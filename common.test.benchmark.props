@@ -1,0 +1,15 @@
+<Project>
+
+  <Import Project="./common.test.props"/>
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CA1822;</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
+    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.1" />
+    <PackageReference Include="ObjectLayoutInspector" Version="0.1.2" />
+  </ItemGroup>
+
+</Project>

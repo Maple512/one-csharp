@@ -1,0 +1,64 @@
+<Project>
+
+  <!--Project Config-->
+  <PropertyGroup>
+    <LangVersion>preview</LangVersion>
+    <Nullable>enable</Nullable>
+    <VersionPrefix>0.0.1</VersionPrefix>
+    <VersionSuffix>rc.1</VersionSuffix>
+    <IsPackable>true</IsPackable>
+    <IncludeMainPack>true</IncludeMainPack>
+  </PropertyGroup>
+
+  <!--Root Namespace-->
+  <PropertyGroup>
+    <RootNamespaceLength>$(MSBuildProjectName.Split(".").Length)</RootNamespaceLength>
+    <RootNamespace Condition="$(RootNamespaceLength) > 1">$(MSBuildProjectName.Split(".")[0]).$(MSBuildProjectName.Split(".")[1])</RootNamespace>
+  </PropertyGroup>
+
+  <!--Assemlby Config-->
+  <PropertyGroup>
+    <Authors>Maple512</Authors>
+    <Product>$(RootName)</Product>
+    <Copyright>$(Authors)</Copyright>
+    <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS1591;CS1573;CS8618;CA2252;</NoWarn>
+  </PropertyGroup>
+
+  <!--Nuget Packages Config-->
+  <PropertyGroup>
+    <IncludeSymbols>false</IncludeSymbols>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/maple512/one-csharp</RepositoryUrl>
+    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <EmbedAllSources>true</EmbedAllSources>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Condition="$(IsPackable)" Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <ProjectReference Include="$(MainProjectPath)" Condition="$(MSBuildProjectName) != $(RootName) and $(IsPackable) and $(IncludeMainPack)"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(LogoPath)" Pack="true" PackagePath="" Condition="$(IsPackable)"/>
+  </ItemGroup>
+
+  <!--github action-->
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(GITHUB_ACTIONS)' != 'true' ">NO_GITHUB_ACTIONS</DefineConstants>
+  </PropertyGroup>
+
+</Project>

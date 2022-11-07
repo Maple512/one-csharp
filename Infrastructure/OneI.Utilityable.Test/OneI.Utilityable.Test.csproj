@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../../common.xunit.props" />
+
+  <PropertyGroup>
+    <TargetFramework>$(NetFramework)</TargetFramework>
+    <RootNamespace>$(ProjectPrefix)</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
+  </ItemGroup>
+
+</Project>

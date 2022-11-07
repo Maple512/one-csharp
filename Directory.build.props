@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    
+    <!-- Net Version -->
+    <NetStandard>netstandard2.0</NetStandard>
+    <NetFramework>net7.0</NetFramework>
+    
+    <!-- Microsoft Version -->
+    <MSVersion>6.0.0</MSVersion>
+    <MSMvcVersion>2.2.0</MSMvcVersion>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,9 @@
+<Project>
+
+  <Import Project="./common.props"/>
+
+  <ItemGroup>
+    <ProjectReference Include="$(MainProjectPath)" Condition="$(MSBuildProjectName) != $(RootName) and $(IsPackable)"/>
+  </ItemGroup>
+
+</Project>

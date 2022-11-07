@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    
+  </PropertyGroup>
+
+  <UsingTask TaskName="OneE.MSBuildTaskClient.TaskExample1"
+             AssemblyFile="F:\Documents\Git\one\one-csharp\Example\OneE.MSBuildTaskClient\bin\Debug\netstandard2.0\OneE.MSBuildTaskClient.dll"></UsingTask>
+
+  <PropertyGroup>
+    <SettingNamespace>MSBuildConsoleExample</SettingNamespace>
+    <RootFolder>$(MSBuildProjectDirectory)</RootFolder>
+    <SettingExtensionFile>mysettings</SettingExtensionFile>
+    <SettingClass>MySetting</SettingClass>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <SettingFiles Include="$(RootFolder)\*.$(SettingExtensionFile)" />
+  </ItemGroup>
+  
+  <Target Name="TaskExample12" BeforeTargets="BeforeCompile" Inputs="@(SettingFiles)" Outputs="$(RootFolder)\$(SettingClass).generated.cs">
+    <TaskExample1 SettingClassName="MySetting" SettingNamespaceName="Example" SettingFiles="@(SettingFiles)" >
+      <Output TaskParameter="ClassNameFile" PropertyName="SettingClassFileName" />
+    </TaskExample1>
+    <!--Our generated file is included to be compiled-->
+    <ItemGroup>
+      <Compile Remove="$(SettingClassFileName)" />
+      <Compile Include="$(SettingClassFileName)" />
+    </ItemGroup>
+    
+  </Target>
+
+  <Target Name="AfterClean" >
+    <Delete Files="$(RootFolder)\$(SettingClass).generated.cs" />
+  </Target>
+  
+</Project>
