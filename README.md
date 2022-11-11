@@ -9,6 +9,11 @@
 
 ## 项目
 
-- `infrastructure`: 基础设施
+- `Infrastructure`: 基础设施
+  - Utility: 工具集
+  - Module: 模块化支持
+  - Event: 事件
+  - Domain: 领域层
+  - Agreement: 协议层
 - `Common`：通用项目
 - `Service`：服务

@@ -1,4 +1,5 @@
-﻿namespace OneI.Restable.Abstractions;
+namespace OneI.Restable;
+
 public class Class1
 {
 
