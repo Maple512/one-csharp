@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 /// 模块
 /// </summary>
 /// <remarks>便于实现依赖注入</remarks>
-public class Module : IModule, IModuleConfigureServices, IModulePostConfigureServices, IModuleConfigure
+public class Module : IModule
 {
     public virtual void ConfigureServices(in ModuleConfigureServiceContext context)
     {

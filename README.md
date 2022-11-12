@@ -10,10 +10,13 @@
 ## 项目
 
 - `Infrastructure`: 基础设施
-  - Utility: 工具集
-  - Module: 模块化支持
-  - Event: 事件
-  - Domain: 领域层
-  - Agreement: 协议层
-- `Common`：通用项目
+  - `Utility`: 工具集
+  - `Module`: 模块化支持
+  - `Event`: 事件
+  - `Domain`: 领域层
+- `Example`：案例
 - `Service`：服务
+
+## 笔记
+
+- `Signal`: 信号，进程间异步通知

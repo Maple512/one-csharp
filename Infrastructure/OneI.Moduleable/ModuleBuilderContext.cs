@@ -3,25 +3,32 @@ namespace OneI.Moduleable;
 using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using OneI.Applicationable;
 
-public readonly ref struct ModuleConfigureServiceContext
+public class ModuleBuilderContext 
 {
-    public ModuleConfigureServiceContext(
+    public ModuleBuilderContext(
+        Type startupType,
         IServiceCollection services,
         IConfiguration configuration,
-        IApplicationEnvironment environment)
+        IApplicationEnvironment environment,
+        ILogger? logger = null)
     {
+        Logger = logger;
         Services = services;
         Configuration = configuration;
         Environment = environment;
+        StartupType = startupType;
     }
+
+    public Type StartupType { get; }
+
+    public ILogger? Logger { get; }
 
     public IServiceCollection Services { get; }
 
     public IConfiguration Configuration { get; }
 
     public IApplicationEnvironment Environment { get; }
-
-    public override int GetHashCode() => HashCode.Combine(Services, Configuration);
 }

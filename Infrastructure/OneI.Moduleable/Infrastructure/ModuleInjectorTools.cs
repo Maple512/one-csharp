@@ -10,7 +10,7 @@ using OneI.Moduleable.DependencyInjection;
 
 public static class ModuleInjectorTools
 {
-    public static void RegistrationModule(ModuleInjectionContext context)
+    public static void RegistrationModule(ModuleRegistrationContext context)
     {
         var types = context.Assembly.GetTypes().Where(IsAllowRegistration).ToArray();
 

@@ -6,7 +6,7 @@
     <NetFramework>net7.0</NetFramework>
     
     <!-- Microsoft Version -->
-    <MSVersion>6.0.0</MSVersion>
+    <MSVersion>7.0.0</MSVersion>
     <MSMvcVersion>2.2.0</MSMvcVersion>
   </PropertyGroup>
 </Project>

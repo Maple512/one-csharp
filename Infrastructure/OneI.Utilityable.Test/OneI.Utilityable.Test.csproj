@@ -4,7 +4,6 @@
 
   <PropertyGroup>
     <TargetFramework>$(NetFramework)</TargetFramework>
-    <RootNamespace>$(ProjectPrefix)</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

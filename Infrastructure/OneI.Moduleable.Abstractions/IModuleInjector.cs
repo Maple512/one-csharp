@@ -10,5 +10,5 @@ public interface IModuleInjector
     /// </summary>
     bool KeepDefault => true;
 
-    void Scan(ModuleInjectionContext context);
+    void Scan(ModuleRegistrationContext context);
 }

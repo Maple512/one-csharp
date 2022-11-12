@@ -1,8 +1,8 @@
-namespace OneI.Moduleable;
+namespace OneI.Moduleable.Internal;
 
 using System.Collections.Generic;
 
-internal class ModuleContainer
+internal class ModuleContainer : IModuleContainer
 {
     public ModuleContainer(IReadOnlyList<IModuleDescriptor> modules)
     {

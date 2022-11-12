@@ -7,9 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 /// <summary>
 /// 模块注入上下文
 /// </summary>
-public readonly struct ModuleInjectionContext
+public readonly struct ModuleRegistrationContext
 {
-    public ModuleInjectionContext(IServiceCollection services, Assembly assembly)
+    public ModuleRegistrationContext(IServiceCollection services, Assembly assembly)
     {
         Services = services;
         Assembly = assembly;
@@ -21,5 +21,5 @@ public readonly struct ModuleInjectionContext
 
     public override int GetHashCode() => HashCode.Combine(Services, Assembly);
 
-    public override string ToString() => $"{nameof(ModuleInjectionContext)} Assembly: {Assembly.FullName}";
+    public override string ToString() => $"{nameof(ModuleRegistrationContext)} Assembly: {Assembly.FullName}";
 }

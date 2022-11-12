@@ -1,37 +1,38 @@
-namespace OneI.Moduleable;
+namespace OneI.Moduleable.Internal;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using OneI.Moduleable.Infrastructure;
 
 internal static class ModuleHelper
 {
-    private static Action<string>? _logger;
+    private static ILogger? _logger;
 
     public static IReadOnlyList<IModuleDescriptor> LoadModules(
         IServiceCollection services,
-        Type startupModuleType,
-        Action<string>? logger = null)
+        Type startupType,
+        ILogger? logger = null)
     {
-        _ = CheckTools.NotNull(services);
-        _ = CheckTools.NotNull(startupModuleType);
-
         _logger = logger;
 
-        var modules = GetDescriptors(startupModuleType);
+        var modules = GetModuleDescriptors(startupType);
 
-        modules = SortByDependency(modules, startupModuleType);
+        if(modules.Count > 1)
+        {
+            modules = SortByDependency(modules, startupType);
+        }
 
         return modules;
     }
 
-    private static List<IModuleDescriptor> GetDescriptors(Type moduleType)
+    private static List<IModuleDescriptor> GetModuleDescriptors(Type startupType)
     {
         var modules = new List<IModuleDescriptor>();
 
-        FillAllModules(modules, moduleType);
+        FillAllModules(modules, startupType);
 
         FillAllDependencies(modules);
 
@@ -57,14 +58,14 @@ internal static class ModuleHelper
     /// <returns></returns>
     private static void FillAllModules(ICollection<IModuleDescriptor> modules, Type moduleType)
     {
-        _logger?.Invoke("Loading module starts.");
+        _logger?.LogInformation("Loading module starts.");
 
         foreach(var item in FindAllDependedTypes(moduleType))
         {
             modules.Add(new ModuleDescriptor(item));
         }
 
-        _logger?.Invoke("Loading module ends.");
+        _logger?.LogInformation("Loading module ends.");
     }
 
     private static void FillAllDependencies(List<IModuleDescriptor> modules)
@@ -128,7 +129,7 @@ internal static class ModuleHelper
 
         moduleTypes.AddIfNotContains(moduleType);
 
-        _logger?.Invoke(
+        _logger?.LogInformation(
             string.Format(
                 "{0}- {1}", new string(' ', depth),
                 moduleType.FullName));

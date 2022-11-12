@@ -4,6 +4,6 @@ namespace OneI.Moduleable;
 /// 模块
 /// </summary>
 /// <remarks>便于实现依赖注入</remarks>
-public interface IModule
+public interface IModule : IModuleConfigureServices, IModulePostConfigureServices, IModuleConfigure
 {
 }
