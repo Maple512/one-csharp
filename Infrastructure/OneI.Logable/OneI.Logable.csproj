@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="../../common.props" />
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OneI.Logable.Abstractions\OneI.Logable.Abstractions.csproj" />
+      <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
+    </ItemGroup>
+
+</Project>

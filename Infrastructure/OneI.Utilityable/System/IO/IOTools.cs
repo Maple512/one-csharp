@@ -28,7 +28,7 @@ public static class IOTools
 
     public static void CreateDirectory(string directory)
     {
-        if(!Directory.Exists(directory))
+        if(Directory.Exists(directory) == false)
         {
             Directory.CreateDirectory(directory);
         }

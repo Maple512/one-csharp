@@ -10,9 +10,14 @@ using OneI;
 [DebuggerStepThrough]
 public static class EnumerableExtensions
 {
-    public static bool IsNullOrEmpty<T>([NotNullWhen(true)] this IEnumerable<T>? source)
+    public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? source)
     {
-        return source?.Any() != true;
+        return source == null || source.Any() == false;
+    }
+
+    public static bool NotNullOrEmpty<T>([NotNullWhen(true)] this IEnumerable<T>? source)
+    {
+        return source != null && source.Any() == true;
     }
 
     public static string JoinAsString<T>(this IEnumerable<T> source, string separator)

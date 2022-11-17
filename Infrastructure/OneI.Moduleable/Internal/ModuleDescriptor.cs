@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 
-public sealed class ModuleDescriptor : IModuleDescriptor
+internal sealed class ModuleDescriptor : IModuleDescriptor
 {
     private readonly List<IModuleDescriptor> _dependencies = new();
 

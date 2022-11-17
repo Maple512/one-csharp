@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OneI.Applicationable;
 
-public class ModuleBuilderContext 
+public class ModuleBuilderContext
 {
     public ModuleBuilderContext(
         Type startupType,

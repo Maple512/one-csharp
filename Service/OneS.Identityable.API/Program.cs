@@ -49,6 +49,13 @@ public class Program
 
             app.MapControllers();
 
+            //app.Use(async next =>
+            //{
+            //    await next();
+
+            //    return () => { };
+            //});
+
             app.Run();
 
             return 0;

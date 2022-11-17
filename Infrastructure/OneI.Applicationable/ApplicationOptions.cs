@@ -1,8 +1,6 @@
 namespace OneI.Applicationable;
 
 using System;
-using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
 
 public class ApplicationOptions
 {

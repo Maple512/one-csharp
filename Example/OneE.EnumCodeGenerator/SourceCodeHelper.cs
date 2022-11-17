@@ -1,7 +1,6 @@
 namespace OneE.EnumCodeGenerator;
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 public static class SourceCodeHelper

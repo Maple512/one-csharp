@@ -14,7 +14,6 @@ internal class Application : IApplication, IDisposable, IAsyncDisposable
 {
     private readonly ILogger _logger;
     private readonly IApplicationLifetimeService _lifetimeService;
-    private readonly IServiceProvider _serviceProvider;
     private readonly ITerminalService _terminalLifetimeService;
     private readonly ApplicationOptions _options;
 
@@ -24,7 +23,7 @@ internal class Application : IApplication, IDisposable, IAsyncDisposable
 
     public Application(IServiceProvider serviceProvider)
     {
-        _serviceProvider = serviceProvider;
+        ServiceProvider = serviceProvider;
 
         _logger = serviceProvider.GetRequiredService<ILogger<Application>>();
         _lifetimeService = serviceProvider.GetRequiredService<IApplicationLifetimeService>();
@@ -32,7 +31,7 @@ internal class Application : IApplication, IDisposable, IAsyncDisposable
         _options = serviceProvider.GetRequiredService<IOptions<ApplicationOptions>>().Value;
     }
 
-    public IServiceProvider ServiceProvider => _serviceProvider;
+    public IServiceProvider ServiceProvider { get; }
 
     public async ValueTask StartAsync(CancellationToken cancellationToken = default)
     {
@@ -46,7 +45,7 @@ internal class Application : IApplication, IDisposable, IAsyncDisposable
 
         combinedCancellationToken.ThrowIfCancellationRequested();
 
-        _applicationPipelineServices = _serviceProvider.GetServices<IApplicationPipelineService>();
+        _applicationPipelineServices = ServiceProvider.GetServices<IApplicationPipelineService>();
 
         foreach(var pipeline in _applicationPipelineServices)
         {

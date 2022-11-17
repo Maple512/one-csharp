@@ -26,7 +26,7 @@ public sealed class EventBus : IEventBus, ISingletonService
     {
         var eventType = typeof(TEventData);
 
-        return _cache.TryAdd(eventType, FindEventHandler(eventType));
+        return _cache.TryAdd(eventType, FindAllEventHandlers(eventType));
     }
 
     public async ValueTask PublishAsync<TEventData>(TEventData eventData)
@@ -34,12 +34,12 @@ public sealed class EventBus : IEventBus, ISingletonService
     {
         _ = CheckTools.NotNull(eventData);
 
-        var handlers = _cache.GetOrAdd(typeof(TEventData), FindEventHandler)
+        var handlers = _cache.GetOrAdd(typeof(TEventData), FindAllEventHandlers)
             .OfType<IEventHandler<TEventData>>().OrderBy(x => x.Order);
 
         foreach(var handler in handlers)
         {
-            await handler!.HandlerAsync(eventData);
+            await handler!.HandleAsync(eventData);
 
             if(handler is IDisposable disposable)
             {
@@ -58,12 +58,12 @@ public sealed class EventBus : IEventBus, ISingletonService
     {
         _ = CheckTools.NotNull(eventData);
 
-        var handlers = _cache.GetOrAdd(typeof(TEventData), FindEventHandler)
+        var handlers = _cache.GetOrAdd(typeof(TEventData), FindAllEventHandlers)
             .OfType<IEventHandler<TEventData>>().OrderBy(x => x.Order);
 
         await Parallel.ForEachAsync(handlers, parallelOptions ?? new(), async (handler, token) =>
         {
-            await handler.HandlerAsync(eventData);
+            await handler.HandleAsync(eventData);
 
             if(handler is IDisposable disposable)
             {
@@ -77,7 +77,7 @@ public sealed class EventBus : IEventBus, ISingletonService
         });
     }
 
-    private IEnumerable<IEventHandler> FindEventHandler(Type eventType)
+    private IEnumerable<IEventHandler> FindAllEventHandlers(Type eventType)
     {
         var handlerType = typeof(IEventHandler<>).MakeGenericType(eventType);
 

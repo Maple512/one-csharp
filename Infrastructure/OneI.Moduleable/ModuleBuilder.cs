@@ -55,15 +55,15 @@ public static class ModuleBuilder
         {
             var registrationContext = new ModuleRegistrationContext(context.Services, module.Assembly);
 
-            if(module.Module is IModuleInjector scanner)
+            if(module.Module is IModuleInjector injector)
             {
-                if(scanner.KeepDefault)
+                if(injector.KeepDefault)
                 {
                     // default
                     ModuleInjectorTools.RegistrationModule(registrationContext);
                 }
 
-                scanner.Scan(registrationContext);
+                injector.Inject(registrationContext);
             }
             else
             {

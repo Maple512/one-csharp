@@ -13,7 +13,7 @@ public class UserRegistrationEventHandler : EventHandlerBase<UserRegistrationEve
         _userRepository = userRepository;
     }
 
-    public override async ValueTask HandlerAsync(UserRegistrationEventData data)
+    public override async ValueTask HandleAsync(UserRegistrationEventData data)
     {
         var user = User.CreateNew(data);
 

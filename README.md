@@ -20,3 +20,7 @@
 ## 笔记
 
 - `Signal`: 信号，进程间异步通知
+- 创建一个泛型对象：Activator.CreateInstance
+
+## Log
+

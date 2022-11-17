@@ -8,7 +8,7 @@ public interface IEventHandler<in TEventData> : IEventHandler
 {
     int? Order { get; }
 
-    ValueTask HandlerAsync(TEventData data);
+    ValueTask HandleAsync(TEventData data);
 }
 
 [EditorBrowsable(EditorBrowsableState.Never)]
@@ -21,5 +21,5 @@ public abstract class EventHandlerBase<TEventData> : IEventHandler<TEventData>
 {
     public int? Order { get; }
 
-    public abstract ValueTask HandlerAsync(TEventData data);
+    public abstract ValueTask HandleAsync(TEventData data);
 }
