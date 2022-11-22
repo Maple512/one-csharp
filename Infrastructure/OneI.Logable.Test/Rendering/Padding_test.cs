@@ -4,13 +4,16 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
+using OneT.Common;
 
 public class Padding_test
 {
     [Fact]
     public void alignment_right()
     {
-        var output = new FileWriter(Path.Combine(TestHelpler.LogFolder, $"{nameof(Padding_test)}.txt"));
+        var path = $"./Logs/{nameof(Padding_test)}.txt";
+
+        var output = new FileWriter(TestTools.GetFilePathWithinProject(path));
 
         Padding.Apply(output, "asd3f54ads65f", new(Direction.Left, 100));
 

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 
 public class TextParserResult
 {
-    public TextParserResult(IEnumerable<TextToken> tokens)
+    public TextParserResult(IEnumerable<Token> tokens)
     {
         Tokens = tokens;
     }
 
-    public IEnumerable<TextToken> Tokens { get; }
+    public IEnumerable<Token> Tokens { get; }
 }

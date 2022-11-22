@@ -16,5 +16,5 @@ public enum PropertyTokenType
     /// 将对象序列化。
     /// 属性前缀<c>@</c>，例如：<c>{@User}</c>
     /// </summary>
-    Serialization,
+    Deconstruct,
 }

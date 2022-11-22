@@ -2,7 +2,7 @@ namespace OneI.Logable;
 
 using System.Threading.Tasks;
 
-public interface ILogAppender 
+public interface ILogAppender
 {
     Task AppendAsync();
 }

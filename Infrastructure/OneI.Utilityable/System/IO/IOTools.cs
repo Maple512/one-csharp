@@ -1,19 +1,12 @@
 namespace System.IO;
 
 using System.Diagnostics;
+using OneI;
 
 [StackTraceHidden]
 [DebuggerStepThrough]
 public static class IOTools
 {
-    public static void EnsureDirectoryNotExisted(string path)
-    {
-        if(Directory.Exists(path))
-        {
-            Directory.Delete(path, true);
-        }
-    }
-
     public static string GetRelativePath(string directory, string file)
     {
         var fullPath = Path.Combine(directory, file);
@@ -26,9 +19,13 @@ public static class IOTools
         return fullPath[(directory.Length + 1)..];
     }
 
-    public static void CreateDirectory(string directory)
+    public static void EnsureDirectoryExisted(string filePath)
     {
-        if(Directory.Exists(directory) == false)
+        CheckTools.NotNullOrWhiteSpace(filePath);
+
+        var directory = Path.GetDirectoryName(filePath);
+        if(Directory.Exists(directory) == false
+            && directory.NotNullOrWhiteSpace())
         {
             Directory.CreateDirectory(directory);
         }

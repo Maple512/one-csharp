@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\OneI.Logable.Abstractions\OneI.Logable.Abstractions.csproj" />
       <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>
 

@@ -1,24 +1,31 @@
 namespace OneI.Logable.Properties;
 
-using System.Text;
+using System;
+using System.IO;
+using System.Linq;
+using OneI.Logable.Properties.Policies;
 
 public class PropertyFactory_Test
 {
     [Fact]
     public void create_null_value_factory()
     {
-        var factory = new PropertyValueFactory();
+        var factory = new PropertyValueFactory(
+            Enumerable.Empty<Type>(),
+            Enumerable.Empty<IDestructuringPolicy>(),
+            false,
+            10,
+            1024,
+            10);
 
-        var nvalue = factory.Create((StringBuilder?)null);
+        var nvalue = factory.Create(TestHelpler.CreateNewUser(), true);
 
-        nvalue.ToString().ShouldBeEquivalentTo("null");
+        var a = nvalue.ToString();
 
-        var spv = factory.Create("这是一段字符串");
+        var output = new StringWriter();
 
-        spv.ToString().ShouldNotBeNull();
+        nvalue.Render(output);
 
-        var c = factory.Create<char>('1');
-
-        c.ToString().ShouldBe("1");
+        var result = output.ToString();
     }
 }

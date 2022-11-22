@@ -466,9 +466,9 @@ public static class TypeExtensions
     /// <param name="type"></param>
     /// <returns></returns>
     public static bool IsAnonymousType(this Type type)
-        => type.Name.StartsWith("<>", StringComparison.Ordinal)
-            && type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), inherit: false).Length > 0
-            && type.Name.Contains("AnonymousType");
+        => type.Namespace == null
+            && type.Name.Contains("AnonymousType", StringComparison.Ordinal)
+            && type.IsDefined(typeof(CompilerGeneratedAttribute));
 
     #endregion Type
 

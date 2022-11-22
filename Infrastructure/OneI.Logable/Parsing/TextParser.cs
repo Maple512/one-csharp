@@ -7,28 +7,33 @@ using System.Text;
 
 public static class TextParser
 {
-    private const byte _open_brace = 0x7B; // {
-    private const byte _close_brace = 0x7D; // }
-    private const char _sign = '@';
-    private const char _colon = ':';
-    private const char _dollar = '$';
+    private const byte _open_brace = (byte)'{';
+    private const byte _close_brace = (byte)'}';
+    private const byte _sign = (byte)'@';
+    private const byte _colon = (byte)':';
+    private const byte _dollar = (byte)'$';
 
-    public static IEnumerable<TextToken> Parse(string text)
+    public static IReadOnlyList<Token> Parse(string? text)
     {
+        if(text.IsNullOrEmpty())
+        {
+            return Array.Empty<Token>();
+        }
+
         return Parse(Encoding.UTF8.GetBytes(text));
     }
 
-    public static IEnumerable<TextToken> Parse(ReadOnlySpan<byte> text)
+    private static IReadOnlyList<Token> Parse(ReadOnlySpan<byte> text)
     {
         if(text.IsEmpty)
         {
             // TODO: 目前的单元测试对yield有问题，无法进行测试，等待修复 https://github.com/microsoft/vstest/issues/2170
             //yield return Token.Empty;
             //yield break;
-            return new TextToken[] { TextToken.Empty };
+            return Array.Empty<Token>();
         }
 
-        var result = new List<TextToken>();
+        var result = new List<Token>();
 
         var index = 0;
         var lastIndex = text.Length - 1;
@@ -53,10 +58,10 @@ public static class TextParser
                 if(index != (openBrace + 1))
                 {
                     var length = index - openBrace - 1;
-                    var content = span.Slice(openBrace + 1, length);
+                    var content = span.Slice(openBrace, length + 2);
 
                     if(TryParsePropertyToken(
-                        Encoding.UTF8.GetString(content),
+                        content,
                         propertyIndex++,
                         out var propertyToken))
                     {
@@ -64,9 +69,9 @@ public static class TextParser
 
                         if(textLength > 0)
                         {
-                            var textC = span.Slice(closeBrace + 1, textLength);
+                            var textContent = span.Slice(closeBrace + 1, textLength);
 
-                            result.Add(new TextToken(Encoding.UTF8.GetString(textC), closeBrace + 1 - propertyTotalLength));
+                            result.Add(new TextToken(Encoding.UTF8.GetString(textContent), closeBrace + 1 - propertyTotalLength));
                         }
 
                         propertyToken.ResetPosition(index - propertyTotalLength - length - 1);
@@ -91,17 +96,19 @@ public static class TextParser
             if(index == lastIndex
                 && closeBrace != index)
             {
-                var textC = span.Slice(closeBrace + 1, index - closeBrace);
+                var textContent = span.Slice(closeBrace + 1, index - closeBrace);
 
-                result.Add(new TextToken(Encoding.UTF8.GetString(textC), closeBrace + 1 - propertyTotalLength));
+                result.Add(new TextToken(Encoding.UTF8.GetString(textContent), closeBrace + 1 - propertyTotalLength));
             }
         } while(++index < lastIndex + 1);
 
         return result;
     }
 
-    private static bool TryParsePropertyToken(string text, int index, [NotNullWhen(true)] out PropertyToken? token)
+    private static bool TryParsePropertyToken(ReadOnlySpan<byte> bytes, int index, [NotNullWhen(true)] out PropertyToken? token)
     {
+        var text = Encoding.UTF8.GetString(bytes);
+
         token = null;
 
         if(text.IsNullOrWhiteSpace())
@@ -109,42 +116,46 @@ public static class TextParser
             return false;
         }
 
-        var splits = text.Split(_colon);
-
-        if(splits.Length > 2)
+        var colonIndex = bytes.IndexOf(_colon);
+        if(colonIndex == 0)
         {
             return false;
         }
 
+        var hasColon = colonIndex > 0;
+
         var parsingType = PropertyTokenType.Stringify;
-        string name;
-        switch(text[0])
+        ReadOnlySpan<byte> name;
+        var length = bytes.Length - 2;
+        switch(bytes[1])
         {
             case _sign:
-                name = splits[0][1..];
-                parsingType = PropertyTokenType.Serialization;
+                parsingType = PropertyTokenType.Deconstruct;
+                name = bytes.Slice(2, hasColon ? colonIndex - 2 : length - 1);
                 break;
             case _dollar:
-                name = splits[0][1..];
+                name = bytes.Slice(2, hasColon ? colonIndex - 2 : length - 1);
                 break;
             default:
-                name = splits[0];
+                name = bytes.Slice(1, hasColon ? colonIndex - 1 : length);
                 break;
         }
 
-        if(name.IsNullOrWhiteSpace())
+        var a = Encoding.UTF8.GetString(name);
+
+        if(name.IsEmpty)
         {
             return false;
         }
 
         string? format = null;
 
-        if(splits.Length == 2)
+        if(colonIndex > 0)
         {
-            format = splits[1];
+            format = text[(colonIndex + 1)..^1];
         }
 
-        token = new PropertyToken(name, index, text, -1, format, null, parsingType);
+        token = new PropertyToken(Encoding.UTF8.GetString(name), index, text, -1, format, null, parsingType);
 
         return true;
     }

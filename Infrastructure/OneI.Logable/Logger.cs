@@ -1,67 +1,126 @@
 namespace OneI.Logable;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using OneI.Logable.Internal;
+using OneI.Logable.Parsing;
+using OneI.Logable.Properties;
 
-public class Logger : ILogger
+public class Logger : ILogger, ILoggerSink, IDisposable, IAsyncDisposable
 {
-    private readonly IEnumerable<LogDelegate> _branchs;
-    private readonly IEnumerable<Func<ILoggerContext, Task<bool>>> _filters;
+    private readonly LevelOverrideMapper? _overrideMapper;
+    private readonly Action? _disposeAction;
+    private readonly Func<ValueTask>? _asyncDisposeAction;
+    private readonly ILoggerEnricher _enricher;
+    private readonly ILoggerSink _sink;
+    private readonly LogLevel _minimumLevel;
+    private readonly LogLevelSwitch? _levelSwitch;
+    private readonly IPropertyFactory _propertyFactory;
+    private readonly PropertyBinder _propertyBinder;
 
-    public Logger(
-        IEnumerable<Func<ILoggerContext, Task<bool>>> filters,
-        IEnumerable<LogDelegate> branchs)
+    internal Logger(
+        LogLevel minimumLevel,
+        LogLevelSwitch? levelSwitch,
+        ILoggerSink sink,
+        ILoggerEnricher enricher,
+        IPropertyFactory propertyFactory,
+        IPropertyValueFactory propertyValueFactory,
+        Action? disposeAction,
+        Func<ValueTask>? asyncDisposeAction,
+        LevelOverrideMapper? overrideMapper)
     {
-        _branchs = branchs;
-        _filters = filters;
+        _minimumLevel = minimumLevel;
+        _enricher = enricher;
+        _sink = sink;
+        _propertyFactory = propertyFactory;
+        _levelSwitch = levelSwitch;
+        _disposeAction = disposeAction;
+        _asyncDisposeAction = asyncDisposeAction;
+        _overrideMapper = overrideMapper;
+
+        _propertyBinder = new PropertyBinder(propertyValueFactory);
     }
 
-    public async Task WriteAsync(
-        ILogContent content,
-        [CallerMemberName] string? membername = null,
-        [CallerFilePath] string? filepath = null,
-        [CallerLineNumber] int? line = null)
+    internal bool HasOverrideMap => _overrideMapper != null;
+
+    public bool IsEnabled(LogLevel level)
     {
-
-
-        var context = new LogContext(content, Enumerable.Empty<ITextToken>())
+        if(level < _minimumLevel)
         {
-            FilePath = filepath,
-            LineNumber = line,
-            MemberName = membername,
-        };
-
-        var passed = true;
-        foreach(var item in _filters)
-        {
-            passed = await item(context);
-
-            if(passed == false)
-            {
-                break;
-            }
+            return false;
         }
 
-        if(passed)
-        {
-            foreach(var item in _branchs)
-            {
-                await item(context);
-            }
-        }
+        return _levelSwitch == null ||
+               level >= _levelSwitch.Value.MinimumLevel;
     }
 
-    public async Task WriteAsync<T>(
+    public void Write(
         LogLevel level,
         string message,
-        T parameter,
-        [CallerMemberName] string? membername = null,
-        [CallerFilePath] string? filepath = null,
-        [CallerLineNumber] int? line = null)
+        object?[]? parameters,
+        Exception? exception = null,
+        [CallerMemberName] string? memberName = null,
+        [CallerFilePath] string? filePath = null,
+        [CallerLineNumber] int? lineNumber = null)
     {
-        await WriteAsync(new LogContent(level, message, parameters: new object?[] { parameter }), membername, filepath, line);
+        if(message == null
+            || IsEnabled(level) != false)
+        {
+            return;
+        }
+
+        var tokens = TextParser.Parse(message);
+
+        var properties = _propertyBinder.ConstructProperties(tokens, parameters);
+
+        var context = new LoggerContext(level, exception, tokens, properties, memberName, filePath, lineNumber);
+
+        Dispatch(context);
+    }
+
+    public void Write(in LoggerContext context)
+    {
+        if(context?.Text == null
+            || IsEnabled(context.Level) != false)
+        {
+            return;
+        }
+
+        Dispatch(context);
+    }
+
+    public void Dispose()
+    {
+        _disposeAction?.Invoke();
+
+        GC.SuppressFinalize(this);
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        GC.SuppressFinalize(this);
+
+        return _asyncDisposeAction?.Invoke() ?? ValueTask.CompletedTask;
+    }
+
+    void ILoggerSink.Emit(LoggerContext context)
+    {
+        Dispatch(context);
+    }
+
+    private void Dispatch(LoggerContext logEvent)
+    {
+        // enricher可能是一个“安全”的聚合器，但通常是空的，因此这里重复了SafeAggregateEnricher的异常处理。
+        try
+        {
+            _enricher.Enrich(logEvent, _propertyFactory);
+        }
+        catch(Exception ex)
+        {
+            InternalLog.WriteLine("Exception {0} caught while enriching {1} with {2}.", ex, logEvent, _enricher);
+        }
+
+        _sink.Emit(logEvent);
     }
 }

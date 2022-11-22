@@ -6,8 +6,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <UsingTask TaskName="OneE.MSBuildTaskClient.TaskExample1"
-             AssemblyFile="F:\Documents\Git\one\one-csharp\Example\OneE.MSBuildTaskClient\bin\Debug\netstandard2.0\OneE.MSBuildTaskClient.dll"></UsingTask>
+  <UsingTask TaskName="OneE.MSBuildTaskClient.TaskExample1" AssemblyFile="F:\Documents\Git\one\one-csharp\Example\OneE.MSBuildTaskClient\bin\Debug\netstandard2.0\OneE.MSBuildTaskClient.dll"></UsingTask>
 
   <PropertyGroup>
     <SettingNamespace>MSBuildConsoleExample</SettingNamespace>
@@ -20,8 +19,12 @@
     <SettingFiles Include="$(RootFolder)\*.$(SettingExtensionFile)" />
   </ItemGroup>
   
+  <ItemGroup>
+    <ProjectReference Include="..\OneE.MSBuildTaskClient\OneE.MSBuildTaskClient.csproj" />
+  </ItemGroup>
+  
   <Target Name="TaskExample12" BeforeTargets="BeforeCompile" Inputs="@(SettingFiles)" Outputs="$(RootFolder)\$(SettingClass).generated.cs">
-    <TaskExample1 SettingClassName="MySetting" SettingNamespaceName="Example" SettingFiles="@(SettingFiles)" >
+    <TaskExample1 SettingClassName="MySetting" SettingNamespaceName="Example" SettingFiles="@(SettingFiles)">
       <Output TaskParameter="ClassNameFile" PropertyName="SettingClassFileName" />
     </TaskExample1>
     <!--Our generated file is included to be compiled-->
@@ -32,7 +35,7 @@
     
   </Target>
 
-  <Target Name="AfterClean" >
+  <Target Name="AfterClean">
     <Delete Files="$(RootFolder)\$(SettingClass).generated.cs" />
   </Target>
   

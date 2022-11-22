@@ -62,14 +62,14 @@ public class TextParser_test
         var text1 = " 0 {@User}{$Name}{Age}{Date:yyyy-MM-dd}34{Date:yyyy-M:M-dd}";
         var result1 = TextParser.Parse(text1);
         result1.GetCount().ShouldBe(6);
-        result1.ElementAt(0).ShouldBeAssignableTo<TextToken>();
+        result1.ElementAt(0).ShouldBeAssignableTo<Token>();
         var property1 = (PropertyToken)result1.ElementAt(1);
         property1.Name.ShouldBe("User");
-        property1.ParsingType.ShouldBe(PropertyTokenType.Serialization);
+        property1.ParsingType.ShouldBe(PropertyTokenType.Deconstruct);
         property1.Format.ShouldBeNull();
-        property1.SpecifyIndex.ShouldBeNull();
+        property1.ParameterIndex.ShouldBe(0);
         property1.Index.ShouldBe(0);
 
-        result1.ElementAt(5).ShouldBeAssignableTo<TextToken>();
+        result1.ElementAt(5).ShouldBeAssignableTo<Token>();
     }
 }

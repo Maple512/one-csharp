@@ -1,31 +1,33 @@
-namespace OneI.Logable;
+namespace OneI.Logable.Internal;
 
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using OneI.Logable;
 
-public class LoggerBuilder : ILoggerBuilder
+public class LoggerBuilder
 {
-    private readonly List<Func<ILoggerContext,Task<bool>>> _filters = new();
+    private readonly List<Func<LoggerContext, Task<bool>>> _filters = new();
 
     private readonly List<LogDelegate> _branchs = new();
 
-    public ILoggerBuilder Filter(Func<ILoggerContext, Task<bool>> filter)
+    public LoggerBuilder Filter(Func<LoggerContext, Task<bool>> filter)
     {
         _filters.Add(filter);
 
         return this;
     }
 
-    public ILoggerBuilder Branch(LogDelegate branch)
+    public LoggerBuilder Branch(LogDelegate branch)
     {
         _branchs.Add(branch);
 
         return this;
     }
 
-    public ILogger Build()
+    public Logger Build()
     {
-        return new Logger(_filters,_branchs);
+        throw new Exception();
+        //return new Logger(_filters, _branchs);
     }
 }

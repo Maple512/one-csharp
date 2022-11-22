@@ -2,7 +2,7 @@
  namespace Example {
 
   public class MySetting {
-    public readonly static string  Greeting = "Hello World!23";
+    public readonly static string  Greeting = "Hello World!";
   }
 
 }
