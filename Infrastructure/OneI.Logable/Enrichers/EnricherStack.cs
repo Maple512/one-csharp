@@ -32,7 +32,7 @@ internal class EnricherStack : IEnumerable<ILoggerEnricher>
 
     public EnricherStack Push(ILoggerEnricher enricher) => new(this, enricher);
 
-    public ILoggerEnricher Top => _top;
+    public ILoggerEnricher? Top => _top;
 
     internal struct Enumerator : IEnumerator<ILoggerEnricher>
     {
@@ -47,9 +47,9 @@ internal class EnricherStack : IEnumerable<ILoggerEnricher>
             _current = null;
         }
 
-        public ILoggerEnricher Current => _current;
+        public ILoggerEnricher Current => _current!;
 
-        object IEnumerator.Current => _current;
+        object IEnumerator.Current => _current!;
 
         public void Dispose() { }
 
@@ -61,7 +61,7 @@ internal class EnricherStack : IEnumerable<ILoggerEnricher>
             }
 
             _current = _top.Top;
-            _top = _top._under;
+            _top = _top._under!;
 
             return true;
         }

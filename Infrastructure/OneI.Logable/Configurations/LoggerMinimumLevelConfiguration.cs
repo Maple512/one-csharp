@@ -47,7 +47,7 @@ public class LoggerMinimumLevelConfiguration
     /// 重写与提供的<paramref name="sourceName"/>相同类型或命名空间的日志等级
     /// </summary>
     /// <param name="sourceName"></param>
-    /// <param name="switch"></param>
+    /// <param name="levelSwitch"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
     public LoggerConfiguration Override(string sourceName, LogLevelSwitch levelSwitch)
@@ -63,8 +63,8 @@ public class LoggerMinimumLevelConfiguration
         return _loggerConfiguration;
     }
 
-    public LoggerConfiguration Override(string sourceName, LogLevel minimunLevel)
+    public LoggerConfiguration Override(string sourceName, LogLevel minimumLevel)
     {
-        return Override(sourceName, new LogLevelSwitch(minimunLevel));
+        return Override(sourceName, new LogLevelSwitch(minimumLevel));
     }
 }

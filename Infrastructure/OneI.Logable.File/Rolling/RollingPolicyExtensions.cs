@@ -7,7 +7,7 @@ public static class RollingPolicyExtensions
     public static string GetFormatString(this RollingPolicy policy)
         => policy switch
         {
-            RollingPolicy.Motionless => string.Empty,
+            RollingPolicy.Infinite => string.Empty,
             RollingPolicy.Year => "yyyy",
             RollingPolicy.Month => "yyyyMM",
             RollingPolicy.Day => "yyyyMMdd",
@@ -19,7 +19,7 @@ public static class RollingPolicyExtensions
     public static DateTime? GetCurrentCheckPoint(this RollingPolicy policy, DateTime datetime)
         => policy switch
         {
-            RollingPolicy.Motionless => null,
+            RollingPolicy.Infinite => null,
             RollingPolicy.Year => new DateTime(datetime.Year, 1, 1, 0, 0, 0, datetime.Kind),
             RollingPolicy.Month => new DateTime(datetime.Year, datetime.Month, 1, 0, 0, 0, datetime.Kind),
             RollingPolicy.Day => new DateTime(datetime.Year, datetime.Month, datetime.Day, 0, 0, 0, datetime.Kind),

@@ -25,7 +25,7 @@ public static class FileConfigurationExtensions
         bool shared = false,
         TimeSpan? flushToDiskInternal = null,
         Encoding? encoding = null,
-        RollingPolicy policy = RollingPolicy.Motionless,
+        RollingPolicy policy = RollingPolicy.Infinite,
         bool rollOnFileMaxSize = false,
         int? retainedFileMaxCount = DefaultRetainedFileMaxCount,
         FileLifecycleHooks? hooks = null,
@@ -77,7 +77,7 @@ public static class FileConfigurationExtensions
         try
         {
             if(rollOnFileMaxSize
-                || policy != RollingPolicy.Motionless)
+                || policy != RollingPolicy.Infinite)
             {
                 sink = new RollingFileSink(
                     path,

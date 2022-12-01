@@ -8,6 +8,6 @@ public enum RollingPolicy
     /// <summary>
     /// 不会滚动
     /// </summary>
-    Motionless,
+    Infinite,
     Year, Month, Day, Hour, Minute
 }
