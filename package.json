@@ -1,5 +1,8 @@
 {
     "scripts": {
+        "restore":"dotnet restore",
+        "test":"dotnet test",
+        "test-release":"dotnet test --no-restore -c Release"
         "format":"dotnet format ./one.sln --no-restore -v diag"
     }
 }
