@@ -102,10 +102,10 @@ public static class ModuleInjectorTools
         var interfaces = type.GetInterfaces();
 
         // 如果只是继承Transient/Scoped/Singleton这三个其中一个接口，那么就直接注入类
-        if((interfaces.Except(_injectables).IsNullOrEmpty()
-            && interfaces.Length >= 2)
-                || (interfaces.Length == 0
-                    && type.IsDefined<ServiceDescribeAttribute>()))
+        if(interfaces.Except(_injectables).IsNullOrEmpty()
+            && interfaces.Length >= 2
+                || interfaces.Length == 0
+                    && type.IsDefined<ServiceDescribeAttribute>())
         {
             serviceRegistrable = ServiceDescribeAttribute.Onlyself;
         }

@@ -12,10 +12,7 @@ public class ApplicationLifetimeService : IApplicationLifetimeService
     private readonly CancellationTokenSource _stoppingSource = new();
     private readonly CancellationTokenSource _stoppedSource = new();
 
-    public ApplicationLifetimeService(ILogger<ApplicationLifetimeService> logger)
-    {
-        _logger = logger;
-    }
+    public ApplicationLifetimeService(ILogger<ApplicationLifetimeService> logger) => _logger = logger;
 
     public CancellationToken Started => _startedSource.Token;
 

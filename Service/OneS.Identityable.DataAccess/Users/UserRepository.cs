@@ -6,8 +6,5 @@ using OneI.Moduleable.DependencyInjection;
 
 public class UserRepository : IUserRepository, ITransientService
 {
-    public ValueTask Create(User user)
-    {
-        throw new NotImplementedException();
-    }
+    public ValueTask Create(User user) => throw new NotImplementedException();
 }

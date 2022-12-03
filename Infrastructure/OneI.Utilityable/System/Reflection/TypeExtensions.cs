@@ -16,10 +16,7 @@ public static class TypeExtensions
 
     #region Attribute
 
-    public static bool IsDefined<T>(this MemberInfo member, bool inherit = false)
-    {
-        return member.IsDefined(typeof(T), inherit);
-    }
+    public static bool IsDefined<T>(this MemberInfo member, bool inherit = false) => member.IsDefined(typeof(T), inherit);
 
     public static T GetRequiredAttribute<T>(this Type type)
         where T : Attribute
@@ -91,10 +88,7 @@ public static class TypeExtensions
     };
 
     /// <inheritdoc cref="Type.IsAssignableTo(Type?)"/>
-    public static bool IsAssignableTo<TBase>(this Type type)
-    {
-        return type.IsAssignableTo(typeof(TBase));
-    }
+    public static bool IsAssignableTo<TBase>(this Type type) => type.IsAssignableTo(typeof(TBase));
 
     /// <summary>
     /// 判断 <typeparamref name="TBase"/> 是否 <paramref name="type"/> 的基类（包括泛型基类）
@@ -102,10 +96,7 @@ public static class TypeExtensions
     /// <typeparam name="TBase"></typeparam>
     /// <param name="type"></param>
     /// <returns></returns>
-    public static bool IsAssignableToType<TBase>(this Type type)
-    {
-        return IsAssignableToType(type, typeof(TBase));
-    }
+    public static bool IsAssignableToType<TBase>(this Type type) => IsAssignableToType(type, typeof(TBase));
 
     /// <summary>
     /// 判断 <paramref name="baseType"/> 是否 <paramref name="type"/> 的基类（包括泛型基类）
@@ -166,10 +157,7 @@ public static class TypeExtensions
     }
 
     /// <inheritdoc cref="Type.IsAssignableFrom(Type?)"/>
-    public static bool IsAssignableFrom<T>(this Type baesType)
-    {
-        return baesType.IsAssignableFrom(typeof(T));
-    }
+    public static bool IsAssignableFrom<T>(this Type baesType) => baesType.IsAssignableFrom(typeof(T));
 
     // TODO: 待测试
     /// <summary>
@@ -398,10 +386,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    public static bool IsNumeric(this Type type)
-    {
-        return NumericTypes.Contains(type.UnwrapNullableType());
-    }
+    public static bool IsNumeric(this Type type) => NumericTypes.Contains(type.UnwrapNullableType());
 
     /// <summary>
     /// 数字：<see cref="sbyte"/>, <see cref="byte"/>, <see cref="char"/>, <see cref="ushort"/>, <see cref="short"/>, <see cref="uint"/>, <see cref="int"/>, <see cref="ulong"/>, <see cref="long"/>, <see cref="float"/>, <see cref="double"/>, <see cref="decimal"/>
@@ -444,10 +429,7 @@ public static class TypeExtensions
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    public static bool IsInteger(this Type type)
-    {
-        return IntegerTypes.Contains(type.UnwrapNullableType());
-    }
+    public static bool IsInteger(this Type type) => IntegerTypes.Contains(type.UnwrapNullableType());
 
     /// <summary>
     /// 有符号整数

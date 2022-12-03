@@ -11,18 +11,12 @@ public static class DictionaryExtensions
     public static TValue GetOrAdd<TKey, TValue>(
         this IDictionary<TKey, TValue> directory,
         TKey key,
-        TValue value)
-    {
-        return GetOrAdd(directory, key, () => value);
-    }
+        TValue value) => GetOrAdd(directory, key, () => value);
 
     public static TValue GetOrAdd<TKey, TValue>(
         this IDictionary<TKey, TValue> directory,
         TKey key,
-        Func<TValue> factory)
-    {
-        return GetOrAdd(directory, key, k => factory());
-    }
+        Func<TValue> factory) => GetOrAdd(directory, key, k => factory());
 
     public static TValue GetOrAdd<TKey, TValue>(
         this IDictionary<TKey, TValue> directory,

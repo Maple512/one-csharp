@@ -37,8 +37,5 @@ internal class SnakeCaseNamingPolly : JsonNamingPolicy
 {
     public static JsonNamingPolicy SnakeCase { get; } = new SnakeCaseNamingPolly();
 
-    public override string ConvertName(string name)
-    {
-        return name.ToSnakeCase();
-    }
+    public override string ConvertName(string name) => name.ToSnakeCase();
 }

@@ -32,8 +32,5 @@ public class User : Entity<Guid>, ICreatedTime, ILastModified
 
     public DateTimeOffset LastModifiedTime { get; }
 
-    internal static User CreateNew(UserRegistrationEventData data)
-    {
-        return new(Guid.NewGuid(), data.Name, data.DisplayName, data.PasswordHash, data.EMail);
-    }
+    internal static User CreateNew(UserRegistrationEventData data) => new(Guid.NewGuid(), data.Name, data.DisplayName, data.PasswordHash, data.EMail);
 }

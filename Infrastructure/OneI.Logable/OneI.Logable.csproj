@@ -3,11 +3,11 @@
     <Import Project="../../common.props" />
 
     <PropertyGroup>
-        <TargetFramework>$(NetFramework)</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
+        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>
 
 </Project>

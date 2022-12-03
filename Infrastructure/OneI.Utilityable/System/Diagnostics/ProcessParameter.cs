@@ -7,10 +7,7 @@ using OneI;
 
 public sealed class ProcessParameter
 {
-    public ProcessParameter(string fileName)
-    {
-        FileName = CheckTools.NotNullOrWhiteSpace(fileName);
-    }
+    public ProcessParameter(string fileName) => FileName = CheckTools.NotNullOrWhiteSpace(fileName);
 
     public ProcessParameter(string fileName, string arguments)
     {

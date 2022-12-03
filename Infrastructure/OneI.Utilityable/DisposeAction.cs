@@ -9,10 +9,7 @@ public readonly struct DisposeAction : IDisposable, IAsyncDisposable
 
     public static readonly DisposeAction Nullable = new();
 
-    public DisposeAction(Action action)
-    {
-        _action = action;
-    }
+    public DisposeAction(Action action) => _action = action;
 
     public void Dispose()
     {

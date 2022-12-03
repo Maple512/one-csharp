@@ -20,6 +20,10 @@ public static class TestTools
         return Path.GetFullPath(path);
     }
 
+    /// <summary>
+    /// Ensures the directory existed.
+    /// </summary>
+    /// <param name="directory">The directory.</param>
     public static void EnsureDirectoryExisted(string directory)
     {
         if(Directory.Exists(directory) == false)

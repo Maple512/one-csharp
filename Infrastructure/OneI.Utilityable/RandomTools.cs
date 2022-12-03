@@ -7,15 +7,9 @@ using System.Security.Cryptography;
 
 public static class RandomTools
 {
-    public static int GetRandom(int minValue, int maxValue)
-    {
-        return RandomNumberGenerator.GetInt32(minValue, maxValue);
-    }
+    public static int GetRandom(int minValue, int maxValue) => RandomNumberGenerator.GetInt32(minValue, maxValue);
 
-    public static int GetRandom(int maxValue)
-    {
-        return RandomNumberGenerator.GetInt32(maxValue);
-    }
+    public static int GetRandom(int maxValue) => RandomNumberGenerator.GetInt32(maxValue);
 
     public static Span<byte> GetRandomBytes(int length)
     {

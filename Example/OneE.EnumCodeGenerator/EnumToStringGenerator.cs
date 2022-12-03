@@ -29,10 +29,7 @@ public class EnumToStringGenerator : IIncrementalGenerator
             static (spc, source) => Execute(source.Left, source.Right, spc));
     }
 
-    private static bool IsSyntaxTargetForGeneration(SyntaxNode node)
-    {
-        return node is EnumDeclarationSyntax m && m.AttributeLists.Count > 0;
-    }
+    private static bool IsSyntaxTargetForGeneration(SyntaxNode node) => node is EnumDeclarationSyntax m && m.AttributeLists.Count > 0;
 
     private static EnumDeclarationSyntax? GetSemanticTargetForGeneration(GeneratorSyntaxContext cts)
     {

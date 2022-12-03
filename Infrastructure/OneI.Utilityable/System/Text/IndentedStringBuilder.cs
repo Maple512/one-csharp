@@ -12,15 +12,9 @@ public class IndentedStringBuilder
 
     private readonly StringBuilder _stringBuilder;
 
-    public IndentedStringBuilder()
-    {
-        _stringBuilder = new();
-    }
+    public IndentedStringBuilder() => _stringBuilder = new();
 
-    public IndentedStringBuilder(int capacity)
-    {
-        _stringBuilder = new(capacity);
-    }
+    public IndentedStringBuilder(int capacity) => _stringBuilder = new(capacity);
 
     public virtual int Length => _stringBuilder.Length;
 

@@ -10,25 +10,13 @@ public static class StringExtensions
 {
     #region Check
 
-    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? str)
-    {
-        return string.IsNullOrEmpty(str);
-    }
+    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? str) => string.IsNullOrEmpty(str);
 
-    public static bool NotNullOrEmpty([NotNullWhen(true)] this string? str)
-    {
-        return string.IsNullOrEmpty(str) == false;
-    }
+    public static bool NotNullOrEmpty([NotNullWhen(true)] this string? str) => string.IsNullOrEmpty(str) == false;
 
-    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? str)
-    {
-        return string.IsNullOrWhiteSpace(str);
-    }
+    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? str) => string.IsNullOrWhiteSpace(str);
 
-    public static bool NotNullOrWhiteSpace([NotNullWhen(true)] this string? str)
-    {
-        return string.IsNullOrWhiteSpace(str) == false;
-    }
+    public static bool NotNullOrWhiteSpace([NotNullWhen(true)] this string? str) => string.IsNullOrWhiteSpace(str) == false;
 
     #endregion
 

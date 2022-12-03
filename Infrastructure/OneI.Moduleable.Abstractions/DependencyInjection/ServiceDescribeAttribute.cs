@@ -11,10 +11,7 @@ public class ServiceDescribeAttribute : Attribute
 {
     private ServiceDescribeAttribute() { }
 
-    public ServiceDescribeAttribute(ServiceLifetime lifetime)
-    {
-        Lifetime = lifetime;
-    }
+    public ServiceDescribeAttribute(ServiceLifetime lifetime) => Lifetime = lifetime;
 
     /// <summary>
     /// 默认配置

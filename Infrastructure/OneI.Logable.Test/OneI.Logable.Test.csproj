@@ -4,12 +4,10 @@
 
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Test\OneT.Common.Test\OneT.Common.Test.csproj" />
-      <ProjectReference Include="..\OneI.Logable.File\OneI.Logable.File.csproj" />
+      <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj" />
     </ItemGroup>
 
 </Project>

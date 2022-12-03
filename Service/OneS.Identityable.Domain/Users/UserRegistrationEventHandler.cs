@@ -8,10 +8,7 @@ public class UserRegistrationEventHandler : EventHandlerBase<UserRegistrationEve
 {
     private readonly IUserRepository _userRepository;
 
-    public UserRegistrationEventHandler(IUserRepository userRepository)
-    {
-        _userRepository = userRepository;
-    }
+    public UserRegistrationEventHandler(IUserRepository userRepository) => _userRepository = userRepository;
 
     public override async ValueTask HandleAsync(UserRegistrationEventData data)
     {

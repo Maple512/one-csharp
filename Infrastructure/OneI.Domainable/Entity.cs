@@ -54,10 +54,7 @@ public abstract class Entity<TKey> : Entity, IEntity<TKey>, IEqualityComparer<En
 {
     protected Entity() { }
 
-    protected Entity(TKey id)
-    {
-        Id = id;
-    }
+    protected Entity(TKey id) => Id = id;
 
     [Key]
     public virtual TKey Id { get; protected set; }
@@ -86,13 +83,7 @@ public abstract class Entity<TKey> : Entity, IEntity<TKey>, IEqualityComparer<En
 
     public bool Equals(Entity<TKey>? other) => other != null && other.Id.Equals(Id);
 
-    public override bool Equals([AllowNull] object obj)
-    {
-        return Equals(obj as Entity<TKey>);
-    }
+    public override bool Equals([AllowNull] object obj) => Equals(obj as Entity<TKey>);
 
-    public override int GetHashCode()
-    {
-        return Id.GetHashCode();
-    }
+    public override int GetHashCode() => Id.GetHashCode();
 }

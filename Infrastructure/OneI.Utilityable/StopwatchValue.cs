@@ -12,15 +12,9 @@ public readonly struct StopwatchValue
 
     public bool IsActive => _startTimestamp != 0;
 
-    private StopwatchValue(long startTimestamp)
-    {
-        _startTimestamp = startTimestamp;
-    }
+    private StopwatchValue(long startTimestamp) => _startTimestamp = startTimestamp;
 
-    public static StopwatchValue StartNew()
-    {
-        return new StopwatchValue(Stopwatch.GetTimestamp());
-    }
+    public static StopwatchValue StartNew() => new(Stopwatch.GetTimestamp());
 
     public TimeSpan GetElapsedTime()
     {

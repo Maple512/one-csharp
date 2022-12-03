@@ -1,4 +1,4 @@
-﻿namespace OneS.Identityable.Identitys;
+namespace OneS.Identityable.Identitys;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,22 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 public class IdentityController : ControllerBase
 {
     [HttpGet]
-    public IActionResult GetList()
-    {
-        return Ok();
-    }
+    public IActionResult GetList() => Ok();
 
     [HttpPost]
     [Route("register")]
-    public IActionResult Register()
-    {
-        return Ok();
-    }
+    public IActionResult Register() => Ok();
 
     [HttpPost]
     [Route("login")]
-    public IActionResult Login()
-    {
-        return Ok();
-    }
+    public IActionResult Login() => Ok();
 }

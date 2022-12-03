@@ -11,20 +11,14 @@ using System.Reflection;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly, AllowMultiple = true)]
 public class ModuleDependOnAttribute : Attribute
 {
-    public ModuleDependOnAttribute(params Type[] denpendTypes)
-    {
-        DenpendedTypes = denpendTypes;
-    }
+    public ModuleDependOnAttribute(params Type[] denpendTypes) => DenpendedTypes = denpendTypes;
 
     /// <summary>
     /// 依赖项
     /// </summary>
     public Type[] DenpendedTypes { get; }
 
-    public static IEnumerable<Type> GetAllDependedTypes(Type type)
-    {
-        return GetAllDependedTypes(type, type.Assembly);
-    }
+    public static IEnumerable<Type> GetAllDependedTypes(Type type) => GetAllDependedTypes(type, type.Assembly);
 
     public static IEnumerable<Type> GetAllDependedTypes(Type type, Assembly? assembly = null)
     {

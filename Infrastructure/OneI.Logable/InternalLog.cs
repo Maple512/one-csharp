@@ -1,33 +1,24 @@
 namespace OneI.Logable;
 
-using System;
-using System.IO;
-
+[StackTraceHidden]
+[DebuggerStepThrough]
 public static class InternalLog
 {
-    private static Action<string>? _log;
+    private static Action<string>? _writer;
 
-    public static void Enable(Action<string> log)
-    {
-        _log = log;
-    }
+    public static void Initialize(Action<string> writer) => _writer = writer;
 
-    public static void Enable(TextWriter output)
+    public static void Initialize(TextWriter writer) => _writer = (string message) =>
     {
-        Enable(x =>
-        {
-            output.WriteLine(x);
-            output.Flush();
-        });
-    }
+        writer.WriteLine(message);
 
-    public static void Disable()
-    {
-        _log = null;
-    }
+        writer.Flush();
+    };
 
-    public static void WriteLine(string format, params object[] args)
+    public static void WriteLine(string message)
     {
-        _log?.Invoke(string.Format($"{DateTimeOffset.Now:O} {format}", args));
+        Debug.Assert(_writer != null);
+
+        _writer?.Invoke(message);
     }
 }

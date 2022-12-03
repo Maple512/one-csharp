@@ -16,4 +16,9 @@
     <PackageReference Include="Shouldly" Version="4.1.0" />
   </ItemGroup>
 
+    <ItemGroup>
+        <Using Include="Shouldly" />
+        <Using Include="Xunit"/>
+    </ItemGroup>
+
 </Project>

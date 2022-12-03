@@ -18,28 +18,19 @@ public static class CheckTools
     [return: NotNull]
     public static string NotNullOrEmpty(
         string? value,
-        [CallerArgumentExpression("value")] string? argumentExpression = null)
-    {
-        return string.IsNullOrEmpty(value) ? throw new ArgumentNullException(argumentExpression) : value;
-    }
+        [CallerArgumentExpression("value")] string? argumentExpression = null) => string.IsNullOrEmpty(value) ? throw new ArgumentNullException(argumentExpression) : value;
 
     [return: NotNull]
     public static string NotNullOrWhiteSpace(
         string? value,
         string? errorMsg = null,
-        [CallerArgumentExpression("value")] string? argumentExpression = null)
-    {
-        return string.IsNullOrWhiteSpace(value) ? throw new ArgumentNullException(argumentExpression, errorMsg) : value;
-    }
+        [CallerArgumentExpression("value")] string? argumentExpression = null) => string.IsNullOrWhiteSpace(value) ? throw new ArgumentNullException(argumentExpression, errorMsg) : value;
 
     [return: NotNull]
     public static T NotNull<T>(
         T? value,
         string? errorMsg = null,
-        [CallerArgumentExpression("value")] string? argumentExpression = null)
-    {
-        return value == null ? throw new ArgumentNullException(argumentExpression, errorMsg) : value;
-    }
+        [CallerArgumentExpression("value")] string? argumentExpression = null) => value == null ? throw new ArgumentNullException(argumentExpression, errorMsg) : value;
 
     [return: NotNull]
     public static IEnumerable<T> NotNullOrEmpty<T>(

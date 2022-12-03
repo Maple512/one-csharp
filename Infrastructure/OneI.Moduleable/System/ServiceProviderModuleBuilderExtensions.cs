@@ -5,8 +5,5 @@ using OneI.Moduleable;
 
 public static class ServiceProviderModuleBuilderExtensions
 {
-    public static async ValueTask<IServiceProvider> ConfigureAsync(this IServiceProvider serviceProvider)
-    {
-        return await ModuleBuilder.ConfigureAsync(serviceProvider);
-    }
+    public static async ValueTask<IServiceProvider> ConfigureAsync(this IServiceProvider serviceProvider) => await ModuleBuilder.ConfigureAsync(serviceProvider);
 }

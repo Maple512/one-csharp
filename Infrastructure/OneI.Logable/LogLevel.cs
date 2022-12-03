@@ -1,6 +1,9 @@
 namespace OneI.Logable;
 
-public enum LogLevel : byte
+/// <summary>
+/// The log level.
+/// </summary>
+public enum LogLevel
 {
     Verbose,
 
