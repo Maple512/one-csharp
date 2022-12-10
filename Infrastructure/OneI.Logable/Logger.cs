@@ -1,16 +1,50 @@
 namespace OneI.Logable;
 
-public class Logger
+using OneI.Logable.Middlewares;
+
+public class Logger : ILogger
 {
-    internal Logger() { }
+    private readonly LoggerDelegate _process;
+    private readonly IReadOnlyList<LoggerDelegate> _writers;
 
-    public void Write(
-        LogLevel level,
-        string message,
-        [CallerMemberName] string? memberName = null,
-        [CallerFilePath] string? filePath = null,
-        [CallerLineNumber] int? lineNumber = null)
+    internal Logger(LoggerDelegate process, IReadOnlyList<LoggerDelegate> writers)
     {
+        _process = process;
+        _writers = writers;
+    }
 
+    public bool IsEnable(LogLevel level)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Write(LoggerContext context)
+    {
+        if(context is not null
+            && IsEnable(context.Level))
+        {
+            Dispatch(context);
+        }
+    }
+
+    private void Dispatch(LoggerContext context)
+    {
+        try
+        {
+            _process.Invoke(context);
+        }
+        catch(Exception)
+        {
+
+        }
+
+        foreach(var writer in _writers)
+        {
+            try
+            {
+                writer(context);
+            }
+            catch(Exception) { }
+        }
     }
 }

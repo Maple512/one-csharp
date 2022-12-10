@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Test\OneT.CodeGenerator\OneT.CodeGenerator.csproj" />
       <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj" />
     </ItemGroup>
 

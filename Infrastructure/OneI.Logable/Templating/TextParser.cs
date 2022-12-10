@@ -1,19 +1,18 @@
 namespace OneI.Logable.Templating;
 
-using System.Diagnostics.CodeAnalysis;
+using System;
 using System.Globalization;
 using OneI.Logable.Templating.Rendering;
 
 public static class TextParser
 {
-    public static IList<Token> Parse(string? text)
+    public static TextTemplate Parse(string text)
     {
-        if(string.IsNullOrEmpty(text))
-        {
-            return Array.Empty<Token>();
-        }
+        var tokens = text.IsNullOrEmpty()
+            ? Array.Empty<Token>()
+         : ParseCore(text.AsSpan());
 
-        return ParseCore(text.AsSpan());
+        return new TextTemplate(text, tokens);
     }
 
     private static IList<Token> ParseCore(ReadOnlySpan<char> text)
@@ -56,10 +55,10 @@ public static class TextParser
                         {
                             var textContent = span.Slice(closeBrace + 1, textLength);
 
-                            result.Add(new TextToken(closeBrace + 1 - propertyTotalLength, new(textContent)));
+                            result.Add(new TextToken(closeBrace + 1 - propertyTotalLength, textContent.ToString()));
                         }
 
-                        propertyToken.ResetPosition(index - propertyTotalLength - length - 1);
+                        propertyToken!.ResetPosition(index - propertyTotalLength - length - 1);
 
                         result.Add(propertyToken);
 
@@ -83,7 +82,7 @@ public static class TextParser
             {
                 var textContent = span.Slice(closeBrace + 1, index - closeBrace);
 
-                result.Add(new TextToken(closeBrace + 1 - propertyTotalLength, new(textContent)));
+                result.Add(new TextToken(closeBrace + 1 - propertyTotalLength, textContent.ToString()));
             }
         } while(++index < lastIndex + 1);
 
@@ -91,7 +90,7 @@ public static class TextParser
     }
 
     // {Date:yyyy-MM-dd,20}
-    private static bool TryParsePropertyToken(ReadOnlySpan<char> bytes, int index, [NotNullWhen(true)] out PropertyToken? token)
+    private static bool TryParsePropertyToken(ReadOnlySpan<char> bytes, int index, out PropertyToken? token)
     {
         token = null;
 
@@ -100,8 +99,8 @@ public static class TextParser
             return false;
         }
 
-        var renderType = GetPropertyRenderType(bytes[0]);
-        var startIndex = renderType.HasValue ? 2 : 1;
+        const int startIndex = 1;
+        var end = bytes.Length - 1;
 
         var formatIndex = bytes.IndexOf(LoggerConstants.Formatters.Format_Separator);
         if(formatIndex == startIndex)
@@ -123,21 +122,21 @@ public static class TextParser
         if(formatIndex == -1
             && alignIndex == -1)
         {
-            name = bytes[startIndex..^1];
+            name = bytes.Slice(startIndex, (end - startIndex));
         }// {Date:yyyy}
         else if(alignIndex == -1
             && formatIndex != -1)
         {
-            name = bytes[startIndex..formatIndex];
-            formatChars = bytes[(formatIndex + 1)..^1];
+            name = bytes.Slice(startIndex, (formatIndex - startIndex));// [startIndex..formatIndex];
+            formatChars = bytes.Slice((formatIndex + 1), (end - (formatIndex + 1)));// [(formatIndex + 1)..^1];
         }// {Data,12}
         else if(formatIndex == -1
             && alignIndex != -1)
         {
-            var align = bytes[(alignIndex + 1)..^1];
+            var align = bytes.Slice((alignIndex + 1), (end - (alignIndex + 1)));//[(alignIndex + 1)..^1];
 
             if(align.IsEmpty == false
-                    && int.TryParse(align, NumberStyles.AllowLeadingSign, System.Globalization.CultureInfo.InvariantCulture, out var width))
+                    && int.TryParse(align.ToString(), NumberStyles.AllowLeadingSign, System.Globalization.CultureInfo.InvariantCulture, out var width))
             {
                 alignment = new Alignment(width);
             }
@@ -146,16 +145,16 @@ public static class TextParser
                 return false;
             }
 
-            name = bytes[startIndex..alignIndex];
+            name = bytes.Slice(startIndex, alignIndex - 1);//[startIndex..alignIndex];
         }
         else
         {   // {Data:yyyy,12}
             if(alignIndex > formatIndex)
             {
-                var align = bytes[(alignIndex + 1)..^1];
+                var align = bytes.Slice((alignIndex + 1), (end - (alignIndex + 1)));// [(alignIndex + 1)..^1];
 
                 if(align.IsEmpty == false
-                    && int.TryParse(align, NumberStyles.AllowLeadingSign, System.Globalization.CultureInfo.InvariantCulture, out var width))
+                    && int.TryParse(align.ToString(), NumberStyles.AllowLeadingSign, System.Globalization.CultureInfo.InvariantCulture, out var width))
                 {
                     alignment = new Alignment(width);
                 }
@@ -164,15 +163,16 @@ public static class TextParser
                     return false;
                 }
 
-                formatChars = new string(bytes[(formatIndex + 1)..alignIndex]);
-                name = bytes[startIndex..formatIndex];
+                formatChars = bytes.Slice((formatIndex + 1), (alignIndex - (formatIndex + 1)));
+                name = bytes.Slice(startIndex, (formatIndex - startIndex));
             }
             else // {Data,12:yyyy}
             {
-                var align = bytes[(alignIndex + 1)..formatIndex];
+                // var align = bytes[(alignIndex + 1)..formatIndex];
+                var align = bytes.Slice((alignIndex + 1), (formatIndex - (alignIndex + 1)));
 
                 if(align.IsEmpty == false
-                    && int.TryParse(align, NumberStyles.AllowLeadingSign | NumberStyles.AllowTrailingWhite, System.Globalization.CultureInfo.InvariantCulture, out var width))
+                    && int.TryParse(align.ToString(), NumberStyles.AllowLeadingSign | NumberStyles.AllowTrailingWhite, System.Globalization.CultureInfo.InvariantCulture, out var width))
                 {
                     alignment = new Alignment(width);
                 }
@@ -181,9 +181,14 @@ public static class TextParser
                     return false;
                 }
 
-                formatChars = bytes[(formatIndex + 1)..^1];
-                name = bytes[startIndex..alignIndex];
+                formatChars = bytes.Slice((formatIndex + 1), end - (formatIndex + 1));
+                name = bytes.Slice(startIndex, (alignIndex - startIndex));
             }
+        }
+
+        if(ValidPropertyName(name) == false)
+        {
+            return false;
         }
 
         if(TryCheckFormat(formatChars, out var format) == false)
@@ -191,17 +196,25 @@ public static class TextParser
             return false;
         }
 
-        token = new PropertyToken(new(name), new(bytes), index, -1, format, alignment, renderType);
+        token = new PropertyToken(name.ToString(), bytes.ToString(), index, -1, format, alignment);
 
         return true;
     }
 
-    private static PropertyRenderType? GetPropertyRenderType(char b) => b switch
+    private static bool ValidPropertyName(ReadOnlySpan<char> name)
     {
-        LoggerConstants.Formatters.Render_As_String => PropertyRenderType.Stringification,
-        LoggerConstants.Formatters.Render_As_Structure => PropertyRenderType.Structuration,
-        _ => null,
-    };
+        for(var i = 0; i < name.Length; i++)
+        {
+            var c = name[i];
+            if(char.IsLetterOrDigit(c) == false
+                && c != '_')
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     private static bool TryCheckFormat(ReadOnlySpan<char> chars, out string? format)
     {
@@ -220,7 +233,7 @@ public static class TextParser
             }
         }
 
-        format = new string(chars);
+        format = chars.ToString();
 
         return true;
     }

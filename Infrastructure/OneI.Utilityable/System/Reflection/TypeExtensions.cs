@@ -236,7 +236,7 @@ public static class TypeExtensions
         }
         finally
         {
-            _ = stringBuilder.Clear();
+            stringBuilder.Clear();
         }
     }
 
@@ -260,7 +260,7 @@ public static class TypeExtensions
         }
         else if(_builtInTypeNames.TryGetValue(type, out var builtInName))
         {
-            _ = builder.Append(builtInName);
+            builder.Append(builtInName);
         }
         else if(!type.IsGenericParameter)
         {
@@ -269,18 +269,18 @@ public static class TypeExtensions
                 if(type.IsNested)
                 {
                     ProcessType(builder, type.DeclaringType!, fullName, isCompilable);
-                    _ = builder.Append('.');
+                    builder.Append('.');
                 }
                 else if(fullName)
                 {
-                    _ = builder.Append(type.Namespace).Append('.');
+                    builder.Append(type.Namespace).Append('.');
                 }
 
-                _ = builder.Append(type.Name);
+                builder.Append(type.Name);
             }
             else
             {
-                _ = builder.Append(fullName ? type.FullName : type.Name);
+                builder.Append(fullName ? type.FullName : type.Name);
             }
         }
     }
@@ -297,9 +297,9 @@ public static class TypeExtensions
 
         while(type.IsArray)
         {
-            _ = builder.Append('[');
-            _ = builder.Append(',', type.GetArrayRank() - 1);
-            _ = builder.Append(']');
+            builder.Append('[');
+            builder.Append(',', type.GetArrayRank() - 1);
+            builder.Append(']');
             type = type.GetElementType()!;
         }
     }
@@ -316,7 +316,7 @@ public static class TypeExtensions
             && type.GetGenericTypeDefinition() == typeof(Nullable<>))
         {
             ProcessType(builder, type.UnwrapNullableType(), fullName, isCompilable);
-            _ = builder.Append('?');
+            builder.Append('?');
             return;
         }
 
@@ -327,12 +327,12 @@ public static class TypeExtensions
             if(type.IsNested)
             {
                 ProcessType(builder, type.DeclaringType!, fullName, isCompilable);
-                _ = builder.Append('.');
+                builder.Append('.');
             }
             else if(fullName)
             {
-                _ = builder.Append(type.Namespace);
-                _ = builder.Append('.');
+                builder.Append(type.Namespace);
+                builder.Append('.');
             }
         }
         else
@@ -342,12 +342,12 @@ public static class TypeExtensions
                 if(type.IsNested)
                 {
                     ProcessGenericType(builder, type.DeclaringType!, genericArguments, offset, fullName, isCompilable);
-                    _ = builder.Append('+');
+                    builder.Append('+');
                 }
                 else
                 {
-                    _ = builder.Append(type.Namespace);
-                    _ = builder.Append('.');
+                    builder.Append(type.Namespace);
+                    builder.Append('.');
                 }
             }
         }
@@ -355,12 +355,12 @@ public static class TypeExtensions
         var genericPartIndex = type.Name.IndexOf('`');
         if(genericPartIndex <= 0)
         {
-            _ = builder.Append(type.Name);
+            builder.Append(type.Name);
             return;
         }
 
-        _ = builder.Append(type.Name, 0, genericPartIndex);
-        _ = builder.Append('<');
+        builder.Append(type.Name, 0, genericPartIndex);
+        builder.Append('<');
 
         for(var i = offset; i < length; i++)
         {
@@ -370,14 +370,14 @@ public static class TypeExtensions
                 continue;
             }
 
-            _ = builder.Append(',');
+            builder.Append(',');
             if(!genericArguments[i + 1].IsGenericParameter)
             {
-                _ = builder.Append(' ');
+                builder.Append(' ');
             }
         }
 
-        _ = builder.Append('>');
+        builder.Append('>');
     }
 
     /// <summary>

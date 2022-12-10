@@ -105,7 +105,7 @@ public static class StringExtensions
                             var c = str[i + 1];
                             if(!char.IsUpper(c) && c != separator)
                             {
-                                _ = stringBuilder.Append(separator);
+                                stringBuilder.Append(separator);
                             }
                         }
 
@@ -113,27 +113,27 @@ public static class StringExtensions
                     }
                     case SnakeCaseState.Lower:
                     case SnakeCaseState.NewWord:
-                        _ = stringBuilder.Append(separator);
+                        stringBuilder.Append(separator);
                         break;
                 }
 
                 var value = char.ToLowerInvariant(str[i]);
-                _ = stringBuilder.Append(value);
+                stringBuilder.Append(value);
                 snakeCaseState = SnakeCaseState.Upper;
             }
             else if(str[i] == separator)
             {
-                _ = stringBuilder.Append(separator);
+                stringBuilder.Append(separator);
                 snakeCaseState = SnakeCaseState.Start;
             }
             else
             {
                 if(snakeCaseState == SnakeCaseState.NewWord)
                 {
-                    _ = stringBuilder.Append(separator);
+                    stringBuilder.Append(separator);
                 }
 
-                _ = stringBuilder.Append(str[i]);
+                stringBuilder.Append(str[i]);
                 snakeCaseState = SnakeCaseState.Lower;
             }
         }

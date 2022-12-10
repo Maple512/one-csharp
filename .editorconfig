@@ -90,7 +90,7 @@ csharp_style_expression_bodied_constructors = when_on_single_line
 csharp_style_expression_bodied_indexers = when_on_single_line
 csharp_style_expression_bodied_lambdas = when_on_single_line
 csharp_style_expression_bodied_local_functions = when_on_single_line
-csharp_style_expression_bodied_methods = when_on_single_line
+csharp_style_expression_bodied_methods = false
 csharp_style_expression_bodied_operators = when_on_single_line
 csharp_style_expression_bodied_properties = when_on_single_line
 
@@ -251,3 +251,4 @@ dotnet_diagnostic.IDE0059.severity = none
 
 # IDE0200: 删除不必要的 lambda 表达式，方法重载冲突
 dotnet_diagnostic.IDE0200.severity = none
+dotnet_diagnostic.IDE0021.severity = none

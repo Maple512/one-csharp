@@ -23,7 +23,7 @@ public static class DictionaryExtensions
         TKey key,
         Func<TKey, TValue> factory)
     {
-        _ = CheckTools.NotNull(key);
+        CheckTools.NotNull(key);
 
         if(directory.TryGetValue(key, out var result))
         {

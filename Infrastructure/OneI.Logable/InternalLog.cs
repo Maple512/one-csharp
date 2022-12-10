@@ -1,6 +1,5 @@
 namespace OneI.Logable;
 
-[StackTraceHidden]
 [DebuggerStepThrough]
 public static class InternalLog
 {

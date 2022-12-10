@@ -1,8 +1,6 @@
 namespace OneT.CodeGenerator;
 
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.CompilerServices;
+using System.ComponentModel.Design;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -24,12 +22,21 @@ public class GeneratorSnapshotTest
 
         references ??= new List<MetadataReference>();
 
-        references.Add(MetadataReference.CreateFromFile(typeof(object).Assembly.Location));
+        var directory = Directory.GetCurrentDirectory();
+
+        var root = Path.GetDirectoryName(typeof(object).Assembly.Location);
+
+        references.AddRange(Directory.EnumerateFiles(directory, "*.dll")
+            .Union(Directory.EnumerateFiles(root, "*.dll"))
+            //.Append(typeof(object).Assembly.Location)
+            .Distinct()
+            .Select(x => MetadataReference.CreateFromFile(x)));
 
         // Create a Roslyn compilation for the syntax tree.
         var compilation = CSharpCompilation.Create(
             assemblyName: "Tests",
             syntaxTrees: new[] { syntaxTree },
+            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary),
             references: references);
 
         // The GeneratorDriver is used to run our generator against a compilation

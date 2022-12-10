@@ -13,14 +13,16 @@ public static class SourceCodeHelper
 
     public const string AttributeFullName = $"{AttributeNamespaceName}.{AttributeClassName}";
 
-    public const string Attribute = @"
-namespace OneE.EnumCodeGenerator
-{
-    [System.AttributeUsage(System.AttributeTargets.Enum)]
-    public class EnumExtensionsAttribute : System.Attribute
-    {
-    }
-}";
+    public const string Attribute = """
+
+        namespace OneE.EnumCodeGenerator
+        {
+            [System.AttributeUsage(System.AttributeTargets.Enum)]
+            public class EnumExtensionsAttribute : System.Attribute
+            {
+            }
+        }
+        """;
 
     public static string GenerateExtensionClass(List<EnumToGenerate> enumsToGenerate)
     {

@@ -1,6 +1,5 @@
 namespace System.Text.Json;
 
-using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 
@@ -11,7 +10,8 @@ public static class JsonSerializationTools
     /// <summary>
     /// <see cref="JsonSerializerOptions"/> 的标准实例
     /// </summary>
-    public static JsonSerializerOptions StandardInstance { get; } = new()
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JsonSerializerOptions StandardInstance() => new()
     {
         ReadCommentHandling = JsonCommentHandling.Skip,
         Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),// 解决中文乱码
@@ -23,7 +23,8 @@ public static class JsonSerializationTools
     /// <see cref="JsonSerializerOptions"/> 的实例， <see
     /// cref="JsonSerializerOptions.PropertyNamingPolicy"/> 是 <see cref="SnakeCaseNamingPolly.SnakeCase"/>
     /// </summary>
-    public static JsonSerializerOptions SnakeCaseInstance { get; } = new()
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static JsonSerializerOptions SnakeCaseInstance() => new()
     {
         ReadCommentHandling = JsonCommentHandling.Skip,
         Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),

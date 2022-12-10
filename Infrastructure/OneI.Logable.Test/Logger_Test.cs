@@ -1,14 +1,16 @@
 namespace OneI.Logable;
 
+using OneI.Logable.Fakes;
+
 public class Logger_Test
 {
     [Fact]
-    public void write_message()
+    public void simple()
     {
-        var logger = new LoggerBuilder("{Message}")
-
+        var log = new LoggerBuilder()
+            .WriteTo(new StringOutputWriter("{Timestamp:yyyy-MM-dd}{Message}"))
             .Build();
 
-        logger.Write(LogLevel.Debug, "");
+        log.Write(LogLevel.Debug, "message");
     }
 }

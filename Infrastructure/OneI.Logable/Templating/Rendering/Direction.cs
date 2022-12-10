@@ -5,5 +5,5 @@ namespace OneI.Logable.Templating.Rendering;
 /// </summary>
 public enum Direction
 {
-    Left, Right,
+    None, Left, Right,
 }

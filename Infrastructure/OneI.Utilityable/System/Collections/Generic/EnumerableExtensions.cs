@@ -1,18 +1,16 @@
 namespace System.Collections.Generic;
 
-using System;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using OneI;
 
 [StackTraceHidden]
 [DebuggerStepThrough]
 public static class EnumerableExtensions
 {
-    public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? source) => source == null || source.Any() == false;
+    public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? source)
+        => source == null || source.Any() == false;
 
-    public static bool NotNullOrEmpty<T>([NotNullWhen(true)] this IEnumerable<T>? source) => source != null && source.Any() == true;
+    public static bool NotNullOrEmpty<T>([NotNullWhen(true)] this IEnumerable<T>? source)
+        => source != null && source.Any() == true;
 
     public static string JoinAsString<T>(this IEnumerable<T> source, string separator)
     {
@@ -49,46 +47,17 @@ public static class EnumerableExtensions
         return source.Where(condition ? @true : @false);
     }
 
-    public static IEnumerable<string> FilterWhiteSpaceAndDistinct(this IEnumerable<string>? sources)
+    public static IEnumerable<string> ExcludeNullAndWriteSpace(this IEnumerable<string> sources, IEqualityComparer<string>? comparer = null)
     {
         if(sources.IsNullOrEmpty())
         {
             return Array.Empty<string>();
         }
 
-        return sources!.Where(static x => !x.IsNullOrWhiteSpace())
-            .Distinct();
-    }
+        var filtered = sources.Where(static x => x.NotNullOrWhiteSpace());
 
-    public static bool ContainAny<T>(this IEnumerable<T> source, params T[] items)
-    {
-        if(source.IsNullOrEmpty()
-            || items.Length == 0)
-        {
-            return false;
-        }
-
-        return source.Any(x => items.Contains(x));
-    }
-
-    public static bool ContainAll<T>(this IEnumerable<T> source, params T[] items)
-    {
-        if(source.IsNullOrEmpty()
-            || items.Length == 0)
-        {
-            return false;
-        }
-
-        return source.Union(items).Count() == source.Count();
-    }
-
-    public static int GetCount<T>(this IEnumerable<T> source)
-    {
-        if(source.TryGetNonEnumeratedCount(out var count))
-        {
-            return count;
-        }
-
-        return source.Count();
+        return comparer is not null
+            ? filtered
+            : filtered.Distinct(comparer);
     }
 }

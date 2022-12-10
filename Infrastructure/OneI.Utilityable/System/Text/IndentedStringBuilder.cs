@@ -8,13 +8,24 @@ public class IndentedStringBuilder
 {
     private const byte IndentSize = 4;
     private byte _indent;
+    private byte _size;
+
+    // 每一个append line都缩进，一行头一个append，其他不需要
     private bool _indentPending = true;
 
     private readonly StringBuilder _stringBuilder;
 
-    public IndentedStringBuilder() => _stringBuilder = new();
+    public IndentedStringBuilder()
+    {
+        _stringBuilder = new();
+        _size = IndentSize;
+    }
 
-    public IndentedStringBuilder(int capacity) => _stringBuilder = new(capacity);
+    public IndentedStringBuilder(int capacity, byte size = IndentSize)
+    {
+        _stringBuilder = new(capacity);
+        _size = size;
+    }
 
     public virtual int Length => _stringBuilder.Length;
 
@@ -38,19 +49,19 @@ public class IndentedStringBuilder
                 }
                 else
                 {
-                    _ = AppendLine();
+                    AppendLine();
                 }
 
                 if(line.Length != 0)
                 {
-                    _ = Append(line);
+                    Append(line);
                 }
             }
         }
 
         if(!skipFinalNewline)
         {
-            _ = AppendLine();
+            AppendLine();
         }
 
         return this;
@@ -58,7 +69,7 @@ public class IndentedStringBuilder
 
     public virtual IndentedStringBuilder AppendLine()
     {
-        _ = AppendLine(string.Empty);
+        AppendLine(string.Empty);
 
         return this;
     }
@@ -70,7 +81,7 @@ public class IndentedStringBuilder
             DoIndent();
         }
 
-        _ = _stringBuilder.AppendLine(value);
+        _stringBuilder.AppendLine(value);
 
         _indentPending = true;
 
@@ -81,7 +92,7 @@ public class IndentedStringBuilder
     {
         DoIndent();
 
-        _ = _stringBuilder.Append(value);
+        _stringBuilder.Append(value);
 
         return this;
     }
@@ -90,7 +101,7 @@ public class IndentedStringBuilder
     {
         DoIndent();
 
-        _ = _stringBuilder.Append(value);
+        _stringBuilder.Append(value);
 
         return this;
     }
@@ -102,7 +113,7 @@ public class IndentedStringBuilder
         // AppendJoin也是使用的foreach
         foreach(var value in values)
         {
-            _ = _stringBuilder.Append(value);
+            _stringBuilder.Append(value);
         }
 
         return this;
@@ -114,7 +125,7 @@ public class IndentedStringBuilder
 
         foreach(var chr in value)
         {
-            _ = _stringBuilder.Append(chr);
+            _stringBuilder.Append(chr);
         }
 
         return this;
@@ -126,7 +137,7 @@ public class IndentedStringBuilder
     /// 递减缩进
     /// </summary>
     /// <returns></returns>
-    public virtual IndentedStringBuilder IncrementIndent()
+    public virtual IndentedStringBuilder Increment()
     {
         _indent++;
 
@@ -137,7 +148,7 @@ public class IndentedStringBuilder
     /// 递增缩进
     /// </summary>
     /// <returns></returns>
-    public virtual IndentedStringBuilder DecrementIndent()
+    public virtual IndentedStringBuilder Decrement()
     {
         if(_indent > 0)
         {
@@ -149,7 +160,7 @@ public class IndentedStringBuilder
 
     public virtual IndentedStringBuilder Clear()
     {
-        _ = _stringBuilder.Clear();
+        _stringBuilder.Clear();
 
         _indent = 0;
 
@@ -164,7 +175,7 @@ public class IndentedStringBuilder
         => new Indenter(this);
 
     /// <summary>
-    /// 暂停缩进
+    /// 暂停缩进（缩进长度设置为0）
     /// </summary>
     /// <returns></returns>
     public virtual IDisposable SuspendIndent()
@@ -174,7 +185,7 @@ public class IndentedStringBuilder
     {
         if(_indentPending && _indent > 0)
         {
-            _ = _stringBuilder.Append(' ', _indent * IndentSize);
+            _stringBuilder.Append(' ', _indent * _size);
         }
 
         _indentPending = false;
@@ -204,10 +215,10 @@ public class IndentedStringBuilder
         {
             _stringBuilder = stringBuilder;
 
-            _ = _stringBuilder.IncrementIndent();
+            _stringBuilder.Increment();
         }
 
         public void Dispose()
-            => _stringBuilder.DecrementIndent();
+            => _stringBuilder.Decrement();
     }
 }

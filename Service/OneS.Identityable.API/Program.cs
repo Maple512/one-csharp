@@ -49,12 +49,17 @@ public class Program
 
             app.MapControllers();
 
-            //app.Use(async next =>
-            //{
-            //    await next();
+            app.Map()
 
-            //    return () => { };
-            //});
+            app.Run( context =>
+            {
+                return Task.CompletedTask;
+            });
+
+            app.Map("", requestDelegate: (a) =>
+            {
+                return Task.CompletedTask;
+            });
 
             app.Run();
 

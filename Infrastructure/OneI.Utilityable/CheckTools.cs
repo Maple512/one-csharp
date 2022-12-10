@@ -1,12 +1,6 @@
 namespace OneI;
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 /// <summary>
 /// 检查工具类
@@ -16,60 +10,101 @@ using System.Runtime.CompilerServices;
 public static class CheckTools
 {
     [return: NotNull]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string NotNullOrEmpty(
         string? value,
-        [CallerArgumentExpression("value")] string? argumentExpression = null) => string.IsNullOrEmpty(value) ? throw new ArgumentNullException(argumentExpression) : value;
+        [CallerArgumentExpression("value")] string? expression = null,
+        [CallerMemberName] string? memberName = null,
+        [CallerFilePath] string? filePath = null,
+        [CallerLineNumber] int? line = null)
+    {
+        return string.IsNullOrEmpty(value)
+            ? throw new ArgumentNullException(expression, ErrorMessage(memberName, filePath, line))
+            : value;
+    }
 
     [return: NotNull]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string NotNullOrWhiteSpace(
         string? value,
-        string? errorMsg = null,
-        [CallerArgumentExpression("value")] string? argumentExpression = null) => string.IsNullOrWhiteSpace(value) ? throw new ArgumentNullException(argumentExpression, errorMsg) : value;
+        [CallerArgumentExpression("value")] string? expression = null,
+        [CallerMemberName] string? memberName = null,
+        [CallerFilePath] string? filePath = null,
+        [CallerLineNumber] int? line = null)
+    {
+        return string.IsNullOrWhiteSpace(value)
+            ? throw new ArgumentNullException(expression, ErrorMessage(memberName, filePath, line))
+            : value;
+    }
 
     [return: NotNull]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T NotNull<T>(
         T? value,
-        string? errorMsg = null,
-        [CallerArgumentExpression("value")] string? argumentExpression = null) => value == null ? throw new ArgumentNullException(argumentExpression, errorMsg) : value;
+        [CallerArgumentExpression("value")] string? expression = null,
+        [CallerMemberName] string? memberName = null,
+        [CallerFilePath] string? filePath = null,
+        [CallerLineNumber] int? line = null)
+    {
+        return value==null
+            ? throw new ArgumentNullException(expression, ErrorMessage(memberName, filePath, line))
+            : value;
+    }
 
     [return: NotNull]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> NotNullOrEmpty<T>(
         IEnumerable<T>? data,
-        [CallerArgumentExpression("data")] string? argumentExpression = null)
+        [CallerArgumentExpression("data")] string? expression = null,
+        [CallerMemberName] string? memberName = null,
+        [CallerFilePath] string? filePath = null,
+        [CallerLineNumber] int? line = null)
     {
-        return data?.Any() != true
-            ? throw new ArgumentNullException(argumentExpression)
-            : data;
-    }
-
-    [return: NotNull]
-    public static Dictionary<TKey, TValue> NotNullOrEmpty<TKey, TValue>(
-        Dictionary<TKey, TValue>? data,
-        [CallerArgumentExpression("data")] string? argumentExpression = null)
-        where TKey : notnull
-    {
-        return data == null || !data.Any()
-            ? throw new ArgumentNullException(argumentExpression)
-            : data;
-    }
-
-    [Conditional("DEBUG")]
-    public static void DebugAssert(
-        [DoesNotReturnIf(false)] bool condition,
-        [CallerArgumentExpression("condition")] string? argumentExpression = null)
-    {
-        if(!condition)
+        if (data?.Any()!=true)
         {
-            throw new ArgumentException($"Check assert failed, expression: {argumentExpression}");
+            throw new ArgumentNullException(expression, ErrorMessage(memberName, filePath, line));
+        }
+        else
+        {
+            return data;
         }
     }
 
-    public static bool IsIn<T>([NotNullWhen(true)] T? item, params T[] data)
+    [return: NotNull]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Dictionary<TKey, TValue> NotNullOrEmpty<TKey, TValue>(
+        Dictionary<TKey, TValue>? data,
+        [CallerArgumentExpression("data")] string? expression = null,
+        [CallerMemberName] string? memberName = null,
+        [CallerFilePath] string? filePath = null,
+        [CallerLineNumber] int? line = null)
+        where TKey : notnull
     {
-        return item != null
-            && data.Length != 0
-            && data.Contains(item);
+        return data==null||!data.Any()
+            ? throw new ArgumentNullException(expression, ErrorMessage(memberName, filePath, line))
+            : data;
     }
+
+    public static bool IsIn<T>([NotNullWhen(true)] T? value, params T[] data)
+    {
+        if (value is null
+            ||data is { Length: 0 })
+        {
+            return false;
+        }
+
+        foreach (var item in data)
+        {
+            if (value.Equals(item))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    #region Validation
 
     /// <summary>
     /// 验证
@@ -85,7 +120,7 @@ public static class CheckTools
     {
         var result = TryValidate(instance, validateAllProperties);
 
-        if(result.IsValid)
+        if (result.IsValid)
         {
             return instance;
         }
@@ -118,6 +153,17 @@ public static class CheckTools
 
         return new ValidationResults(isValid, errors);
     }
+
+    #endregion Validation
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static string ErrorMessage(
+        string? memberName,
+        string? filePath,
+        int? lineNumber)
+    {
+        return $"Value be not null. (\"{filePath}\" L{lineNumber} \"{memberName}\")";
+    }
 }
 
 /// <summary>
@@ -127,8 +173,8 @@ public readonly ref struct ValidationResults
 {
     public ValidationResults(bool isValid, ICollection<ValidationResult> errors)
     {
-        IsValid = isValid;
-        Errors = errors;
+        IsValid=isValid;
+        Errors=errors;
     }
 
     public bool IsValid { get; }

@@ -31,6 +31,8 @@ public static class LoggerConstants
 
         public const char Render_As_Structure = '@';
 
+        public const string Render_As_Json = "j";
+
         public const char Align_Separator = ',';
 
         public const char Format_Separator = ':';
@@ -39,10 +41,8 @@ public static class LoggerConstants
 
         public const char Close_Separator = '}';
 
-        public const char Level_Upper = 'u';
+        public const string UpperCase = "u";
 
-        public const char Level_Lower = 'w';
-
-        public const char Level_Narmal = 'n';
+        public const string LowerCase = "l";
     }
 }

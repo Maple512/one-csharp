@@ -24,3 +24,5 @@
 
 ## Log
 
+
+`OutputItemType="Analyzer" ReferenceOutputAssembly="false"`

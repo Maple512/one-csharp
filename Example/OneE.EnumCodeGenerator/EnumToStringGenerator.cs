@@ -23,13 +23,15 @@ public class EnumToStringGenerator : IIncrementalGenerator
             static (s, _) => IsSyntaxTargetForGeneration(s),
             static (ctx, _) => GetSemanticTargetForGeneration(ctx));
 
-        var compilation = context.CompilationProvider.Combine(hasEnumSyntaxes.Collect());
+        var compilation = context.CompilationProvider
+            .Combine(hasEnumSyntaxes.Collect());
 
         context.RegisterSourceOutput(compilation,
             static (spc, source) => Execute(source.Left, source.Right, spc));
     }
 
-    private static bool IsSyntaxTargetForGeneration(SyntaxNode node) => node is EnumDeclarationSyntax m && m.AttributeLists.Count > 0;
+    private static bool IsSyntaxTargetForGeneration(SyntaxNode node)
+        => node is EnumDeclarationSyntax m && m.AttributeLists.Count > 0;
 
     private static EnumDeclarationSyntax? GetSemanticTargetForGeneration(GeneratorSyntaxContext cts)
     {

@@ -1,7 +1,10 @@
 namespace System.IO;
 
 using System;
+using System.ComponentModel;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using OneT.Common;
 using Xunit;
 
@@ -10,6 +13,10 @@ public class TextWriter_Test
     [Fact]
     public void writer_flush()
     {
+        Nullable<Model> a = new Model(1);
+
+        var aa = JsonSerializer.Serialize(a);
+
         var filePath = TestTools.GetFilePathWithinProject("./Logs/aaa.txt");
 
         var ms = System.IO.File.Open(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
@@ -25,5 +32,12 @@ public class TextWriter_Test
         stream.Dispose();
 
         ms.Dispose();
+    }
+
+    struct Model
+    {
+        public Model(int id) => Id = id;
+
+        public int Id { get; }
     }
 }

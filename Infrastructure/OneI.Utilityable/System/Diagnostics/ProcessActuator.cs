@@ -60,7 +60,7 @@ public class ProcessActuator
         {
             foreach(var env in paramter.EnvironmentsToRemove)
             {
-                _ = process.StartInfo.Environment.Remove(env);
+                process.StartInfo.Environment.Remove(env);
             }
         }
 
@@ -88,11 +88,11 @@ public class ProcessActuator
         {
             if(continueWithErrors && process.ExitCode != 0)
             {
-                _ = processLifetimeTask.TrySetException(new InvalidOperationException($"Command {paramter.FileName} {paramter.Arguments.JoinAsString(' ')} returned exit code: {process.ExitCode}"));
+                processLifetimeTask.TrySetException(new InvalidOperationException($"Command {paramter.FileName} {paramter.Arguments.JoinAsString(' ')} returned exit code: {process.ExitCode}"));
             }
             else
             {
-                _ = processLifetimeTask.TrySetResult(new ProcessResult(
+                processLifetimeTask.TrySetResult(new ProcessResult(
                     process.Id,
                     process.ExitCode,
                     process.TotalProcessorTime));
@@ -114,7 +114,7 @@ public class ProcessActuator
         {
             if(!_isWindows)
             {
-                _ = sys_kill(process.Id, sig: 2); // SIGINT
+                sys_kill(process.Id, sig: 2); // SIGINT
             }
             else
             {
@@ -128,7 +128,7 @@ public class ProcessActuator
             {
                 var cancel = new CancellationTokenSource();
 
-                _ = await Task.WhenAny(processLifetimeTask.Task, Task.Delay(TimeSpan.FromSeconds(5), cancel.Token));
+                await Task.WhenAny(processLifetimeTask.Task, Task.Delay(TimeSpan.FromSeconds(5), cancel.Token));
 
                 cancel.Cancel();
 

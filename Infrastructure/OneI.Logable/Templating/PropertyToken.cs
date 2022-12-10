@@ -11,14 +11,12 @@ public class PropertyToken : Token
         int index,
         int position,
         string? format,
-        Alignment? alignment = null,
-        PropertyRenderType? renderType = null) : base(position, text)
+        Alignment? alignment = null) : base(position, text)
     {
         Name = name;
         Format = format;
         Index = index;
         Alignment = alignment;
-        RenderType = renderType ?? PropertyRenderType.Stringification;
 
         if(int.TryParse(name, NumberStyles.None, CultureInfo.InvariantCulture, out var parameterIndex) &&
            parameterIndex >= 0)
@@ -34,8 +32,6 @@ public class PropertyToken : Token
     public int Index { get; }
 
     public Alignment? Alignment { get; }
-
-    public PropertyRenderType RenderType { get; }
 
     public int? ParameterIndex { get; }
 

@@ -12,7 +12,7 @@ public class TextParser_Test
     [InlineData("{Data,-56:yyyy-MM-dd}", "Data", "yyyy-MM-dd", -56)]
     public void parse_property_token(string text, string name, string format, int? width)
     {
-        var tokens = TextParser.Parse(text);
+        var tokens = TextParser.Parse(text).Tokens;
 
         tokens.Count.ShouldBe(1);
 
@@ -39,7 +39,7 @@ public class TextParser_Test
     [InlineData("{{}{}{}{}}}}}}")]
     public void parse_text_token(string text)
     {
-        var tokens = TextParser.Parse(text);
+        var tokens = TextParser.Parse(text).Tokens;
 
         tokens.OfType<TextToken>().GetCount().ShouldBe(1);
     }
@@ -51,7 +51,7 @@ public class TextParser_Test
     [InlineData("The assembly is {Assembly}{Date:yyyy年}", 1, 2)]
     public void mixed_tokens(string template, int textCount, int propertyCount)
     {
-        var tokens = TextParser.Parse(template);
+        var tokens = TextParser.Parse(template).Tokens;
 
         tokens.OfType<TextToken>().GetCount().ShouldBe(textCount);
         tokens.OfType<PropertyToken>().GetCount().ShouldBe(propertyCount);
@@ -69,7 +69,7 @@ public class TextParser_Test
     [InlineData("{Exception:yyyy,}")]
     public void invalid_property_token(string template, bool isText = true)
     {
-        var tokens = TextParser.Parse(template);
+        var tokens = TextParser.Parse(template).Tokens;
 
         if(isText)
         {
