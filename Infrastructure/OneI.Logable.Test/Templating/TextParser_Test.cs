@@ -41,7 +41,7 @@ public class TextParser_Test
     {
         var tokens = TextParser.Parse(text).Tokens;
 
-        tokens.OfType<TextToken>().GetCount().ShouldBe(1);
+        tokens.OfType<TextToken>().Count().ShouldBe(1);
     }
 
     [Theory]
@@ -53,8 +53,8 @@ public class TextParser_Test
     {
         var tokens = TextParser.Parse(template).Tokens;
 
-        tokens.OfType<TextToken>().GetCount().ShouldBe(textCount);
-        tokens.OfType<PropertyToken>().GetCount().ShouldBe(propertyCount);
+        tokens.OfType<TextToken>().Count().ShouldBe(textCount);
+        tokens.OfType<PropertyToken>().Count().ShouldBe(propertyCount);
     }
 
     [Theory]
@@ -73,11 +73,11 @@ public class TextParser_Test
 
         if(isText)
         {
-            tokens.OfType<TextToken>().GetCount().ShouldBe(1);
+            tokens.OfType<TextToken>().Count().ShouldBe(1);
         }
         else
         {
-            tokens.OfType<PropertyToken>().GetCount().ShouldBe(1);
+            tokens.OfType<PropertyToken>().Count().ShouldBe(1);
         }
     }
 }

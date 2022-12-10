@@ -1,4 +1,4 @@
-﻿namespace OneI.Logable.Middlewares;
+namespace OneI.Logable.Middlewares;
 
 using OneI.Logable.Templating.Properties;
 
@@ -9,8 +9,8 @@ public class PropertyMiddleware : ILoggerMiddleware
 
     public PropertyMiddleware(string name, PropertyValue value)
     {
-        _name=name;
-        _value=value;
+        _name = name;
+        _value = value;
     }
 
     public void Invoke(in LoggerContext context, in LoggerDelegate next)

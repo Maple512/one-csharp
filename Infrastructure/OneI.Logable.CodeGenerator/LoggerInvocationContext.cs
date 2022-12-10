@@ -12,9 +12,9 @@
 
 //    public List<ParameterDefinition> Parameties { get; }
 
-//    public Dictionary<string, string?> GenericConstraints
+//    public Dictionary<string, string?> TypeArguments
 //        => Parameties.Where(x => x.Type.IsMethodConstraints)
-//        .ToDictionary((k => k.Type.Name), v => v.Type.GenericConstraints);
+//        .ToDictionary((k => k.Type.Name), v => v.Type.TypeArguments);
 
 //    public LoggerInvocationContext AddParameter(string typeName)
 //    {
@@ -45,13 +45,13 @@
 //    {
 //        if(string.IsNullOrWhiteSpace(name) == false)
 //        {
-//            if(GenericConstraints.ContainsKey(name))
+//            if(TypeArguments.ContainsKey(name))
 //            {
-//                GenericConstraints[name] = constraint;
+//                TypeArguments[name] = constraint;
 //            }
 //            else
 //            {
-//                GenericConstraints.Add(name, constraint);
+//                TypeArguments.Add(name, constraint);
 //            }
 //        }
 
@@ -62,9 +62,9 @@
 //    {
 //        content.Append($"public static void Write");
 
-//        if(GenericConstraints.Count > 0)
+//        if(TypeArguments.Count > 0)
 //        {
-//            content.Append($"<{string.Join(", ", GenericConstraints.Keys)}>");
+//            content.Append($"<{string.Join(", ", TypeArguments.Keys)}>");
 //        }
 
 //        content.AppendLine("(");
@@ -81,7 +81,7 @@
 //            content.AppendLine(")");
 
 //            // 泛型约束
-//            foreach(var x in GenericConstraints
+//            foreach(var x in TypeArguments
 //                .Where(x => string.IsNullOrWhiteSpace(x.Value) == false))
 //            {
 //                content.AppendLine($"where {x.Key}: {x.Value}");

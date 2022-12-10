@@ -6,64 +6,33 @@ using OneI.Logable.Infrastructure;
 
 public class MethodDefinition
 {
-    public MethodDefinition()
+    public MethodDefinition(string name)
     {
+        Name = name;
         Parameters = new();
-        VariableParameters = new();
         TypeArguments = new();
-        GenericConstraints = new();
     }
 
-    public List<string> TypeArguments { get; }
+    public string Name { get; }
 
-    public Dictionary<string, string?> GenericConstraints { get; }
+    public Dictionary<string, string?> TypeArguments { get; }
 
-    public ParameterDefinition? Message { get; private set; }
+    public bool HasLevel { get; private set; }
 
-    public ParameterDefinition? Level { get; private set; }
-
-    public ParameterDefinition? Exception { get; private set; }
+    public bool HasException { get; private set; }
 
     public List<ParameterDefinition> Parameters { get; }
 
-    public List<ParameterDefinition> VariableParameters { get; }
-
-    public void AddParameter(string type, bool isException = false, bool isTypeParameter = false)
+    public void AddParameter(string type)
     {
-        var parameter = new ParameterDefinition(Parameters.Count, type, isException, isTypeParameter);
+        var parameter = new ParameterDefinition(Parameters.Count, type);
 
         Parameters.Add(parameter);
-
-        switch(parameter.Kind)
-        {
-            case ParameterKind.LogLevel:
-                if(Level is null)
-                {
-                    Level = parameter;
-                    return;
-                }
-
-                break;
-            case ParameterKind.Message:
-                if(Message is null)
-                {
-                    Message = parameter;
-                    return;
-                }
-
-                break;
-            case ParameterKind.Exception:
-                if(Exception is null)
-                {
-                    Exception = parameter;
-                    return;
-                }
-
-                break;
-        }
-
-        VariableParameters.Add(parameter);
     }
+
+    public void DefinedLevel() => HasLevel = true;
+
+    public void DefinedException() => HasException = true;
 
     /// <summary>
     /// 添加类型参数
@@ -72,27 +41,34 @@ public class MethodDefinition
     /// <param name="constraint">类型约束</param>
     public void AddTypeArgument(string type, string? constraint = null)
     {
-        TypeArguments.Add(type);
-
-        if(constraint is not null and { Length: > 0 })
-        {
-            GenericConstraints.Add(type, constraint);
-        }
+        TypeArguments.Add(type, constraint);
     }
 
     public void AppendTo(IndentedStringBuilder builder, ConcurrentDictionary<string, TypeDefinition> _types)
     {
-        builder.Append($"public static void Write");
+        builder.Append($"public static void {Name}");
 
         if(TypeArguments.Count > 0)
         {
-            builder.Append($"<{string.Join(", ", TypeArguments)}>");
+            builder.Append($"<{string.Join(", ", TypeArguments.Keys)}>");
         }
 
-        // arguments type & name
-        builder.AppendLine("(");
+        // 方法参数
+        builder.Append("(");
         using(var _ = builder.Indent())
         {
+            if(HasLevel)
+            {
+                builder.Append($"{CodeAssets.LogLevelParameterType} {CodeAssets.LogLevelParameterName}, ");
+            }
+
+            if(HasException)
+            {
+                builder.Append($"{CodeAssets.ExceptionParameterType} {CodeAssets.ExceptionParameterName}, ");
+            }
+
+            builder.Append($"{CodeAssets.MessageParameterType} {CodeAssets.MessageParameterName}, ");
+
             for(var i = 0; i < Parameters.Count; i++)
             {
                 var item = Parameters[i];
@@ -108,7 +84,7 @@ public class MethodDefinition
             builder.AppendLine(")");
 
             // 泛型约束
-            foreach(var x in GenericConstraints
+            foreach(var x in TypeArguments
                 .Where(x => string.IsNullOrWhiteSpace(x.Value) == false))
             {
                 builder.AppendLine($"where {x.Key}: {x.Value}");
@@ -120,9 +96,11 @@ public class MethodDefinition
         // body
         using(var _ = builder.Indent())
         {
-            builder.AppendLine($"var propertyValues = new global::System.Collections.Generic.List<global::OneI.Logable.Templating.Properties.PropertyValue>({VariableParameters.Count});");
+            builder.AppendLine($"var propertyValues = new global::System.Collections.Generic.List<global::OneI.Logable.Templating.Properties.PropertyValue>({Parameters.Count});");
 
-            foreach(var parameter in VariableParameters)
+            builder.AppendLine();
+
+            foreach(var parameter in Parameters)
             {
                 if(_types.TryGetValue(parameter.Type, out var type))
                 {
@@ -139,7 +117,7 @@ public class MethodDefinition
                         case TypeKindEnum.Dictionary:
                             break;
                         default:
-                            builder.AppendLine($"propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<{type}>({parameter.Name}));");
+                            builder.AppendLine($"propertyValues.Add({CodeAssets.CreatePropertyValueMethodName}({parameter.Name}));");
                             break;
                     }
                 }
@@ -151,7 +129,29 @@ public class MethodDefinition
 
             builder.AppendLine();
 
-            builder.AppendLine($"WarpMessage({Level!.Name}, {Message!.Name}, null, propertyValues);");
+            builder.Append($"WriteCore(");
+
+            if(HasLevel)
+            {
+                builder.Append($"{CodeAssets.LogLevelParameterName}, ");
+            }
+            else
+            {
+                builder.Append($"{CodeAssets.LogLevelParameterType}.{Name}, ");
+            }
+
+            if(HasException)
+            {
+                builder.Append($"{CodeAssets.ExceptionParameterName}, ");
+            }
+            else
+            {
+                builder.Append("null, ");
+            }
+
+            builder.Append($"{CodeAssets.MessageParameterName}, ");
+
+            builder.AppendLine($"propertyValues);");
         }
 
         builder.AppendLine("}");

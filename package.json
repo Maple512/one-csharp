@@ -1,9 +1,0 @@
-{
-    "scripts": {
-        "restore":"dotnet restore",
-        "test":"dotnet test",
-        "test-release":"dotnet test --no-restore -c Release",
-        "format":"dotnet format ./one.sln --no-restore -v diag",
-        "pack":"dotnet pack ./Infrastructure/OneI.Logable.CodeGenerator/OneI.Logable.CodeGenerator.csproj --no-restore -c Release -o ./packages"
-    }
-}

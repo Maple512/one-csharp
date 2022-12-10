@@ -1,10 +1,14 @@
 namespace OneI.Logable;
 
+using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using OneI.Logable.Templating;
 using OneI.Logable.Templating.Properties.ValueTypes;
 using OneT.CodeGenerator;
+using VerifyXunit;
+using Xunit;
 
 [UsesVerify]
 public class LogGenerator_Test : GeneratorSnapshotTest
@@ -30,60 +34,10 @@ public class UserController
     private void Index<T0, T1>(T0 t0, T1 t1)
         where T0 : new()
     {
+        Log.Debug("");
 
-Log.Write(LogLevel.Information, "Message", 1);
-        Log.Write(LogLevel.Debug, "Message", 3, 4, 5, 65);
-
-        object o = 1;
-        int? a = null;
-        var e = new ArgumentException("");
-        var u = new User<int>();
-        var list = new List<User<int>>();
-        var dic = new Dictionary<int, int>();
-        var func = static (int a) => "";
-
-        var tulp = (1, 2);
-
-        var array = Array.Empty<string>();
-
-        dynamic dy = 1;
-
-        Log.Write(
-            LogLevel.Information,
-            "message",
-            t0, t1,
-
-            e,
-LocalA()
-u,
-            list,
-            async () => await Task.CompletedTask,
-            LogGenerator_Test.PublicMethod111,
-            RVoid,
-            func,
-            func(1),
-            ()=>string.Empty,
-            (int i)=>string.Empty,
-            async () => await Task.FromCanceled,
-            async () => await Task.FromResult(1),
-            "message",
-            1,
-            (int?)1,
-            (byte?)1,
-            o,
-            tulp,
-            a,
-            dic,
-            array,
-            dy,
-            LocalM()
-            );
+        Log.Debug("", 1);
     }
-
-    public static int RVoid() { return 1; }
-
-    static string LocalM() => string.Empty;
-    static IEnumerable<int> LocalA() => Array.Empty<int>();
 }
 
 #nullable restore
@@ -94,31 +48,6 @@ u,
         // Pass the source code to our helper and snapshot test the output
         return Verify(source, new LoggerCodeGenerator());
     }
-
-    public static int PublicMethod111()
-    {
-        return 0;
-    }
-
-    [Fact]
-    private void serializer_json_string()
-    {
-        StructModel? m = new StructModel(1);
-
-        var result1 = JsonSerializer.Serialize(m);
-
-        var tuple = (1, 2, 3);
-        var r2 = JsonSerializer.Serialize(tuple);
-        var r3 = tuple.ToString();
-
-        var d = (dynamic)1;
-
-        var a = DynamicMethod(DynamicMethod).GetType();
-    }
-
-    private object DynamicMethod(object obj) => obj;
-
-    private record struct StructModel(int Id) { }
 
     [Fact]
     public void probable_generated_method()

@@ -1,13 +1,12 @@
 namespace OneI.Logable.Definitions;
 
-using System;
-using System.Diagnostics;
+using OneI.Logable.Infrastructure;
 
-public class TypeDefinition : IEqualityComparer<TypeDefinition>, IEquatable<TypeDefinition>
+public class TypeDefinition
 {
     private readonly List<PropertyDefinition> _properties;
     private readonly List<string> _typeArguments;
-    readonly List<string> _contraints;
+    private readonly List<string> _contraints;
 
     public TypeDefinition(string name)
         : this(name, Enumerable.Empty<string>(), Enumerable.Empty<PropertyDefinition>())
@@ -48,8 +47,6 @@ public class TypeDefinition : IEqualityComparer<TypeDefinition>, IEquatable<Type
 
     public IReadOnlyList<string?> Constraints => _contraints;
 
-    //public bool HasConstraints
-
     public bool IsGenericType { get; private set; }
 
     public TypeKindEnum Kind { get; private set; }
@@ -75,43 +72,47 @@ public class TypeDefinition : IEqualityComparer<TypeDefinition>, IEquatable<Type
     /// 添加类型的泛型约束
     /// </summary>
     /// <param name="constraint"></param>
-    public void AddConstraint(string constraint)
-    {
-        _contraints.Add(constraint);
-    }
+    public void AddConstraint(string constraint) => _contraints.Add(constraint);
 
-    public void AddProperty(PropertyDefinition property)
-    {
-        _properties.Add(property);
-    }
+    public void AddProperty(PropertyDefinition property) => _properties.Add(property);
 
     public void ResetTypeKind(TypeKindEnum kind) => Kind = kind;
 
+    public void AppendTo(IndentedStringBuilder builder)
+    {
+        builder.AppendLine($"private static global::OneI.Logable.Templating.Properties.PropertyValue {CodeAssets.CreatePropertyValueMethodName}({FullName} p)");
+
+        builder.AppendLine("{");
+
+        using (var _ = builder.Indent())
+        {
+            switch(Kind)
+            {
+                case TypeKindEnum.ValueTuple:
+                    break;
+                case TypeKindEnum.Nullable:
+                    break;
+                case TypeKindEnum.Object:
+                    break;
+                case TypeKindEnum.Enumerable:
+                    break;
+                case TypeKindEnum.Dictionary:
+                    break;
+                default:
+                    Default(builder);
+                    break;
+            }
+        }
+
+        builder.AppendLine("}");
+    }
+
     public override string ToString() => $"{FullName}";
 
-    public override int GetHashCode()
-    {
-        return (FullName, Properties).GetHashCode();
-    }
+    public override int GetHashCode() => (FullName, Properties).GetHashCode();
 
-    public override bool Equals(object obj)
+    private void Default(IndentedStringBuilder builder)
     {
-        return obj is TypeDefinition td && Equals(td, this);
-    }
-
-    public bool Equals(TypeDefinition x, TypeDefinition y)
-    {
-        return string.Equals(x.Name, y.Name, StringComparison.OrdinalIgnoreCase)
-                && x.Properties.SequenceEqual(y.Properties);
-    }
-
-    public bool Equals(TypeDefinition other)
-    {
-        return Equals(this, other);
-    }
-
-    public int GetHashCode(TypeDefinition obj)
-    {
-        return obj.GetHashCode();
+        builder.AppendLine($"return new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<{FullName}>(p);");
     }
 }

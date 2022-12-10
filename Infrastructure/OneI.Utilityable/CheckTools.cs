@@ -46,7 +46,7 @@ public static class CheckTools
         [CallerFilePath] string? filePath = null,
         [CallerLineNumber] int? line = null)
     {
-        return value==null
+        return value == null
             ? throw new ArgumentNullException(expression, ErrorMessage(memberName, filePath, line))
             : value;
     }
@@ -60,7 +60,7 @@ public static class CheckTools
         [CallerFilePath] string? filePath = null,
         [CallerLineNumber] int? line = null)
     {
-        if (data?.Any()!=true)
+        if(data?.Any() != true)
         {
             throw new ArgumentNullException(expression, ErrorMessage(memberName, filePath, line));
         }
@@ -80,22 +80,22 @@ public static class CheckTools
         [CallerLineNumber] int? line = null)
         where TKey : notnull
     {
-        return data==null||!data.Any()
+        return data == null || !data.Any()
             ? throw new ArgumentNullException(expression, ErrorMessage(memberName, filePath, line))
             : data;
     }
 
     public static bool IsIn<T>([NotNullWhen(true)] T? value, params T[] data)
     {
-        if (value is null
-            ||data is { Length: 0 })
+        if(value is null
+            || data is { Length: 0 })
         {
             return false;
         }
 
-        foreach (var item in data)
+        foreach(var item in data)
         {
-            if (value.Equals(item))
+            if(value.Equals(item))
             {
                 return true;
             }
@@ -120,7 +120,7 @@ public static class CheckTools
     {
         var result = TryValidate(instance, validateAllProperties);
 
-        if (result.IsValid)
+        if(result.IsValid)
         {
             return instance;
         }
@@ -173,8 +173,8 @@ public readonly ref struct ValidationResults
 {
     public ValidationResults(bool isValid, ICollection<ValidationResult> errors)
     {
-        IsValid=isValid;
-        Errors=errors;
+        IsValid = isValid;
+        Errors = errors;
     }
 
     public bool IsValid { get; }

@@ -19,7 +19,7 @@ public static class LevelFormatter
         if(format.IsNullOrWhiteSpace()
             || (level < LogLevel.Verbose && level > LogLevel.Fatal))
         {
-            return RenderHelper.Casing(level.ToString(), format);
+            return RenderHelper.Casing(level.ToString(), format)!;
         }
 
         int? order = null;
@@ -48,6 +48,6 @@ public static class LevelFormatter
 
         var moniker = minikers[index];
 
-        return RenderHelper.Casing(moniker, @case);
+        return RenderHelper.Casing(moniker, @case)!;
     }
 }

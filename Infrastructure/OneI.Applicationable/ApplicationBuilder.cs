@@ -17,7 +17,7 @@ public sealed class ApplicationBuilder : IApplicationBuilder
 
     private readonly IServiceFactoryAdapter _serviceProviderFactory = new ServiceFactoryAdapter<IServiceCollection>(new DefaultServiceProviderFactory());
 
-    private readonly ApplicationBuilderContext _builderContext;
+    //private readonly ApplicationBuilderContext _builderContext;
     private IServiceProvider _serviceProvider;
 
     public IApplication Build(IConfigurationRoot configuration, IServiceCollection services)

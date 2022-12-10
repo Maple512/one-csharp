@@ -18,14 +18,15 @@ public class LoggerCodeGenerator : IIncrementalGenerator
         RegisterDefinitionFiles(context);
 
         var hasEnumSyntaxes = context.SyntaxProvider.CreateSyntaxProvider(
-           static (s, _) => IsSyntaxTargetForGeneration(s),
-           static (ctx, _) => BuildInvocationContext(ctx));
+           static (s, token) => IsSyntaxTargetForGeneration(s, token),
+           static (ctx, token) => BuildInvocationContext(ctx, token));
 
         var compilation = context.CompilationProvider
             .Combine(hasEnumSyntaxes.Collect());
 
         context.RegisterSourceOutput(compilation,
-            static (spc, source) => Execute(source.Left, source.Right, spc));
+            static (spc, source)
+            => Execute(source.Left, source.Right, spc));
     }
 
     /// <summary>
@@ -36,9 +37,8 @@ public class LoggerCodeGenerator : IIncrementalGenerator
     {
         context.RegisterPostInitializationOutput(ctx =>
         {
-            ctx.AddSource(
-                CodeAssets.LogClassFileName,
-                SourceText.From(CodeAssets.LogClassContent, Encoding.UTF8));
+            ctx.AddSource(CodeAssets.LogFileName,
+                SourceText.From(CodeAssets.LogFileContent, Encoding.UTF8));
         });
     }
 
@@ -47,8 +47,10 @@ public class LoggerCodeGenerator : IIncrementalGenerator
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>
-    private static bool IsSyntaxTargetForGeneration(SyntaxNode node)
+    private static bool IsSyntaxTargetForGeneration(SyntaxNode node, CancellationToken token)
     {
+        token.ThrowIfCancellationRequested();
+
         // 调用
         if(node is InvocationExpressionSyntax invocation)
         {
@@ -61,26 +63,28 @@ public class LoggerCodeGenerator : IIncrementalGenerator
         return false;
     }
 
-    private static MethodDefinition? BuildInvocationContext(GeneratorSyntaxContext cts)
+    private static MethodDefinition? BuildInvocationContext(GeneratorSyntaxContext cts, CancellationToken token)
     {
+        token.ThrowIfCancellationRequested();
+
         var invocation = (InvocationExpressionSyntax)cts.Node;
 
-        Debug.WriteLine(invocation.ToFullString(), nameof(LoggerCodeGenerator));
+        var flag = false;
+        var method = cts.SemanticModel.GetSymbolInfo((invocation.Expression as MemberAccessExpressionSyntax)!).Symbol as IMethodSymbol;
 
-        var typeConfimded = false;
-        if(cts.SemanticModel.GetSymbolInfo((invocation.Expression as MemberAccessExpressionSyntax)!).Symbol
-            is IMethodSymbol method
-            && method is { ContainingType: not null })
+        if(method is { ContainingType: not null })
         {
+            var isParams = method.Parameters.Any(x => x.IsParams);
+
             var typename = method.ContainingType.ToDisplayString();
 
-            if(typename == CodeAssets.LogClassFullName)
+            if(typename == CodeAssets.LogClassFullName && isParams)
             {
-                typeConfimded = true;
+                flag = true;
             }
         }
 
-        if(!typeConfimded)
+        if(!flag)
         {
             var diagnostics = cts.SemanticModel.Compilation.GetDiagnostics();
 
@@ -92,7 +96,9 @@ public class LoggerCodeGenerator : IIncrementalGenerator
             return null;
         }
 
-        return InvocationParser.TryParser(invocation, cts);
+        Debug.WriteLine(invocation.ToFullString(), nameof(LoggerCodeGenerator));
+
+        return InvocationParser.TryParser(invocation, method!, cts);
     }
 
     private static void Execute(
@@ -109,6 +115,6 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
         InvocationParser.Wrap(content, methods);
 
-        context.AddSource(CodeAssets.LogImplClassFileName, SourceText.From(content.ToString(), Encoding.UTF8));
+        context.AddSource(CodeAssets.LogableExtensionsFileName, SourceText.From(content.ToString(), Encoding.UTF8));
     }
 }

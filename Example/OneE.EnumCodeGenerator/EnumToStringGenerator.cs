@@ -114,7 +114,7 @@ public class EnumToStringGenerator : IIncrementalGenerator
 
             // Get the full type name of the enum e.g. Colour, 
             // or OuterClass<T>.Colour if it was nested in a generic type (for example)
-            var enumName = enumSymbol.ToString();
+            var enumName = enumSymbol.ToString()!;
 
             // Get all the members in the enum
             var enumMembers = enumSymbol.GetMembers();

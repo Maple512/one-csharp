@@ -49,18 +49,6 @@ public class Program
 
             app.MapControllers();
 
-            app.Map()
-
-            app.Run( context =>
-            {
-                return Task.CompletedTask;
-            });
-
-            app.Map("", requestDelegate: (a) =>
-            {
-                return Task.CompletedTask;
-            });
-
             app.Run();
 
             return 0;

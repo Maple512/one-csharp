@@ -4,6 +4,7 @@
 
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
 
     <ItemGroup>

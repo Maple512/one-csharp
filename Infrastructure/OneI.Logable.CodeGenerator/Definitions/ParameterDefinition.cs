@@ -4,13 +4,14 @@ using OneI.Logable.Infrastructure;
 
 public class ParameterDefinition
 {
-    public ParameterDefinition(int index, string type, bool isException = false, bool isTypeParameter = false)
+    public ParameterDefinition(int index, string type)
+        : this(index, $"p{index}", type) { }
+
+    public ParameterDefinition(int index, string name, string type)
     {
-        Name = $"p{index}";
+        Name = name;
         Index = index;
-        Type = isTypeParameter ? type : $"global::{type}";
-        IsTypeParameter = isTypeParameter;
-        Kind = isException ? ParameterKind.Exception : ParseKind(type);
+        Type = type;
     }
 
     public string Name { get; }
@@ -19,29 +20,13 @@ public class ParameterDefinition
 
     public string Type { get; }
 
-    public ParameterKind Kind { get; }
-
-    /// <summary>
-    /// 泛型参数
-    /// </summary>
-    public bool IsTypeParameter { get; }
-
-    public override string ToString() => $"{Type} {Name}";
-
-    private static ParameterKind ParseKind(string type) => type switch
+    public override string ToString()
     {
-        "OneI.Logable.LogLevel" => ParameterKind.LogLevel,
-        "System.String" => ParameterKind.Message,
-        _ => ParameterKind.None,
-    };
+        return $"{Type} {Name}";
+    }
 
     public void AppendTo(IndentedStringBuilder builder, TypeDefinition type)
     {
 
     }
-}
-
-public enum ParameterKind
-{
-    None, LogLevel, Message, Exception
 }

@@ -110,7 +110,7 @@ internal class Application : IApplication, IDisposable, IAsyncDisposable
 
         _lifetimeService.OnApplicationStopping();
 
-        var exceptions = new List<Exception>(_applicationPipelineServices?.GetCount() ?? 0 + 1);
+        var exceptions = new List<Exception>(_applicationPipelineServices?.Count() ?? 0);
 
         if(_applicationPipelineServices is not null)
         {

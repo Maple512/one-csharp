@@ -24,7 +24,7 @@ public class GeneratorSnapshotTest
 
         var directory = Directory.GetCurrentDirectory();
 
-        var root = Path.GetDirectoryName(typeof(object).Assembly.Location);
+        var root = Path.GetDirectoryName(typeof(object).Assembly.Location)!;
 
         references.AddRange(Directory.EnumerateFiles(directory, "*.dll")
             .Union(Directory.EnumerateFiles(root, "*.dll"))

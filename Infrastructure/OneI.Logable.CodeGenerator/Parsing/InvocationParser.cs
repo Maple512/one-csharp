@@ -14,22 +14,47 @@ public static class InvocationParser
 {
     private static readonly ConcurrentDictionary<string, TypeDefinition> _types = new();
 
-    public static MethodDefinition? TryParser(InvocationExpressionSyntax invocation, GeneratorSyntaxContext cts)
+    public static MethodDefinition? TryParser(InvocationExpressionSyntax invocation, IMethodSymbol method, GeneratorSyntaxContext cts)
     {
         try
         {
-            return Parser(invocation, cts);
+            return Parser(invocation, method, cts);
         }
-        catch { return null; }
+        catch
+        {
+            return null;
+        }
     }
 
-    private static MethodDefinition Parser(InvocationExpressionSyntax invocation, GeneratorSyntaxContext cts)
+    private static MethodDefinition Parser(InvocationExpressionSyntax invocation, IMethodSymbol methodSymbol, GeneratorSyntaxContext cts)
     {
-        var method = new MethodDefinition();
+        var method = new MethodDefinition(methodSymbol.Name);
 
-        var arguments = invocation.ArgumentList.Arguments;
+        int index;
+        for(index = 0; index < methodSymbol.Parameters.Length; index++)
+        {
+            var parameter = methodSymbol.Parameters[index];
 
-        foreach(var argument in arguments)
+            if(parameter.IsParams)
+            {
+                break;
+            }
+
+            var name = parameter.Name;
+
+            var type = ParseTypeSymbol(parameter.Type);
+
+            if(name == CodeAssets.ExceptionParameterName)
+            {
+                method.DefinedException();
+            }
+            else if(name == CodeAssets.LogLevelParameterName)
+            {
+                method.DefinedLevel();
+            }
+        }
+
+        foreach(var argument in invocation.ArgumentList.Arguments.Skip(index))
         {
             var argText = argument.ToFullString();
 
@@ -44,36 +69,10 @@ public static class InvocationParser
                 method.AddTypeArgument(type.FullName, string.Join(", ", type.Constraints));
             }
 
-            var isException = IsException(symbol);
-
-            method.AddParameter(type!.FullName, isException, isTypeParameter);
+            method.AddParameter(type!.FullName);
         }
 
         return method;
-    }
-
-    private static bool IsException(ISymbol? symbol)
-    {
-        if(symbol is INamedTypeSymbol namedType)
-        {
-            if(namedType.Name == "Exception")
-            {
-                return true;
-            }
-            else if(namedType.BaseType is not null and var baseType)
-            {
-                if(baseType.Name == "Exception")
-                {
-                    return true;
-                }
-                else if(baseType.Name is not "Object")
-                {
-                    return IsException(namedType.BaseType);
-                }
-            }
-        }
-
-        return false;
     }
 
     private static TypeDefinition ParseSymbol(ISymbol? symbol, out bool isTypeParameter)
@@ -89,7 +88,7 @@ public static class InvocationParser
 
         Debug.WriteLine(symbolString, nameof(ParseSymbol));
 
-        TypeDefinition type = null;
+        TypeDefinition? type = null;
         switch(symbol)
         {
             case IFieldSymbol field:
@@ -142,7 +141,7 @@ public static class InvocationParser
         type = symbol switch
         {
             INamedTypeSymbol namedType => ParseNamedTypeSymbol(namedType),
-            IDynamicTypeSymbol dynamicType => new TypeDefinition("System.Dynamic.DynamicObject"),
+            IDynamicTypeSymbol dynamicType => new TypeDefinition(GlobalType("global::System.Object")),
             _ => throw new ArgumentException($"Unknown expression type: {symbolType}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}"),
         };
 
@@ -155,7 +154,7 @@ public static class InvocationParser
     {
         var typeName = $"{symbol.ContainingNamespace}.{symbol.Name}";
 
-        var typeDefinition = new TypeDefinition(typeName);
+        var typeDefinition = new TypeDefinition(GlobalType(typeName));
 
         if(symbol.IsGenericType)
         {
@@ -345,14 +344,14 @@ public static class InvocationParser
 
         switch(type.Name)
         {
-            case "System.Nullable":
+            case "global::System.Nullable":
                 type.ResetTypeKind(TypeKindEnum.Nullable);
                 return;
-            case "System.ValueTuple":
+            case "global::System.ValueTuple":
                 type.ResetTypeKind(TypeKindEnum.ValueTuple);
                 return;
-            case "System.Exception":
-            case "System.String":
+            case "global::System.Exception":
+            case "global::System.String":
                 return;
         }
 
@@ -398,8 +397,7 @@ public static class InvocationParser
         builder.AppendLine("#nullable enable");
         builder.AppendLine("namespace OneI.Logable;");
         builder.AppendLine();
-        builder.AppendLine("using global::System;");
-        builder.AppendLine();
+        builder.AppendLine("[global::System.Diagnostics.DebuggerStepThrough]");
         builder.AppendLine("public static partial class Log");
         builder.AppendLine("{");
 
@@ -408,7 +406,21 @@ public static class InvocationParser
             foreach(var item in methods.Where(x => x is not null))
             {
                 item!.AppendTo(builder, _types);
+
+                builder.AppendLine();
             }
+
+            builder.AppendLine("#region Create Property Values");
+            builder.AppendLine();
+
+            foreach(var item in _types)
+            {
+                item.Value.AppendTo(builder);
+
+                builder.AppendLine();
+            }
+
+            builder.AppendLine("#endregion Create Property Values");
         }
 
         builder.AppendLine("}");
@@ -434,5 +446,11 @@ public static class InvocationParser
     {
         return type.SpecialType != SpecialType.None
             || type.IsSerializable == false;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static string GlobalType(string type)
+    {
+        return $"global::{type}";
     }
 }

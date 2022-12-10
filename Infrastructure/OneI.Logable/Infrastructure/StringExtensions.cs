@@ -6,7 +6,7 @@ internal static class StringExtensions
     public static bool IsNullOrEmpty(this string? str) => string.IsNullOrEmpty(str);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool NotNullOrEmpty( this string? str) => string.IsNullOrEmpty(str) == false;
+    public static bool NotNullOrEmpty(this string? str) => string.IsNullOrEmpty(str) == false;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNullOrWhiteSpace(this string? str) => string.IsNullOrWhiteSpace(str);
