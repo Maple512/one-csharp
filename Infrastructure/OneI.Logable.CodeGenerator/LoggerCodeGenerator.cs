@@ -86,9 +86,10 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
         if(!flag)
         {
-            var diagnostics = cts.SemanticModel.Compilation.GetDiagnostics();
+            var errors = cts.SemanticModel.Compilation.GetDiagnostics()
+                .Where(x => x.Severity == DiagnosticSeverity.Error);
 
-            foreach(var item in diagnostics)
+            foreach(var item in errors)
             {
                 Debug.WriteLine(item.GetMessage(), nameof(LoggerCodeGenerator));
             }
@@ -98,7 +99,7 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
         Debug.WriteLine(invocation.ToFullString(), nameof(LoggerCodeGenerator));
 
-        return InvocationParser.TryParser(invocation, method!, cts);
+        return InvocationParser.TryParse(invocation, method!, cts);
     }
 
     private static void Execute(

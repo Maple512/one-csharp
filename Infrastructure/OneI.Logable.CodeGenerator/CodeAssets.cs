@@ -262,5 +262,5 @@ public static class CodeAssets
         #nullable restore
         """;
 
-    public const string CreatePropertyValueMethodName = "Create";
+    public const string CreateMethodName = "Create";
 }

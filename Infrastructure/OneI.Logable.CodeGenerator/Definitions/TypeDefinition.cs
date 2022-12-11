@@ -8,29 +8,18 @@ public class TypeDefinition
     private readonly List<string> _typeArguments;
     private readonly List<string> _contraints;
 
-    public TypeDefinition(string name)
-        : this(name, Enumerable.Empty<string>(), Enumerable.Empty<PropertyDefinition>())
-    {
-    }
-
     public TypeDefinition(
         string name,
-        IEnumerable<string> typeArguments,
-        IEnumerable<PropertyDefinition> properties,
+        bool isTypeArguments = false,
         TypeKindEnum kind = default)
     {
         Name = name;
         Kind = kind;
+        IsTypeArguments = isTypeArguments;
 
-        _typeArguments = typeArguments.ToList();
-        _properties = properties.ToList();
-
-        IsGenericType = _typeArguments.Count != 0;
-        FullName = IsGenericType
-            ? $"{Name}<{string.Join(", ", TypeArguments)}>"
-            : $"{Name}";
-
-        _contraints = new List<string>();
+        _typeArguments = new();
+        _properties = new();
+        _contraints = new();
     }
 
     /// <summary>
@@ -38,7 +27,7 @@ public class TypeDefinition
     /// </summary>
     public string Name { get; }
 
-    public string FullName { get; private set; }
+    public string FullName => ToDisplayString();
 
     /// <summary>
     /// 类型参数
@@ -47,7 +36,15 @@ public class TypeDefinition
 
     public IReadOnlyList<string?> Constraints => _contraints;
 
-    public bool IsGenericType { get; private set; }
+    /// <summary>
+    /// 是否泛型类型
+    /// </summary>
+    public bool IsGenericType => _typeArguments.Count != 0;
+
+    /// <summary>
+    /// 是否泛型类型参数
+    /// </summary>
+    public bool IsTypeArguments { get; }
 
     public TypeKindEnum Kind { get; private set; }
 
@@ -60,12 +57,6 @@ public class TypeDefinition
     public void AddTypeArgument(string type)
     {
         _typeArguments.Add(type);
-
-        IsGenericType = _typeArguments.Count != 0;
-
-        FullName = IsGenericType
-            ? $"{Name}<{string.Join(", ", TypeArguments)}>"
-            : $"{Name}";
     }
 
     /// <summary>
@@ -80,11 +71,11 @@ public class TypeDefinition
 
     public void AppendTo(IndentedStringBuilder builder)
     {
-        builder.AppendLine($"private static global::OneI.Logable.Templating.Properties.PropertyValue {CodeAssets.CreatePropertyValueMethodName}({FullName} p)");
+        builder.AppendLine($"private static global::OneI.Logable.Templating.Properties.PropertyValue {CodeAssets.CreateMethodName}({FullName} p)");
 
         builder.AppendLine("{");
 
-        using (var _ = builder.Indent())
+        using(var _ = builder.Indent())
         {
             switch(Kind)
             {
@@ -94,7 +85,9 @@ public class TypeDefinition
                     break;
                 case TypeKindEnum.Object:
                     break;
+                case TypeKindEnum.Array:
                 case TypeKindEnum.Enumerable:
+                    BuildEnumerable(builder);
                     break;
                 case TypeKindEnum.Dictionary:
                     break;
@@ -107,12 +100,37 @@ public class TypeDefinition
         builder.AppendLine("}");
     }
 
-    public override string ToString() => $"{FullName}";
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public string ToDisplayString()
+    {
+        var name = IsGenericType
+              ? $"{Name}<{string.Join(", ", TypeArguments)}>"
+              : $"{Name}";
 
-    public override int GetHashCode() => (FullName, Properties).GetHashCode();
+        return IsTypeArguments ? $"global::{name}" : name;
+    }
+
+    public override string ToString() => Name;
 
     private void Default(IndentedStringBuilder builder)
     {
         builder.AppendLine($"return new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<{FullName}>(p);");
+    }
+
+    private void BuildEnumerable(IndentedStringBuilder builder)
+    {
+        builder.AppendLine($"var array = new global::OneI.Logable.Templating.Properties.ValueTypes.EnumerableValue();");
+        builder.AppendLine();
+
+        builder.AppendLine($"foreach(var item in p)");
+        builder.AppendLine("{");
+        using(var _ = builder.Indent())
+        {
+            builder.AppendLine($"array.AddPropertyValue(Create(item));");
+        }
+        builder.AppendLine("}");
+        builder.AppendLine();
+
+        builder.AppendLine($"return array;");
     }
 }

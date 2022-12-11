@@ -104,22 +104,7 @@ public class MethodDefinition
             {
                 if(_types.TryGetValue(parameter.Type, out var type))
                 {
-                    switch(type.Kind)
-                    {
-                        case TypeKindEnum.ValueTuple:
-                            break;
-                        case TypeKindEnum.Nullable:
-                            break;
-                        case TypeKindEnum.Object:
-                            break;
-                        case TypeKindEnum.Enumerable:
-                            break;
-                        case TypeKindEnum.Dictionary:
-                            break;
-                        default:
-                            builder.AppendLine($"propertyValues.Add({CodeAssets.CreatePropertyValueMethodName}({parameter.Name}));");
-                            break;
-                    }
+                    builder.AppendLine($"propertyValues.Add({CodeAssets.CreateMethodName}({parameter.Name}));");
                 }
                 else
                 {

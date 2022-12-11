@@ -6,7 +6,7 @@ using VerifyXunit;
 using Xunit;
 
 [UsesVerify]
-public class EnumGeneratorSnapshotTest : GeneratorSnapshotTest
+public class EnumGeneratorSnapshotTest : CodeGeneratorSnapshotTest
 {
     [Fact]
     public Task GeneratesEnumExtensionsCorrectly()

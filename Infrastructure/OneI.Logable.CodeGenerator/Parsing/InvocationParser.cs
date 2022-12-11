@@ -14,19 +14,19 @@ public static class InvocationParser
 {
     private static readonly ConcurrentDictionary<string, TypeDefinition> _types = new();
 
-    public static MethodDefinition? TryParser(InvocationExpressionSyntax invocation, IMethodSymbol method, GeneratorSyntaxContext cts)
+    public static MethodDefinition? TryParse(InvocationExpressionSyntax invocation, IMethodSymbol method, GeneratorSyntaxContext cts)
     {
         try
         {
-            return Parser(invocation, method, cts);
+            return Parse(invocation, method, cts);
         }
-        catch
+        catch(Exception ex)
         {
-            return null;
+            throw;
         }
     }
 
-    private static MethodDefinition Parser(InvocationExpressionSyntax invocation, IMethodSymbol methodSymbol, GeneratorSyntaxContext cts)
+    private static MethodDefinition Parse(InvocationExpressionSyntax invocation, IMethodSymbol methodSymbol, GeneratorSyntaxContext cts)
     {
         var method = new MethodDefinition(methodSymbol.Name);
 
@@ -40,15 +40,13 @@ public static class InvocationParser
                 break;
             }
 
-            var name = parameter.Name;
+            var type = TypeParser.Parse(parameter.Type);
 
-            var type = ParseTypeSymbol(parameter.Type);
-
-            if(name == CodeAssets.ExceptionParameterName)
+            if(parameter.Name == CodeAssets.ExceptionParameterName)
             {
                 method.DefinedException();
             }
-            else if(name == CodeAssets.LogLevelParameterName)
+            else if(parameter.Name == CodeAssets.LogLevelParameterName)
             {
                 method.DefinedLevel();
             }
@@ -56,11 +54,7 @@ public static class InvocationParser
 
         foreach(var argument in invocation.ArgumentList.Arguments.Skip(index))
         {
-            var argText = argument.ToFullString();
-
             var symbol = TryParseExpression(argument.Expression, cts);
-
-            var symbolStr = symbol?.ToDisplayString();
 
             var type = ParseSymbol(symbol, out var isTypeParameter);
 
@@ -77,55 +71,27 @@ public static class InvocationParser
 
     private static TypeDefinition ParseSymbol(ISymbol? symbol, out bool isTypeParameter)
     {
-        isTypeParameter = symbol is ITypeParameterSymbol;
+        isTypeParameter = false;
 
         if(symbol == null)
         {
             throw new Exception();
         }
 
-        var symbolString = symbol.ToDisplayString();
-
-        Debug.WriteLine(symbolString, nameof(ParseSymbol));
-
-        TypeDefinition? type = null;
-        switch(symbol)
+        return symbol switch
         {
-            case IFieldSymbol field:
-                type = ParseTypeSymbol(field.Type);
-                break;
-            case INamedTypeSymbol named:
-                type = ParseTypeSymbol(named);
-                break;
-            case ILocalSymbol local:
-                type = ParseTypeSymbol(local.Type);
-                break;
-            case IMethodSymbol method:
-                type = ParseTypeSymbol(method.ReturnType);
-                break;
-            case IArrayTypeSymbol arrayType:
-                type = ParseTypeSymbol(arrayType.ElementType);
-                break;
-            case ITypeParameterSymbol typeParameter:
-                type = ParseTypeParameterSymbol(typeParameter);
-                isTypeParameter = true;
-                break;
-            case IPropertySymbol property:
-                type = ParseTypeSymbol(property.Type);
-                break;
-            case IDynamicTypeSymbol dynamicType:
-                type = ParseTypeSymbol(dynamicType);
-                break;
-            default:
-                throw new ArgumentException($"Unknown symbol type: {symbol.GetType().FullName}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}");
+            IFieldSymbol field => TypeParser.Parse(field.Type),
+            ILocalSymbol local => TypeParser.Parse(local.Type),
+            IMethodSymbol method => TypeParser.Parse(method.ReturnType),
+            ITypeSymbol type => TypeParser.Parse(type),
+            IPropertySymbol property => TypeParser.Parse(property.Type),
+            _ => throw new ArgumentException($"Unknown symbol type: {symbol.GetType().FullName}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}"),
         };
-
-        return type;
     }
 
-    private static TypeDefinition ParseTypeSymbol(ITypeSymbol symbol)
+    private static TypeDefinition ParseTypeSymbol(ITypeSymbol symbol, bool isArrayType = false)
     {
-        var fullName = $"{symbol.ContainingNamespace}.{symbol.Name}";
+        var fullName = $"global::{symbol.ContainingNamespace}.{symbol.Name}{(isArrayType ? "[]" : null)}";
 
         var symbolType = symbol.GetType().FullName;
         var st = symbol.SpecialType;
@@ -133,85 +99,46 @@ public static class InvocationParser
         var tk = symbol.TypeKind;
         var str = symbol.ToDisplayString();
 
-        if(TryGetTypeDefinition(fullName, out var type))
+        var s = symbol.OriginalDefinition;
+
+        var type = _types.Values.FirstOrDefault(x => x?.FullName == fullName);
+        if(type is not null)
         {
             return type!;
         }
 
-        type = symbol switch
+        if(symbol is IDynamicTypeSymbol dynamicType)
         {
-            INamedTypeSymbol namedType => ParseNamedTypeSymbol(namedType),
-            IDynamicTypeSymbol dynamicType => new TypeDefinition(GlobalType("global::System.Object")),
-            _ => throw new ArgumentException($"Unknown expression type: {symbolType}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}"),
-        };
+            return new TypeDefinition("global::System.Object");
+        }
 
-        AddTypeCache(type);
-
-        return type;
-    }
-
-    private static TypeDefinition ParseNamedTypeSymbol(INamedTypeSymbol symbol)
-    {
-        var typeName = $"{symbol.ContainingNamespace}.{symbol.Name}";
-
-        var typeDefinition = new TypeDefinition(GlobalType(typeName));
-
-        if(symbol.IsGenericType)
+        if(symbol is not INamedTypeSymbol typeSymbol)
         {
-            foreach(var item in symbol.TypeArguments)
+            throw new ArgumentException($"Unknown expression type: {symbolType}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}");
+        }
+
+        type = new TypeDefinition(fullName);
+
+        if(typeSymbol.IsGenericType)
+        {
+            foreach(var item in typeSymbol.TypeArguments)
             {
                 var ct = ParseTypeSymbol(item);
 
-                typeDefinition.AddTypeArgument(ct!.FullName);
+                type.AddTypeArgument(ct!.FullName);
             }
         }
 
-        TryParsePropeties(symbol, typeDefinition);
-
-        return typeDefinition;
-    }
-
-    /// <summary>
-    /// 解析泛型类型参数
-    /// </summary>
-    /// <param name="symbol"></param>
-    /// <returns></returns>
-    private static TypeDefinition ParseTypeParameterSymbol(ITypeParameterSymbol symbol)
-    {
-        var type = new TypeDefinition(symbol.Name);
-
-        if(symbol.HasConstructorConstraint)
+        if(isArrayType == false)
         {
-            type.AddConstraint("new()");
+            TryParsePropeties(typeSymbol, type);
+        }
+        else
+        {
+            type.ResetTypeKind(TypeKindEnum.Array);
         }
 
-        if(symbol.HasNotNullConstraint)
-        {
-            type.AddConstraint("notnull");
-        }
-
-        if(symbol.HasValueTypeConstraint)
-        {
-            type.AddConstraint("struct");
-        }
-
-        if(symbol.HasReferenceTypeConstraint)
-        {
-            type.AddConstraint("class");
-        }
-
-        if(symbol.HasUnmanagedTypeConstraint)
-        {
-            type.AddConstraint("unmanaged");
-        }
-
-        if(symbol.ConstraintTypes.IsDefaultOrEmpty == false)
-        {
-            foreach(var item in symbol.ConstraintTypes)
-            {
-                type.AddConstraint(ParseTypeSymbol(item).FullName);
-            }
-        }
+        _types.TryAdd(type.FullName, type);
 
         return type;
     }
@@ -251,6 +178,13 @@ public static class InvocationParser
             // await
             AwaitExpressionSyntax awaitExpression
             => TryParseExpression(awaitExpression.Expression, cts),
+
+            // array
+            ArrayCreationExpressionSyntax arrayCreation
+            => cts.SemanticModel.GetTypeInfo(arrayCreation).Type,
+
+            ImplicitArrayCreationExpressionSyntax implicitArrayCreation
+            => null,
 
             _ => throw new ArgumentException($"Unknown expression type: {syntax.GetType().FullName}"),
         };
@@ -436,21 +370,9 @@ public static class InvocationParser
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static void AddTypeCache(TypeDefinition type)
-    {
-        _types.TryAdd(type.FullName, type);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsTerminalType(INamedTypeSymbol type)
     {
         return type.SpecialType != SpecialType.None
             || type.IsSerializable == false;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static string GlobalType(string type)
-    {
-        return $"global::{type}";
     }
 }

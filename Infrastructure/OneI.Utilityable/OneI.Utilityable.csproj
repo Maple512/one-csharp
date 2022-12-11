@@ -3,7 +3,7 @@
   <Import Project="../../common.props" />
 
   <PropertyGroup>
-    <TargetFramework>$(NetFramework)</TargetFramework>
+    <TargetFrameworks>$(NetFramework);$(NetStandard)</TargetFrameworks>
     <RootNamespace>$(ProjectPrefix)</RootNamespace>
   </PropertyGroup>
 

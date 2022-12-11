@@ -4,7 +4,6 @@
 
     <PropertyGroup>
         <TargetFramework>$(NetStandard)</TargetFramework>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
 
     <ItemGroup>

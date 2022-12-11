@@ -12,6 +12,8 @@ public enum TypeKindEnum : byte
 
     Object,
 
+    Array,
+
     Enumerable,
 
     Dictionary,

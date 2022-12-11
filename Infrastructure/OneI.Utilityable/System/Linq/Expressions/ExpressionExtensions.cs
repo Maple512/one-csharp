@@ -1,9 +1,9 @@
 namespace System.Linq.Expressions;
 
-using System.Collections.Generic;
-using System.Diagnostics;
-
+#if NET7_0_OR_GREATER
+using System.ComponentModel.DataAnnotations;
 [StackTraceHidden]
+#endif
 [DebuggerStepThrough]
 public static class ExpressionExtensions
 {

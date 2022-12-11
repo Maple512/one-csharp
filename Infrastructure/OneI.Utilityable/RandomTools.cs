@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 
 public static class RandomTools
 {
+#if NET7_0_OR_GREATER
     public static int GetRandom(int minValue, int maxValue) => RandomNumberGenerator.GetInt32(minValue, maxValue);
 
     public static int GetRandom(int maxValue) => RandomNumberGenerator.GetInt32(maxValue);
@@ -52,4 +53,5 @@ public static class RandomTools
 
         return randomList;
     }
+#endif
 }

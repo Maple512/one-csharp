@@ -106,8 +106,11 @@ public class ProcessActuator
 
         var cancelledTcs = new TaskCompletionSource<object?>();
 
+#if NET7_0_OR_GREATER
         await using var registration = token.Register(() => cancelledTcs.TrySetResult(null));
-
+#else
+        using var registration = token.Register(() => cancelledTcs.TrySetResult(null));
+#endif
         var result = await Task.WhenAny(processLifetimeTask.Task, cancelledTcs.Task);
 
         if(result == cancelledTcs.Task)

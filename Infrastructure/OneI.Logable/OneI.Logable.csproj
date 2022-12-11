@@ -5,8 +5,13 @@
     <PropertyGroup>
         <TargetFramework>$(NetStandard)</TargetFramework>
     </PropertyGroup>
+    
     <ItemGroup>
         <PackageReference Include="System.Memory" Version="4.5.5" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>
 
 </Project>

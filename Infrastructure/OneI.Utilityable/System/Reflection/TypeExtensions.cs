@@ -3,12 +3,15 @@ namespace System.Reflection;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using OneI;
 
+#if NET7_0_OR_GREATER
+using System.Diagnostics.CodeAnalysis;
+[StackTraceHidden]
+#endif
 [DebuggerStepThrough]
 public static class TypeExtensions
 {
@@ -87,74 +90,11 @@ public static class TypeExtensions
         { typeof(void), "void" }
     };
 
-    /// <inheritdoc cref="Type.IsAssignableTo(Type?)"/>
+#if NET7_0_OR_GREATER
     public static bool IsAssignableTo<TBase>(this Type type) => type.IsAssignableTo(typeof(TBase));
-
-    /// <summary>
-    /// 判断 <typeparamref name="TBase"/> 是否 <paramref name="type"/> 的基类（包括泛型基类）
-    /// </summary>
-    /// <typeparam name="TBase"></typeparam>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static bool IsAssignableToType<TBase>(this Type type) => IsAssignableToType(type, typeof(TBase));
-
-    /// <summary>
-    /// 判断 <paramref name="baseType"/> 是否 <paramref name="type"/> 的基类（包括泛型基类）
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="baseType"></param>
-    /// <returns></returns>
-    public static bool IsAssignableToType(this Type type, Type baseType)
-    {
-        if(type.IsAssignableTo(baseType))
-        {
-            return true;
-        }
-
-        if(type.IsGenericType && type.GetGenericTypeDefinition() == baseType)
-        {
-            return true;
-        }
-
-        foreach(var interfaceType in type.GetInterfaces())
-        {
-            if(interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == baseType)
-            {
-                return true;
-            }
-        }
-
-        if(type.BaseType == null)
-        {
-            return false;
-        }
-
-        return IsAssignableToType(type.BaseType, baseType);
-    }
-
-    /// <summary>
-    /// 判断 <paramref name="baseTypes"/> 是否 <paramref name="type"/> 的基类（包括泛型基类）
-    /// </summary>
-    /// <param name="type"></param>
-    /// <param name="baseTypes"></param>
-    /// <returns></returns>
-    public static bool IsAssignableToTypes(this Type type, params Type[] baseTypes)
-    {
-        if(baseTypes.Length == 0)
-        {
-            return true;
-        }
-
-        foreach(var baseType in baseTypes)
-        {
-            if(IsAssignableToType(type, baseType))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
+#elif NETSTANDARD
+    public static bool IsAssignableTo<TBase>(this Type type) => typeof(TBase).IsAssignableFrom(type);
+#endif
 
     /// <inheritdoc cref="Type.IsAssignableFrom(Type?)"/>
     public static bool IsAssignableFrom<T>(this Type baesType) => baesType.IsAssignableFrom(typeof(T));
@@ -442,6 +382,7 @@ public static class TypeExtensions
             || type == typeof(short)
             || type == typeof(sbyte);
 
+#if NET7_0_OR_GREATER
     /// <summary>
     /// 是否匿名类型
     /// </summary>
@@ -449,20 +390,44 @@ public static class TypeExtensions
     /// <returns></returns>
     public static bool IsAnonymousType(this Type type)
         => type.Namespace == null
-            && type.Name.Contains("AnonymousType", StringComparison.Ordinal)
+            && type.Name.Contains("AnonymousType")
             && type.IsDefined(typeof(CompilerGeneratedAttribute));
+#elif NETSTANDARD
+    /// <summary>
+    /// 是否匿名类型
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static bool IsAnonymousType(this Type type)
+        => type.Namespace == null
+            && type.Name.Contains("AnonymousType")
+            && type.IsDefined(typeof(CompilerGeneratedAttribute));
+#endif
+
 
     #endregion Type
 
     #region Constructor
 
-    /// <summary>
+#if NET7_0_OR_GREATER
+/// <summary>
     /// 尝试获取无参构造器
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
     public static bool TryGetParameterlessConstructor(this Type type, [NotNullWhen(true)] out ConstructorInfo? constructor)
-        => (constructor = type.GetTypeInfo().DeclaredConstructors.FirstOrDefault(x => x.GetParameters().IsNullOrEmpty())) != null;
+        => (constructor = type.GetTypeInfo().DeclaredConstructors
+        .FirstOrDefault(x => x.GetParameters().IsNullOrEmpty())) != null;
+#elif NETSTANDARD
+    /// <summary>
+    /// 尝试获取无参构造器
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static bool TryGetParameterlessConstructor(this Type type, out ConstructorInfo? constructor)
+        => (constructor = type.GetTypeInfo().DeclaredConstructors
+        .FirstOrDefault(x => x.GetParameters().IsNullOrEmpty())) != null;
+#endif
 
     #endregion Constructor
 }

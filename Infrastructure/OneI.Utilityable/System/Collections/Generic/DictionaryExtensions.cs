@@ -1,10 +1,11 @@
 namespace System.Collections.Generic;
 
-using System;
-using System.Diagnostics;
 using OneI;
 
+#if NET7_0_OR_GREATER
+using System.Diagnostics.CodeAnalysis;
 [StackTraceHidden]
+#endif
 [DebuggerStepThrough]
 public static class DictionaryExtensions
 {
@@ -39,4 +40,19 @@ public static class DictionaryExtensions
             ? obj
             : default;
     }
+
+#if NETSTANDARD
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
+    {
+        if(dict.ContainsKey(key))
+        {
+            return false;
+        }
+
+        dict.Add(key, value);
+
+        return true;
+    }
+#endif
 }

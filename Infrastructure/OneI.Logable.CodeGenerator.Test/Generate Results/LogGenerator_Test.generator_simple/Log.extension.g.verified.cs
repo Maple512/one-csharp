@@ -6,26 +6,35 @@ namespace OneI.Logable;
 [global::System.Diagnostics.DebuggerStepThrough]
 public static partial class Log
 {
-    public static void Debug(global::System.String message, global::System.Int32 p0)
+    public static void Debug(global::System.String message, System.Object p0, System.Object p1, Tests.UserType p2, Tests.UserType p3, Tests.Handlers p4, System.Decimal p5, System.Int32 p6, System.Boolean p7, System.Boolean p8, System.Char p9, System.Char p10, System.SByte p11, System.SByte p12, System.Object[] p13, System.Object[] p14, System.Collections.BitArray p15, System.Collections.BitArray p16, System.Collections.Generic.List p17, System.Collections.Generic.List p18, System.ValueTuple p19)
     {
-        var propertyValues = new global::System.Collections.Generic.List<global::OneI.Logable.Templating.Properties.PropertyValue>(1);
+        var propertyValues = new global::System.Collections.Generic.List<global::OneI.Logable.Templating.Properties.PropertyValue>(20);
 
-        propertyValues.Add(Create(p0));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Object>(p0));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Object>(p1));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<Tests.UserType>(p2));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<Tests.UserType>(p3));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<Tests.Handlers>(p4));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Decimal>(p5));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Int32>(p6));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Boolean>(p7));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Boolean>(p8));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Char>(p9));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Char>(p10));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.SByte>(p11));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.SByte>(p12));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Object[]>(p13));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Object[]>(p14));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Collections.BitArray>(p15));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Collections.BitArray>(p16));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Collections.Generic.List>(p17));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.Collections.Generic.List>(p18));
+        propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<System.ValueTuple>(p19));
 
         WriteCore(global::OneI.Logable.LogLevel.Debug, null, message, propertyValues);
     }
 
     #region Create Property Values
-
-    private static global::OneI.Logable.Templating.Properties.PropertyValue Create(global::System.String p)
-    {
-        return new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<global::System.String>(p);
-    }
-
-    private static global::OneI.Logable.Templating.Properties.PropertyValue Create(global::System.Int32 p)
-    {
-        return new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<global::System.Int32>(p);
-    }
 
     #endregion Create Property Values
 }

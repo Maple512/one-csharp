@@ -1,9 +1,9 @@
 namespace OneI;
 
-using System;
-using System.Threading.Tasks;
-
-public readonly struct DisposeAction : IDisposable, IAsyncDisposable
+public readonly struct DisposeAction : IDisposable
+#if NET7_0_OR_GREATER
+    , IAsyncDisposable
+#endif
 {
     private readonly Action? _action;
 
@@ -17,7 +17,7 @@ public readonly struct DisposeAction : IDisposable, IAsyncDisposable
 
         GC.SuppressFinalize(this);
     }
-
+    #if NET7_0_OR_GREATER
     public ValueTask DisposeAsync()
     {
         _action?.Invoke();
@@ -26,5 +26,5 @@ public readonly struct DisposeAction : IDisposable, IAsyncDisposable
 
         return ValueTask.CompletedTask;
     }
+    #endif
 }
-
