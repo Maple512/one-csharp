@@ -2,6 +2,10 @@ namespace OneI.Logable.Templating.Properties.ValueTypes;
 
 using OneI.Logable.Templating.Rendering;
 
+/// <summary>
+/// The literal value.
+/// </summary>
+/// <typeparam name="T"></typeparam>
 public class LiteralValue<T> : PropertyValue
 {
     public LiteralValue(T? value)

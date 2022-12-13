@@ -8,12 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using OneI;
 
-#if NET7_0_OR_GREATER
-using System.Diagnostics.CodeAnalysis;
-[StackTraceHidden]
-#endif
 [DebuggerStepThrough]
-public static class TypeExtensions
+public static partial class TypeExtensions
 {
     public const BindingFlags StaticBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -26,7 +22,7 @@ public static class TypeExtensions
     {
         var attribute = type.GetCustomAttribute<T>();
 
-        return CheckTools.NotNull(attribute, $"Could not find attribute '{typeof(T)}' on type '{type}'");
+        return Check.NotNull(attribute, $"Could not find attribute '{typeof(T)}' on type '{type}'");
     }
 
     #endregion Attribute
@@ -60,7 +56,7 @@ public static class TypeExtensions
     {
         var method = type.GetTypeInfo().GetDeclaredMethod(name);
 
-        return CheckTools.NotNull(method, $"Could not find method '{name}' on type '{type}'");
+        return Check.NotNull(method, $"Could not find method '{name}' on type '{type}'");
     }
 
     #endregion Method
@@ -89,12 +85,6 @@ public static class TypeExtensions
         { typeof(ushort), "ushort" },
         { typeof(void), "void" }
     };
-
-#if NET7_0_OR_GREATER
-    public static bool IsAssignableTo<TBase>(this Type type) => type.IsAssignableTo(typeof(TBase));
-#elif NETSTANDARD
-    public static bool IsAssignableTo<TBase>(this Type type) => typeof(TBase).IsAssignableFrom(type);
-#endif
 
     /// <inheritdoc cref="Type.IsAssignableFrom(Type?)"/>
     public static bool IsAssignableFrom<T>(this Type baesType) => baesType.IsAssignableFrom(typeof(T));
@@ -382,35 +372,12 @@ public static class TypeExtensions
             || type == typeof(short)
             || type == typeof(sbyte);
 
-#if NET7_0_OR_GREATER
-    /// <summary>
-    /// 是否匿名类型
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static bool IsAnonymousType(this Type type)
-        => type.Namespace == null
-            && type.Name.Contains("AnonymousType")
-            && type.IsDefined(typeof(CompilerGeneratedAttribute));
-#elif NETSTANDARD
-    /// <summary>
-    /// 是否匿名类型
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static bool IsAnonymousType(this Type type)
-        => type.Namespace == null
-            && type.Name.Contains("AnonymousType")
-            && type.IsDefined(typeof(CompilerGeneratedAttribute));
-#endif
-
-
     #endregion Type
 
     #region Constructor
 
 #if NET7_0_OR_GREATER
-/// <summary>
+    /// <summary>
     /// 尝试获取无参构造器
     /// </summary>
     /// <param name="type"></param>
@@ -431,3 +398,37 @@ public static class TypeExtensions
 
     #endregion Constructor
 }
+
+#if NET7_0_OR_GREATER
+[StackTraceHidden]
+public static partial class TypeExtensions
+{
+    public static bool IsAssignableTo<TBase>(this Type type) => type.IsAssignableTo(typeof(TBase));
+
+    /// <summary>
+    /// 是否匿名类型
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static bool IsAnonymousType(this Type type)
+        => type.Namespace == null
+            && type.Name.Contains("AnonymousType")
+            && type.IsDefined(typeof(CompilerGeneratedAttribute));
+}
+#elif NETSTANDARD
+
+public static partial class TypeExtensions
+{
+    public static bool IsAssignableTo<TBase>(this Type type) => typeof(TBase).IsAssignableFrom(type);
+
+    /// <summary>
+    /// 是否匿名类型
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static bool IsAnonymousType(this Type type)
+        => type.Namespace == null
+            && type.Name.Contains("AnonymousType")
+            && type.IsDefined(typeof(CompilerGeneratedAttribute));
+}
+#endif

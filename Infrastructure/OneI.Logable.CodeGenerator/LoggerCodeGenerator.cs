@@ -7,8 +7,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using OneI.Logable.Definitions;
-using OneI.Logable.Infrastructure;
-using OneI.Logable.Parsing;
 
 [Generator]
 public class LoggerCodeGenerator : IIncrementalGenerator
@@ -63,7 +61,7 @@ public class LoggerCodeGenerator : IIncrementalGenerator
         return false;
     }
 
-    private static MethodDefinition? BuildInvocationContext(GeneratorSyntaxContext cts, CancellationToken token)
+    private static MethodDef? BuildInvocationContext(GeneratorSyntaxContext cts, CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
 
@@ -91,7 +89,7 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
             foreach(var item in errors)
             {
-                Debug.WriteLine(item.GetMessage(), nameof(LoggerCodeGenerator));
+                Debug.WriteLine($"{item.GetMessage()} {item.Location}", nameof(LoggerCodeGenerator));
             }
 
             return null;
@@ -99,12 +97,12 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
         Debug.WriteLine(invocation.ToFullString(), nameof(LoggerCodeGenerator));
 
-        return InvocationParser.TryParse(invocation, method!, cts);
+        return InvocationExpressionParser.TryParse(invocation, method!, cts);
     }
 
     private static void Execute(
         Compilation compilation,
-        ImmutableArray<MethodDefinition?> methods,
+        ImmutableArray<MethodDef?> methods,
         SourceProductionContext context)
     {
         if(methods.IsDefaultOrEmpty)
@@ -112,10 +110,8 @@ public class LoggerCodeGenerator : IIncrementalGenerator
             return;
         }
 
-        var content = new IndentedStringBuilder();
+        var source = CodePrinter.Print(methods);
 
-        InvocationParser.Wrap(content, methods);
-
-        context.AddSource(CodeAssets.LogableExtensionsFileName, SourceText.From(content.ToString(), Encoding.UTF8));
+        context.AddSource(CodeAssets.LogableExtensionsFileName, source);
     }
 }

@@ -28,7 +28,7 @@ public class TextTemplate
         token = propertyTokens.FirstOrDefault(x => x.ParameterIndex == index);
 
         if(token is null
-            && propertyTokens.Count() > (index + 1))
+            && propertyTokens.Count() > index + 1)
         {
             token = propertyTokens.ElementAt(index);
         }

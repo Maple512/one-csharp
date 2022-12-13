@@ -12,9 +12,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Using Include="System.Collections.Concurrent"/>
         <Using Include="System.Diagnostics" />
         <Using Include="System.Diagnostics.CodeAnalysis"/>
         <Using Include="System.Runtime.CompilerServices"/>
+        <Using Include="System.Text"/>
     </ItemGroup>
 
     <!--Root Namespace-->
@@ -61,7 +63,7 @@
 
     <!--github action-->
     <PropertyGroup>
-        <DefineConstants Condition=" '$(GITHUB_ACTIONS)' != 'true' ">NO_GITHUB_ACTIONS</DefineConstants>
+        <DefineConstants Condition=" '$(GITHUB_ACTIONS)' != 'true' ">$(DefineConstants);NO_GITHUB_ACTIONS</DefineConstants>
     </PropertyGroup>
 
 </Project>

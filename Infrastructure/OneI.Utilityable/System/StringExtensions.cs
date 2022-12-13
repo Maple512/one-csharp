@@ -1,16 +1,26 @@
 namespace System;
 
-using System.Diagnostics;
 using System.Text;
 
-#if NET7_0_OR_GREATER
-using System.Diagnostics.CodeAnalysis;
-[StackTraceHidden]
-#endif
 [DebuggerStepThrough]
-public static class StringExtensions
+public static partial class StringExtensions
 {
+    /// <summary>
+    /// The snake case state.
+    /// </summary>
+    private enum SnakeCaseState
+    {
+        Start,
+        Lower,
+        Upper,
+        NewWord,
+    }
+}
+
 #if NET7_0_OR_GREATER
+[StackTraceHidden]
+public static partial class StringExtensions
+{
     #region Check
 
     /// <summary>
@@ -165,8 +175,11 @@ public static class StringExtensions
     }
 
     #endregion char case
+}
 #elif NETSTANDARD
-    #region Check
+public static partial class StringExtensions
+{
+#region Check
 
     /// <summary>
     /// Is null or empty.
@@ -196,9 +209,9 @@ public static class StringExtensions
     /// <returns>A bool.</returns>
     public static bool NotNullOrWhiteSpace(this string? str) => string.IsNullOrWhiteSpace(str) == false;
 
-    #endregion
+#endregion
 
-    #region char case
+#region char case
 
     /// <summary>
     /// 转驼峰命名（首字符转小写，其余不变）
@@ -317,17 +330,6 @@ public static class StringExtensions
         return stringBuilder.ToString();
     }
 
-    #endregion char case
-#endif
-
-    /// <summary>
-    /// The snake case state.
-    /// </summary>
-    private enum SnakeCaseState
-    {
-        Start,
-        Lower,
-        Upper,
-        NewWord,
-    }
+#endregion char case
 }
+#endif

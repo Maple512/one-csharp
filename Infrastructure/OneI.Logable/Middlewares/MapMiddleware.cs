@@ -2,8 +2,8 @@ namespace OneI.Logable.Middlewares;
 
 public class MapMiddleware : ILoggerMiddleware
 {
-    readonly LoggerDelegate _branch;
-    readonly Func<LoggerContext, bool> _condition;
+    private readonly LoggerDelegate _branch;
+    private readonly Func<LoggerContext, bool> _condition;
 
     public MapMiddleware(LoggerDelegate branch, Func<LoggerContext, bool> condition)
     {

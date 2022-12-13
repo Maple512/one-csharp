@@ -4,8 +4,8 @@ using OneI.Logable.Templating.Properties;
 
 public class PropertyMiddleware : ILoggerMiddleware
 {
-    readonly string _name;
-    readonly PropertyValue _value;
+    private readonly string _name;
+    private readonly PropertyValue _value;
 
     public PropertyMiddleware(string name, PropertyValue value)
     {

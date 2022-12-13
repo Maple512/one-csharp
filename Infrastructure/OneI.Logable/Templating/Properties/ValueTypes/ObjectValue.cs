@@ -1,23 +1,24 @@
 namespace OneI.Logable.Templating.Properties.ValueTypes;
 
+/// <summary>
+/// The object value.
+/// </summary>
 public class ObjectValue : PropertyValue
 {
-    const string _type = "$type";
-
     private readonly List<Property> _values;
 
-    public ObjectValue(string originalType)
+    public ObjectValue()
     {
-        OriginalType = originalType;
         _values = new();
     }
 
-    /// <summary>
-    /// 原始的类型
-    /// </summary>
-    public string OriginalType { get; }
-
-    public IReadOnlyList<Property> Properties => _values;
+    public IReadOnlyList<Property> Properties
+    {
+        get
+        {
+            return _values;
+        }
+    }
 
     public override void Render(TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
     {
@@ -29,12 +30,10 @@ public class ObjectValue : PropertyValue
 
             Render(writer, property, format, formatProvider);
 
-            writer.Write(", ");
-        }
-
-        if(OriginalType.NotNullOrWhiteSpace())
-        {
-            Render(writer, new Property(_type, new LiteralValue<string>(OriginalType)), format, formatProvider);
+            if(i < count - 1)
+            {
+                writer.Write(", ");
+            }
         }
 
         writer.Write(" }");
@@ -46,6 +45,11 @@ public class ObjectValue : PropertyValue
         new LiteralValue<string>(property.Name).Render(writer);
         writer.Write(": ");
         property.Value.Render(writer, format, formatProvider);
+    }
+
+    public void AddProperty(string name, PropertyValue property)
+    {
+        _values.Add(new Property(name, property));
     }
 
     public void AddProperty(Property property)

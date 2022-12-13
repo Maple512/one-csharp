@@ -2,16 +2,12 @@ namespace System.Collections.Generic;
 
 using OneI;
 
-#if NET7_0_OR_GREATER
-using System.Diagnostics.CodeAnalysis;
-[StackTraceHidden]
-#endif
 [DebuggerStepThrough]
-public static class CollectionExtensions
+public static partial class CollectionExtensions
 {
     public static void AddIfNotContains<T>(this ICollection<T> source, T item)
     {
-        CheckTools.NotNull(source);
+        Check.NotNull(source);
 
         if(!source.Contains(item))
         {
@@ -21,7 +17,7 @@ public static class CollectionExtensions
 
     public static void AddIfNotContains<T>(this ICollection<T> source, IEnumerable<T> items)
     {
-        CheckTools.NotNull(source);
+        Check.NotNull(source);
 
         foreach(var item in items)
         {
@@ -44,3 +40,11 @@ public static class CollectionExtensions
         return items;
     }
 }
+
+#if NET7_0_OR_GREATER
+[StackTraceHidden]
+public static partial class CollectionExtensions
+{
+
+}
+#endif

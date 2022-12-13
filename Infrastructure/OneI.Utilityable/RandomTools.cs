@@ -23,21 +23,21 @@ public static class RandomTools
 
     public static T GetRandomOf<T>(params T[] objs)
     {
-        CheckTools.NotNullOrEmpty(objs);
+        Check.NotNullOrEmpty(objs);
 
         return objs[GetRandom(0, objs.Length)];
     }
 
     public static T GetRandomOfList<T>(IEnumerable<T> list)
     {
-        CheckTools.NotNullOrEmpty(list);
+        Check.NotNullOrEmpty(list);
 
         return list.ElementAt(GetRandom(0, list.Count()));
     }
 
     public static List<T> GenerateRandomizedList<T>(IEnumerable<T> items)
     {
-        CheckTools.NotNull(items);
+        Check.NotNull(items);
 
         var currentList = new List<T>(items);
         var randomList = new List<T>();

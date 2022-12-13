@@ -17,8 +17,5 @@ public abstract class PropertyValue : IFormattable
 
     public override string ToString() => ToString(null, null);
 
-    public static PropertyValue Create<TType>(TType type)
-    {
-        return new LiteralValue<TType>(type);
-    }
+    public static PropertyValue Create<TType>(TType type) => new LiteralValue<TType>(type);
 }

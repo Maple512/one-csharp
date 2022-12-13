@@ -37,8 +37,5 @@ public static class PropertiesFormatter
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IncludePropertyName(TextTemplate template, string propertyName)
-    {
-        return template.Tokens.OfType<PropertyToken>().Any(x => x.Name == propertyName);
-    }
+    private static bool IncludePropertyName(TextTemplate template, string propertyName) => template.Tokens.OfType<PropertyToken>().Any(x => x.Name == propertyName);
 }

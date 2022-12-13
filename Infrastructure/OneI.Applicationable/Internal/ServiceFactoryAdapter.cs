@@ -13,15 +13,15 @@ internal sealed class ServiceFactoryAdapter<TContainerBuilder>
     private readonly Func<ApplicationBuilderContext>? _contextResolver;
     private readonly Func<ApplicationBuilderContext, IServiceProviderFactory<TContainerBuilder>>? _factoryResolver;
 
-    public ServiceFactoryAdapter(IServiceProviderFactory<TContainerBuilder> serviceProviderFactory) => _serviceProviderFactory = CheckTools.NotNull(serviceProviderFactory);
+    public ServiceFactoryAdapter(IServiceProviderFactory<TContainerBuilder> serviceProviderFactory) => _serviceProviderFactory = Check.NotNull(serviceProviderFactory);
 
     public ServiceFactoryAdapter(
         Func<ApplicationBuilderContext> contextResolver,
         Func<ApplicationBuilderContext, IServiceProviderFactory<TContainerBuilder>> factoryResolver)
     {
-        _contextResolver = CheckTools.NotNull(contextResolver);
+        _contextResolver = Check.NotNull(contextResolver);
 
-        _factoryResolver = CheckTools.NotNull(factoryResolver);
+        _factoryResolver = Check.NotNull(factoryResolver);
     }
 
     public object CreateBuilder(IServiceCollection services)

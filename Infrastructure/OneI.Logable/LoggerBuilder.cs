@@ -1,7 +1,6 @@
 namespace OneI.Logable;
 
 using OneI.Logable.Middlewares;
-using OneI.Logable.Templating.Properties;
 
 public class LoggerBuilder
 {
@@ -88,8 +87,8 @@ public class LoggerBuilder
     /// <returns></returns>
     public LoggerBuilder NewWhen(Func<LoggerContext, bool> condition, Action<LoggerBuilder> configuration)
     {
-        CheckTools.NotNull(condition);
-        CheckTools.NotNull(configuration);
+        Check.NotNull(condition);
+        Check.NotNull(configuration);
 
         var builder = New();
 
@@ -146,15 +145,9 @@ public class LoggerBuilder
 
     #endregion Write To
 
-    public Logger Build()
-    {
-        return new(PackageComponents(), _writers);
-    }
+    public Logger Build() => new(PackageComponents(), _writers);
 
-    private void End(LoggerDelegate handler)
-    {
-        Use(_ => handler);
-    }
+    private void End(LoggerDelegate handler) => Use(_ => handler);
 
     private LoggerDelegate PackageComponents()
     {

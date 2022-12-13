@@ -24,7 +24,7 @@ public static class DictionaryExtensions
         TKey key,
         Func<TKey, TValue> factory)
     {
-        CheckTools.NotNull(key);
+        Check.NotNull(key);
 
         if(directory.TryGetValue(key, out var result))
         {
@@ -40,19 +40,4 @@ public static class DictionaryExtensions
             ? obj
             : default;
     }
-
-#if NETSTANDARD
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryAdd<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue value)
-    {
-        if(dict.ContainsKey(key))
-        {
-            return false;
-        }
-
-        dict.Add(key, value);
-
-        return true;
-    }
-#endif
 }

@@ -1,7 +1,6 @@
 namespace System.Linq.Expressions;
 
 #if NET7_0_OR_GREATER
-using System.ComponentModel.DataAnnotations;
 [StackTraceHidden]
 #endif
 [DebuggerStepThrough]

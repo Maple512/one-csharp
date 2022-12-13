@@ -1,10 +1,8 @@
 namespace System.IO;
 
 using System;
-using System.ComponentModel;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using OneT.Common;
 using Xunit;
 
@@ -34,7 +32,7 @@ public class TextWriter_Test
         ms.Dispose();
     }
 
-    struct Model
+    private readonly struct Model
     {
         public Model(int id) => Id = id;
 

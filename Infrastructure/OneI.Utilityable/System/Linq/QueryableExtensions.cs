@@ -23,7 +23,7 @@ public static class QueryableExtensions
         int offset,
         int takeCount)
     {
-        CheckTools.NotNull(query);
+        Check.NotNull(query);
 
         return query.Skip(offset).Take(takeCount);
     }
@@ -33,7 +33,7 @@ public static class QueryableExtensions
         bool condition,
         Expression<Func<T, bool>> predicate)
     {
-        CheckTools.NotNull(source);
+        Check.NotNull(source);
 
         return condition ? source.Where(predicate) : source;
     }
@@ -43,7 +43,7 @@ public static class QueryableExtensions
         bool condition,
         Expression<Func<T, int, bool>> predicate)
     {
-        CheckTools.NotNull(source);
+        Check.NotNull(source);
 
         return condition ? source.Where(predicate) : source;
     }
@@ -54,7 +54,7 @@ public static class QueryableExtensions
         Expression<Func<T, bool>> @true,
         Expression<Func<T, bool>> @false)
     {
-        CheckTools.NotNull(source);
+        Check.NotNull(source);
 
         return source.Where(condition ? @true : @false);
     }
@@ -65,7 +65,7 @@ public static class QueryableExtensions
         Expression<Func<T, int, bool>> @true,
         Expression<Func<T, int, bool>> @false)
     {
-        CheckTools.NotNull(source);
+        Check.NotNull(source);
 
         return source.Where(condition ? @true : @false);
     }

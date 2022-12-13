@@ -26,3 +26,7 @@
 
 
 `OutputItemType="Analyzer" ReferenceOutputAssembly="false"`
+
+## 其他
+
+- git base: `git config --global --add core.quotepath false` 防止中文乱码

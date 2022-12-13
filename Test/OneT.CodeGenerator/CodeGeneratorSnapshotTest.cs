@@ -1,5 +1,6 @@
 namespace OneT.CodeGenerator;
 
+using System.Linq;
 using System.Threading.Tasks;
 using Basic.Reference.Assemblies;
 using Microsoft.CodeAnalysis;
@@ -22,14 +23,15 @@ public class CodeGeneratorSnapshotTest
         var directory = Directory.GetCurrentDirectory();
 
         var references = Directory.EnumerateFiles(directory, "*.dll")
-                 .Select(x => MetadataReference.CreateFromFile(x));
+            .Select(x => MetadataReference.CreateFromFile(x));
 
         // 编译环境
         var compilation = CSharpCompilation.Create(
-            assemblyName: "Tests",
-            syntaxTrees: new[] { syntaxTree },
-            options: new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary),
-            references: references).WithReferenceAssemblies(assemblyKind);
+             "Tests",
+             new[] { syntaxTree },
+             references,
+             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+             ).AddReferences(assemblyKind);
 
         GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
 

@@ -24,8 +24,5 @@ public class StringOutputWriter : ILoggerWriter
         _writer.Flush();
     }
 
-    public override string ToString()
-    {
-        return _writer.ToString();
-    }
+    public override string ToString() => _writer.ToString();
 }

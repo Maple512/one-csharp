@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 public static class IOTools
 {
 #if NET7_0_OR_GREATER
-public static string GetRelativePath(string directory, string file)
+    public static string GetRelativePath(string directory, string file)
     {
         var fullPath = Path.Combine(directory, file);
         if(directory.EndsWith(Path.DirectorySeparatorChar)
@@ -32,13 +32,13 @@ public static string GetRelativePath(string directory, string file)
             return fullPath.Substring(directory.Length, fullPath.Length - directory.Length);// [directory.Length..];
         }
 
-        return fullPath.Substring((directory.Length + 1), fullPath.Length - (directory.Length + 1));
+        return fullPath.Substring(directory.Length + 1, fullPath.Length - (directory.Length + 1));
     }
 #endif
 
     public static void EnsureDirectoryExisted(string filePath)
     {
-        CheckTools.NotNullOrWhiteSpace(filePath);
+        Check.NotNullOrWhiteSpace(filePath);
 
         var directory = Path.GetDirectoryName(filePath);
         if(Directory.Exists(directory) == false

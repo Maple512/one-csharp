@@ -11,7 +11,7 @@ internal sealed class ModuleDescriptor : IModuleDescriptor
 
     public ModuleDescriptor(Type instance)
     {
-        StartupType = CheckTools.NotNull(instance);
+        StartupType = Check.NotNull(instance);
 
         Assembly = instance.Assembly;
 

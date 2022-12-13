@@ -4,10 +4,10 @@ using Rendering;
 
 public static class LevelFormatter
 {
-    static readonly string[][] _levelMap =
+    private static readonly string[][] _levelMap =
         {
             new []{ "V", "Vrb", "Verbose" },
-            new []{ "D", "Dbg", "Debug" },
+            new []{ "D", "Dbg", "Asserter" },
             new []{ "I", "Inf", "Information" },
             new []{ "W", "Wrn", "Warning" },
             new []{ "E", "Err", "Error" },
@@ -17,14 +17,14 @@ public static class LevelFormatter
     public static string Format(LogLevel level, string? format = null)
     {
         if(format.IsNullOrWhiteSpace()
-            || (level < LogLevel.Verbose && level > LogLevel.Fatal))
+            || level < LogLevel.Verbose && level > LogLevel.Fatal)
         {
             return RenderHelper.Casing(level.ToString(), format)!;
         }
 
         int? order = null;
         string? @case = null;
-        for(int i = 0; i < Math.Min(format!.Length, 2); i++)
+        for(var i = 0; i < Math.Min(format!.Length, 2); i++)
         {
             var item = format[i];
             if(char.IsDigit(item))

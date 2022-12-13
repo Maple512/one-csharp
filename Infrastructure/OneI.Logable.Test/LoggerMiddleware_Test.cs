@@ -1,7 +1,4 @@
 namespace OneI.Logable;
-
-using System;
-
 public class LoggerMiddleware_Test
 {
     [Fact]

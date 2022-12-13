@@ -13,10 +13,7 @@ public class Logger : ILogger
         _writers = writers;
     }
 
-    public bool IsEnable(LogLevel level)
-    {
-        throw new NotImplementedException();
-    }
+    public bool IsEnable(LogLevel level) => throw new NotImplementedException();
 
     public void Write(LoggerContext context)
     {

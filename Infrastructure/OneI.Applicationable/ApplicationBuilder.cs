@@ -93,7 +93,7 @@ public sealed class ApplicationBuilder : IApplicationBuilder
 
     private static IApplication Resolver(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
     {
-        CheckTools.NotNull(serviceProvider);
+        Check.NotNull(serviceProvider);
 
         // 显式解析一次，已将其在服务提供程序中标记为已解析，确保该配置由提供程序正确处理
         _ = serviceProvider.GetService<IConfiguration>();

@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../common.xunit.props" />
+    <Import Project="../../common.xunit.props" />
 
-  <PropertyGroup>
-    <TargetFramework>$(NetFramework)</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+        <RootNamespace>OneI</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Test\OneT.Common.Test\OneT.Common.Test.csproj" />
-    <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Test\OneT.Common.Test\OneT.Common.Test.csproj" />
+        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
+    </ItemGroup>
 
 </Project>

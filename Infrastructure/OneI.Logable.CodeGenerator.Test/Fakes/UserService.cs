@@ -1,25 +1,19 @@
-#nullable enable
-namespace Tests;
+namespace OneI.Logable.Fakes;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using OneI.Logable;
 
+/// <summary>
+/// The user service.
+/// </summary>
 public class UserService
 {
     public delegate string Handlers();
 
     public event Handlers HandlerEvent;
 
-    public enum UserType { a, b, c, d }
-
     private void Index<T0, T1>(T0 t0, T1 t1)
-        where T0 : new()
+       where T0 : new()
     {
         var p1 = (object)1;
         var p2 = UserType.a;
@@ -38,18 +32,16 @@ public class UserService
 
         var p10 = new List<int> { 1, 2, 3, 4 };
 
-        var p11 = (1, 2, 3);
+        var p11 = (A: 1, B: "", C: 1.3m);
 
-        Log.Debug("message text", p1, new object(), p2, UserType.b, p3, p4, 3, p5, false, p6, '0', p7, (sbyte)10, p8, new[] { "123" }, p9, new BitArray(new[] { true, false, }), p10, new List<byte> { 1, 2, 3 }, p11);
+        var p12 = (dynamic)12;
+
+        var p13 = new UserInfo() { Id = 1 };
+
+        int? p14 = null;
+
+        var p15 = new Dictionary<int, int> { { 1, 2 }, { 2, 3 }, { 3, 4 } };
+
+        Log.Debug("message text", p15, p14, p1, new Model1(), p3, "", p13, p8, p12, p9, p2, p10, new object(), UserType.b, p4, 3, p5, false, p6, '0', p7, (sbyte)10, new object[] { "1", 2, 'c' }, new BitArray(new[] { true, false, }), new List<byte> { 1, 2, 3 }, p11, t0, t1);
     }
 }
-
-public static partial class Log
-{
-    public static void Debug(string message, params object[] args)
-    {
-
-    }
-}
-
-#nullable restore

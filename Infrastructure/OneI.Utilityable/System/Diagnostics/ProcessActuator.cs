@@ -28,7 +28,7 @@ public class ProcessActuator
         bool continueWithErrors = true,
         CancellationToken token = default)
     {
-        var arguments = paramter.Arguments.JoinAsString(' ');
+        var arguments = paramter.Arguments.Join(' ');
 
         using var process = new Process
         {
@@ -88,7 +88,7 @@ public class ProcessActuator
         {
             if(continueWithErrors && process.ExitCode != 0)
             {
-                processLifetimeTask.TrySetException(new InvalidOperationException($"Command {paramter.FileName} {paramter.Arguments.JoinAsString(' ')} returned exit code: {process.ExitCode}"));
+                processLifetimeTask.TrySetException(new InvalidOperationException($"Command {paramter.FileName} {paramter.Arguments.Join(' ')} returned exit code: {process.ExitCode}"));
             }
             else
             {

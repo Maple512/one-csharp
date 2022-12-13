@@ -1,7 +1,6 @@
 namespace OneI.Logable.Templating.Rendering;
 
 using Properties;
-using Properties.ValueTypes;
 
 public static class MessageTemplateRender
 {
@@ -65,8 +64,5 @@ public static class MessageTemplateRender
         PropertyValue propertyValue,
         TextWriter output,
         string? format,
-        IFormatProvider? formatProvider)
-    {
-        propertyValue.Render(output, format, formatProvider);
-    }
+        IFormatProvider? formatProvider) => propertyValue.Render(output, format, formatProvider);
 }

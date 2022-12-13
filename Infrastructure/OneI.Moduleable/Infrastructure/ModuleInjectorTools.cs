@@ -151,7 +151,7 @@ public static class ModuleInjectorTools
         IEnumerable<Type> allServiceTypes,
         ServiceLifetime lifetime)
     {
-        if(!CheckTools.IsIn(lifetime, ServiceLifetime.Singleton, ServiceLifetime.Scoped))
+        if(!Check.IsIn(lifetime, ServiceLifetime.Singleton, ServiceLifetime.Scoped))
         {
             return ServiceDescriptor.Describe(
                 serviceType,

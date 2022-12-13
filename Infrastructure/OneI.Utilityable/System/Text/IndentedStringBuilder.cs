@@ -8,7 +8,7 @@ public class IndentedStringBuilder
 {
     private const byte IndentSize = 4;
     private byte _indent;
-    private byte _size;
+    private readonly byte _size;
 
     // 每一个append line都缩进，一行头一个append，其他不需要
     private bool _indentPending = true;
@@ -137,7 +137,7 @@ public class IndentedStringBuilder
     /// 递减缩进
     /// </summary>
     /// <returns></returns>
-    public virtual IndentedStringBuilder Increment()
+    private IndentedStringBuilder Increment()
     {
         _indent++;
 
@@ -148,7 +148,7 @@ public class IndentedStringBuilder
     /// 递增缩进
     /// </summary>
     /// <returns></returns>
-    public virtual IndentedStringBuilder Decrement()
+    private IndentedStringBuilder Decrement()
     {
         if(_indent > 0)
         {
@@ -218,7 +218,6 @@ public class IndentedStringBuilder
             _stringBuilder.Increment();
         }
 
-        public void Dispose()
-            => _stringBuilder.Decrement();
+        public void Dispose() => _stringBuilder.Decrement();
     }
 }

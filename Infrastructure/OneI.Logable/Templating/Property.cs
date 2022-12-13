@@ -6,7 +6,7 @@ public class Property
 {
     public Property(string name, PropertyValue value)
     {
-        Name = CheckTools.NotNullOrEmpty(name);
+        Name = Check.NotNullOrEmpty(name);
         Value = value;
     }
 

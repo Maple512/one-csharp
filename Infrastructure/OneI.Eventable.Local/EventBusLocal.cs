@@ -4,7 +4,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OneI.Moduleable.DependencyInjection;
@@ -32,7 +31,7 @@ public sealed class EventBus : IEventBus, ISingletonService
     public async ValueTask PublishAsync<TEventData>(TEventData eventData)
         where TEventData : IEventData
     {
-        _ = CheckTools.NotNull(eventData);
+        _ = Check.NotNull(eventData);
 
         var handlers = _cache.GetOrAdd(typeof(TEventData), FindAllEventHandlers)
             .OfType<IEventHandler<TEventData>>().OrderBy(x => x.Order);
@@ -56,7 +55,7 @@ public sealed class EventBus : IEventBus, ISingletonService
     public async ValueTask PublishAsync<TEventData>(TEventData eventData, ParallelOptions? parallelOptions = null)
         where TEventData : IEventData
     {
-        _ = CheckTools.NotNull(eventData);
+        _ = Check.NotNull(eventData);
 
         var handlers = _cache.GetOrAdd(typeof(TEventData), FindAllEventHandlers)
             .OfType<IEventHandler<TEventData>>().OrderBy(x => x.Order);
@@ -82,7 +81,7 @@ public sealed class EventBus : IEventBus, ISingletonService
         var handlerType = typeof(IEventHandler<>).MakeGenericType(eventType);
 
         var handlers = _serviceProvider.GetServices<IEventHandler>()
-            .Where(x => x.GetType().IsAssignableToType(handlerType));
+            .Where(x => x.GetType().IsAssignableTo(handlerType));
 
         if(handlers.IsNullOrEmpty())
         {

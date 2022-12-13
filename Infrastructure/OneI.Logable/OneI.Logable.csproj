@@ -11,7 +11,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
+      <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj"/>
     </ItemGroup>
 
 </Project>

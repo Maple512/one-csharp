@@ -30,13 +30,7 @@ public class EnumerableValue : PropertyValue
         writer.Write(']');
     }
 
-    public void AddPropertyValue(PropertyValue value)
-    {
-        _values.Add(value);
-    }
+    public void AddPropertyValue(PropertyValue value) => _values.Add(value);
 
-    public void AddPropertyValues(params PropertyValue[] values)
-    {
-        _values.AddRange(values);
-    }
+    public void AddPropertyValues(params PropertyValue[] values) => _values.AddRange(values);
 }

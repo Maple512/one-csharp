@@ -9,7 +9,7 @@ public static class ServiceCollectionBuilderExtensions
 {
     public static IServiceProvider BuildServiceProviderFromFactory(this IServiceCollection services)
     {
-        _ = CheckTools.NotNull(services);
+        _ = Check.NotNull(services);
 
         foreach(var service in services)
         {
@@ -44,7 +44,7 @@ public static class ServiceCollectionBuilderExtensions
         Action<TContainerBuilder>? builderAction = null)
         where TContainerBuilder : notnull
     {
-        _ = CheckTools.NotNull(services);
+        _ = Check.NotNull(services);
 
         var serviceProviderFactory = services.GetSingleInstance<IServiceProviderFactory<TContainerBuilder>>();
 

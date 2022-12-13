@@ -7,18 +7,18 @@ using OneI;
 
 public sealed class ProcessParameter
 {
-    public ProcessParameter(string fileName) => FileName = CheckTools.NotNullOrWhiteSpace(fileName);
+    public ProcessParameter(string fileName) => FileName = Check.NotNullOrWhiteSpace(fileName);
 
     public ProcessParameter(string fileName, string arguments)
     {
-        FileName = CheckTools.NotNullOrWhiteSpace(fileName);
+        FileName = Check.NotNullOrWhiteSpace(fileName);
 
         Arguments.AddRange(arguments.Split(' '));
     }
 
     public ProcessParameter(string fileName, params string[] arguments)
     {
-        FileName = CheckTools.NotNullOrWhiteSpace(fileName);
+        FileName = Check.NotNullOrWhiteSpace(fileName);
 
         Arguments.AddRange(arguments);
     }
@@ -65,14 +65,14 @@ public sealed class ProcessParameter
 
     public ProcessParameter WithWorkingDirectory(string workingDirectory)
     {
-        WorkingDirectory = CheckTools.NotNull(workingDirectory);
+        WorkingDirectory = Check.NotNull(workingDirectory);
 
         return this;
     }
 
     public ProcessParameter WithEnvironment(string name, string value)
     {
-        CheckTools.NotNullOrWhiteSpace(name);
+        Check.NotNullOrWhiteSpace(name);
 
         Environments[name] = value;
 
@@ -81,7 +81,7 @@ public sealed class ProcessParameter
 
     public ProcessParameter WithEnvironmentToRemove(string name)
     {
-        CheckTools.NotNullOrWhiteSpace(name);
+        Check.NotNullOrWhiteSpace(name);
 
         EnvironmentsToRemove.Add(name);
 
@@ -90,7 +90,7 @@ public sealed class ProcessParameter
 
     public ProcessParameter WithOutput(Action<bool, string?> output)
     {
-        OutputReceiver = CheckTools.NotNull(output);
+        OutputReceiver = Check.NotNull(output);
 
         return this;
     }
