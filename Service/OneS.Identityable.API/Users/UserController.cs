@@ -8,14 +8,26 @@ using Microsoft.AspNetCore.Mvc;
 public class UsersController : ControllerBase
 {
     [HttpGet]
-    public IActionResult GetList() => Ok();
+    public IActionResult GetList()
+    {
+        return Ok();
+    }
 
     [HttpGet("{id}")]
-    public IActionResult Get(Guid id) => Ok();
+    public IActionResult Get(Guid id)
+    {
+        return Ok();
+    }
 
     [HttpDelete("id")]
-    public IActionResult Delete(Guid id) => Ok();
+    public IActionResult Delete(Guid id)
+    {
+        return Ok();
+    }
 
     [HttpPut]
-    public IActionResult Update() => Ok();
+    public IActionResult Update()
+    {
+        return Ok();
+    }
 }

@@ -18,5 +18,8 @@ public class ParameterDef
 
     public TypeDef Type { get; }
 
-    public override string ToString() => $"{Type} {Name}";
+    public override string ToString()
+    {
+        return $"{Type} {Name}";
+    }
 }

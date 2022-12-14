@@ -12,5 +12,8 @@ public readonly struct Alignment
 
     public int Width { get; }
 
-    public override string ToString() => $"{Direction}, {Width}";
+    public override string ToString()
+    {
+        return $"{Direction}, {Width}";
+    }
 }

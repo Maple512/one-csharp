@@ -19,7 +19,13 @@ public readonly struct ModuleRegistrationContext
 
     public Assembly Assembly { get; }
 
-    public override int GetHashCode() => HashCode.Combine(Services, Assembly);
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Services, Assembly);
+    }
 
-    public override string ToString() => $"{nameof(ModuleRegistrationContext)} Assembly: {Assembly.FullName}";
+    public override string ToString()
+    {
+        return $"{nameof(ModuleRegistrationContext)} Assembly: {Assembly.FullName}";
+    }
 }

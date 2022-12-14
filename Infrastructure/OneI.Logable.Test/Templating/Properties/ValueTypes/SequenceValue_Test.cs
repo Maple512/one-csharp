@@ -16,9 +16,9 @@ public class SequenceValue_Test
 
         var result = Render(values: new[]
         {
-            PropertyValue.Create(1),
-            PropertyValue.Create("123123"),
-            PropertyValue.Create(1254.22m),
+            PropertyValue.CreateLiteral(1),
+            PropertyValue.CreateLiteral("123123"),
+            PropertyValue.CreateLiteral(1254.22m),
         });
 
         result.ShouldBe("""[1, "123123", 1254.22]""");

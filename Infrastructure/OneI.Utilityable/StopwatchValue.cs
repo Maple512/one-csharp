@@ -14,7 +14,10 @@ public readonly struct StopwatchValue
 
     private StopwatchValue(long startTimestamp) => _startTimestamp = startTimestamp;
 
-    public static StopwatchValue StartNew() => new(Stopwatch.GetTimestamp());
+    public static StopwatchValue StartNew()
+    {
+        return new(Stopwatch.GetTimestamp());
+    }
 
     public TimeSpan GetElapsedTime()
     {

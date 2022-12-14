@@ -1,8 +1,7 @@
- using System;
- namespace Example {
-
-  public class MySetting {
-    public readonly static string  Greeting = "Hello World!";
-  }
-
+namespace Example
+{
+    public class MySetting
+    {
+        public static readonly string Greeting = "Hello World!";
+    }
 }

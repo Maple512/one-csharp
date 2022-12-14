@@ -5,7 +5,10 @@ namespace OneI.Logable.Definitions;
 /// </summary>
 public class TypeDef
 {
-    public TypeDef(params string[] names) : this(names.ToList()) { }
+    public TypeDef(params string[] names)
+        : this(names.ToList())
+    {
+    }
 
     public TypeDef(List<string> names)
     {

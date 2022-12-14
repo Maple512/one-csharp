@@ -2,6 +2,9 @@ namespace OneI.Logable.Templating.Properties;
 
 using OneI.Logable.Templating.Properties.ValueTypes;
 
+/// <summary>
+/// The property value.
+/// </summary>
 public abstract class PropertyValue : IFormattable
 {
     public abstract void Render(TextWriter writer, string? format = null, IFormatProvider? formatProvider = null);
@@ -15,7 +18,18 @@ public abstract class PropertyValue : IFormattable
         return writer.ToString();
     }
 
-    public override string ToString() => ToString(null, null);
+    public override string ToString()
+    {
+        return ToString(null, null);
+    }
 
-    public static PropertyValue Create<TType>(TType type) => new LiteralValue<TType>(type);
+    public static PropertyValue CreateLiteral<T>(T type)
+    {
+        return new LiteralValue<T>(type);
+    }
+
+    public static PropertyValue CreateLiteral<T>(T type, ILoggerSerializable<T>? serializable)
+    {
+        return new LiteralValue<T>(type, serializable);
+    }
 }

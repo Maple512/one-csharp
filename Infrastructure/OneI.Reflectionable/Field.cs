@@ -17,9 +17,28 @@ public class Field : FieldInfo
     public override string Name { get; }
     public override Type ReflectedType { get; }
 
-    public override object[] GetCustomAttributes(bool inherit) => throw new NotImplementedException();
-    public override object[] GetCustomAttributes(Type attributeType, bool inherit) => throw new NotImplementedException();
-    public override object GetValue(object obj) => throw new NotImplementedException();
-    public override bool IsDefined(Type attributeType, bool inherit) => throw new NotImplementedException();
-    public override void SetValue(object obj, object value, BindingFlags invokeAttr, Binder binder, CultureInfo culture) => throw new NotImplementedException();
+    public override object[] GetCustomAttributes(bool inherit)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override object[] GetCustomAttributes(Type attributeType, bool inherit)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override object GetValue(object obj)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override bool IsDefined(Type attributeType, bool inherit)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void SetValue(object obj, object value, BindingFlags invokeAttr, Binder binder, CultureInfo culture)
+    {
+        throw new NotImplementedException();
+    }
 }

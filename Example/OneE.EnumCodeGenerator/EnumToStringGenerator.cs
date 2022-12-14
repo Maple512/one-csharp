@@ -31,7 +31,9 @@ public class EnumToStringGenerator : IIncrementalGenerator
     }
 
     private static bool IsSyntaxTargetForGeneration(SyntaxNode node)
-        => node is EnumDeclarationSyntax m && m.AttributeLists.Count > 0;
+    {
+        return node is EnumDeclarationSyntax m && m.AttributeLists.Count > 0;
+    }
 
     private static EnumDeclarationSyntax? GetSemanticTargetForGeneration(GeneratorSyntaxContext cts)
     {
@@ -89,7 +91,7 @@ public class EnumToStringGenerator : IIncrementalGenerator
         // Create a list to hold our output
         var enumsToGenerate = new List<EnumToGenerate>();
 
-        // Get the semantic representation of our marker attribute 
+        // Get the semantic representation of our marker attribute
         var enumAttribute = compilation.GetTypeByMetadataName(SourceCodeHelper.AttributeFullName);
 
         if(enumAttribute == null)
@@ -112,7 +114,7 @@ public class EnumToStringGenerator : IIncrementalGenerator
                 continue;
             }
 
-            // Get the full type name of the enum e.g. Colour, 
+            // Get the full type name of the enum e.g. Colour,
             // or OuterClass<T>.Colour if it was nested in a generic type (for example)
             var enumName = enumSymbol.ToString()!;
 

@@ -18,7 +18,10 @@ public class ModuleDependOnAttribute : Attribute
     /// </summary>
     public Type[] DenpendedTypes { get; }
 
-    public static IEnumerable<Type> GetAllDependedTypes(Type type) => GetAllDependedTypes(type, type.Assembly);
+    public static IEnumerable<Type> GetAllDependedTypes(Type type)
+    {
+        return GetAllDependedTypes(type, type.Assembly);
+    }
 
     public static IEnumerable<Type> GetAllDependedTypes(Type type, Assembly? assembly = null)
     {

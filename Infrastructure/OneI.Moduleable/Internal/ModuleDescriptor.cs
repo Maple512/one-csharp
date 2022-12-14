@@ -34,7 +34,13 @@ internal sealed class ModuleDescriptor : IModuleDescriptor
     /// 添加模块依赖
     /// </summary>
     /// <param name="descriptor"></param>
-    public void AddDependency(IModuleDescriptor descriptor) => _dependencies.AddIfNotContains(descriptor);
+    public void AddDependency(IModuleDescriptor descriptor)
+    {
+        _dependencies.AddIfNotContains(descriptor);
+    }
 
-    public override string ToString() => $"Module: {StartupType.ShortDisplayName()}";
+    public override string ToString()
+    {
+        return $"Module: {StartupType.ShortDisplayName()}";
+    }
 }

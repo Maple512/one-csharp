@@ -13,33 +13,42 @@ public static class JsonSerializationTools
     /// <see cref="JsonSerializerOptions"/> 的标准实例
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JsonSerializerOptions StandardInstance() => new()
+    public static JsonSerializerOptions StandardInstance()
     {
-        ReadCommentHandling = JsonCommentHandling.Skip,
-        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),// 解决中文乱码
-        AllowTrailingCommas = true,
-        WriteIndented = true,
-    };
+        return new()
+        {
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),// 解决中文乱码
+            AllowTrailingCommas = true,
+            WriteIndented = true,
+        };
+    }
 
     /// <summary>
     /// <see cref="JsonSerializerOptions"/> 的实例， <see
     /// cref="JsonSerializerOptions.PropertyNamingPolicy"/> 是 <see cref="SnakeCaseNamingPolly.SnakeCase"/>
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JsonSerializerOptions SnakeCaseInstance() => new()
+    public static JsonSerializerOptions SnakeCaseInstance()
     {
-        ReadCommentHandling = JsonCommentHandling.Skip,
-        Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
-        AllowTrailingCommas = true,
-        WriteIndented = true,
-        PropertyNamingPolicy = SnakeCaseNamingPolly.SnakeCase,
-    };
+        return new()
+        {
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+            AllowTrailingCommas = true,
+            WriteIndented = true,
+            PropertyNamingPolicy = SnakeCaseNamingPolly.SnakeCase,
+        };
+    }
 }
 
 internal class SnakeCaseNamingPolly : JsonNamingPolicy
 {
     public static JsonNamingPolicy SnakeCase { get; } = new SnakeCaseNamingPolly();
 
-    public override string ConvertName(string name) => name?.ToSnakeCase()!;
+    public override string ConvertName(string name)
+    {
+        return name?.ToSnakeCase()!;
+    }
 }
 #endif

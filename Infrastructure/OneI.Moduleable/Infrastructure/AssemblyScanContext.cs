@@ -4,7 +4,7 @@ using System;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-public readonly ref struct AssemblyScanContext
+public readonly struct AssemblyScanContext
 {
     public AssemblyScanContext(IServiceCollection services, Assembly assembly)
     {
@@ -16,7 +16,13 @@ public readonly ref struct AssemblyScanContext
 
     public Assembly Assembly { get; }
 
-    public override int GetHashCode() => HashCode.Combine(Services, Assembly);
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Services, Assembly);
+    }
 
-    public override string ToString() => $"{nameof(AssemblyScanContext)} Assembly: {Assembly.FullName}";
+    public override string ToString()
+    {
+        return $"{nameof(AssemblyScanContext)} Assembly: {Assembly.FullName}";
+    }
 }

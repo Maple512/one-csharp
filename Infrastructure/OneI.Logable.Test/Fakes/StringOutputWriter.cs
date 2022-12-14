@@ -2,7 +2,7 @@ namespace OneI.Logable.Fakes;
 
 using Templating.Rendering;
 
-public class StringOutputWriter : ILoggerWriter
+public class StringOutputWriter : ILoggerEndpoint
 {
     private readonly StringWriter _writer;
     private readonly ITextRenderer _renderer;
@@ -13,7 +13,7 @@ public class StringOutputWriter : ILoggerWriter
         _renderer = new TextTemplateRenderer(outputTempalte);
     }
 
-    public void Write(in LoggerContext context)
+    public void Invoke(in LoggerContext context)
     {
         _renderer.Render(context, _writer);
 
@@ -24,5 +24,8 @@ public class StringOutputWriter : ILoggerWriter
         _writer.Flush();
     }
 
-    public override string ToString() => _writer.ToString();
+    public override string ToString()
+    {
+        return _writer.ToString();
+    }
 }

@@ -33,7 +33,6 @@ internal class TerminalService : ITerminalService, IDisposable
             ((TerminalService)state!).OnStarted();
         }, this);
 
-
         _applicationStoppingRegistration = _applicationLifetimeService.Stopping.Register(state =>
         {
             ((TerminalService)state!).OnStopping();
@@ -44,7 +43,10 @@ internal class TerminalService : ITerminalService, IDisposable
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask StopAsync(CancellationToken cancellationToken) => ValueTask.CompletedTask;
+    public ValueTask StopAsync(CancellationToken cancellationToken)
+    {
+        return ValueTask.CompletedTask;
+    }
 
     public void Dispose()
     {
@@ -64,7 +66,10 @@ internal class TerminalService : ITerminalService, IDisposable
         _logger.LogInformation("Root path: {RootRoot}", _environment.RootPath);
     }
 
-    private void OnStopping() => _logger.LogInformation("Application is shutting down...");
+    private void OnStopping()
+    {
+        _logger.LogInformation("Application is shutting down...");
+    }
 
     private PosixSignalRegistration? _sigIntRegistration;
     private PosixSignalRegistration? _sigQuitRegistration;

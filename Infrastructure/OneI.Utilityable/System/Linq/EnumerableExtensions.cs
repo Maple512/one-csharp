@@ -1,4 +1,4 @@
-namespace System.Collections.Generic;
+namespace System.Linq;
 
 using OneI;
 
@@ -50,11 +50,15 @@ public static partial class EnumerableExtensions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? source)
-        => source == null || source.Any() == false;
+    {
+        return source == null || source.Any() == false;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool NotNullOrEmpty<T>([NotNullWhen(true)] this IEnumerable<T>? source)
-        => source != null && source.Any() == true;
+    {
+        return source != null && source.Any() == true;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Join<T>(this IEnumerable<T> source, string separator)
@@ -78,11 +82,15 @@ public static partial class EnumerableExtensions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNullOrEmpty<T>(this IEnumerable<T>? source)
-        => source == null || source.Any() == false;
+    {
+        return source == null || source.Any() == false;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool NotNullOrEmpty<T>(this IEnumerable<T>? source)
-        => source != null && source.Any() == true;
+    {
+        return source != null && source.Any() == true;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Join<T>(this IEnumerable<T> source, string separator)

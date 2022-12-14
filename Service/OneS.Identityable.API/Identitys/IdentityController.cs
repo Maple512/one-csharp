@@ -7,13 +7,22 @@ using Microsoft.AspNetCore.Mvc;
 public class IdentityController : ControllerBase
 {
     [HttpGet]
-    public IActionResult GetList() => Ok();
+    public IActionResult GetList()
+    {
+        return Ok();
+    }
 
     [HttpPost]
     [Route("register")]
-    public IActionResult Register() => Ok();
+    public IActionResult Register()
+    {
+        return Ok();
+    }
 
     [HttpPost]
     [Route("login")]
-    public IActionResult Login() => Ok();
+    public IActionResult Login()
+    {
+        return Ok();
+    }
 }

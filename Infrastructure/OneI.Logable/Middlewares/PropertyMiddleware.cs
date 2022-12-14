@@ -1,8 +1,9 @@
 namespace OneI.Logable.Middlewares;
 
+using OneI.Logable;
 using OneI.Logable.Templating.Properties;
 
-public class PropertyMiddleware : ILoggerMiddleware
+public class PropertyMiddleware : LoggerMiddleware
 {
     private readonly string _name;
     private readonly PropertyValue _value;
@@ -13,10 +14,12 @@ public class PropertyMiddleware : ILoggerMiddleware
         _value = value;
     }
 
-    public void Invoke(in LoggerContext context, in LoggerDelegate next)
+    public override LoggerVoid Invoke(in LoggerContext context, in LoggerDelegate next)
     {
         context.AddPropertyIfAbsent(new(_name, _value));
 
         next(context);
+
+        return base.Invoke(context, next);
     }
 }

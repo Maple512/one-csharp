@@ -25,5 +25,8 @@ public class LevelFormatter_Test
     [InlineData(LogLevel.Fatal, "2", "Ftl")]
     [InlineData(LogLevel.Fatal, "3", "Fatal")]
     [InlineData(LogLevel.Fatal, "5", "Fatal")]
-    public void invalid_format(LogLevel level, string? format, string expected) => LevelFormatter.Format(level, format).ShouldBe(expected);
+    public void invalid_format(LogLevel level, string? format, string expected)
+    {
+        LevelFormatter.Format(level, format).ShouldBe(expected);
+    }
 }

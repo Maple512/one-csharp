@@ -7,6 +7,9 @@ namespace OneE.MSBuildTaskClient
     using Microsoft.Build.Framework;
     using Microsoft.Build.Utilities;
 
+    /// <summary>
+    /// The task example1.
+    /// </summary>
     public class TaskExample1 : Task
     {
         [Required]
@@ -128,7 +131,6 @@ namespace OneE.MSBuildTaskClient
                 // open namespace
                 settingsClass.Append($@" using System;
  namespace {SettingNamespaceName} {{
-
   public class {SettingClassName} {{
 ");
                 //For each element in the dictionary create a static property
@@ -139,10 +141,8 @@ namespace OneE.MSBuildTaskClient
                 }
                 // close namespace and class
                 settingsClass.Append(@"  }
-
 }");
                 File.WriteAllText(ClassNameFile, settingsClass.ToString());
-
             }
             catch(Exception ex)
             {

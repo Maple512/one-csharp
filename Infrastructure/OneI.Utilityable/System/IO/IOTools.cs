@@ -3,13 +3,16 @@ namespace System.IO;
 using OneI;
 
 #if NET7_0_OR_GREATER
+
 using System.Diagnostics.CodeAnalysis;
+
 [StackTraceHidden]
 #endif
 [DebuggerStepThrough]
 public static class IOTools
 {
 #if NET7_0_OR_GREATER
+
     public static string GetRelativePath(string directory, string file)
     {
         var fullPath = Path.Combine(directory, file);
@@ -21,6 +24,7 @@ public static class IOTools
 
         return fullPath[(directory.Length + 1)..];
     }
+
 #elif NETSTANDARD
     public static string GetRelativePath(string directory, string file)
     {

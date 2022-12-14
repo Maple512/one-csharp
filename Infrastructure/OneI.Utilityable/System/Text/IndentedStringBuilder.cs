@@ -131,7 +131,10 @@ public class IndentedStringBuilder
         return this;
     }
 
-    public override string ToString() => _stringBuilder.ToString();
+    public override string ToString()
+    {
+        return _stringBuilder.ToString();
+    }
 
     /// <summary>
     /// 递减缩进
@@ -172,14 +175,18 @@ public class IndentedStringBuilder
     /// </summary>
     /// <returns></returns>
     public virtual IDisposable Indent()
-        => new Indenter(this);
+    {
+        return new Indenter(this);
+    }
 
     /// <summary>
     /// 暂停缩进（缩进长度设置为0）
     /// </summary>
     /// <returns></returns>
     public virtual IDisposable SuspendIndent()
-        => new IndentSuspender(this);
+    {
+        return new IndentSuspender(this);
+    }
 
     private void DoIndent()
     {
@@ -204,7 +211,9 @@ public class IndentedStringBuilder
         }
 
         public void Dispose()
-            => _stringBuilder._indent = _indent;
+        {
+            _stringBuilder._indent = _indent;
+        }
     }
 
     private sealed class Indenter : IDisposable
@@ -218,6 +227,9 @@ public class IndentedStringBuilder
             _stringBuilder.Increment();
         }
 
-        public void Dispose() => _stringBuilder.Decrement();
+        public void Dispose()
+        {
+            _stringBuilder.Decrement();
+        }
     }
 }

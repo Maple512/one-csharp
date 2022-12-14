@@ -26,7 +26,10 @@ public static partial class Check
     private static string ErrorMessage(
         string? memberName,
         string? filePath,
-        int? lineNumber) => $"Value be not null. (\"{filePath}\" L{lineNumber} \"{memberName}\")";
+        int? lineNumber)
+    {
+        return $"Value be not null. (\"{filePath}\" L{lineNumber} \"{memberName}\")";
+    }
 }
 
 #if NET7_0_OR_GREATER

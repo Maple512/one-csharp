@@ -36,7 +36,10 @@ public sealed class ApplicationBuilder : IApplicationBuilder
         return Resolver(_serviceProvider, diagnostic);
     }
 
-    public IApplicationEnvironment ResolverEnvironment(IConfigurationRoot configuration) => ApplicationEnvironment.Resolver(configuration);
+    public IApplicationEnvironment ResolverEnvironment(IConfigurationRoot configuration)
+    {
+        return ApplicationEnvironment.Resolver(configuration);
+    }
 
     private void InitializeServiceProvider(IConfigurationRoot configuration, IServiceCollection services)
     {
@@ -111,5 +114,8 @@ public sealed class ApplicationBuilder : IApplicationBuilder
 
     [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2026:UnrecognizedReflectionPattern",
             Justification = "The values being passed into Write are being consumed by the application already.")]
-    private static void Write<T>(DiagnosticSource source, string name, T value) => source.Write(name, value);
+    private static void Write<T>(DiagnosticSource source, string name, T value)
+    {
+        source.Write(name, value);
+    }
 }

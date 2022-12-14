@@ -1,4 +1,5 @@
 namespace OneI.Logable;
+
 using System.Text;
 using OneI.Logable.Definitions;
 
@@ -20,19 +21,24 @@ public static partial class CodePrinter
                 case TypeDefKind.Object:
                     BuildObject(builder, type);
                     break;
+
                 case TypeDefKind.ValueTuple:
                     BuildValueTuple(builder, type);
                     break;
+
                 case TypeDefKind.Nullable:
                     BuildNullable(builder, type);
                     break;
+
                 case TypeDefKind.Array:
                 case TypeDefKind.Enumerable:
                     BuildEnumerable(builder);
                     break;
+
                 case TypeDefKind.Dictionary:
                     BuildDictionary(builder, type);
                     break;
+
                 default:
                     Default(builder, type);
                     break;
@@ -113,6 +119,7 @@ public static partial class CodePrinter
         {
             builder.AppendLine("return Create(p.Value);");
         }
+
         builder.AppendLine("}");
         builder.AppendLine();
         builder.AppendLine("return Create(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<object>(null));");
@@ -128,6 +135,7 @@ public static partial class CodePrinter
         {
             builder.AppendLine($"dictionary.Add(Create(item.Key), Create(item.Value));");
         }
+
         builder.AppendLine("}");
         builder.AppendLine();
         builder.AppendLine($"return dictionary;");

@@ -15,7 +15,10 @@ public static partial class TypeExtensions
 
     #region Attribute
 
-    public static bool IsDefined<T>(this MemberInfo member, bool inherit = false) => member.IsDefined(typeof(T), inherit);
+    public static bool IsDefined<T>(this MemberInfo member, bool inherit = false)
+    {
+        return member.IsDefined(typeof(T), inherit);
+    }
 
     public static T GetRequiredAttribute<T>(this Type type)
         where T : Attribute
@@ -87,7 +90,10 @@ public static partial class TypeExtensions
     };
 
     /// <inheritdoc cref="Type.IsAssignableFrom(Type?)"/>
-    public static bool IsAssignableFrom<T>(this Type baesType) => baesType.IsAssignableFrom(typeof(T));
+    public static bool IsAssignableFrom<T>(this Type baesType)
+    {
+        return baesType.IsAssignableFrom(typeof(T));
+    }
 
     // TODO: 待测试
     /// <summary>
@@ -129,7 +135,9 @@ public static partial class TypeExtensions
     /// <param name="type"></param>
     /// <returns></returns>
     public static bool IsNullableValueType(this Type type)
-            => type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+    {
+        return type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+    }
 
     /// <summary>
     /// 可空的类型（引用类型都是可空的，值类型需要另外的判断）
@@ -137,7 +145,9 @@ public static partial class TypeExtensions
     /// <param name="type"></param>
     /// <returns></returns>
     public static bool IsNullableType(this Type type)
-        => !type.IsValueType || type.IsNullableValueType();
+    {
+        return !type.IsValueType || type.IsNullableValueType();
+    }
 
     /// <summary>
     /// 去掉可空类型的包装。 <c>int?</c>-&gt; <c>int</c>
@@ -145,7 +155,9 @@ public static partial class TypeExtensions
     /// <param name="type"></param>
     /// <returns></returns>
     public static Type UnwrapNullableType(this Type type)
-            => Nullable.GetUnderlyingType(type) ?? type;
+    {
+        return Nullable.GetUnderlyingType(type) ?? type;
+    }
 
     /// <summary>
     /// 转换为人性化可读的名称
@@ -175,7 +187,10 @@ public static partial class TypeExtensions
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    public static string ShortDisplayName(this Type type) => type.DisplayName(false);
+    public static string ShortDisplayName(this Type type)
+    {
+        return type.DisplayName(false);
+    }
 
     private static void ProcessType(StringBuilder builder, Type type, bool fullName, bool isCompilable)
     {
@@ -316,7 +331,10 @@ public static partial class TypeExtensions
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    public static bool IsNumeric(this Type type) => NumericTypes.Contains(type.UnwrapNullableType());
+    public static bool IsNumeric(this Type type)
+    {
+        return NumericTypes.Contains(type.UnwrapNullableType());
+    }
 
     /// <summary>
     /// 数字：<see cref="sbyte"/>, <see cref="byte"/>, <see cref="char"/>, <see cref="ushort"/>, <see cref="short"/>, <see cref="uint"/>, <see cref="int"/>, <see cref="ulong"/>, <see cref="long"/>, <see cref="float"/>, <see cref="double"/>, <see cref="decimal"/>
@@ -359,7 +377,10 @@ public static partial class TypeExtensions
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    public static bool IsInteger(this Type type) => IntegerTypes.Contains(type.UnwrapNullableType());
+    public static bool IsInteger(this Type type)
+    {
+        return IntegerTypes.Contains(type.UnwrapNullableType());
+    }
 
     /// <summary>
     /// 有符号整数
@@ -367,10 +388,12 @@ public static partial class TypeExtensions
     /// <param name="type"></param>
     /// <returns></returns>
     public static bool IsSignedInteger(this Type type)
-        => type == typeof(int)
-            || type == typeof(long)
-            || type == typeof(short)
-            || type == typeof(sbyte);
+    {
+        return type == typeof(int)
+                || type == typeof(long)
+                || type == typeof(short)
+                || type == typeof(sbyte);
+    }
 
     #endregion Type
 
@@ -383,8 +406,10 @@ public static partial class TypeExtensions
     /// <param name="type"></param>
     /// <returns></returns>
     public static bool TryGetParameterlessConstructor(this Type type, [NotNullWhen(true)] out ConstructorInfo? constructor)
-        => (constructor = type.GetTypeInfo().DeclaredConstructors
-        .FirstOrDefault(x => x.GetParameters().IsNullOrEmpty())) != null;
+    {
+        return (constructor = type.GetTypeInfo().DeclaredConstructors
+            .FirstOrDefault(x => x.GetParameters().IsNullOrEmpty())) != null;
+    }
 #elif NETSTANDARD
     /// <summary>
     /// 尝试获取无参构造器
@@ -392,8 +417,10 @@ public static partial class TypeExtensions
     /// <param name="type"></param>
     /// <returns></returns>
     public static bool TryGetParameterlessConstructor(this Type type, out ConstructorInfo? constructor)
-        => (constructor = type.GetTypeInfo().DeclaredConstructors
-        .FirstOrDefault(x => x.GetParameters().IsNullOrEmpty())) != null;
+    {
+        return (constructor = type.GetTypeInfo().DeclaredConstructors
+            .FirstOrDefault(x => x.GetParameters().IsNullOrEmpty())) != null;
+    }
 #endif
 
     #endregion Constructor
@@ -403,7 +430,10 @@ public static partial class TypeExtensions
 [StackTraceHidden]
 public static partial class TypeExtensions
 {
-    public static bool IsAssignableTo<TBase>(this Type type) => type.IsAssignableTo(typeof(TBase));
+    public static bool IsAssignableTo<TBase>(this Type type)
+    {
+        return type.IsAssignableTo(typeof(TBase));
+    }
 
     /// <summary>
     /// 是否匿名类型
@@ -411,15 +441,20 @@ public static partial class TypeExtensions
     /// <param name="type"></param>
     /// <returns></returns>
     public static bool IsAnonymousType(this Type type)
-        => type.Namespace == null
-            && type.Name.Contains("AnonymousType")
-            && type.IsDefined(typeof(CompilerGeneratedAttribute));
+    {
+        return type.Namespace == null
+                && type.Name.Contains("AnonymousType")
+                && type.IsDefined(typeof(CompilerGeneratedAttribute));
+    }
 }
 #elif NETSTANDARD
 
 public static partial class TypeExtensions
 {
-    public static bool IsAssignableTo<TBase>(this Type type) => typeof(TBase).IsAssignableFrom(type);
+    public static bool IsAssignableTo<TBase>(this Type type)
+    {
+        return typeof(TBase).IsAssignableFrom(type);
+    }
 
     /// <summary>
     /// 是否匿名类型
@@ -427,8 +462,10 @@ public static partial class TypeExtensions
     /// <param name="type"></param>
     /// <returns></returns>
     public static bool IsAnonymousType(this Type type)
-        => type.Namespace == null
-            && type.Name.Contains("AnonymousType")
-            && type.IsDefined(typeof(CompilerGeneratedAttribute));
+    {
+        return type.Namespace == null
+                && type.Name.Contains("AnonymousType")
+                && type.IsDefined(typeof(CompilerGeneratedAttribute));
+    }
 }
 #endif

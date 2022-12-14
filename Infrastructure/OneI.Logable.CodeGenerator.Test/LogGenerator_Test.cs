@@ -2,7 +2,6 @@ namespace OneI.Logable;
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using OneI.Logable.Templating;
 using OneI.Logable.Templating.Properties.ValueTypes;
@@ -147,7 +146,7 @@ public class User<T>
 
 public interface IModel
 {
-
 }
 
-public interface IModel<T> { }
+public interface IModel<T>
+{ }

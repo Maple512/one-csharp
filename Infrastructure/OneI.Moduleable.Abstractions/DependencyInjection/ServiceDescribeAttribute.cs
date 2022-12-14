@@ -9,7 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 [AttributeUsage(AttributeTargets.Class)]
 public class ServiceDescribeAttribute : Attribute
 {
-    private ServiceDescribeAttribute() { }
+    private ServiceDescribeAttribute()
+    { }
 
     public ServiceDescribeAttribute(ServiceLifetime lifetime) => Lifetime = lifetime;
 

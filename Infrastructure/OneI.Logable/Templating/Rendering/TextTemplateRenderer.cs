@@ -29,16 +29,21 @@ public class TextTemplateRenderer : ITextRenderer
                 case TextToken textToken:
                     RenderText(writer, textToken);
                     break;
+
                 case PropertyToken propertyToken:
                     RenderProperty(writer, propertyToken, context);
                     break;
+
                 default:
                     throw new InvalidOperationException($"Unknown token type: {token.GetType().FullName}");
             }
         }
     }
 
-    internal static void RenderText(TextWriter writer, TextToken token) => writer.Write(token.ToString());
+    internal static void RenderText(TextWriter writer, TextToken token)
+    {
+        writer.Write(token.ToString());
+    }
 
     private void RenderProperty(TextWriter writer, PropertyToken token, LoggerContext context)
     {
@@ -84,7 +89,7 @@ public class TextTemplateRenderer : ITextRenderer
             }
             else if(token.Name == PropertyNames.Timestamp)
             {
-                DefaultRender(context.Timestamp, sw, token.Format, _formatProvider);
+                DefaultRender(context.Timestamp, null, sw, token.Format, _formatProvider);
             }
             else if(token.Name == PropertyNames.Properties)
             {
@@ -114,6 +119,7 @@ public class TextTemplateRenderer : ITextRenderer
 
     internal static void DefaultRender<T>(
         T? value,
+        ILoggerSerializable<T>? serializer,
         TextWriter writer,
         string? format = null,
         IFormatProvider? formatProvider = null)
@@ -121,6 +127,12 @@ public class TextTemplateRenderer : ITextRenderer
         if(value == null)
         {
             writer.Write("null");
+            return;
+        }
+
+        if(serializer != null)
+        {
+            writer.Write(serializer.Serialize(value));
             return;
         }
 
@@ -151,10 +163,9 @@ public class TextTemplateRenderer : ITextRenderer
         if(value is IFormattable f)
         {
             writer.Write(f.ToString(format, formatProvider ?? CultureInfo.InvariantCulture));
+            return;
         }
-        else
-        {
-            writer.Write(value.ToString());
-        }
+
+        writer.Write(value.ToString());
     }
 }

@@ -35,5 +35,8 @@ public class PropertyToken : Token
 
     public int? ParameterIndex { get; }
 
-    internal void ResetPosition(int position) => Position = position;
+    internal void ResetPosition(int position)
+    {
+        Position = position;
+    }
 }

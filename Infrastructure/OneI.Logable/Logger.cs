@@ -1,19 +1,30 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Middlewares;
-
 public class Logger : ILogger
 {
-    private readonly LoggerDelegate _process;
-    private readonly IReadOnlyList<LoggerDelegate> _writers;
+    private readonly LogLevelMap _levelMap;
+    private readonly LoggerDelegate _middleware;
+    private readonly ILoggerEndpoint _endpoint;
 
-    internal Logger(LoggerDelegate process, IReadOnlyList<LoggerDelegate> writers)
+    internal Logger(
+        LoggerDelegate middleware,
+        ILoggerEndpoint endpoint,
+        LogLevelMap levelMap)
     {
-        _process = process;
-        _writers = writers;
+        _middleware = middleware;
+        _endpoint = endpoint;
+        _levelMap = levelMap;
     }
 
-    public bool IsEnable(LogLevel level) => throw new NotImplementedException();
+    /// <summary>
+    /// 表示指定的<paramref name="level"/>是否已经启用
+    /// </summary>
+    /// <param name="level"></param>
+    /// <returns></returns>
+    public bool IsEnable(LogLevel level)
+    {
+        return _levelMap.IsEnabled(level);
+    }
 
     public void Write(LoggerContext context)
     {
@@ -28,20 +39,12 @@ public class Logger : ILogger
     {
         try
         {
-            _process.Invoke(context);
+            _middleware.Invoke(context);
         }
         catch(Exception)
         {
-
         }
 
-        foreach(var writer in _writers)
-        {
-            try
-            {
-                writer(context);
-            }
-            catch(Exception) { }
-        }
+        _endpoint.Invoke(context);
     }
 }

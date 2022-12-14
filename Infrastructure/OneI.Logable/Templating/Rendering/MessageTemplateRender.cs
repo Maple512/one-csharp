@@ -64,5 +64,8 @@ public static class MessageTemplateRender
         PropertyValue propertyValue,
         TextWriter output,
         string? format,
-        IFormatProvider? formatProvider) => propertyValue.Render(output, format, formatProvider);
+        IFormatProvider? formatProvider)
+    {
+        propertyValue.Render(output, format, formatProvider);
+    }
 }

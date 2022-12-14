@@ -45,10 +45,13 @@ public static class RenderHelper
     /// <param name="format"><code>l -> to lower-case</code><code>u -> to upper-case</code></param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? Casing(string? value, string? format = null) => format switch
+    public static string? Casing(string? value, string? format = null)
     {
-        Formatters.UpperCase => value?.ToUpperInvariant(),
-        Formatters.LowerCase => value?.ToLowerInvariant(),
-        _ => value,
-    };
+        return format switch
+        {
+            Formatters.UpperCase => value?.ToUpperInvariant(),
+            Formatters.LowerCase => value?.ToLowerInvariant(),
+            _ => value,
+        };
+    }
 }

@@ -1,14 +1,21 @@
 namespace System.Linq.Expressions;
 
 #if NET7_0_OR_GREATER
+
 [StackTraceHidden]
 #endif
 [DebuggerStepThrough]
 public static class ExpressionExtensions
 {
-    public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right) => CombineLambdas(left, right, ExpressionType.AndAlso);
+    public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
+    {
+        return CombineLambdas(left, right, ExpressionType.AndAlso);
+    }
 
-    public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right) => CombineLambdas(left, right, ExpressionType.OrElse);
+    public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> left, Expression<Func<T, bool>> right)
+    {
+        return CombineLambdas(left, right, ExpressionType.OrElse);
+    }
 
     public static Expression<Func<T, bool>> CombineLambdas<T>(
         this Expression<Func<T, bool>> left,
@@ -32,6 +39,9 @@ public static class ExpressionExtensions
     {
         public Dictionary<Expression, Expression> Sub = new();
 
-        protected override Expression VisitParameter(ParameterExpression node) => Sub.TryGetValue(node, out var newValue) ? newValue : node;
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            return Sub.TryGetValue(node, out var newValue) ? newValue : node;
+        }
     }
 }

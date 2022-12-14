@@ -3,15 +3,11 @@
     <Import Project="../../common.props" />
 
     <PropertyGroup>
-        <TargetFramework>$(NetStandard)</TargetFramework>
+        <TargetFramework>$(NetFramework)</TargetFramework>
     </PropertyGroup>
-    
+
     <ItemGroup>
-        <PackageReference Include="System.Memory" Version="4.5.5" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj"/>
+        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" SetTargetFramework="TargetFramework=net7.0"/>
     </ItemGroup>
 
 </Project>

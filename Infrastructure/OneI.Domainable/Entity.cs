@@ -37,22 +37,38 @@ public abstract class Entity : IEntity, IEqualityComparer<Entity>, IEquatable<En
         return x.GetKeys().SequenceEqual(y.GetKeys());
     }
 
-    public int GetHashCode([DisallowNull] Entity obj) => obj.GetKeys().GetHashCode();
+    public int GetHashCode([DisallowNull] Entity obj)
+    {
+        return obj.GetKeys().GetHashCode();
+    }
 
-    public bool Equals(Entity? other) => other != null && GetKeys().SequenceEqual(other.GetKeys());
+    public bool Equals(Entity? other)
+    {
+        return other != null && GetKeys().SequenceEqual(other.GetKeys());
+    }
 
-    public override string ToString() => $"[Entity: {GetType().Name}, Keys: {string.Join(',', GetKeys())}]";
+    public override string ToString()
+    {
+        return $"[Entity: {GetType().Name}, Keys: {string.Join(',', GetKeys())}]";
+    }
 
-    public override bool Equals(object? obj) => Equals(obj as Entity);
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as Entity);
+    }
 
-    public override int GetHashCode() => GetKeys().GetHashCode();
+    public override int GetHashCode()
+    {
+        return GetKeys().GetHashCode();
+    }
 }
 
 [Serializable]
 public abstract class Entity<TKey> : Entity, IEntity<TKey>, IEqualityComparer<Entity<TKey>>, IEquatable<Entity<TKey>>
     where TKey : notnull
 {
-    protected Entity() { }
+    protected Entity()
+    { }
 
     protected Entity(TKey id) => Id = id;
 
@@ -74,16 +90,28 @@ public abstract class Entity<TKey> : Entity, IEntity<TKey>, IEqualityComparer<En
         return x.Id.Equals(y.Id);
     }
 
-    public sealed override IEnumerable<object> GetKeys()
+    public override sealed IEnumerable<object> GetKeys()
     {
         yield return Id;
     }
 
-    public int GetHashCode([DisallowNull] Entity<TKey> obj) => obj.Id.GetHashCode();
+    public int GetHashCode([DisallowNull] Entity<TKey> obj)
+    {
+        return obj.Id.GetHashCode();
+    }
 
-    public bool Equals(Entity<TKey>? other) => other != null && other.Id.Equals(Id);
+    public bool Equals(Entity<TKey>? other)
+    {
+        return other != null && other.Id.Equals(Id);
+    }
 
-    public override bool Equals([AllowNull] object obj) => Equals(obj as Entity<TKey>);
+    public override bool Equals([AllowNull] object obj)
+    {
+        return Equals(obj as Entity<TKey>);
+    }
 
-    public override int GetHashCode() => Id.GetHashCode();
+    public override int GetHashCode()
+    {
+        return Id.GetHashCode();
+    }
 }

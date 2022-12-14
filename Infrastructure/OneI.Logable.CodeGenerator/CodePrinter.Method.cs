@@ -1,4 +1,5 @@
 namespace OneI.Logable;
+
 using System.Text;
 using OneI.Logable.Definitions;
 

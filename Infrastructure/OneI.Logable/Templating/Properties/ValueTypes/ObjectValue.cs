@@ -12,13 +12,7 @@ public class ObjectValue : PropertyValue
         _values = new();
     }
 
-    public IReadOnlyList<Property> Properties
-    {
-        get
-        {
-            return _values;
-        }
-    }
+    public IReadOnlyList<Property> Properties => _values;
 
     public override void Render(TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
     {

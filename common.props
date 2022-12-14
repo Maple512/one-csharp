@@ -19,6 +19,10 @@
         <Using Include="System.Text"/>
     </ItemGroup>
 
+    <PropertyGroup>
+        <NoWarn>$(NoWarn);CS1591;CS1573;CS8618;CA2252;CD1600;CD1601;CD1602;CD1603;CD1604;CD1605;CD1606;</NoWarn>
+    </PropertyGroup>
+
     <!--Root Namespace-->
     <PropertyGroup>
         <RootNamespaceLength>$(MSBuildProjectName.Split(".").Length)</RootNamespaceLength>
@@ -31,10 +35,6 @@
         <Product>$(RootName)</Product>
         <Copyright>$(Authors)</Copyright>
         <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <NoWarn>$(NoWarn);CS1591;CS1573;CS8618;CA2252;</NoWarn>
     </PropertyGroup>
 
     <!--Nuget Packages Config-->

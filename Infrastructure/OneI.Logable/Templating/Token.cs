@@ -12,5 +12,8 @@ public class Token
 
     public string Text { get; }
 
-    public override string ToString() => Text;
+    public override string ToString()
+    {
+        return Text;
+    }
 }

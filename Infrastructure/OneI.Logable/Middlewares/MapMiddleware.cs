@@ -1,23 +1,25 @@
 namespace OneI.Logable.Middlewares;
 
-public class MapMiddleware : ILoggerMiddleware
-{
-    private readonly LoggerDelegate _branch;
-    private readonly Func<LoggerContext, bool> _condition;
+using System;
 
-    public MapMiddleware(LoggerDelegate branch, Func<LoggerContext, bool> condition)
+public class MapMiddleware : LoggerMiddleware
+{
+    private readonly Func<LoggerContext, bool> _condition;
+    private readonly LoggerDelegate _branch;
+
+    public MapMiddleware(Func<LoggerContext, bool> condition, LoggerDelegate branch)
     {
-        _branch = branch;
         _condition = condition;
+        _branch = branch;
     }
 
-    public void Invoke(in LoggerContext context, in LoggerDelegate next)
+    public override LoggerVoid Invoke(in LoggerContext context, in LoggerDelegate next)
     {
         if(_condition(context))
         {
-            _branch(context);
+            return _branch(context);
         }
 
-        next(context);
+        return next(context);
     }
 }

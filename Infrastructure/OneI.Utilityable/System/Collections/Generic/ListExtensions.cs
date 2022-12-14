@@ -1,7 +1,5 @@
 namespace System.Collections.Generic;
 
-using System;
-using System.Linq;
 using OneI;
 
 public static class ListExtensions

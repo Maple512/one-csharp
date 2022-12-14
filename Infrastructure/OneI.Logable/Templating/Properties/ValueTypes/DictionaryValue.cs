@@ -1,4 +1,5 @@
 namespace OneI.Logable.Templating.Properties.ValueTypes;
+
 /// <summary>
 /// The dictionary value.
 /// </summary>
@@ -11,13 +12,7 @@ public class DictionaryValue : PropertyValue
         _properties = new();
     }
 
-    public IReadOnlyDictionary<PropertyValue, PropertyValue> Values
-    {
-        get
-        {
-            return _properties;
-        }
-    }
+    public IReadOnlyDictionary<PropertyValue, PropertyValue> Values => _properties;
 
     public override void Render(TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
     {
@@ -46,7 +41,7 @@ public class DictionaryValue : PropertyValue
 
     public void Add(string name, PropertyValue value)
     {
-        var key = Create(name);
+        var key = CreateLiteral(name);
         if(_properties.ContainsKey(key))
         {
             return;

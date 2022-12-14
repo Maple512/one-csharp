@@ -3,7 +3,9 @@ namespace System.IO;
 using System.Diagnostics;
 
 #if NET7_0_OR_GREATER
+
 using System.Diagnostics.CodeAnalysis;
+
 [StackTraceHidden]
 #endif
 [DebuggerStepThrough]

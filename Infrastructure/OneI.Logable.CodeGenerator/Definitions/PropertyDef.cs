@@ -32,5 +32,8 @@ public class PropertyDef
     /// </summary>
     public TypeDef Type { get; }
 
-    public override string ToString() => Name;
+    public override string ToString()
+    {
+        return Name;
+    }
 }

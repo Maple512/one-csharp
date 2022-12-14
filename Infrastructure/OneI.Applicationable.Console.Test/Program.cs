@@ -20,7 +20,10 @@ public class Program : AppProgram
         await AppProgram.RunAsync<Program>(configurationBuilderAction, logger);
     }
 
-    public static void ConfigureConfiguration(IConfigurationBuilder builder) => builder.AddJsonFile("appsettings.json");
+    public static void ConfigureConfiguration(IConfigurationBuilder builder)
+    {
+        builder.AddJsonFile("appsettings.json");
+    }
 
     public override void ConfigureServices(in ModuleConfigureServiceContext context)
     {
@@ -33,9 +36,11 @@ public class Program : AppProgram
 
         if(context.Environment.IsDevelopment())
         {
-
         }
     }
 
-    public override ValueTask ConfigureAsync(ModuleConfigureContext context) => base.ConfigureAsync(context);
+    public override ValueTask ConfigureAsync(ModuleConfigureContext context)
+    {
+        return base.ConfigureAsync(context);
+    }
 }

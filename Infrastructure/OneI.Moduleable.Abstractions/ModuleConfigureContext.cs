@@ -8,5 +8,8 @@ public readonly struct ModuleConfigureContext
 
     public IServiceProvider ServiceProvider { get; }
 
-    public override int GetHashCode() => HashCode.Combine(ServiceProvider);
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(ServiceProvider);
+    }
 }

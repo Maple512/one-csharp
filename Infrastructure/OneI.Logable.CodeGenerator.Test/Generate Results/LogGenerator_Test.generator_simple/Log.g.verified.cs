@@ -37,7 +37,7 @@ public static partial class Log
 
     public static void Write(LogLevel level, string message, params object?[] args)
     {
-        WriteCore(level, null, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(level, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Write(LogLevel level, Exception exception, string message)
@@ -47,7 +47,7 @@ public static partial class Log
 
     public static void Write(LogLevel level, Exception exception, string message, params object?[] args)
     {
-        WriteCore(level, exception, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(level, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Write(LoggerContext context)
@@ -106,7 +106,7 @@ public static partial class Log
 
     public static void Verbose(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Verbose, null, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Verbose, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Verbose(Exception exception, string message)
@@ -116,7 +116,7 @@ public static partial class Log
 
     public static void Verbose(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Verbose, exception, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Verbose, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Verbose
@@ -130,7 +130,7 @@ public static partial class Log
 
     public static void Debug(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Debug, null, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Debug, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Debug(Exception exception, string message)
@@ -140,7 +140,7 @@ public static partial class Log
 
     public static void Debug(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Debug, exception, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Debug, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Debug
@@ -154,7 +154,7 @@ public static partial class Log
 
     public static void Information(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Information, null, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Information, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Information(Exception exception, string message)
@@ -164,7 +164,7 @@ public static partial class Log
 
     public static void Information(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Information, exception, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Information, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Information
@@ -178,7 +178,7 @@ public static partial class Log
 
     public static void Warning(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Warning, null, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Warning, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Warning(Exception exception, string message)
@@ -188,7 +188,7 @@ public static partial class Log
 
     public static void Warning(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Warning, exception, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Warning, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Warning
@@ -202,7 +202,7 @@ public static partial class Log
 
     public static void Error(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Error, null, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Error, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Error(Exception exception, string message)
@@ -212,7 +212,7 @@ public static partial class Log
 
     public static void Error(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Error, exception, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Error, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Error
@@ -226,7 +226,7 @@ public static partial class Log
 
     public static void Fatal(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Fatal, null, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Fatal, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Fatal(Exception exception, string message)
@@ -236,7 +236,7 @@ public static partial class Log
 
     public static void Fatal(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Fatal, exception, message, args.Select(x => PropertyValue.Create(x)));
+        WriteCore(LogLevel.Fatal, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Fatal

@@ -8,8 +8,10 @@ public class Logger_Test
     public void simple()
     {
         var log = new LoggerBuilder()
-            .WriteTo(new StringOutputWriter("{Timestamp:yyyy-MM-dd}{Message}"))
-            .Build();
+            .Level.Error()
+            .Level.Override(nameof(Microsoft), LogLevel.Information, LogLevel.Debug)
+            .Endpoint.Run(new StringOutputWriter("{Timestamp:yyyy-MM-dd}{Message}"))
+            .CreateLogger();
 
         log.Write(LogLevel.Debug, "message");
     }

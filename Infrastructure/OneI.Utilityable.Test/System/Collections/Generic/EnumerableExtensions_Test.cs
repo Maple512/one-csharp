@@ -14,5 +14,7 @@ public class EnumerableExtensions_Test
     [Theory]
     [MemberData(nameof(GetEqualityComparers))]
     public void exclude_null_and_writespace(IEnumerable<string> source, IEqualityComparer<string> comparer, int count)
-        => source.ExcludeNullAndWriteSpace(comparer).Count().ShouldBe(count);
+    {
+        source.ExcludeNullAndWriteSpace(comparer).Count().ShouldBe(count);
+    }
 }

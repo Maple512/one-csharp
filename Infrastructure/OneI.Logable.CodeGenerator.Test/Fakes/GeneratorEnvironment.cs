@@ -5,7 +5,8 @@ using System;
 /// <summary>
 /// The user type.
 /// </summary>
-public enum UserType { a, b, c, d }
+public enum UserType
+{ a, b, c, d }
 
 /// <summary>
 /// The user info.

@@ -28,28 +28,40 @@ public static partial class StringExtensions
     /// </summary>
     /// <param name="str">The str.</param>
     /// <returns>A bool.</returns>
-    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? str) => string.IsNullOrEmpty(str);
+    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? str)
+    {
+        return string.IsNullOrEmpty(str);
+    }
 
     /// <summary>
     /// Not the null or empty.
     /// </summary>
     /// <param name="str">The str.</param>
     /// <returns>A bool.</returns>
-    public static bool NotNullOrEmpty([NotNullWhen(true)] this string? str) => string.IsNullOrEmpty(str) == false;
+    public static bool NotNullOrEmpty([NotNullWhen(true)] this string? str)
+    {
+        return string.IsNullOrEmpty(str) == false;
+    }
 
     /// <summary>
     /// Is null or white space.
     /// </summary>
     /// <param name="str">The str.</param>
     /// <returns>A bool.</returns>
-    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? str) => string.IsNullOrWhiteSpace(str);
+    public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? str)
+    {
+        return string.IsNullOrWhiteSpace(str);
+    }
 
     /// <summary>
     /// Not the null or white space.
     /// </summary>
     /// <param name="str">The str.</param>
     /// <returns>A bool.</returns>
-    public static bool NotNullOrWhiteSpace([NotNullWhen(true)] this string? str) => string.IsNullOrWhiteSpace(str) == false;
+    public static bool NotNullOrWhiteSpace([NotNullWhen(true)] this string? str)
+    {
+        return string.IsNullOrWhiteSpace(str) == false;
+    }
 
     #endregion
 
@@ -179,39 +191,51 @@ public static partial class StringExtensions
 #elif NETSTANDARD
 public static partial class StringExtensions
 {
-#region Check
+    #region Check
 
     /// <summary>
     /// Is null or empty.
     /// </summary>
     /// <param name="str">The str.</param>
     /// <returns>A bool.</returns>
-    public static bool IsNullOrEmpty(this string? str) => string.IsNullOrEmpty(str);
+    public static bool IsNullOrEmpty(this string? str)
+    {
+        return string.IsNullOrEmpty(str);
+    }
 
     /// <summary>
     /// Not the null or empty.
     /// </summary>
     /// <param name="str">The str.</param>
     /// <returns>A bool.</returns>
-    public static bool NotNullOrEmpty(this string? str) => string.IsNullOrEmpty(str) == false;
+    public static bool NotNullOrEmpty(this string? str)
+    {
+        return string.IsNullOrEmpty(str) == false;
+    }
 
     /// <summary>
     /// Is null or white space.
     /// </summary>
     /// <param name="str">The str.</param>
     /// <returns>A bool.</returns>
-    public static bool IsNullOrWhiteSpace(this string? str) => string.IsNullOrWhiteSpace(str);
+    public static bool IsNullOrWhiteSpace(this string? str)
+    {
+        return string.IsNullOrWhiteSpace(str);
+    }
 
     /// <summary>
     /// Not the null or white space.
     /// </summary>
     /// <param name="str">The str.</param>
     /// <returns>A bool.</returns>
-    public static bool NotNullOrWhiteSpace(this string? str) => string.IsNullOrWhiteSpace(str) == false;
+    public static bool NotNullOrWhiteSpace(this string? str)
+    {
+        return string.IsNullOrWhiteSpace(str) == false;
+    }
 
-#endregion
+    #endregion
 
-#region char case
+    #region char case
 
     /// <summary>
     /// 转驼峰命名（首字符转小写，其余不变）
@@ -330,6 +354,6 @@ public static partial class StringExtensions
         return stringBuilder.ToString();
     }
 
-#endregion char case
+    #endregion char case
 }
 #endif

@@ -1,12 +1,12 @@
 {
-  "profiles": {
-    "OneI.Restable.Abstractions": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:2308;http://localhost:2309"
+    "profiles": {
+        "OneI.Restable.Abstractions": {
+            "commandName": "Project",
+            "launchBrowser": true,
+            "environmentVariables": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "applicationUrl": "https://localhost:2308;http://localhost:2309"
+        }
     }
-  }
 }

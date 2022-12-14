@@ -16,5 +16,8 @@ public class Module : IModule
     {
     }
 
-    public virtual ValueTask ConfigureAsync(ModuleConfigureContext context) => ValueTask.CompletedTask;
+    public virtual ValueTask ConfigureAsync(ModuleConfigureContext context)
+    {
+        return ValueTask.CompletedTask;
+    }
 }

@@ -1,6 +1,7 @@
 namespace OneI.Logable;
 
 using System.Collections;
+using System.Linq;
 using Microsoft.CodeAnalysis;
 using OneI.Logable.Definitions;
 
@@ -9,13 +10,26 @@ using OneI.Logable.Definitions;
 /// </summary>
 public class TypeSymbolVisitor : SymbolVisitor
 {
+    /// <summary>
+    /// The current.
+    /// </summary>
     private TypeDef _current;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TypeSymbolVisitor"/> class.
+    /// </summary>
+    /// <param name="current">The current.</param>
     public TypeSymbolVisitor(TypeDef? current = null)
     {
         _current = current ?? new();
     }
 
+    /// <summary>
+    /// Try parse.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <param name="type">The type.</param>
+    /// <returns>A bool.</returns>
     public static bool TryParse(ISymbol? symbol, out TypeDef? type)
     {
         if(symbol == null)
@@ -38,21 +52,33 @@ public class TypeSymbolVisitor : SymbolVisitor
         return true;
     }
 
+    /// <summary>
+    /// Visit array type.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
     public override void VisitArrayType(IArrayTypeSymbol symbol)
     {
         if(TryParse(symbol.ElementType, out var elementTyppe))
         {
             _current.Kind = TypeDefKind.Array;
 
-            _current.Names.AddRange(elementTyppe.Names);
+            _current.Names.AddRange(elementTyppe!.Names);
         }
     }
 
+    /// <summary>
+    /// Visit dynamic type.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
     public override void VisitDynamicType(IDynamicTypeSymbol symbol)
     {
         _current.Names.AddRange(new[] { nameof(System), nameof(Object) });
     }
 
+    /// <summary>
+    /// Visit type parameter.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
     public override void VisitTypeParameter(ITypeParameterSymbol symbol)
     {
         _current.Names.Add(symbol.Name);
@@ -96,6 +122,10 @@ public class TypeSymbolVisitor : SymbolVisitor
         }
     }
 
+    /// <summary>
+    /// Visit named type.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
     public override void VisitNamedType(INamedTypeSymbol symbol)
     {
         try
@@ -177,6 +207,10 @@ public class TypeSymbolVisitor : SymbolVisitor
         }
     }
 
+    /// <summary>
+    /// Parses the named type names.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
     private void ParseNamedTypeNames(INamedTypeSymbol symbol)
     {
         if(symbol.ContainingType is not null)
@@ -202,11 +236,19 @@ public class TypeSymbolVisitor : SymbolVisitor
         _current.Names.Add(symbol.Name);
     }
 
+    /// <summary>
+    /// Visit property.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
     public override void VisitProperty(IPropertySymbol symbol)
     {
         TryParse(symbol.Type, out _current);
     }
 
+    /// <summary>
+    /// Visit namespace.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
     public override void VisitNamespace(INamespaceSymbol symbol)
     {
         if(symbol.IsGlobalNamespace == false)
@@ -217,6 +259,10 @@ public class TypeSymbolVisitor : SymbolVisitor
         }
     }
 
+    /// <summary>
+    /// Visit field.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
     public override void VisitField(IFieldSymbol symbol)
     {
         if(TryParse(symbol.Type, out var type))
@@ -225,6 +271,11 @@ public class TypeSymbolVisitor : SymbolVisitor
         }
     }
 
+    /// <summary>
+    /// Default the visit.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <exception cref="NotImplementedException"></exception>
     public override void DefaultVisit(ISymbol symbol)
     {
         throw new NotImplementedException(symbol.GetType().FullName);

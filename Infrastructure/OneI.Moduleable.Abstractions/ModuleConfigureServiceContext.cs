@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OneI.Applicationable;
 
-public readonly ref struct ModuleConfigureServiceContext
+public readonly struct ModuleConfigureServiceContext
 {
     public ModuleConfigureServiceContext(
         IServiceCollection services,
@@ -23,5 +23,8 @@ public readonly ref struct ModuleConfigureServiceContext
 
     public IApplicationEnvironment Environment { get; }
 
-    public override int GetHashCode() => HashCode.Combine(Services, Configuration);
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Services, Configuration);
+    }
 }
