@@ -6,11 +6,11 @@ using OneI.Logable.Definitions;
 /// <summary>
 /// The code printer.
 /// </summary>
-public static partial class CodePrinter
+internal static partial class CodePrinter
 {
-    public static void PrintType(IndentedStringBuilder builder, TypeDef type)
+    internal static void PrintType(IndentedStringBuilder builder, TypeDef type)
     {
-        builder.AppendLine($"private static global::OneI.Logable.Templating.Properties.PropertyValue {CodeAssets.CreateMethodName}({type.ToDisplayString()} p)");
+        builder.AppendLine($"public static global::OneI.Logable.Templating.Properties.PropertyValue {CodeAssets.LoggerPropertyCreateMethodName}({type.ToDisplayString()} p)");
 
         builder.AppendLine("{");
 

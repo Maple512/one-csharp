@@ -7,7 +7,7 @@ public class LoggerMiddleware_Test
     {
         var order = new List<int>();
 
-        var logger = new LoggerBuilder()
+        var logger = new LoggerConfiguration()
             .Use(context => order.Add(1))
             .UseWhen(context => context.Level == LogLevel.Debug, _ => order.Add(2))
             .Use(context => order.Add(3))

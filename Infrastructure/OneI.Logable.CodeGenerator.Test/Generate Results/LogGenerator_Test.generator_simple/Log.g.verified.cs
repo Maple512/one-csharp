@@ -20,7 +20,7 @@ public static partial class Log
     /// <param name="logger"></param>
     public static void Initialize(ILogger logger)
     {
-        _logger = logger;
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public static bool IsEnable(LogLevel logLevel)
@@ -32,66 +32,26 @@ public static partial class Log
 
     public static void Write(LogLevel level, string message)
     {
-        WriteCore(level, null, message, null);
+        LoggerExtensions.PackageWrite(_logger, level, null, message, null);
     }
 
     public static void Write(LogLevel level, string message, params object?[] args)
     {
-        WriteCore(level, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, level, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Write(LogLevel level, Exception exception, string message)
     {
-        WriteCore(level, exception, message, null);
+        LoggerExtensions.PackageWrite(_logger, level, exception, message, null);
     }
 
     public static void Write(LogLevel level, Exception exception, string message, params object?[] args)
     {
-        WriteCore(level, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, level, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Write(LoggerContext context)
     {
-        _logger?.Write(context);
-    }
-
-    private static void WriteCore(
-        LogLevel level,
-        Exception? exception,
-        string message,
-        IEnumerable<PropertyValue>? propertyValues = null)
-    {
-        propertyValues ??= new List<PropertyValue>(0);
-
-        var template = TextParser.Parse(message);
-        var tokens = template.Properties;
-
-        var count = propertyValues.Count();
-        var length = Math.Max(tokens.Count, count);
-
-        var properties = new List<Property>(length);
-
-        for(var i = 0; i < length; i++)
-        {
-            var name = $"__{i}";
-            var index = i;
-            if(i < tokens.Count)
-            {
-                var token = tokens[i];
-
-                name = token.Name;
-
-                index = token.ParameterIndex ?? i;
-            }
-
-            if(count > index)
-            {
-                properties.Add(new Property(name, propertyValues.ElementAt(i)));
-            }
-        }
-
-        var context = new LoggerContext(level, template, exception, properties);
-
         _logger?.Write(context);
     }
 
@@ -101,22 +61,22 @@ public static partial class Log
 
     public static void Verbose(string message)
     {
-        WriteCore(LogLevel.Verbose, null, message);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Verbose, null, message);
     }
 
     public static void Verbose(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Verbose, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Verbose, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Verbose(Exception exception, string message)
     {
-        WriteCore(LogLevel.Verbose, exception, message, null);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Verbose, exception, message, null);
     }
 
     public static void Verbose(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Verbose, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Verbose, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Verbose
@@ -125,22 +85,22 @@ public static partial class Log
 
     public static void Debug(string message)
     {
-        WriteCore(LogLevel.Debug, null, message);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Debug, null, message);
     }
 
     public static void Debug(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Debug, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Debug, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Debug(Exception exception, string message)
     {
-        WriteCore(LogLevel.Debug, exception, message, null);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Debug, exception, message, null);
     }
 
     public static void Debug(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Debug, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Debug, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Debug
@@ -149,22 +109,22 @@ public static partial class Log
 
     public static void Information(string message)
     {
-        WriteCore(LogLevel.Information, null, message);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Information, null, message);
     }
 
     public static void Information(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Information, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Information, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Information(Exception exception, string message)
     {
-        WriteCore(LogLevel.Information, exception, message, null);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Information, exception, message, null);
     }
 
     public static void Information(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Information, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Information, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Information
@@ -173,22 +133,22 @@ public static partial class Log
 
     public static void Warning(string message)
     {
-        WriteCore(LogLevel.Warning, null, message);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Warning, null, message);
     }
 
     public static void Warning(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Warning, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Warning, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Warning(Exception exception, string message)
     {
-        WriteCore(LogLevel.Warning, exception, message, null);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Warning, exception, message, null);
     }
 
     public static void Warning(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Warning, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Warning, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Warning
@@ -197,22 +157,22 @@ public static partial class Log
 
     public static void Error(string message)
     {
-        WriteCore(LogLevel.Error, null, message);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Error, null, message);
     }
 
     public static void Error(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Error, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Error, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Error(Exception exception, string message)
     {
-        WriteCore(LogLevel.Error, exception, message, null);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Error, exception, message, null);
     }
 
     public static void Error(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Error, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Error, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Error
@@ -221,22 +181,22 @@ public static partial class Log
 
     public static void Fatal(string message)
     {
-        WriteCore(LogLevel.Fatal, null, message);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Fatal, null, message);
     }
 
     public static void Fatal(string message, params object?[] args)
     {
-        WriteCore(LogLevel.Fatal, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Fatal, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     public static void Fatal(Exception exception, string message)
     {
-        WriteCore(LogLevel.Fatal, exception, message, null);
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Fatal, exception, message, null);
     }
 
     public static void Fatal(Exception exception, string message, params object?[] args)
     {
-        WriteCore(LogLevel.Fatal, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
+        LoggerExtensions.PackageWrite(_logger, LogLevel.Fatal, exception, message, args.Select(x => PropertyValue.CreateLiteral(x)));
     }
 
     #endregion Fatal

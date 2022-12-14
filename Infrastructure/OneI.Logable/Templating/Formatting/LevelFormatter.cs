@@ -7,7 +7,7 @@ public static class LevelFormatter
     private static readonly string[][] _levelMap =
         {
             new []{ "V", "Vrb", "Verbose" },
-            new []{ "D", "Dbg", "Asserter" },
+            new []{ "D", "Dbg", "Debug" },
             new []{ "I", "Inf", "Information" },
             new []{ "W", "Wrn", "Warning" },
             new []{ "E", "Err", "Error" },

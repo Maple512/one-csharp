@@ -38,6 +38,12 @@ public class LoggerCodeGenerator : IIncrementalGenerator
             ctx.AddSource(CodeAssets.LogFileName,
                 SourceText.From(CodeAssets.LogFileContent, Encoding.UTF8));
         });
+
+        context.RegisterPostInitializationOutput(ctx =>
+        {
+            ctx.AddSource(CodeAssets.LoggerExtensionClassFileName,
+                SourceText.From(CodeAssets.LoggerExtensionClassContent, Encoding.UTF8));
+        });
     }
 
     /// <summary>
@@ -76,7 +82,8 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
             var typename = method.ContainingType.ToDisplayString();
 
-            if(typename == CodeAssets.LogClassFullName && isParams)
+            if(isParams
+                && (typename == CodeAssets.LogClassFullName || typename == CodeAssets.LoggerExtensionFullName))
             {
                 flag = true;
             }
@@ -110,8 +117,12 @@ public class LoggerCodeGenerator : IIncrementalGenerator
             return;
         }
 
-        var source = CodePrinter.Print(methods);
+        CodePrinter.Print(methods, out var types, out var logExtensions, out var loggerExtensions);
 
-        context.AddSource(CodeAssets.LogableExtensionsFileName, source);
+        context.AddSource(CodeAssets.LoggerPropertyCreatorClassFileName, types);
+
+        context.AddSource(CodeAssets.LogExtensionsFileName, logExtensions);
+
+        context.AddSource(CodeAssets.LoggerExtensionExtensionClassFileName, loggerExtensions);
     }
 }

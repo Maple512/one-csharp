@@ -107,6 +107,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "reflection", "reflection", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Reflectionable", "Infrastructure\OneI.Reflectionable\OneI.Reflectionable.csproj", "{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Logable.File.Test", "Infrastructure\OneI.Logable.File.Test\OneI.Logable.File.Test.csproj", "{883FA6F7-5F50-4FF1-90F3-AEB784C1A0F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -233,6 +235,10 @@ Global
 		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{883FA6F7-5F50-4FF1-90F3-AEB784C1A0F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{883FA6F7-5F50-4FF1-90F3-AEB784C1A0F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{883FA6F7-5F50-4FF1-90F3-AEB784C1A0F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{883FA6F7-5F50-4FF1-90F3-AEB784C1A0F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -279,6 +285,7 @@ Global
 		{DA78E95C-D1A8-4D59-BCFF-7501E7C9A436} = {C5A8AD1C-0308-4DDC-9695-7D84A2954E7C}
 		{E9E65482-5206-427A-BC81-B5A526EC1B6B} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
 		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD} = {E9E65482-5206-427A-BC81-B5A526EC1B6B}
+		{883FA6F7-5F50-4FF1-90F3-AEB784C1A0F7} = {C5A8AD1C-0308-4DDC-9695-7D84A2954E7C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

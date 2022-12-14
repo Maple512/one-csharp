@@ -7,16 +7,16 @@ using OneI.Logable.Templating.Properties;
 /// <summary>
 /// The logger builder.
 /// </summary>
-public partial class LoggerBuilder
+public partial class LoggerConfiguration
 {
     /// <summary>
     /// The logger property builder.
     /// </summary>
-    private class LoggerPropertyBuilder : ILoggerPropertyBuilder
+    private class LoggerPropertyConfiguration : ILoggerPropertyConfiguration
     {
-        private readonly LoggerBuilder _parent;
+        private readonly LoggerConfiguration _parent;
 
-        public LoggerPropertyBuilder(LoggerBuilder parent)
+        public LoggerPropertyConfiguration(LoggerConfiguration parent)
         {
             _parent = parent;
         }
@@ -28,7 +28,7 @@ public partial class LoggerBuilder
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public ILoggerBuilder With<T>(string name, T value)
+        public ILoggerConfiguration With<T>(string name, T value)
         {
             _parent.Use(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value)));
 
@@ -43,7 +43,7 @@ public partial class LoggerBuilder
         /// <param name="value"></param>
         /// <param name="serializable">指定<typeparamref name="T"/>输出时使用的序列化器</param>
         /// <returns></returns>
-        public ILoggerBuilder With<T>(string name, T value, ILoggerSerializable<T>? serializable)
+        public ILoggerConfiguration With<T>(string name, T value, ILoggerSerializable<T>? serializable)
         {
             _parent.Use(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value, serializable)));
 
@@ -57,7 +57,7 @@ public partial class LoggerBuilder
         /// <param name="name"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public ILoggerBuilder WithSerializable<T>(string name, T value)
+        public ILoggerConfiguration WithSerializable<T>(string name, T value)
             where T : ILoggerSerializable<T>
         {
             _parent.Use(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value, value)));

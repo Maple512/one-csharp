@@ -8,9 +8,15 @@ public static class TextParser
 {
     public static TextTemplate Parse(string text)
     {
-        var tokens = text.IsNullOrEmpty()
-            ? Array.Empty<Token>()
-         : ParseCore(text.AsSpan());
+        IList<Token> tokens;
+        if(text.IsNullOrEmpty())
+        {
+            tokens = Array.Empty<Token>();
+        }
+        else
+        {
+            tokens = ParseCore(text.AsSpan());
+        }
 
         return new TextTemplate(text, tokens);
     }
@@ -122,18 +128,18 @@ public static class TextParser
         if(formatIndex == -1
             && alignIndex == -1)
         {
-            name = bytes[startIndex..end];
+            name = bytes.Slice(startIndex, end - startIndex);
         }// {Date:yyyy}
         else if(alignIndex == -1
             && formatIndex != -1)
         {
-            name = bytes[startIndex..formatIndex];// [startIndex..formatIndex];
-            formatChars = bytes[(formatIndex + 1)..end];// [(formatIndex + 1)..^1];
+            name = bytes.Slice(startIndex, formatIndex - startIndex);// [startIndex..formatIndex];
+            formatChars = bytes.Slice(formatIndex + 1, end - (formatIndex + 1));// [(formatIndex + 1)..^1];
         }// {Data,12}
         else if(formatIndex == -1
             && alignIndex != -1)
         {
-            var align = bytes[(alignIndex + 1)..end];//[(alignIndex + 1)..^1];
+            var align = bytes.Slice(alignIndex + 1, end - (alignIndex + 1));//[(alignIndex + 1)..^1];
 
             if(align.IsEmpty == false
                     && int.TryParse(align.ToString(), NumberStyles.AllowLeadingSign, System.Globalization.CultureInfo.InvariantCulture, out var width))
@@ -151,7 +157,7 @@ public static class TextParser
         {   // {Data:yyyy,12}
             if(alignIndex > formatIndex)
             {
-                var align = bytes[(alignIndex + 1)..end];// [(alignIndex + 1)..^1];
+                var align = bytes.Slice(alignIndex + 1, end - (alignIndex + 1));// [(alignIndex + 1)..^1];
 
                 if(align.IsEmpty == false
                     && int.TryParse(align.ToString(), NumberStyles.AllowLeadingSign, System.Globalization.CultureInfo.InvariantCulture, out var width))
@@ -163,13 +169,13 @@ public static class TextParser
                     return false;
                 }
 
-                formatChars = bytes[(formatIndex + 1)..alignIndex];
-                name = bytes[startIndex..formatIndex];
+                formatChars = bytes.Slice(formatIndex + 1, alignIndex - (formatIndex + 1));
+                name = bytes.Slice(startIndex, formatIndex - startIndex);
             }
             else // {Data,12:yyyy}
             {
                 // var align = bytes[(alignIndex + 1)..formatIndex];
-                var align = bytes[(alignIndex + 1)..formatIndex];
+                var align = bytes.Slice(alignIndex + 1, formatIndex - (alignIndex + 1));
 
                 if(align.IsEmpty == false
                     && int.TryParse(align.ToString(), NumberStyles.AllowLeadingSign | NumberStyles.AllowTrailingWhite, System.Globalization.CultureInfo.InvariantCulture, out var width))
@@ -181,8 +187,8 @@ public static class TextParser
                     return false;
                 }
 
-                formatChars = bytes[(formatIndex + 1)..end];
-                name = bytes[startIndex..alignIndex];
+                formatChars = bytes.Slice(formatIndex + 1, end - (formatIndex + 1));
+                name = bytes.Slice(startIndex, alignIndex - startIndex);
             }
         }
 
@@ -241,6 +247,9 @@ public static class TextParser
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsValidFormat(char c)
     {
-        return char.IsLetterOrDigit(c) || char.IsPunctuation(c);
+        return char.IsLetterOrDigit(c) // 字母或数字
+            || char.IsPunctuation(c) // 标点符号
+            || char.IsWhiteSpace(c) // 空格
+            || char.IsSymbol(c); // 字符
     }
 }

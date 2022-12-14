@@ -1,73 +1,73 @@
 namespace OneI.Logable;
 
-public partial class LoggerBuilder
+public partial class LoggerConfiguration
 {
-    private class LoggerLevelBuilder : ILoggerLevelBuilder
+    private class LoggerLevelConfiguration : ILoggerLevelConfiguration
     {
-        private readonly LoggerBuilder _parent;
+        private readonly LoggerConfiguration _parent;
 
-        public LoggerLevelBuilder(LoggerBuilder parent)
+        public LoggerLevelConfiguration(LoggerConfiguration parent)
         {
             _parent = parent;
         }
 
-        public ILoggerBuilder Minimum(LogLevel minimum)
+        public ILoggerConfiguration Minimum(LogLevel minimum)
         {
             _parent._logLevelMap.Minimum(minimum);
 
             return _parent;
         }
 
-        public ILoggerBuilder Verbose()
+        public ILoggerConfiguration Verbose()
         {
             Minimum(LogLevel.Verbose);
 
             return _parent;
         }
 
-        public ILoggerBuilder Debug()
+        public ILoggerConfiguration Debug()
         {
             Minimum(LogLevel.Debug);
 
             return _parent;
         }
 
-        public ILoggerBuilder Information()
+        public ILoggerConfiguration Information()
         {
             Minimum(LogLevel.Information);
 
             return _parent;
         }
 
-        public ILoggerBuilder Warning()
+        public ILoggerConfiguration Warning()
         {
             Minimum(LogLevel.Warning);
 
             return _parent;
         }
 
-        public ILoggerBuilder Error()
+        public ILoggerConfiguration Error()
         {
             Minimum(LogLevel.Error);
 
             return _parent;
         }
 
-        public ILoggerBuilder Fatal()
+        public ILoggerConfiguration Fatal()
         {
             Minimum(LogLevel.Fatal);
 
             return _parent;
         }
 
-        public ILoggerBuilder Maximum(LogLevel maximum)
+        public ILoggerConfiguration Maximum(LogLevel maximum)
         {
             _parent._logLevelMap.Maximum(maximum);
 
             return _parent;
         }
 
-        public ILoggerBuilder Override(string sourceContext, LogLevel minimum, LogLevel? maximum = null)
+        public ILoggerConfiguration Override(string sourceContext, LogLevel minimum, LogLevel? maximum = null)
         {
             if(sourceContext.IsNullOrWhiteSpace())
             {

@@ -1,19 +1,16 @@
-namespace OneI.Logable.Endpoints;
+namespace OneI.Logable.Sinks;
 
-/// <summary>
-/// The aggregate endpoint.
-/// </summary>
-public class AggregateEndpoint : ILoggerEndpoint
+public class AggregateSink : ILoggerSink
 {
-    private readonly IReadOnlyList<ILoggerEndpoint> _endpoints;
+    private readonly IReadOnlyList<ILoggerSink> _endpoints;
     private readonly bool _isSilent;
 
     /// <summary>
-    /// 聚合多个<see cref="ILoggerEndpoint"/>
+    /// 聚合多个<see cref="ILoggerSink"/>
     /// </summary>
     /// <param name="endpoints"></param>
     /// <param name="isSilent">是否忽略遇到的异常</param>
-    public AggregateEndpoint(List<ILoggerEndpoint> endpoints, bool isSilent = false)
+    public AggregateSink(List<ILoggerSink> endpoints, bool isSilent = false)
     {
         _endpoints = endpoints;
         _isSilent = isSilent;

@@ -2,36 +2,13 @@
   "solution": {
     "path": "one.sln",
     "projects": [
-      "Example\\OneE.EnumCodeGenerator.Test\\OneE.EnumCodeGenerator.Test.csproj",
-      "Example\\OneE.EnumCodeGenerator\\OneE.EnumCodeGenerator.csproj",
-      "Example\\OneE.MSBuildTaskClient\\OneE.MSBuildTaskClient.csproj",
-      "Example\\OneE.MSBuildTaskServer\\OneE.MSBuildTaskServer.csproj",
-      "Infrastructure\\OneI.Applicationable.Astractions\\OneI.Applicationable.Astractions.csproj",
-      "Infrastructure\\OneI.Applicationable.Console.Test\\OneI.Applicationable.Console.Test.csproj",
-      "Infrastructure\\OneI.Applicationable.Module\\OneI.Applicationable.Module.csproj",
-      "Infrastructure\\OneI.Applicationable.Test\\OneI.Applicationable.Test.csproj",
-      "Infrastructure\\OneI.Applicationable\\OneI.Applicationable.csproj",
-      "Infrastructure\\OneI.Domainable\\OneI.Domainable.csproj",
-      "Infrastructure\\OneI.Eventable.Abstractions\\OneI.Eventable.Abstractions.csproj",
-      "Infrastructure\\OneI.Eventable.Local\\OneI.Eventable.Local.csproj",
       "Infrastructure\\OneI.Logable.CodeGenerator.Test2\\OneI.Logable.CodeGenerator.Test2.csproj",
       "Infrastructure\\OneI.Logable.CodeGenerator.Test\\OneI.Logable.CodeGenerator.Test.csproj",
       "Infrastructure\\OneI.Logable.CodeGenerator\\OneI.Logable.CodeGenerator.csproj",
+      "Infrastructure\\OneI.Logable.File.Test\\OneI.Logable.File.Test.csproj",
       "Infrastructure\\OneI.Logable.File\\OneI.Logable.File.csproj",
       "Infrastructure\\OneI.Logable.Test\\OneI.Logable.Test.csproj",
-      "Infrastructure\\OneI.Logable\\OneI.Logable.csproj",
-      "Infrastructure\\OneI.Moduleable.Abstractions\\OneI.Moduleable.Abstractions.csproj",
-      "Infrastructure\\OneI.Moduleable\\OneI.Moduleable.csproj",
-      "Infrastructure\\OneI.Reflectionable\\OneI.Reflectionable.csproj",
-      "Infrastructure\\OneI.Restable.Abstractions\\OneI.Restable.Abstractions.csproj",
-      "Infrastructure\\OneI.Utilityable.Test\\OneI.Utilityable.Test.csproj",
-      "Infrastructure\\OneI.Utilityable\\OneI.Utilityable.csproj",
-      "Service\\OneS.Identityable.API\\OneS.Identityable.API.csproj",
-      "Service\\OneS.Identityable.Common\\OneS.Identityable.Common.csproj",
-      "Service\\OneS.Identityable.DataAccess\\OneS.Identityable.DataAccess.csproj",
-      "Service\\OneS.Identityable.Domain\\OneS.Identityable.Domain.csproj",
-      "Test\\OneT.CodeGenerator\\OneT.CodeGenerator.csproj",
-      "Test\\OneT.Common.Test\\OneT.Common.Test.csproj"
+      "Infrastructure\\OneI.Logable\\OneI.Logable.csproj"
     ]
   }
 }

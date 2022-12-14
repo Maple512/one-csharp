@@ -7,10 +7,10 @@ public class Logger_Test
     [Fact]
     public void simple()
     {
-        var log = new LoggerBuilder()
+        var log = new LoggerConfiguration()
             .Level.Error()
             .Level.Override(nameof(Microsoft), LogLevel.Information, LogLevel.Debug)
-            .Endpoint.Run(new StringOutputWriter("{Timestamp:yyyy-MM-dd}{Message}"))
+            .Sink.Use(new StringOutputWriter("{Timestamp:yyyy-MM-dd}{Message}"))
             .CreateLogger();
 
         log.Write(LogLevel.Debug, "message");

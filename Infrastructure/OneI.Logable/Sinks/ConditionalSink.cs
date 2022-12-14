@@ -2,12 +2,12 @@ namespace OneI.Logable.Endpoints;
 
 using System;
 
-public class ConditionalEndpoint : ILoggerEndpoint
+public class ConditionalSink : ILoggerSink
 {
     private readonly Func<LoggerContext, bool> _condition;
-    private readonly ILoggerEndpoint _endpoint;
+    private readonly ILoggerSink _endpoint;
 
-    public ConditionalEndpoint(Func<LoggerContext, bool> condition, ILoggerEndpoint endpoint)
+    public ConditionalSink(Func<LoggerContext, bool> condition, ILoggerSink endpoint)
     {
         _condition = condition;
         _endpoint = endpoint;

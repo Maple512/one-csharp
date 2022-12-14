@@ -6,9 +6,9 @@ using OneI.Logable.Definitions;
 /// <summary>
 /// The code printer.
 /// </summary>
-public static partial class CodePrinter
+internal static partial class CodePrinter
 {
-    public static void PrintMethod(IndentedStringBuilder builder, MethodDef method)
+    internal static void PrintMethod(IndentedStringBuilder builder, MethodDef method)
     {
         builder.Append($"public static void {method.Name}");
 
@@ -21,6 +21,11 @@ public static partial class CodePrinter
         builder.Append("(");
         using(var _ = builder.Indent())
         {
+            if(method.IsLogger)
+            {
+                builder.Append($"this global::{CodeAssets.LoggerFullName} logger, ");
+            }
+
             if(method.HasLevel)
             {
                 builder.Append($"{CodeAssets.LogLevelParameterType} {CodeAssets.LogLevelParameterName}, ");
@@ -69,7 +74,7 @@ public static partial class CodePrinter
                 var type = _types.FirstOrDefault(x => x.Equals(parameter.Type));
                 if(type is not null)
                 {
-                    builder.AppendLine($"propertyValues.Add({CodeAssets.CreateMethodName}({parameter.Name}));");
+                    builder.AppendLine($"propertyValues.Add({CodeAssets.LoggerPropertyCreateCalledName}({parameter.Name}));");
                 }
                 else
                 {
@@ -79,7 +84,15 @@ public static partial class CodePrinter
 
             builder.AppendLine();
 
-            builder.Append($"WriteCore(");
+            // call LoggerExtensions.Write
+            if(method.IsLogger)
+            {
+                builder.Append($"LoggerExtensions.PackageWrite(logger, ");
+            }
+            else
+            {
+                builder.Append($"LoggerExtensions.PackageWrite(_logger, ");
+            }
 
             if(method.HasLevel)
             {

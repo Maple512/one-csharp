@@ -2,7 +2,7 @@ namespace OneI.Logable.Fakes;
 
 using Templating.Rendering;
 
-public class StringOutputWriter : ILoggerEndpoint
+public class StringOutputWriter : ILoggerSink
 {
     private readonly StringWriter _writer;
     private readonly ITextRenderer _renderer;

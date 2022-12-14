@@ -1,18 +1,18 @@
 namespace OneI.Logable;
 
-public class Logger : ILogger
+internal class Logger : ILogger
 {
     private readonly LogLevelMap _levelMap;
     private readonly LoggerDelegate _middleware;
-    private readonly ILoggerEndpoint _endpoint;
+    private readonly ILoggerSink _sink;
 
     internal Logger(
         LoggerDelegate middleware,
-        ILoggerEndpoint endpoint,
+        ILoggerSink sink,
         LogLevelMap levelMap)
     {
         _middleware = middleware;
-        _endpoint = endpoint;
+        _sink = sink;
         _levelMap = levelMap;
     }
 
@@ -45,6 +45,6 @@ public class Logger : ILogger
         {
         }
 
-        _endpoint.Invoke(context);
+        _sink.Invoke(context);
     }
 }

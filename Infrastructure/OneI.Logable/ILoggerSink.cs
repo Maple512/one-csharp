@@ -1,6 +1,6 @@
 namespace OneI.Logable;
 
-public interface ILoggerEndpoint
+public interface ILoggerSink
 {
     void Invoke(in LoggerContext context);
 }

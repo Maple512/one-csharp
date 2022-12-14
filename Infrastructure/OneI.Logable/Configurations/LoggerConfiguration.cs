@@ -1,45 +1,45 @@
 namespace OneI.Logable;
 
 using OneI.Logable.Configurations;
-using OneI.Logable.Endpoints;
 using OneI.Logable.Middlewares;
+using OneI.Logable.Sinks;
 
-public partial class LoggerBuilder : ILoggerBuilder, ILoggerBranchBuilder
+public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerBranchConfiguration
 {
     private readonly List<Func<LoggerDelegate, LoggerDelegate>> _components;
-    private readonly List<ILoggerEndpoint> _endpoints;
+    private readonly List<ILoggerSink> _endpoints;
     private readonly LogLevelMap _logLevelMap;
 
-    public LoggerBuilder()
+    public LoggerConfiguration()
     {
         _endpoints = new();
         _logLevelMap = new();
 
-        Level = new LoggerLevelBuilder(this);
-        Properties = new LoggerPropertyBuilder(this);
-        Endpoint = new LoggerEndpointBuilder(this);
+        Level = new LoggerLevelConfiguration(this);
+        Properties = new LoggerPropertyConfiguration(this);
+        Sink = new LoggerSinkBuilder(this);
         _components = new();
     }
 
-    public ILoggerEndpointBuilder Endpoint { get; }
-    public ILoggerLevelBuilder Level { get; }
-    public ILoggerPropertyBuilder Properties { get; }
+    public ILoggerSinkConfiguration Sink { get; }
+    public ILoggerLevelConfiguration Level { get; }
+    public ILoggerPropertyConfiguration Properties { get; }
 
     public ILogger CreateLogger()
     {
-        var endpoint = new AggregateEndpoint(_endpoints, true);
+        var sink = new AggregateSink(_endpoints, true);
 
-        return new Logger(PackageMiddleware(), endpoint, _logLevelMap);
+        return new Logger(PackageMiddleware(), sink, _logLevelMap);
     }
 
-    public ILoggerBuilder New()
+    public ILoggerConfiguration New()
     {
-        var @new = new LoggerBuilder();
+        var @new = new LoggerConfiguration();
 
         return @new;
     }
 
-    public virtual ILoggerBuilder NewWhen(Func<LoggerContext, bool> condition, Action<ILoggerBuilder> configuration)
+    public virtual ILoggerConfiguration NewWhen(Func<LoggerContext, bool> condition, Action<ILoggerConfiguration> configuration)
     {
         var builder = New();
 
@@ -64,7 +64,7 @@ public partial class LoggerBuilder : ILoggerBuilder, ILoggerBranchBuilder
         return process;
     }
 
-    public virtual ILoggerBuilder Use(ILoggerMiddleware middleware)
+    public virtual ILoggerConfiguration Use(ILoggerMiddleware middleware)
     {
         Use(next =>
         {
@@ -74,14 +74,14 @@ public partial class LoggerBuilder : ILoggerBuilder, ILoggerBranchBuilder
         return this;
     }
 
-    public virtual ILoggerBuilder Use<TMiddleware>() where TMiddleware : ILoggerMiddleware, new()
+    public virtual ILoggerConfiguration Use<TMiddleware>() where TMiddleware : ILoggerMiddleware, new()
     {
         Use(new TMiddleware());
 
         return this;
     }
 
-    public virtual ILoggerBuilder Use(Action<LoggerContext, LoggerDelegate> middleware)
+    public virtual ILoggerConfiguration Use(Action<LoggerContext, LoggerDelegate> middleware)
     {
         Use(next => context =>
         {
@@ -93,7 +93,7 @@ public partial class LoggerBuilder : ILoggerBuilder, ILoggerBranchBuilder
         return this;
     }
 
-    public virtual ILoggerBuilder Use(Action<LoggerContext> middleware)
+    public virtual ILoggerConfiguration Use(Action<LoggerContext> middleware)
     {
         Use(next => context =>
         {
@@ -105,14 +105,14 @@ public partial class LoggerBuilder : ILoggerBuilder, ILoggerBranchBuilder
         return this;
     }
 
-    public virtual ILoggerBuilder UseWhen(Func<LoggerContext, bool> condition, Action<LoggerContext> action)
+    public virtual ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, Action<LoggerContext> action)
     {
         Use(new ConditionalMiddleware(condition, action));
 
         return this;
     }
 
-    private ILoggerBuilder Use(Func<LoggerDelegate, LoggerDelegate> middleware)
+    private ILoggerConfiguration Use(Func<LoggerDelegate, LoggerDelegate> middleware)
     {
         _components.Add(middleware);
 

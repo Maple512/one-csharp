@@ -15,6 +15,8 @@ public class MethodDef
 
     public bool HasException { get; set; }
 
+    public bool IsLogger { get; set; }
+
     public List<ParameterDef> Parameters { get; } = new();
 
     public void AddParameter(TypeDef type)

@@ -21,7 +21,10 @@ public static class InvocationExpressionParser
 
     private static MethodDef Parse(InvocationExpressionSyntax invocation, IMethodSymbol methodSymbol, GeneratorSyntaxContext cts)
     {
-        var method = new MethodDef(methodSymbol.Name);
+        var method = new MethodDef(methodSymbol.Name)
+        {
+            IsLogger = methodSymbol.ContainingType.ToDisplayString() == CodeAssets.LoggerExtensionFullName
+        };
 
         int index;
         for(index = 0; index < methodSymbol.Parameters.Length; index++)

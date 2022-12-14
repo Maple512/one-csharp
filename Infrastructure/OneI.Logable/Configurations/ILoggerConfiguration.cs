@@ -2,22 +2,22 @@ namespace OneI.Logable;
 
 using OneI.Logable.Configurations;
 
-public interface ILoggerBuilder : ILoggerBranchBuilder
+public interface ILoggerConfiguration : ILoggerBranchConfiguration
 {
     /// <summary>
-    /// 表示<see cref="ILoggerLevelBuilder"/>相关的配置
+    /// 表示<see cref="ILoggerLevelConfiguration"/>相关的配置
     /// </summary>
-    ILoggerLevelBuilder Level { get; }
+    ILoggerLevelConfiguration Level { get; }
 
     /// <summary>
-    /// 表示<see cref="ILoggerPropertyBuilder"/>相关的配置
+    /// 表示<see cref="ILoggerPropertyConfiguration"/>相关的配置
     /// </summary>
-    ILoggerPropertyBuilder Properties { get; }
+    ILoggerPropertyConfiguration Properties { get; }
 
     /// <summary>
-    /// 表示<see cref="ILoggerEndpoint"/>相关的配置
+    /// 表示<see cref="ILoggerSink"/>相关的配置
     /// </summary>
-    ILoggerEndpointBuilder Endpoint { get; }
+    ILoggerSinkConfiguration Sink { get; }
 
     /// <summary>
     /// 组装中间件
@@ -32,8 +32,8 @@ public interface ILoggerBuilder : ILoggerBranchBuilder
     ILogger CreateLogger();
 
     /// <summary>
-    /// 创建一个新的<see cref="ILoggerBuilder"/>
+    /// 创建一个新的<see cref="ILoggerConfiguration"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerBuilder New();
+    ILoggerConfiguration New();
 }
