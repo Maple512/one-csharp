@@ -2,7 +2,7 @@ namespace OneI.Logable.Middlewares;
 
 using System;
 
-public class MapMiddleware : LoggerMiddleware
+public class MapMiddleware : ILoggerMiddleware
 {
     private readonly Func<LoggerContext, bool> _condition;
     private readonly LoggerDelegate _branch;
@@ -13,7 +13,7 @@ public class MapMiddleware : LoggerMiddleware
         _branch = branch;
     }
 
-    public override LoggerVoid Invoke(in LoggerContext context, in LoggerDelegate next)
+    public LoggerVoid Invoke(in LoggerContext context, in LoggerDelegate next)
     {
         if(_condition(context))
         {

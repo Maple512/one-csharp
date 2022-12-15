@@ -20,6 +20,11 @@ public interface ILoggerConfiguration : ILoggerBranchConfiguration
     ILoggerSinkConfiguration Sink { get; }
 
     /// <summary>
+    /// 表示
+    /// </summary>
+    ILoggerAuditConfiguration Audit { get; }
+
+    /// <summary>
     /// 组装中间件
     /// </summary>
     /// <returns></returns>
@@ -30,10 +35,4 @@ public interface ILoggerConfiguration : ILoggerBranchConfiguration
     /// </summary>
     /// <returns></returns>
     ILogger CreateLogger();
-
-    /// <summary>
-    /// 创建一个新的<see cref="ILoggerConfiguration"/>
-    /// </summary>
-    /// <returns></returns>
-    ILoggerConfiguration New();
 }

@@ -81,7 +81,7 @@ public class TextTemplateRenderer : ITextRenderer
             if(token.Name == PropertyNames.Message)
             {
                 MessageTemplateRender.Render(
-                    context.MessageTemplate,
+                    context.TextTemplate,
                     context.Properties,
                     sw,
                     token.Format,
@@ -94,7 +94,7 @@ public class TextTemplateRenderer : ITextRenderer
             else if(token.Name == PropertyNames.Properties)
             {
                 PropertiesFormatter.Format(
-                    context.MessageTemplate,
+                    context.TextTemplate,
                     context.Properties,
                     _outputTemplate,
                     sw,
@@ -119,7 +119,7 @@ public class TextTemplateRenderer : ITextRenderer
 
     internal static void DefaultRender<T>(
         T? value,
-        ILoggerSerializable<T>? serializer,
+        IPropertyValueRenderer<T>? renderer,
         TextWriter writer,
         string? format = null,
         IFormatProvider? formatProvider = null)
@@ -130,9 +130,9 @@ public class TextTemplateRenderer : ITextRenderer
             return;
         }
 
-        if(serializer != null)
+        if(renderer != null)
         {
-            writer.Write(serializer.Serialize(value));
+            writer.Write(renderer.Render(value));
             return;
         }
 

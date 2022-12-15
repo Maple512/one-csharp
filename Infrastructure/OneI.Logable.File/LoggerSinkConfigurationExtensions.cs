@@ -8,7 +8,7 @@ public static class LoggerSinkConfigurationExtensions
 {
     public static ILoggerConfiguration File(
         this ILoggerSinkConfiguration configuration,
-        RollFileOptions options)
+        LogFileOptions options)
     {
         ILoggerSink sink;
         if(options.Frequency != RollFrequency.Naver)
@@ -45,16 +45,18 @@ public static class LoggerSinkConfigurationExtensions
     }
 }
 
-public class RollFileOptions
+public class LogFileOptions
 {
-    const string DefaultTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}";
+    private const string DefaultTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}";
 
-    public RollFileOptions(string path, string? template = DefaultTemplate, IFormatProvider? formatProvider = null)
+    /// <param name="path">日志路径</param>
+    /// <param name="template">日志消息模版，默认格式：<code>{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}</code></param>
+    public LogFileOptions(string path, string? template = null, IFormatProvider? formatProvider = null)
         : this(path, new TextTemplateRenderer(template ?? DefaultTemplate, formatProvider))
     {
     }
 
-    public RollFileOptions(string path, ITextRenderer textRenderer)
+    public LogFileOptions(string path, ITextRenderer textRenderer)
     {
         Path = path;
 

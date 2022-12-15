@@ -1,7 +1,7 @@
 namespace OneI.Logable;
 
 /// <summary>
-/// 表示日志等级的范围
+/// 表示描述日志等级的范围
 /// </summary>
 public struct LogLevelRange
 {
@@ -10,17 +10,19 @@ public struct LogLevelRange
     /// </summary>
     /// <param name="minimum">The minimum.</param>
     /// <param name="maximum">The maximum.</param>
-    public LogLevelRange(LogLevel? minimum = LogLevel.Information, LogLevel? maximum = null)
+    public LogLevelRange(LogLevel minimum = LogLevel.Information, LogLevel? maximum = null)
     {
         Minimum = minimum;
         Maximum = maximum;
     }
 
+    public const LogLevel MinimumLevel = LogLevel.Verbose;
+
     /// <summary>
     /// Gets the minimum.
     /// </summary>
     /// <value>A LogLevel? .</value>
-    public LogLevel? Minimum { get; private set; }
+    public LogLevel Minimum { get; private set; } = MinimumLevel;
 
     /// <summary>
     /// Gets the maximum.
@@ -41,8 +43,7 @@ public struct LogLevelRange
 
     public void Max(LogLevel level)
     {
-        if(Minimum.HasValue
-            && Minimum.Value > level)
+        if(Minimum > level)
         {
             throw new ArgumentOutOfRangeException(nameof(Maximum), "The maximum value of the log level cannot be smaller than the minimum value.");
         }
@@ -57,14 +58,13 @@ public struct LogLevelRange
     /// <returns>A bool.</returns>
     public bool IsEnabled(LogLevel level)
     {
-        if(Minimum.HasValue
-            && Minimum.Value < level)
+        if(Minimum > level)
         {
             return false;
         }
 
         if(Maximum.HasValue
-            && Maximum.Value > level)
+            && Maximum.Value < level)
         {
             return false;
         }

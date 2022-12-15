@@ -1,4 +1,4 @@
-namespace OneI.Logable;
+namespace OneI.Logable.Configurations;
 
 public partial class LoggerConfiguration
 {

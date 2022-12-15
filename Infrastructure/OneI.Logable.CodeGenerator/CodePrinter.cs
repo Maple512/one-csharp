@@ -71,7 +71,7 @@ internal static partial class CodePrinter
         {
             var count = methods.Count;
 
-            for(int i = 0; i < count; i++)
+            for(var i = 0; i < count; i++)
             {
                 var item = methods[i];
 
@@ -106,7 +106,7 @@ internal static partial class CodePrinter
         {
             var count = methods.Count;
 
-            for(int i = 0; i < count; i++)
+            for(var i = 0; i < count; i++)
             {
                 var item = methods[i];
 

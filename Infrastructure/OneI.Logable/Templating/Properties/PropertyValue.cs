@@ -28,8 +28,8 @@ public abstract class PropertyValue : IFormattable
         return new LiteralValue<T>(type);
     }
 
-    public static PropertyValue CreateLiteral<T>(T type, ILoggerSerializable<T>? serializable)
+    public static PropertyValue CreateLiteral<T>(T type, IPropertyValueRenderer<T>? renderer)
     {
-        return new LiteralValue<T>(type, serializable);
+        return new LiteralValue<T>(type, renderer);
     }
 }

@@ -1,25 +1,20 @@
 namespace OneI.Logable;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 public class SharedFileSink : IFileSink, IDisposable
 {
-    readonly TextWriter _writer;
-    readonly FileStream _stream;
-    readonly ITextRenderer _textRenderer;
-    readonly long? _fileSizeMaxBytes;
-
-    static readonly object _lock = new();
-
-    const string MutexNameSuffix = ".logable";
+    private readonly TextWriter _writer;
+    private readonly FileStream _stream;
+    private readonly ITextRenderer _textRenderer;
+    private readonly long? _fileSizeMaxBytes;
+    private static readonly object _lock = new();
+    private const string MutexNameSuffix = ".logable";
 
     // 互斥锁等待时间（ms）
-    const int MutexWaitTimeout = 10_000;
-    readonly Mutex _mutex;
+    private const int MutexWaitTimeout = 10_000;
+    private readonly Mutex _mutex;
 
     public SharedFileSink(
         string path,
@@ -35,6 +30,7 @@ public class SharedFileSink : IFileSink, IDisposable
         {
             directory = Directory.GetCurrentDirectory();
         }
+
         if(Directory.Exists(directory) == false)
         {
             Directory.CreateDirectory(directory);
@@ -123,7 +119,7 @@ public class SharedFileSink : IFileSink, IDisposable
     /// 尝试获取互斥信号
     /// </summary>
     /// <returns></returns>
-    bool TryAcquireMutex()
+    private bool TryAcquireMutex()
     {
         try
         {

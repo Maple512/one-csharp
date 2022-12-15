@@ -2,7 +2,7 @@ namespace OneI.Logable.Sinks;
 
 public class AggregateSink : ILoggerSink
 {
-    private readonly IReadOnlyList<ILoggerSink> _endpoints;
+    private readonly IReadOnlyList<Action<LoggerContext>> _endpoints;
     private readonly bool _isSilent;
 
     /// <summary>
@@ -10,7 +10,7 @@ public class AggregateSink : ILoggerSink
     /// </summary>
     /// <param name="endpoints"></param>
     /// <param name="isSilent">是否忽略遇到的异常</param>
-    public AggregateSink(List<ILoggerSink> endpoints, bool isSilent = false)
+    public AggregateSink(List<Action<LoggerContext>> endpoints, bool isSilent = false)
     {
         _endpoints = endpoints;
         _isSilent = isSilent;

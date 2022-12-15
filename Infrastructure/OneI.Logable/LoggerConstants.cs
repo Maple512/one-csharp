@@ -31,8 +31,6 @@ public static class LoggerConstants
 
         public const char Render_As_Structure = '@';
 
-        public const string Render_As_Json = "j";
-
         public const char Align_Separator = ',';
 
         public const char Format_Separator = ':';

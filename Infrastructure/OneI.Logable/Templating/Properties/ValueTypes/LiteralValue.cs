@@ -8,19 +8,19 @@ using OneI.Logable.Templating.Rendering;
 /// <typeparam name="T"></typeparam>
 public class LiteralValue<T> : PropertyValue
 {
-    public LiteralValue(T? value, ILoggerSerializable<T>? serializer = null)
+    public LiteralValue(T? value, IPropertyValueRenderer<T>? renderer = null)
     {
         Value = value;
-        Serializer = serializer;
+        Renderer = renderer;
     }
 
     public T? Value { get; }
 
-    public ILoggerSerializable<T>? Serializer { get; }
+    public IPropertyValueRenderer<T>? Renderer { get; }
 
     public override void Render(TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
     {
-        TextTemplateRenderer.DefaultRender(Value, Serializer, writer, format, formatProvider);
+        TextTemplateRenderer.DefaultRender(Value, Renderer, writer, format, formatProvider);
     }
 
     public override bool Equals(object? obj)

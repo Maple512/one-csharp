@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Context;
 using Serilog.Events;
 
 public class Program
@@ -15,7 +16,10 @@ public class Program
             .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .WriteTo.File("Logs")
+            .Enrich.FromLogContext()
             .CreateLogger();
+
+        LogContext.Push()
 
         try
         {

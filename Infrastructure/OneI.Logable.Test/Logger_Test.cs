@@ -1,5 +1,6 @@
 namespace OneI.Logable;
 
+using OneI.Logable.Configurations;
 using OneI.Logable.Fakes;
 
 public class Logger_Test

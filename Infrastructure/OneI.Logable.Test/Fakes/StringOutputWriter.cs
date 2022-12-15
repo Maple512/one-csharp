@@ -17,11 +17,11 @@ public class StringOutputWriter : ILoggerSink
     {
         _renderer.Render(context, _writer);
 
+        _writer.Flush();
+
         var content = ToString();
 
         Debug.WriteLine(content, nameof(StringOutputWriter));
-
-        _writer.Flush();
     }
 
     public override string ToString()

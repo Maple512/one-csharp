@@ -1,23 +1,23 @@
-namespace OneI.Logable.Endpoints;
+namespace OneI.Logable.Sinks;
 
 using System;
 
 public class ConditionalSink : ILoggerSink
 {
     private readonly Func<LoggerContext, bool> _condition;
-    private readonly ILoggerSink _endpoint;
+    private readonly Action<LoggerContext> _sink;
 
-    public ConditionalSink(Func<LoggerContext, bool> condition, ILoggerSink endpoint)
+    public ConditionalSink(Func<LoggerContext, bool> condition, Action<LoggerContext> sink)
     {
         _condition = condition;
-        _endpoint = endpoint;
+        _sink = sink;
     }
 
     public void Invoke(in LoggerContext context)
     {
         if(_condition(context))
         {
-            _endpoint.Invoke(context);
+            _sink.Invoke(context);
         }
     }
 }

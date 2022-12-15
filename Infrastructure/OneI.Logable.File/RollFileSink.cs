@@ -15,7 +15,7 @@ public class RollFileSink : ILoggerSink, IFileFlusher, IDisposable
     private bool _disposed;
     private DateTime? _nextPeroid;
     private IFileSink? _sink;
-    private readonly int? _currentSequence;
+    private int? _currentSequence;
 
     public RollFileSink(
         string path,
@@ -152,6 +152,8 @@ public class RollFileSink : ILoggerSink, IFileFlusher, IDisposable
                 _sink = _shared
                     ? new SharedFileSink(path, _textRenderer, _fileSizeMaxBytes, _encoding)
                 : new FileSink(path, _textRenderer, _fileSizeMaxBytes, _encoding, _buffered);
+
+                _currentSequence = sequence;
             }
             catch(IOException)
             {

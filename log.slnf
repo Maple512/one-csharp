@@ -2,10 +2,8 @@
   "solution": {
     "path": "one.sln",
     "projects": [
-      "Infrastructure\\OneI.Logable.CodeGenerator.Test2\\OneI.Logable.CodeGenerator.Test2.csproj",
       "Infrastructure\\OneI.Logable.CodeGenerator.Test\\OneI.Logable.CodeGenerator.Test.csproj",
       "Infrastructure\\OneI.Logable.CodeGenerator\\OneI.Logable.CodeGenerator.csproj",
-      "Infrastructure\\OneI.Logable.File.Test\\OneI.Logable.File.Test.csproj",
       "Infrastructure\\OneI.Logable.File\\OneI.Logable.File.csproj",
       "Infrastructure\\OneI.Logable.Test\\OneI.Logable.Test.csproj",
       "Infrastructure\\OneI.Logable\\OneI.Logable.csproj"

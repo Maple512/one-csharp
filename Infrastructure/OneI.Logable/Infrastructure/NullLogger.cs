@@ -9,6 +9,11 @@ public class NullLogger : ILogger
         return false;
     }
 
+    public static ILogger New()
+    {
+        return Instance;
+    }
+
     public void Write(LoggerContext context)
     {
     }

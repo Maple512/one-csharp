@@ -1,10 +1,12 @@
 namespace OneI.Logable.Configurations;
 
-using System;
-
 public interface ILoggerSinkConfiguration
 {
-    ILoggerConfiguration Use(ILoggerSink writer);
+    ILoggerConfiguration Use(ILoggerSink sink);
 
-    ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, ILoggerSink writer);
+    ILoggerConfiguration Use(Action<LoggerContext> sink);
+
+    ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, ILoggerSink sink);
+
+    ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, Action<LoggerContext> sink);
 }

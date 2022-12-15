@@ -1,7 +1,6 @@
-namespace OneI.Logable;
+namespace OneI.Logable.Configurations;
 
-using OneI.Logable.Configurations;
-using OneI.Logable.Endpoints;
+using OneI.Logable.Sinks;
 
 public partial class LoggerConfiguration
 {
@@ -14,18 +13,28 @@ public partial class LoggerConfiguration
             _parent = parent;
         }
 
-        public ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, ILoggerSink endpoint)
+        public ILoggerConfiguration Use(ILoggerSink sink)
         {
-            _parent._endpoints.Add(new ConditionalSink(condition, endpoint));
+            _parent._sinks.Add(context => sink.Invoke(context));
 
             return _parent;
         }
 
-        public ILoggerConfiguration Use(ILoggerSink endpoint)
+        public ILoggerConfiguration Use(Action<LoggerContext> sink)
         {
-            _parent._endpoints.Add(endpoint);
+            _parent._sinks.Add(sink);
 
             return _parent;
+        }
+
+        public ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, ILoggerSink sink)
+        {
+            return Use(new ConditionalSink(condition, context => sink.Invoke(context)));
+        }
+
+        public ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, Action<LoggerContext> sink)
+        {
+            return Use(new ConditionalSink(condition, sink));
         }
     }
 }

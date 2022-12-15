@@ -34,15 +34,23 @@ public interface ILoggerBranchConfiguration
     /// 向管道中添加一个带有条件的中间件
     /// </summary>
     /// <param name="condition"></param>
-    /// <param name="action"></param>
+    /// <param name="middleware"></param>
     /// <returns></returns>
-    ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, Action<LoggerContext> action);
+    ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, ILoggerMiddleware middleware);
 
     /// <summary>
-    /// 当符合条件时，开启一个全新的分支
+    /// 向管道中添加一个带有条件的中间件
     /// </summary>
-    /// <param name="condition"></param>
-    /// <param name="branch"></param>
-    /// <returns></returns>
-    ILoggerConfiguration NewWhen(Func<LoggerContext, bool> condition, Action<ILoggerConfiguration> branch);
+    ILoggerConfiguration UseWhen<TMiddleware>(Func<LoggerContext, bool> condition)
+       where TMiddleware : ILoggerMiddleware, new();
+
+    /// <summary>
+    /// 向管道中添加一个带有条件的中间件
+    /// </summary>
+    ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, Action<LoggerContext, LoggerDelegate> middleware);
+
+    /// <summary>
+    /// 向管道中添加一个带有条件的中间件
+    /// </summary>
+    ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, Action<LoggerContext> middleware);
 }
