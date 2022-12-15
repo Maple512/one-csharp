@@ -21,43 +21,7 @@ internal static partial class CodePrinter
         builder.Append("(");
         using(var _ = builder.Indent())
         {
-            if(method.IsLogger)
-            {
-                builder.Append($"this global::{CodeAssets.LoggerFullName} logger, ");
-            }
-
-            if(method.HasLevel)
-            {
-                builder.Append($"{CodeAssets.LogLevelParameterType} {CodeAssets.LogLevelParameterName}, ");
-            }
-
-            if(method.HasException)
-            {
-                builder.Append($"{CodeAssets.ExceptionParameterType} {CodeAssets.ExceptionParameterName}, ");
-            }
-
-            builder.Append($"{CodeAssets.MessageParameterType} {CodeAssets.MessageParameterName}, ");
-
-            for(var i = 0; i < method.Parameters.Count; i++)
-            {
-                var item = method.Parameters[i];
-
-                builder.Append($"{item.Type.ToDisplayString()} {item.Name}");
-
-                if(i < method.Parameters.Count - 1)
-                {
-                    builder.Append(", ");
-                }
-            }
-
-            builder.AppendLine(")");
-
-            // 泛型约束
-            foreach(var x in method.TypeArguments
-                .Where(x => string.IsNullOrWhiteSpace(x.Value) == false))
-            {
-                builder.AppendLine($"where {x.Key}: {x.Value}");
-            }
+            PrintMethodParameters(builder, method);
         }
 
         builder.AppendLine("{");
@@ -65,58 +29,103 @@ internal static partial class CodePrinter
         // body
         using(var _ = builder.Indent())
         {
-            builder.AppendLine($"var propertyValues = new global::System.Collections.Generic.List<global::OneI.Logable.Templating.Properties.PropertyValue>({method.Parameters.Count});");
-
-            builder.AppendLine();
-
-            foreach(var parameter in method.Parameters)
-            {
-                var type = _types.FirstOrDefault(x => x.Equals(parameter.Type));
-                if(type is not null)
-                {
-                    builder.AppendLine($"propertyValues.Add({CodeAssets.LoggerPropertyCreateCalledName}({parameter.Name}));");
-                }
-                else
-                {
-                    builder.AppendLine($"propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<{parameter.Type}>({parameter.Name}));");
-                }
-            }
-
-            builder.AppendLine();
-
-            // call LoggerExtensions.Write
-            if(method.IsLogger)
-            {
-                builder.Append($"LoggerExtensions.PackageWrite(logger, ");
-            }
-            else
-            {
-                builder.Append($"LoggerExtensions.PackageWrite(_logger, ");
-            }
-
-            if(method.HasLevel)
-            {
-                builder.Append($"{CodeAssets.LogLevelParameterName}, ");
-            }
-            else
-            {
-                builder.Append($"{CodeAssets.LogLevelParameterType}.{method.Name}, ");
-            }
-
-            if(method.HasException)
-            {
-                builder.Append($"{CodeAssets.ExceptionParameterName}, ");
-            }
-            else
-            {
-                builder.Append("null, ");
-            }
-
-            builder.Append($"{CodeAssets.MessageParameterName}, ");
-
-            builder.AppendLine($"propertyValues);");
+            PrintMethodBody(builder, method);
         }
 
         builder.AppendLine("}");
+    }
+
+    private static void PrintMethodParameters(IndentedStringBuilder builder, MethodDef method)
+    {
+        if(method.IsLogger)
+        {
+            builder.Append($"this global::{CodeAssets.LoggerFullName} logger, ");
+        }
+
+        if(method.HasLevel)
+        {
+            builder.Append($"{CodeAssets.LogLevelParameterType} {CodeAssets.LogLevelParameterName}, ");
+        }
+
+        if(method.HasException)
+        {
+            builder.Append($"{CodeAssets.ExceptionParameterType} {CodeAssets.ExceptionParameterName}, ");
+        }
+
+        builder.Append($"{CodeAssets.MessageParameterType} {CodeAssets.MessageParameterName}, ");
+
+        for(var i = 0; i < method.Parameters.Count; i++)
+        {
+            var item = method.Parameters[i];
+
+            builder.Append($"{item.Type.ToDisplayString()} {item.Name}, ");
+        }
+
+        builder.Append("[global::System.Runtime.CompilerServices.CallerMemberName] global::System.String? memberName = null, ");
+        builder.Append("[global::System.Runtime.CompilerServices.CallerFilePath] global::System.String? filePath = null, ");
+        builder.Append("[global::System.Runtime.CompilerServices.CallerLineNumber] global::System.Int32? lineNumber = null");
+
+        builder.AppendLine(")");
+
+        // 泛型约束
+        foreach(var x in method.TypeArguments
+            .Where(x => string.IsNullOrWhiteSpace(x.Value) == false))
+        {
+            builder.AppendLine($"where {x.Key}: {x.Value}");
+        }
+    }
+
+    private static void PrintMethodBody(IndentedStringBuilder builder, MethodDef method)
+    {
+        builder.AppendLine($"var propertyValues = new global::System.Collections.Generic.List<global::OneI.Logable.Templating.Properties.PropertyValue>({method.Parameters.Count});");
+
+        builder.AppendLine();
+
+        foreach(var parameter in method.Parameters)
+        {
+            var type = _types.FirstOrDefault(x => x.Equals(parameter.Type));
+            if(type is not null)
+            {
+                builder.AppendLine($"propertyValues.Add({CodeAssets.LoggerPropertyCreateCalledName}({parameter.Name}));");
+            }
+            else
+            {
+                builder.AppendLine($"propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<{parameter.Type}>({parameter.Name}));");
+            }
+        }
+
+        builder.AppendLine();
+
+        // call LoggerExtensions.Write
+        if(method.IsLogger)
+        {
+            builder.Append($"LoggerExtensions.PackageWrite(logger, ");
+        }
+        else
+        {
+            builder.Append($"LoggerExtensions.PackageWrite(_logger, ");
+        }
+
+        if(method.HasLevel)
+        {
+            builder.Append($"{CodeAssets.LogLevelParameterName}, ");
+        }
+        else
+        {
+            builder.Append($"{CodeAssets.LogLevelParameterType}.{method.Name}, ");
+        }
+
+        if(method.HasException)
+        {
+            builder.Append($"{CodeAssets.ExceptionParameterName}, ");
+        }
+        else
+        {
+            builder.Append("null, ");
+        }
+
+        builder.Append($"{CodeAssets.MessageParameterName}, ");
+
+        builder.AppendLine($"propertyValues, memberName, filePath, lineNumber);");
     }
 }

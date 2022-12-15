@@ -179,7 +179,5 @@ public static partial class LoggerWriteExtensions
     }
 
     #endregion Fatal
-
-
 }
 #nullable restore

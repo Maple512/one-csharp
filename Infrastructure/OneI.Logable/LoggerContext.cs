@@ -12,27 +12,36 @@ public class LoggerContext
         LogLevel level,
         TextTemplate textTemplate,
         Exception? exception = null,
-        List<Property>? properties = null)
+        List<Property>? properties = null,
+         string? memberName = null,
+         string? filePath = null,
+         int? lineNumber = null)
+        : this(level, textTemplate, exception, default(Dictionary<string, PropertyValue>?), memberName, filePath, lineNumber)
     {
-        Timestamp = DateTimeOffset.Now;
-        Level = level;
-        TextTemplate = textTemplate;
-        Exception = exception;
-        _properties = properties?.ToDictionary(k => k.Name, v => v.Value)
-            ?? new();
+        if(properties?.Count > 0)
+        {
+            _properties = properties.ToDictionary(k => k.Name, v => v.Value);
+        }
     }
 
     private LoggerContext(
         LogLevel level,
         TextTemplate textTemplate,
         Exception? exception = null,
-        Dictionary<string, PropertyValue>? properties = null)
+        Dictionary<string, PropertyValue>? properties = null,
+         string? memberName = null,
+         string? filePath = null,
+         int? lineNumber = null)
     {
-        Timestamp = DateTimeOffset.Now;
+        Timestamp = Clock.Now;
         Level = level;
         TextTemplate = textTemplate;
         Exception = exception;
         _properties = properties ?? new();
+
+        MemberName = memberName;
+        FilePath = filePath;
+        LineNumber = lineNumber;
     }
 
     public DateTimeOffset Timestamp { get; }
@@ -43,11 +52,11 @@ public class LoggerContext
 
     public Exception? Exception { get; }
 
-    //public string? MemberName { get; }
+    public string? MemberName { get; }
 
-    //public string? FilePath { get; }
+    public string? FilePath { get; }
 
-    //public int? LineNumber { get; }
+    public int? LineNumber { get; }
 
     public IReadOnlyDictionary<string, PropertyValue> Properties => _properties;
 

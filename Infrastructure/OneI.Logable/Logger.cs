@@ -1,5 +1,9 @@
 namespace OneI.Logable;
 
+using OneI.Logable.Configurations;
+using OneI.Logable.Middlewares;
+using OneI.Logable.Templating.Properties;
+
 internal class Logger : ILogger
 {
     private readonly LogLevelMap _levelMap;
@@ -33,6 +37,26 @@ internal class Logger : ILogger
         {
             Dispatch(context);
         }
+    }
+
+    public ILogger ForContext(params ILoggerMiddleware[] middlewares)
+    {
+        var aggregate = new AggregateMiddleware(middlewares);
+
+        return new LoggerConfiguration()
+            .Use(aggregate)
+            .Sink.UseSecondary(this)
+            .CreateLogger();
+    }
+
+    public ILogger ForContext(string sourceContext)
+    {
+        return ForContext(new PropertyMiddleware(LoggerConstants.PropertyNames.SourceContext, PropertyValue.CreateLiteral(sourceContext)));
+    }
+
+    public ILogger ForContext<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSourceContext>()
+    {
+        return ForContext(typeof(TSourceContext).FullName!);
     }
 
     private void Dispatch(LoggerContext context)

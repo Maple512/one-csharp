@@ -1,7 +1,7 @@
 namespace OneI;
 
 /// <summary>
-/// 时钟配置
+/// 统一的时钟
 /// </summary>
 public static class Clock
 {
@@ -17,5 +17,5 @@ public static class Clock
         _provider = Check.NotNull(provider);
     }
 
-    public static DateTimeOffset DateTime => _provider?.Invoke() ?? DateTimeOffset.Now;
+    public static DateTimeOffset Now => _provider?.Invoke() ?? DateTimeOffset.Now;
 }

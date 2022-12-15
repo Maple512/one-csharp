@@ -1,7 +1,7 @@
 namespace OneI.Logable.Templating;
 
 using System.Globalization;
-using OneI.Logable.Templating.Rendering;
+using OneI.Logable.Rendering;
 
 public class PropertyToken : Token
 {

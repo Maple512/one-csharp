@@ -1,21 +1,18 @@
 namespace OneI.Logable;
 
-/// <summary>
-/// The log level map.
-/// </summary>
 public readonly struct LogLevelMap
 {
-    /// <summary>
-    /// The overrides.
-    /// </summary>
     private readonly Dictionary<string, LogLevelRange> _overrides;
 
-    /// <summary>
-    /// The range.
-    /// </summary>
     private readonly LogLevelRange _range;
 
-    public const LogLevel MaximumLevel = LogLevel.Fatal;
+    public const LogLevel MaximumLevelDefault = LogLevel.Fatal;
+
+    public LogLevelMap(LogLevel minimum, LogLevel? maximum = null)
+    {
+        _range = new LogLevelRange(minimum, maximum);
+        _overrides = new Dictionary<string, LogLevelRange>();
+    }
 
     public LogLevelMap()
     {
@@ -23,17 +20,39 @@ public readonly struct LogLevelMap
         _range = new();
     }
 
-    public void Minimum(LogLevel level)
+    public LogLevel MinimumLevel => _range.Minimum;
+
+    public LogLevel? MaximumLevel => _range.Maximum;
+
+    public LogLevelMap Minimum(LogLevel level)
     {
         _range.Min(level);
+
+        return this;
     }
 
-    public void Maximum(LogLevel level)
+    public LogLevelMap Maximum(LogLevel? level)
     {
         _range.Max(level);
+
+        return this;
+
     }
 
-    public void Override(string sourceContext, LogLevel minimum, LogLevel? maximum)
+    internal LogLevelMap Override(LogLevelMap @new)
+    {
+        _range.Min(@new.MinimumLevel);
+        _range.Max(@new.MaximumLevel);
+
+        foreach(var item in @new._overrides)
+        {
+            Override(item.Key, item.Value.Minimum, item.Value.Maximum);
+        }
+
+        return this;
+    }
+
+    public LogLevelMap Override(string sourceContext, LogLevel minimum, LogLevel? maximum)
     {
         maximum ??= _range.Maximum ?? MaximumLevel;
 
@@ -46,6 +65,8 @@ public readonly struct LogLevelMap
         {
             _overrides.Add(sourceContext, range);
         }
+
+        return this;
     }
 
     /// <summary>

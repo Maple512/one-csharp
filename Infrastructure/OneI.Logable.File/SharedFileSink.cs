@@ -3,11 +3,10 @@ namespace OneI.Logable;
 using System;
 using System.Text;
 
-public class SharedFileSink : IFileSink, IDisposable
+public class SharedFileSink : FileSinkBase, IFileSink, IDisposable
 {
     private readonly TextWriter _writer;
     private readonly FileStream _stream;
-    private readonly ITextRenderer _textRenderer;
     private readonly long? _fileSizeMaxBytes;
     private static readonly object _lock = new();
     private const string MutexNameSuffix = ".logable";
@@ -18,11 +17,10 @@ public class SharedFileSink : IFileSink, IDisposable
 
     public SharedFileSink(
         string path,
-        ITextRenderer textRenderer,
+        List<ITextRendererProvider> rendererProvider,
         long? fileSizeMaxBytes,
-        Encoding? encoding)
+        Encoding? encoding) : base(rendererProvider)
     {
-        _textRenderer = textRenderer;
         _fileSizeMaxBytes = fileSizeMaxBytes;
 
         var directory = Path.GetDirectoryName(path);
@@ -75,7 +73,7 @@ public class SharedFileSink : IFileSink, IDisposable
         }
     }
 
-    public void Invoke(in LoggerContext context)
+    public override void Invoke(in LoggerContext context)
     {
         Write(context);
     }
@@ -100,7 +98,7 @@ public class SharedFileSink : IFileSink, IDisposable
                     return false;
                 }
 
-                _textRenderer.Render(context, _writer);
+                GetTextRenderer(context).Render(context, _writer);
 
                 // 共享文件，不需要缓冲区
                 _writer.Flush();

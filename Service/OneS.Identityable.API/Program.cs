@@ -19,8 +19,6 @@ public class Program
             .Enrich.FromLogContext()
             .CreateLogger();
 
-        LogContext.Push()
-
         try
         {
             Log.Information("Starting host");

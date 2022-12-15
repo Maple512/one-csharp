@@ -20,28 +20,32 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
 #nullable enable
 namespace OneI.Logable.Fakes;
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using OneI.Logable;
 
 public class UserService
 {
-
     public void Register()
     {
         var logger = new LoggerConfiguration()
             .CreateLogger();
 
-        logger.Debug("", 1, 2, 3);
+        var user = new User(){Id =1};
 
-        Log.Debug("", 1, 2, 3);
+        logger.Debug("", user);
+
+        Log.Debug("", user);
     }
 }
+
 #nullable restore
 """;
         // Pass the source code to our helper and snapshot test the output
         return Verify(source, new LoggerCodeGenerator());
     }
-
+   
     [Fact]
     public void probable_generated_method()
     {
@@ -104,6 +108,12 @@ public class UserService
 
         public int Id { get; }
     }
+}
+
+[Serializable]
+public class User
+{
+    public int Id { get; set; }
 }
 
 [Serializable]

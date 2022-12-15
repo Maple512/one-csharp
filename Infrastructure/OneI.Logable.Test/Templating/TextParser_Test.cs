@@ -1,6 +1,6 @@
 namespace OneI.Logable.Templating;
 
-using OneI.Logable.Templating.Rendering;
+using OneI.Logable.Rendering;
 
 public class TextParser_Test
 {

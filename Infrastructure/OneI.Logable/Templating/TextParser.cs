@@ -2,7 +2,7 @@ namespace OneI.Logable.Templating;
 
 using System;
 using System.Globalization;
-using OneI.Logable.Templating.Rendering;
+using OneI.Logable.Rendering;
 
 public static class TextParser
 {

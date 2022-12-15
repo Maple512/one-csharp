@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj" />
         <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" SetTargetFramework="TargetFramework=net7.0" />
     </ItemGroup>
 

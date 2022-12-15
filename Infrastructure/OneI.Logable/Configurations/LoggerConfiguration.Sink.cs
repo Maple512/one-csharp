@@ -1,5 +1,6 @@
-namespace OneI.Logable.Configurations;
+namespace OneI.Logable;
 
+using OneI.Logable.Configurations;
 using OneI.Logable.Sinks;
 
 public partial class LoggerConfiguration

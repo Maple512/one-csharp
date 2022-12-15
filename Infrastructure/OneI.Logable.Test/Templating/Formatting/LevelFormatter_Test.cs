@@ -1,5 +1,7 @@
 namespace OneI.Logable.Templating.Formatting;
 
+using OneI.Logable.Rendering.Formatting;
+
 public class LevelFormatter_Test
 {
     [Theory]

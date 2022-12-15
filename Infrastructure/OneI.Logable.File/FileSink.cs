@@ -1,13 +1,13 @@
 namespace OneI.Logable;
 
-public class FileSink : IFileSink, IDisposable
+public class FileSink : FileSinkBase, IFileSink, IDisposable
 {
     private readonly TextWriter _writer;
     /// <summary>
     /// 原始文件流
     /// </summary>
     private readonly FileStream _originalStream;
-    private readonly ITextRenderer _textRenderer;
+
     /// <summary>
     /// 文件最大长度
     /// </summary>
@@ -24,12 +24,11 @@ public class FileSink : IFileSink, IDisposable
     /// <param name="buffered">是否开启缓冲区，当写入到流之后，是否立即刷新缓冲区</param>
     public FileSink(
         string path,
-        ITextRenderer textRenderer,
+        List<ITextRendererProvider> rendererProvider,
         long? fileSizeMaxBytes,
         Encoding? encoding,
-        bool buffered)
+        bool buffered) : base(rendererProvider)
     {
-        _textRenderer = textRenderer;
         _fileSizeMaxBytes = fileSizeMaxBytes;
         _buffered = buffered;
 
@@ -65,7 +64,7 @@ public class FileSink : IFileSink, IDisposable
         }
     }
 
-    public void Invoke(in LoggerContext context)
+    public override void Invoke(in LoggerContext context)
     {
         Write(context);
     }
@@ -80,7 +79,7 @@ public class FileSink : IFileSink, IDisposable
                 return false;
             }
 
-            _textRenderer.Render(context, _writer);
+            GetTextRenderer(context).Render(context, _writer);
 
             if(!_buffered)
             {

@@ -1,8 +1,10 @@
-namespace OneI.Logable.Templating.Rendering;
+using OneI.Logable.Templating;
+
+namespace OneI.Logable.Rendering;
 
 using System.Globalization;
 using System.IO;
-using OneI.Logable.Templating.Formatting;
+using OneI.Logable.Rendering.Formatting;
 using PropertyNames = LoggerConstants.PropertyNames;
 
 /// <summary>
@@ -61,21 +63,21 @@ public class TextTemplateRenderer : ITextRenderer
         {
             RenderHelper.Padding(writer, context.Exception?.ToString(), token.Alignment);
         }
-        //else if(token.Name == PropertyNames.MemberName)
-        //{
-        //    RenderHelper.Padding(writer, context.MemberName, token.Alignment);
-        //}
-        //else if(token.Name == PropertyNames.FilePath)
-        //{
-        //    RenderHelper.Padding(writer, context.FilePath, token.Alignment);
-        //}
-        //else if(token.Name == PropertyNames.LineNumber)
-        //{
-        //    RenderHelper.Padding(writer, context.LineNumber?.ToString(), token.Alignment);
-        //}
+        else if(token.Name == PropertyNames.MemberName)
+        {
+            RenderHelper.Padding(writer, context.MemberName, token.Alignment);
+        }
+        else if(token.Name == PropertyNames.FilePath)
+        {
+            RenderHelper.Padding(writer, context.FilePath, token.Alignment);
+        }
+        else if(token.Name == PropertyNames.LineNumber)
+        {
+            RenderHelper.Padding(writer, context.LineNumber?.ToString(), token.Alignment);
+        }
         else
         {
-            // 在此块中，writer 可能用于缓冲输出，以便可以应用填充。
+            // 在此块中，writer 可能用于缓冲输出，以便可以应用填充
             var sw = token.Alignment.HasValue ? new StringWriter() : writer;
 
             if(token.Name == PropertyNames.Message)

@@ -50,7 +50,7 @@ public static class InvocationExpressionParser
         {
             var symbol = TryParseExpression(argument.Expression, cts);
 
-            if(TypeSymbolVisitor.TryParse(symbol, out var type))
+            if(TypeSymbolParser.TryParse(symbol, out var type))
             {
                 var typeName = type!.ToDisplayString();
 

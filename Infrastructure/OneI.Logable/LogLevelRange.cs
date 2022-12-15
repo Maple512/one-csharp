@@ -41,7 +41,7 @@ public struct LogLevelRange
         Minimum = level;
     }
 
-    public void Max(LogLevel level)
+    public void Max(LogLevel? level)
     {
         if(Minimum > level)
         {

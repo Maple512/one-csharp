@@ -1,11 +1,10 @@
 namespace OneI.Logable;
 
-public class RollFileSink : ILoggerSink, IFileFlusher, IDisposable
+public class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposable
 {
     private static readonly object _lock = new();
 
     private readonly PathRoller _roller;
-    private readonly ITextRenderer _textRenderer;
     private readonly long? _fileSizeMaxBytes;
     private readonly int? _retainedFileCountMax;
     private readonly TimeSpan? _retainedFileTimeMax;
@@ -20,16 +19,15 @@ public class RollFileSink : ILoggerSink, IFileFlusher, IDisposable
     public RollFileSink(
         string path,
         RollFrequency frequency,
-        ITextRenderer textRenderer,
+         List<ITextRendererProvider> provider,
         long? fileSizeMaxBytes,
         int? retainedFileCountMax,
         TimeSpan? retainedFileTimeMax,
         Encoding? encoding,
         bool buffered,
-        bool shared)
+        bool shared) : base(provider)
     {
         _roller = new PathRoller(path, frequency);
-        _textRenderer = textRenderer;
         _fileSizeMaxBytes = fileSizeMaxBytes;
         _retainedFileCountMax = retainedFileCountMax;
         _retainedFileTimeMax = retainedFileTimeMax;
@@ -46,7 +44,7 @@ public class RollFileSink : ILoggerSink, IFileFlusher, IDisposable
         }
     }
 
-    public void Invoke(in LoggerContext context)
+    public override void Invoke(in LoggerContext context)
     {
         if(_disposed)
         {
@@ -150,8 +148,8 @@ public class RollFileSink : ILoggerSink, IFileFlusher, IDisposable
             {
                 // TODO: 滚动需要每次都重新创建吗？
                 _sink = _shared
-                    ? new SharedFileSink(path, _textRenderer, _fileSizeMaxBytes, _encoding)
-                : new FileSink(path, _textRenderer, _fileSizeMaxBytes, _encoding, _buffered);
+                    ? new SharedFileSink(path, _providers, _fileSizeMaxBytes, _encoding)
+                : new FileSink(path, _providers, _fileSizeMaxBytes, _encoding, _buffered);
 
                 _currentSequence = sequence;
             }

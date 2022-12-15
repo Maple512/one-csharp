@@ -1,6 +1,6 @@
 namespace OneI.Logable.Templating.Properties.ValueTypes;
 
-using OneI.Logable.Templating.Rendering;
+using OneI.Logable.Rendering;
 
 /// <summary>
 /// The literal value.

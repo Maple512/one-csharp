@@ -1,7 +1,14 @@
-namespace OneI.Logable;
+namespace OneI.Logable.Configurations;
 
 public interface ILoggerLevelConfiguration
 {
+    /// <summary>
+    /// 设置日志等级
+    /// </summary>
+    /// <param name="levelMap"></param>
+    /// <returns></returns>
+    LoggerConfiguration Use(LogLevelMap levelMap);
+
     /// <summary>
     /// 设置最小的日志等级
     /// </summary>

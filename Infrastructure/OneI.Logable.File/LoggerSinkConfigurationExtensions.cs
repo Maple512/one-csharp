@@ -2,7 +2,7 @@ namespace OneI.Logable;
 
 using System;
 using OneI.Logable.Configurations;
-using OneI.Logable.Templating.Rendering;
+using OneI.Logable.Rendering;
 
 public static class LoggerSinkConfigurationExtensions
 {
@@ -10,12 +10,17 @@ public static class LoggerSinkConfigurationExtensions
         this ILoggerSinkConfiguration configuration,
         LogFileOptions options)
     {
+        return configuration.Use(CreateSink(options));
+    }
+
+    private static ILoggerSink CreateSink(LogFileOptions options)
+    {
         ILoggerSink sink;
         if(options.Frequency != RollFrequency.Naver)
         {
             sink = new RollFileSink(options.Path,
                 options.Frequency,
-                options.TextRenderer,
+                options.TextRenderers,
                 options.FileSizeMaxBytes,
                 options.RetainedFileCountMax,
                 options.RetainedFileTimeMax,
@@ -27,7 +32,7 @@ public static class LoggerSinkConfigurationExtensions
         {
             sink = new SharedFileSink(
                 options.Path,
-                options.TextRenderer,
+                options.TextRenderers,
                 options.FileSizeMaxBytes,
                 options.Encoding);
         }
@@ -35,13 +40,13 @@ public static class LoggerSinkConfigurationExtensions
         {
             sink = new FileSink(
                 options.Path,
-                options.TextRenderer,
+                options.TextRenderers,
                 options.FileSizeMaxBytes,
                 options.Encoding,
                 options.Buffered);
         }
 
-        return configuration.Use(sink);
+        return sink;
     }
 }
 
@@ -52,26 +57,24 @@ public class LogFileOptions
     /// <param name="path">日志路径</param>
     /// <param name="template">日志消息模版，默认格式：<code>{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}</code></param>
     public LogFileOptions(string path, string? template = null, IFormatProvider? formatProvider = null)
-        : this(path, new TextTemplateRenderer(template ?? DefaultTemplate, formatProvider))
+        : this(path, new TextRendererProvider(template ?? DefaultTemplate, formatProvider))
     {
     }
 
-    public LogFileOptions(string path, ITextRenderer textRenderer)
+    public LogFileOptions(string path, ITextRendererProvider rendererProvider)
     {
         Path = path;
 
-        TextRenderer = textRenderer;
+        TextRenderers = new()
+        {
+            Check.NotNull(rendererProvider)
+        };
     }
 
     /// <summary>
     /// 日志路径，如：./Logs/*.txt
     /// </summary>
     public string Path { get; }
-
-    /// <summary>
-    /// 文本渲染器。默认：<see cref="TextTemplateRenderer"/>
-    /// </summary>
-    public ITextRenderer TextRenderer { get; init; }
 
     /// <summary>
     /// 文件最大长度
@@ -109,4 +112,27 @@ public class LogFileOptions
     /// 最大日志文件的保留时间
     /// </summary>
     public TimeSpan? RetainedFileTimeMax { get; init; }
+
+    public List<ITextRendererProvider> TextRenderers { get; }
+
+    /// <summary>
+    /// 表示按条件对指定文本进行渲染
+    /// </summary>
+    /// <param name="condition"></param>
+    /// <param name="textRenderer"></param>
+    public void RenderWhen(Func<LoggerContext, bool> condition, ITextRenderer textRenderer)
+    {
+        TextRenderers.Insert(0, new ConditionalRendererProvider(condition, textRenderer));
+    }
+
+    /// <summary>
+    /// 表示按条件对指定文本进行渲染
+    /// </summary>
+    /// <param name="condition"></param>
+    /// <param name="template"></param>
+    /// <param name="formatProvider"></param>
+    public void RenderWhen(Func<LoggerContext, bool> condition, string template, IFormatProvider? formatProvider = null)
+    {
+        TextRenderers.Insert(0, new ConditionalRendererProvider(condition, new TextTemplateRenderer(template, formatProvider)));
+    }
 }

@@ -17,4 +17,19 @@ public class NullLogger : ILogger
     public void Write(LoggerContext context)
     {
     }
+
+    public ILogger ForContext(params ILoggerMiddleware[] middlewares)
+    {
+        return Instance;
+    }
+
+    public ILogger ForContext(string sourceContext)
+    {
+        return Instance;
+    }
+
+    public ILogger ForContext<TSourceContext>()
+    {
+        return Instance;
+    }
 }

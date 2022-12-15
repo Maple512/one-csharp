@@ -1,4 +1,6 @@
-namespace OneI.Logable.Configurations;
+namespace OneI.Logable;
+
+using OneI.Logable.Configurations;
 
 public partial class LoggerConfiguration
 {
@@ -9,6 +11,13 @@ public partial class LoggerConfiguration
         public LoggerLevelConfiguration(LoggerConfiguration parent)
         {
             _parent = parent;
+        }
+
+        public LoggerConfiguration Use(LogLevelMap levelMap)
+        {
+            _parent._logLevelMap.Override(levelMap);
+
+            return _parent;
         }
 
         public ILoggerConfiguration Minimum(LogLevel minimum)
