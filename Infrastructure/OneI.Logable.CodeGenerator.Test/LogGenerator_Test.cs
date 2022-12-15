@@ -45,7 +45,7 @@ public class UserService
         // Pass the source code to our helper and snapshot test the output
         return Verify(source, new LoggerCodeGenerator());
     }
-   
+
     [Fact]
     public void probable_generated_method()
     {

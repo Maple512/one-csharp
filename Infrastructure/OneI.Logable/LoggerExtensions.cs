@@ -11,7 +11,7 @@ public static class LoggerExtensions
         Exception? exception,
         string message,
         IEnumerable<PropertyValue>? propertyValues = null,
-        [CallerMemberName]string? memberName = null,
+        [CallerMemberName] string? memberName = null,
         [CallerFilePath] string? filePath = null,
         [CallerLineNumber] int? lineNumber = null)
     {

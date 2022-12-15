@@ -1,7 +1,6 @@
 namespace OneI.Logable.Rendering.Formatting;
 
 using OneI.Logable.Rendering;
-using Rendering;
 
 public static class LevelFormatter
 {

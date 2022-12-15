@@ -2,7 +2,7 @@ namespace OneI.Logable.Middlewares;
 
 public class AggregateMiddleware : ILoggerMiddleware
 {
-    ILoggerMiddleware[] _middlewares;
+    private readonly ILoggerMiddleware[] _middlewares;
 
     public AggregateMiddleware(ILoggerMiddleware[] middlewares)
     {

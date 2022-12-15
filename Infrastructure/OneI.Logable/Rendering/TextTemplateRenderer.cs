@@ -1,10 +1,9 @@
-using OneI.Logable.Templating;
-
 namespace OneI.Logable.Rendering;
 
 using System.Globalization;
 using System.IO;
 using OneI.Logable.Rendering.Formatting;
+using OneI.Logable.Templating;
 using PropertyNames = LoggerConstants.PropertyNames;
 
 /// <summary>

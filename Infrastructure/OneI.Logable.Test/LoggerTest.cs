@@ -2,7 +2,7 @@ namespace OneI.Logable;
 
 public static class LoggerTest
 {
-    const string ErrorTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}{NewLine}{FilePath}#L{LineNumber}@{MemberName}{NewLine}";
+    private const string ErrorTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}{NewLine}{FilePath}#L{LineNumber}@{MemberName}{NewLine}";
 
     public static ILogger CreateLogger(
         string? path = null,
