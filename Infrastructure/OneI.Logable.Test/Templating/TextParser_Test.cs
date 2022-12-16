@@ -1,16 +1,44 @@
 namespace OneI.Logable.Templating;
 
 using OneI.Logable.Rendering;
+using OneI.Logable.Templating.Properties;
 
 public class TextParser_Test
 {
+    [Fact]
+    public void full_token()
+    {
+        var text = "{Date:yyyy-MM-dd,20'12}";
+
+        var template = TextParser.Parse(text);
+        var token = (template.Tokens[0] as PropertyToken)!;
+
+        token.Text.ShouldBe("Date:yyyy-MM-dd,20'12");
+        token.Format.ShouldBe("yyyy-MM-dd");
+        token.Alignment!.Value.Width.ShouldBe(20);
+        token.Alignment!.Value.Direction.ShouldBe(Direction.Right);
+        token.Indent.ShouldBe(12);
+        token.Index.ShouldBe(0);
+        token.Name.ShouldBe("Date");
+        token.Position.ShouldBe(0);
+        token.ParameterIndex.ShouldBeNull();
+
+        var writer = new StringWriter();
+        MessageTemplateRender.RenderPropertyToken(token, new Dictionary<string, PropertyValue>
+        {
+            {"Date",PropertyValue.CreateLiteral(DateTimeOffset.Now) }
+        }, writer, null);
+
+        writer.ToString().ShouldBe("          2022-12-17");
+    }
+
     [Theory]
-    [InlineData("{Data}", "Data", null, null)]
+    [InlineData("{Data'23}", "Data", null, null, 23)]
     [InlineData("{Data,-56}", "Data", null, -56)]
     [InlineData("{Data:yyyy-MM-dd}", "Data", "yyyy-MM-dd", null)]
     [InlineData("{Data:yyyy-MM-dd,23}", "Data", "yyyy-MM-dd", 23)]
-    [InlineData("{Data,-56:yyyy-MM-dd}", "Data", "yyyy-MM-dd", -56)]
-    public void parse_property_token(string text, string name, string format, int? width)
+    [InlineData("{Data,-56:yyyy-MM-dd'23}", "Data", "yyyy-MM-dd", -56, 23)]
+    public void parse_property_token(string text, string name, string? format = null, int? width = null, int? indent = null)
     {
         var tokens = TextParser.Parse(text).Tokens;
 
@@ -31,6 +59,8 @@ public class TextParser_Test
         {
             t.Alignment.HasValue.ShouldBeFalse();
         }
+
+        t.Indent.ShouldBe(indent);
     }
 
     [Theory]
@@ -49,6 +79,7 @@ public class TextParser_Test
     [InlineData("The assembly is {Assembly}", 1, 1)]
     [InlineData("The assembly is {Assembly}{Date::yyyy年}", 1, 2)]
     [InlineData("The assembly is {Assembly}{Date:yyyy年}", 1, 2)]
+    [InlineData("The assembly is {Assembly}{Date:yyyy年'-34}", 2, 1)]
     public void mixed_tokens(string template, int textCount, int propertyCount)
     {
         var tokens = TextParser.Parse(template).Tokens;

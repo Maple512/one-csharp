@@ -1,23 +1,18 @@
 namespace OneI.Logable;
 
-public readonly struct LogLevelMap
+public class LogLevelMap
 {
-    private readonly Dictionary<string, LogLevelRange> _overrides;
-
-    private readonly LogLevelRange _range;
-
+    public const LogLevel MinimumLevelDefault = LogLevel.Verbose;
     public const LogLevel MaximumLevelDefault = LogLevel.Fatal;
 
-    public LogLevelMap(LogLevel minimum, LogLevel? maximum = null)
-    {
-        _range = new LogLevelRange(minimum, maximum);
-        _overrides = new Dictionary<string, LogLevelRange>();
-    }
+    private readonly Dictionary<string, LogLevelRange> _overrides;
 
-    public LogLevelMap()
+    private LogLevelRange _range;
+
+    public LogLevelMap(LogLevel minimum = LogLevel.Information)
     {
         _overrides = new();
-        _range = new();
+        _range = new(minimum);
     }
 
     public LogLevel MinimumLevel => _range.Minimum;
@@ -26,34 +21,40 @@ public readonly struct LogLevelMap
 
     public LogLevelMap Minimum(LogLevel level)
     {
-        _range.Min(level);
+        if(MaximumLevel.HasValue
+            && MaximumLevel.Value < level)
+        {
+            throw new ArgumentOutOfRangeException(nameof(Minimum), "The minimum log level cannot be greater than the maximum.");
+        }
+
+        _range = new LogLevelRange(level, _range.Maximum);
 
         return this;
     }
 
     public LogLevelMap Maximum(LogLevel? level)
     {
-        _range.Max(level);
-
-        return this;
-
-    }
-
-    internal LogLevelMap Override(LogLevelMap @new)
-    {
-        _range.Min(@new.MinimumLevel);
-        _range.Max(@new.MaximumLevel);
-
-        foreach(var item in @new._overrides)
+        if(MinimumLevel > level)
         {
-            Override(item.Key, item.Value.Minimum, item.Value.Maximum);
+            throw new ArgumentOutOfRangeException(nameof(Maximum), "The maximum value of the log level cannot be smaller than the minimum value.");
         }
 
+        _range = new(_range.Minimum, level);
+
         return this;
     }
 
+    /// <summary>
+    /// 指定命名空间或类型的日志范围
+    /// </summary>
+    /// <param name="sourceContext">表示命名空间或类型名称</param>
+    /// <param name="minimum"></param>
+    /// <param name="maximum"></param>
+    /// <returns></returns>
     public LogLevelMap Override(string sourceContext, LogLevel minimum, LogLevel? maximum)
     {
+        Check.NotNullOrWhiteSpace(sourceContext);
+
         maximum ??= _range.Maximum ?? MaximumLevel;
 
         var range = new LogLevelRange(minimum, maximum);
@@ -84,11 +85,27 @@ public readonly struct LogLevelMap
                 if(context!.StartsWith(item.Key)
                     && (context.Length == item.Key.Length || context[item.Key.Length] == '.'))
                 {
-                    return item.Value.IsEnabled(level);
+                    return IsEnabled(level);
                 }
             }
         }
 
-        return _range.IsEnabled(level);
+        return IsEnabled(_range, level);
+    }
+
+    private static bool IsEnabled(LogLevelRange range, LogLevel level)
+    {
+        if(range.Minimum > level)
+        {
+            return false;
+        }
+
+        if(range.Maximum.HasValue
+            && range.Maximum.Value < level)
+        {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -1,9 +1,5 @@
 namespace Microsoft.Extensions.DependencyInjection;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 public static class ServiceCollectionCommonExtensions
 {
     /// <summary>
@@ -40,13 +36,7 @@ public static class ServiceCollectionCommonExtensions
     /// <returns></returns>
     public static T GetSingleInstance<T>(this IServiceCollection services)
     {
-        var service = services.GetSingleInstanceOrNull<T>();
-
-        if(service == null)
-        {
-            throw new ArgumentException($"Could not find singleton service: {typeof(T).AssemblyQualifiedName}");
-        }
-
-        return service;
+       return services.GetSingleInstanceOrNull<T>()
+            ?? throw new ArgumentException($"Could not find singleton service: {typeof(T).AssemblyQualifiedName}");
     }
 }

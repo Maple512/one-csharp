@@ -1,9 +1,5 @@
 namespace System.Text;
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-
 public class IndentedStringBuilder
 {
     private const byte IndentSize = 4;

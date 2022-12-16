@@ -15,7 +15,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Infrastructure\OneI.Utilityable\OneI.Utilityable.csproj" />
+        <ProjectReference Include="..\..\Infrastructure\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj" />
+        <ProjectReference Include="..\OneT.Common.Test\OneT.Common.Test.csproj" />
     </ItemGroup>
 
 </Project>

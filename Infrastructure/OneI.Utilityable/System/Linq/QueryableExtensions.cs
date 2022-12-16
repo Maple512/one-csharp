@@ -3,12 +3,7 @@ namespace System.Linq;
 using System.Linq.Expressions;
 using OneI;
 
-#if NET7_0_OR_GREATER
-
-using System.ComponentModel.DataAnnotations;
-
 [StackTraceHidden]
-#endif
 [DebuggerStepThrough]
 public static class QueryableExtensions
 {

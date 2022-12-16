@@ -23,6 +23,6 @@ public class AggregateMiddleware : ILoggerMiddleware
             }
         }
 
-        return LoggerVoid.Instance;
+        return next(context);
     }
 }

@@ -58,7 +58,7 @@ public static class MessageTemplateRender
             return;
         }
 
-        RenderHelper.Padding(output, value, pt.Alignment.Value);
+        RenderHelper.Padding(output, value, pt.Alignment.Value,pt.Indent);
     }
 
     private static void RenderValue(

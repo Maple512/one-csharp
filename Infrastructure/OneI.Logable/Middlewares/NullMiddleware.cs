@@ -8,6 +8,6 @@ public class NullMiddleware : ILoggerMiddleware
 
     public LoggerVoid Invoke(in LoggerContext context, in LoggerDelegate next)
     {
-        return LoggerVoid.Instance;
+        return next(context);
     }
 }

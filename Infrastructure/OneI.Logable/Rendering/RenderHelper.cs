@@ -4,16 +4,20 @@ using Formatters = LoggerConstants.Formatters;
 
 public static class RenderHelper
 {
-    /// <summary>
-    /// 向指定的方向填充指定长度的空格（' '）
-    /// </summary>
-    /// <param name="writer"></param>
-    /// <param name="value"></param>
-    /// <param name="alignment">指定填充方向和长度</param>
-    public static void Padding(TextWriter writer, string? value, Alignment? alignment)
+    public static void Padding(TextWriter writer, string? value, Alignment? alignment, int? indent = null)
     {
+        if(value.IsNullOrWhiteSpace())
+        {
+            writer.Write(value);
+            return;
+        }
+
+        if(indent != null)
+        {
+            writer.Write(new string(' ', indent.Value));
+        }
+
         if(alignment.HasValue is false
-            || value is null
             || value.Length >= alignment.Value.Width)
         {
             writer.Write(value);
@@ -21,18 +25,16 @@ public static class RenderHelper
             return;
         }
 
-        var align = alignment.Value;
+        var pad = alignment.Value.Width - value.Length;
 
-        var pad = align.Width - value.Length;
-
-        if(align.Direction == Direction.Left)
+        if(alignment.Value.Direction == Direction.Left)
         {
             writer.Write(value);
         }
 
         writer.Write(new string(' ', pad));
 
-        if(align.Direction == Direction.Right)
+        if(alignment.Value.Direction == Direction.Right)
         {
             writer.Write(value);
         }

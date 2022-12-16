@@ -1,15 +1,14 @@
 namespace System.Reflection;
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using OneI;
 
+// TODO: 使用源生成器解决反射
+[Obsolete]
+[StackTraceHidden]
 [DebuggerStepThrough]
-public static partial class TypeExtensions
+public static class TypeExtensions
 {
     public const BindingFlags StaticBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -395,6 +394,23 @@ public static partial class TypeExtensions
                 || type == typeof(sbyte);
     }
 
+    public static bool IsAssignableTo<TBase>(this Type type)
+    {
+        return type.IsAssignableTo(typeof(TBase));
+    }
+
+    /// <summary>
+    /// 是否匿名类型
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public static bool IsAnonymousType(this Type type)
+    {
+        return type.Namespace == null
+                && type.Name.Contains("AnonymousType")
+                && type.IsDefined(typeof(CompilerGeneratedAttribute));
+    }
+
     #endregion Type
 
     #region Constructor
@@ -425,47 +441,3 @@ public static partial class TypeExtensions
 
     #endregion Constructor
 }
-
-#if NET7_0_OR_GREATER
-[StackTraceHidden]
-public static partial class TypeExtensions
-{
-    public static bool IsAssignableTo<TBase>(this Type type)
-    {
-        return type.IsAssignableTo(typeof(TBase));
-    }
-
-    /// <summary>
-    /// 是否匿名类型
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static bool IsAnonymousType(this Type type)
-    {
-        return type.Namespace == null
-                && type.Name.Contains("AnonymousType")
-                && type.IsDefined(typeof(CompilerGeneratedAttribute));
-    }
-}
-#elif NETSTANDARD
-
-public static partial class TypeExtensions
-{
-    public static bool IsAssignableTo<TBase>(this Type type)
-    {
-        return typeof(TBase).IsAssignableFrom(type);
-    }
-
-    /// <summary>
-    /// 是否匿名类型
-    /// </summary>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    public static bool IsAnonymousType(this Type type)
-    {
-        return type.Namespace == null
-                && type.Name.Contains("AnonymousType")
-                && type.IsDefined(typeof(CompilerGeneratedAttribute));
-    }
-}
-#endif

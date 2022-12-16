@@ -35,6 +35,8 @@ public static class LoggerConstants
 
         public const char Format_Separator = ':';
 
+        public const char Indent_Separator = '\'';
+
         public const char Open_Separator = '{';
 
         public const char Close_Separator = '}';

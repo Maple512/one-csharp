@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Test\OneT.Common.Test\OneT.Common.Test.csproj" />
-        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
+        <ProjectReference Include="..\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj" />
     </ItemGroup>
 
 </Project>

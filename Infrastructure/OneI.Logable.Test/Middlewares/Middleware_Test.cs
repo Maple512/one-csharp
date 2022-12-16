@@ -2,19 +2,23 @@ namespace OneI.Logable.Middlewares;
 
 public class Middleware_Test
 {
-    [Fact]
-    public void middleware_order()
+    [Theory]
+    [InlineData(LogLevel.Verbose, 2)]
+    [InlineData(LogLevel.Information, 3)]
+    [InlineData(LogLevel.Debug, 2)]
+    public void middleware_order(LogLevel level, int count)
     {
-        var logger = LoggerTest.CreateLogger();
+        var orders = new List<int>();
+        var logger = new LoggerConfiguration()
+            .Use(_ => orders.Add(1))
+            .UseWhen(c => c.Level == level, _ => orders.Add(2))
+            .Use(_ => orders.Add(3))
+            .CreateLogger();
 
-        logger.Write(LogLevel.Information, "Information message");
+        logger.Information("");
 
-        logger.Write(LogLevel.Debug, " Debug message");
-
-        logger.Write(LogLevel.Error, "error message");
-
-        logger.Write(LogLevel.Error, new ArgumentException(), "error message");
-
-        logger.ForContext<Middleware_Test>().Debug("{SourceContext}");
+        orders.Count.ShouldBe(count);
+        orders.First().ShouldBe(1);
+        orders.Last().ShouldBe(3);
     }
 }

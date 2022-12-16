@@ -1,10 +1,10 @@
 namespace OneT.CodeGenerator;
 
-using System.Linq;
 using System.Threading.Tasks;
 using Basic.Reference.Assemblies;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using OneT.Common;
 using VerifyXunit;
 
 /// <summary>
@@ -18,18 +18,15 @@ public class CodeGeneratorSnapshotTest
         ReferenceAssemblyKind assemblyKind = ReferenceAssemblyKind.NetStandard20,
         [CallerFilePath] string? filePath = null)
     {
-        var syntaxTree = CSharpSyntaxTree.ParseText(source);
-
         var directory = Directory.GetCurrentDirectory();
 
-        var references = Directory.EnumerateFiles(directory, "*.dll")
-            .Select(x => MetadataReference.CreateFromFile(x));
+        var syntaxTree = CSharpSyntaxTree.ParseText(source);
 
         // 编译环境
         var compilation = CSharpCompilation.Create(
              "Tests",
              new[] { syntaxTree },
-             references,
+             null,
              new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
              ).AddReferences(assemblyKind);
 
@@ -38,7 +35,7 @@ public class CodeGeneratorSnapshotTest
         driver = driver.RunGenerators(compilation);
 
         var verify = Verifier.Verify(driver)
-            .UseDirectory(Path.Combine(Path.GetDirectoryName(filePath)!, "Generate Results"))
+            .UseDirectory(Path.Combine(TestTools.GetCSProjectDirecoty(filePath), "Logs"))
             .AutoVerify()
             .UseUniqueDirectory();
 

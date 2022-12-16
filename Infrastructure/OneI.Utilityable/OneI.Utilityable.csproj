@@ -3,13 +3,9 @@
     <Import Project="../../common.props" />
 
     <PropertyGroup>
-        <TargetFrameworks>$(NetFramework);$(NetStandard)</TargetFrameworks>
+        <TargetFramework>$(NetFramework)</TargetFramework>
         <RootNamespace>OneI</RootNamespace>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
-
-    <ItemGroup>
-        <PackageReference Include="System.Memory" Version="4.5.5"  />
-        <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
-    </ItemGroup>
 
 </Project>

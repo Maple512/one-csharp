@@ -11,9 +11,13 @@
 
 - `Infrastructure`: 基础设施
   - `Utility`: 工具集
-  - `Module`: 模块化支持
+  - `Module`: 模块化支持（参考[abp](https://abp.io))
   - `Event`: 事件
   - `Domain`: 领域层
+  - [`Log`](./log.md)：日志（参考[Serial](https://serilog.net/)）
+    - `OneI.Logable`：主项目
+    - `OneI.Logable.CodeGenerator`：源代码生成器，生成日志的扩展
+    - `OneI.Logable.File`：将日志记录到文件中
 - `Example`：案例
 - `Service`：服务
 
@@ -22,8 +26,7 @@
 - `Signal`: 信号，进程间异步通知
 - 创建一个泛型对象：Activator.CreateInstance
 
-## Log
-
+## Source Code Generator
 
 `OutputItemType="Analyzer" ReferenceOutputAssembly="false"`
 

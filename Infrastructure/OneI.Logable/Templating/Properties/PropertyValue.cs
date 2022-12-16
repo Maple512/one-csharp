@@ -1,7 +1,5 @@
 namespace OneI.Logable.Templating.Properties;
 
-using OneI.Logable.Templating.Properties.ValueTypes;
-
 /// <summary>
 /// The property value.
 /// </summary>

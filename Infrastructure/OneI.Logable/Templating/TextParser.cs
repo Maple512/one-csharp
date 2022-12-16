@@ -1,8 +1,9 @@
 namespace OneI.Logable.Templating;
 
-using System;
 using System.Globalization;
 using OneI.Logable.Rendering;
+
+using static OneI.Logable.LoggerConstants.Formatters;
 
 public static class TextParser
 {
@@ -39,11 +40,11 @@ public static class TextParser
 
             span[index] = c;
 
-            if(c is LoggerConstants.Formatters.Open_Separator)
+            if(c is Open_Separator)
             {
                 openBrace = index;
             }
-            else if(c == LoggerConstants.Formatters.Close_Separator && openBrace > -1)
+            else if(c == Close_Separator && openBrace > -1)
             {
                 if(index != openBrace + 1)
                 {
@@ -95,7 +96,6 @@ public static class TextParser
         return result;
     }
 
-    // {Date:yyyy-MM-dd,20}
     private static bool TryParsePropertyToken(ReadOnlySpan<char> bytes, int index, out PropertyToken? token)
     {
         token = null;
@@ -105,112 +105,115 @@ public static class TextParser
             return false;
         }
 
-        const int startIndex = 1;
-
-        var formatIndex = bytes.IndexOf(LoggerConstants.Formatters.Format_Separator);
-        if(formatIndex == startIndex)
+        string? name = null;
+        string? format = null;
+        Alignment? align = null;
+        int? indent = null;
+        Span<char> container = stackalloc char[bytes.Length - 2];
+        var start = 0;
+        int end;
+        var flag = 0;
+        for(end = 0; end < bytes.Length - 2; end++)
         {
-            return false;
-        }
-
-        var alignIndex = bytes.IndexOf(LoggerConstants.Formatters.Align_Separator);
-        if(alignIndex == startIndex)
-        {
-            return false;
-        }
-
-        ReadOnlySpan<char> name = null;
-        ReadOnlySpan<char> formatChars = null;
-        Alignment? alignment = null;
-
-        // {Date}
-        if(formatIndex == -1
-            && alignIndex == -1)
-        {
-            name = bytes[startIndex..^1];
-        }// {Date:yyyy}
-        else if(alignIndex == -1
-            && formatIndex != -1)
-        {
-            name = bytes[startIndex..formatIndex];// [startIndex..formatIndex];
-            formatChars = bytes[(formatIndex + 1)..^1];// [(formatIndex + 1)..^1];
-        }// {Data,12}
-        else if(formatIndex == -1
-            && alignIndex != -1)
-        {
-            var align = bytes[(alignIndex + 1)..^1];//[(alignIndex + 1)..^1];
-
-            if(align.IsEmpty == false
-                    && int.TryParse(align.ToString(), NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var width))
+            var c = bytes[end + 1];
+            if(c == Format_Separator && flag != 1)
             {
-                alignment = new Alignment(width);
+                if(TryAssignment(container) == false)
+                {
+                    return false;
+                }
+
+                container.Clear();
+                start = end;
+                flag = 1;
+            }
+            else if(c == Align_Separator && flag != 2)
+            {
+                if(TryAssignment(container) == false)
+                {
+                    return false;
+                }
+
+                container.Clear();
+                start = end;
+                flag = 2;
+            }
+            else if(c == Indent_Separator && flag != 3)
+            {
+                if(TryAssignment(container) == false)
+                {
+                    return false;
+                }
+
+                container.Clear();
+                start = end;
+                flag = 3;
             }
             else
             {
-                return false;
-            }
-
-            name = bytes.Slice(startIndex, alignIndex - 1);//[startIndex..alignIndex];
-        }
-        else
-        {   // {Data:yyyy,12}
-            if(alignIndex > formatIndex)
-            {
-                var align = bytes[(alignIndex + 1)..^1];// [(alignIndex + 1)..^1];
-
-                if(align.IsEmpty == false
-                    && int.TryParse(align.ToString(), NumberStyles.AllowLeadingSign, System.Globalization.CultureInfo.InvariantCulture, out var width))
-                {
-                    alignment = new Alignment(width);
-                }
-                else
-                {
-                    return false;
-                }
-
-                formatChars = bytes[(formatIndex + 1)..alignIndex];
-                name = bytes[startIndex..formatIndex];
-            }
-            else // {Data,12:yyyy}
-            {
-                // var align = bytes[(alignIndex + 1)..formatIndex];
-                var align = bytes[(alignIndex + 1)..formatIndex];
-
-                if(align.IsEmpty == false
-                    && int.TryParse(align.ToString(), NumberStyles.AllowLeadingSign | NumberStyles.AllowTrailingWhite, CultureInfo.InvariantCulture, out var width))
-                {
-                    alignment = new Alignment(width);
-                }
-                else
-                {
-                    return false;
-                }
-
-                formatChars = bytes[(formatIndex + 1)..^1];
-                name = bytes[startIndex..alignIndex];
+                container[end] = c;
             }
         }
 
-        if(ValidPropertyName(name) == false)
+        if(TryAssignment(container) == false)
         {
             return false;
         }
 
-        if(TryCheckFormat(formatChars, out var format) == false)
+        if(name.IsNullOrWhiteSpace())
         {
             return false;
         }
 
-        token = new PropertyToken(name.ToString(), bytes.ToString(), index, -1, format, alignment);
+        token = new PropertyToken(name!, bytes[1..^1].ToString(), index, -1, format, align, indent);
 
         return true;
+
+        bool TryAssignment(Span<char> text)
+        {
+            switch(flag)
+            {
+                case 1:
+                    if(TryValidFormat(text[(start + 1)..end], out format) == false)
+                    {
+                        return false;
+                    }
+
+                    break;
+                case 2:
+                    if(TryValidAlign(text[(start + 1)..end], out align) == false)
+                    {
+                        return false;
+                    }
+
+                    break;
+                case 3:
+                    if(TryValidIndent(text[(start + 1)..end], out indent) == false)
+                    {
+                        return false;
+                    }
+
+                    break;
+                default:
+                    if(TryValidPropertyName(text[start..end], out name) == false)
+                    {
+                        return false;
+                    }
+
+                    break;
+            }
+
+            return true;
+        }
     }
 
-    private static bool ValidPropertyName(ReadOnlySpan<char> name)
+    private static bool TryValidPropertyName(ReadOnlySpan<char> text, [NotNullWhen(true)] out string? name)
     {
-        for(var i = 0; i < name.Length; i++)
+        name = null;
+
+        for(var i = 0; i < text.Length; i++)
         {
-            var c = name[i];
+            var c = text[i];
             if(char.IsLetterOrDigit(c) == false
                 && c != '_')
             {
@@ -218,19 +221,53 @@ public static class TextParser
             }
         }
 
+        name = text.ToString();
+
         return true;
     }
 
-    private static bool TryCheckFormat(ReadOnlySpan<char> chars, out string? format)
+    private static bool TryValidIndent(ReadOnlySpan<char> text, out int? indent)
     {
-        format = null;
-
-        if(chars is { IsEmpty: true })
+        indent = 0;
+        if(text.IsEmpty || text.IsWhiteSpace())
         {
+            return false;
+        }
+
+        int.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out var result);
+
+        indent = result;
+
+        return indent != 0;
+    }
+
+    private static bool TryValidAlign(ReadOnlySpan<char> text, [NotNullWhen(true)] out Alignment? align)
+    {
+        align = null;
+        if(text.IsEmpty || text.IsWhiteSpace())
+        {
+            return false;
+        }
+
+        if(int.TryParse(text, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var width))
+        {
+            align = new Alignment(width);
+
             return true;
         }
 
-        foreach(var item in chars)
+        return false;
+    }
+
+    private static bool TryValidFormat(ReadOnlySpan<char> text, [NotNullWhen(true)] out string? format)
+    {
+        format = null;
+        if(text.IsEmpty || text.IsWhiteSpace())
+        {
+            return false;
+        }
+
+        foreach(var item in text)
         {
             if(IsValidFormat(item) == false)
             {
@@ -238,7 +275,7 @@ public static class TextParser
             }
         }
 
-        format = chars.ToString();
+        format = text.ToString();
 
         return true;
     }

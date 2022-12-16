@@ -1,7 +1,5 @@
 namespace System.Text.Json;
 
-#if NET7_0_OR_GREATER
-
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 
@@ -51,4 +49,3 @@ internal class SnakeCaseNamingPolly : JsonNamingPolicy
         return name?.ToSnakeCase()!;
     }
 }
-#endif

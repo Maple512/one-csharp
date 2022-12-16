@@ -2,12 +2,7 @@ namespace System.Collections.Generic;
 
 using OneI;
 
-#if NET7_0_OR_GREATER
-
-using System.Diagnostics.CodeAnalysis;
-
 [StackTraceHidden]
-#endif
 [DebuggerStepThrough]
 public static class DictionaryExtensions
 {

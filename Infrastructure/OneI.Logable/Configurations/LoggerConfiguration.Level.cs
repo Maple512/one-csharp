@@ -13,9 +13,10 @@ public partial class LoggerConfiguration
             _parent = parent;
         }
 
-        public LoggerConfiguration Use(LogLevelMap levelMap)
+        public LoggerConfiguration Use(LogLevel minimum,LogLevel? maximum = null)
         {
-            _parent._logLevelMap.Override(levelMap);
+            _parent._logLevelMap.Minimum(minimum);
+            _parent._logLevelMap.Maximum(maximum);
 
             return _parent;
         }

@@ -62,7 +62,7 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerBranchCo
         {
             middleware.Invoke(context, next);
 
-            return LoggerVoid.Instance;
+            return next(context);
         });
     }
 
@@ -93,7 +93,7 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerBranchCo
         {
             middleware(context, next);
 
-            return LoggerVoid.Instance;
+            return next(context);
         });
     }
 
@@ -103,7 +103,7 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerBranchCo
         {
             middleware(context);
 
-            return LoggerVoid.Instance;
+            return next(context);
         });
     }
 

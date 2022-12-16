@@ -52,10 +52,10 @@ public static class LoggerSinkConfigurationExtensions
 
 public class LogFileOptions
 {
-    private const string DefaultTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}";
+    private const string DefaultTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}";
 
     /// <param name="path">日志路径</param>
-    /// <param name="template">日志消息模版，默认格式：<code>{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}{NewLine}{Exception}</code></param>
+    /// <param name="template">日志消息模版，默认格式：<code>{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level}] {Message}</code></param>
     public LogFileOptions(string path, string? template = null, IFormatProvider? formatProvider = null)
         : this(path, new TextRendererProvider(template ?? DefaultTemplate, formatProvider))
     {

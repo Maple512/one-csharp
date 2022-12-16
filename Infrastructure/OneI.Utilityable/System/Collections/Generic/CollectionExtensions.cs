@@ -2,6 +2,7 @@ namespace System.Collections.Generic;
 
 using OneI;
 
+[StackTraceHidden]
 [DebuggerStepThrough]
 public static partial class CollectionExtensions
 {
@@ -40,11 +41,3 @@ public static partial class CollectionExtensions
         return items;
     }
 }
-
-#if NET7_0_OR_GREATER
-[StackTraceHidden]
-public static partial class CollectionExtensions
-{
-
-}
-#endif

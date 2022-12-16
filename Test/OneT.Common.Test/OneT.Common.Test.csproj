@@ -7,4 +7,8 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Infrastructure\OneI.Utilityable\OneI.Utilityable.csproj" />
+    </ItemGroup>
+
 </Project>

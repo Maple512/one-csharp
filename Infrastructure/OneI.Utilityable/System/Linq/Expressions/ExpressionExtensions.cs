@@ -1,9 +1,6 @@
 namespace System.Linq.Expressions;
 
-#if NET7_0_OR_GREATER
-
 [StackTraceHidden]
-#endif
 [DebuggerStepThrough]
 public static class ExpressionExtensions
 {

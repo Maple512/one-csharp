@@ -105,6 +105,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "reflection", "reflection", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Reflectionable", "Infrastructure\OneI.Reflectionable\OneI.Reflectionable.csproj", "{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Utilityable.Command", "Infrastructure\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj", "{81FE7853-EC0C-4294-9E8A-498D202147DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -227,6 +229,10 @@ Global
 		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81FE7853-EC0C-4294-9E8A-498D202147DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81FE7853-EC0C-4294-9E8A-498D202147DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81FE7853-EC0C-4294-9E8A-498D202147DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81FE7853-EC0C-4294-9E8A-498D202147DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -272,6 +278,7 @@ Global
 		{667AD8AB-AEC3-4B93-A586-57A2BD1813F3} = {C5A8AD1C-0308-4DDC-9695-7D84A2954E7C}
 		{E9E65482-5206-427A-BC81-B5A526EC1B6B} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
 		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD} = {E9E65482-5206-427A-BC81-B5A526EC1B6B}
+		{81FE7853-EC0C-4294-9E8A-498D202147DA} = {C2F8B1B1-8C2A-4CE8-928A-B960041F8699}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

@@ -1,8 +1,66 @@
 namespace OneI;
 
+[StackTraceHidden]
 [DebuggerStepThrough]
 public static partial class Check
 {
+    [return: NotNull]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string NotNullOrEmpty(
+       string? value,
+       [CallerFilePath] string? filePath = null,
+       [CallerMemberName] string? memberName = null,
+       [CallerLineNumber] int? line = null)
+    {
+        return string.IsNullOrEmpty(value)
+            ? throw new ArgumentNullException(nameof(value), ErrorMessage(filePath, memberName, line))
+            : value;
+    }
+
+    [return: NotNull]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string NotNullOrWhiteSpace(
+        string? value,
+        [CallerFilePath] string? filePath = null,
+        [CallerMemberName] string? memberName = null,
+        [CallerLineNumber] int? line = null)
+    {
+        return string.IsNullOrWhiteSpace(value)
+            ? throw new ArgumentNullException(nameof(value), ErrorMessage(filePath, memberName, line))
+            : value;
+    }
+
+    [return: NotNull]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static T NotNull<T>(
+        T? value,
+        [CallerFilePath] string? filePath = null,
+        [CallerMemberName] string? memberName = null,
+        [CallerLineNumber] int? line = null)
+    {
+        return value == null
+            ? throw new ArgumentNullException(nameof(value), ErrorMessage(filePath, memberName, line))
+            : value;
+    }
+
+    [return: NotNull]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static IEnumerable<T> NotNullOrEmpty<T>(
+        IEnumerable<T> data,
+        [CallerFilePath] string? filePath = null,
+        [CallerMemberName] string? memberName = null,
+        [CallerLineNumber] int? line = null)
+    {
+        if(data?.Any() != true)
+        {
+            throw new ArgumentNullException(nameof(data), ErrorMessage(filePath, memberName, line));
+        }
+        else
+        {
+            return data;
+        }
+    }
+
     public static bool IsIn<T>(T? value, params T[] data)
     {
         if(value is null
@@ -22,160 +80,26 @@ public static partial class Check
         return false;
     }
 
+    [return: NotNull]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Dictionary<TKey, TValue> NotNullOrEmpty<TKey, TValue>(
+        Dictionary<TKey, TValue>? data,
+        [CallerFilePath] string? filePath = null,
+        [CallerMemberName] string? memberName = null,
+        [CallerLineNumber] int? line = null)
+        where TKey : notnull
+    {
+        return data == null || !data.Any()
+            ? throw new ArgumentNullException(nameof(data), ErrorMessage(filePath, memberName, line))
+            : data;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static string ErrorMessage(
-        string? memberName,
         string? filePath,
+        string? memberName,
         int? lineNumber)
     {
-        return $"Value be not null. (\"{filePath}\" L{lineNumber} \"{memberName}\")";
+        return $"Value be not null. ({filePath}#L{lineNumber}@{memberName})";
     }
 }
-
-#if NET7_0_OR_GREATER
-[StackTraceHidden]
-public static partial class Check
-{
-    [return: NotNull]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrEmpty(
-        string? value,
-        [CallerMemberName] string? memberName = null,
-        [CallerFilePath] string? filePath = null,
-        [CallerLineNumber] int? line = null)
-    {
-        return string.IsNullOrEmpty(value)
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(memberName, filePath, line))
-            : value;
-    }
-
-    [return: NotNull]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrWhiteSpace(
-        string? value,
-        [CallerMemberName] string? memberName = null,
-        [CallerFilePath] string? filePath = null,
-        [CallerLineNumber] int? line = null)
-    {
-        return string.IsNullOrWhiteSpace(value)
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(memberName, filePath, line))
-            : value;
-    }
-
-    [return: NotNull]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T NotNull<T>(
-        T? value,
-        [CallerMemberName] string? memberName = null,
-        [CallerFilePath] string? filePath = null,
-        [CallerLineNumber] int? line = null)
-    {
-        return value == null
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(memberName, filePath, line))
-            : value;
-    }
-
-    [return: NotNull]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> NotNullOrEmpty<T>(
-        IEnumerable<T> data,
-        [CallerMemberName] string? memberName = null,
-        [CallerFilePath] string? filePath = null,
-        [CallerLineNumber] int? line = null)
-    {
-        if(data?.Any() != true)
-        {
-            throw new ArgumentNullException(nameof(data), ErrorMessage(memberName, filePath, line));
-        }
-        else
-        {
-            return data;
-        }
-    }
-
-    [return: NotNull]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Dictionary<TKey, TValue> NotNullOrEmpty<TKey, TValue>(
-        Dictionary<TKey, TValue>? data,
-        [CallerMemberName] string? memberName = null,
-        [CallerFilePath] string? filePath = null,
-        [CallerLineNumber] int? line = null)
-        where TKey : notnull
-    {
-        return data == null || !data.Any()
-            ? throw new ArgumentNullException(nameof(data), ErrorMessage(memberName, filePath, line))
-            : data;
-    }
-}
-#endif
-
-#if NETSTANDARD2_0
-public static partial class Check
-{
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrEmpty(
-       string? value,
-       [CallerMemberName] string? memberName = null,
-       [CallerFilePath] string? filePath = null,
-       [CallerLineNumber] int? line = null)
-    {
-        return string.IsNullOrEmpty(value)
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(memberName, filePath, line))
-            : value!;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrWhiteSpace(
-        string? value,
-        [CallerMemberName] string? memberName = null,
-        [CallerFilePath] string? filePath = null,
-        [CallerLineNumber] int? line = null)
-    {
-        return string.IsNullOrWhiteSpace(value)
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(memberName, filePath, line))
-            : value!;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T NotNull<T>(
-        T? value,
-        [CallerMemberName] string? memberName = null,
-        [CallerFilePath] string? filePath = null,
-        [CallerLineNumber] int? line = null)
-    {
-        return value == null
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(memberName, filePath, line))
-            : value;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> NotNullOrEmpty<T>(
-        IEnumerable<T>? data,
-        [CallerMemberName] string? memberName = null,
-        [CallerFilePath] string? filePath = null,
-        [CallerLineNumber] int? line = null)
-    {
-        if(data?.Any() != true)
-        {
-            throw new ArgumentNullException(nameof(data), ErrorMessage(memberName, filePath, line));
-        }
-        else
-        {
-            return data;
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Dictionary<TKey, TValue> NotNullOrEmpty<TKey, TValue>(
-        Dictionary<TKey, TValue>? data,
-        [CallerMemberName] string? memberName = null,
-        [CallerFilePath] string? filePath = null,
-        [CallerLineNumber] int? line = null)
-        where TKey : notnull
-    {
-        return data == null || !data.Any()
-            ? throw new ArgumentNullException(nameof(data), ErrorMessage(memberName, filePath, line))
-            : data;
-    }
-}
-#endif

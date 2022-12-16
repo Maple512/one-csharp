@@ -11,8 +11,8 @@ public static class LoggerExtensions
         Exception? exception,
         string message,
         IEnumerable<PropertyValue>? propertyValues = null,
-        [CallerMemberName] string? memberName = null,
         [CallerFilePath] string? filePath = null,
+        [CallerMemberName] string? memberName = null,
         [CallerLineNumber] int? lineNumber = null)
     {
         propertyValues ??= new List<PropertyValue>(0);
@@ -44,6 +44,6 @@ public static class LoggerExtensions
             }
         }
 
-        logger.Write(new(level, template, exception, properties, memberName, filePath, lineNumber));
+        logger.Write(new(level, template, exception, properties, filePath, memberName, lineNumber));
     }
 }

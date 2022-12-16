@@ -5,30 +5,40 @@ using System.IO;
 public static class TestTools
 {
     /// <summary>
-    /// 获取<paramref name="file"/>在项目中的完整路径
+    /// 获取项目csporj文件所在目录
     /// </summary>
-    /// <param name="file"></param>
+    /// <param name="filePath">调用该方法的文件地址</param>
     /// <returns></returns>
-    public static string GetFilePathWithinProject(string file)
+    public static string GetCSProjectDirecoty([CallerFilePath] string? filePath = null)
     {
-        var projectPath = Directory.CreateDirectory(Directory.GetCurrentDirectory()).Parent!.Parent!.Parent!.FullName;
+        if(TryGetCSProjectDirecoty(out var csprojDirectory, filePath) == false)
+        {
+            return Path.GetDirectoryName(filePath)! ?? Directory.GetCurrentDirectory();
+        }
 
-        var path = Path.Combine(projectPath, file);
-
-        EnsureDirectoryExisted(Path.GetDirectoryName(path)!);
-
-        return Path.GetFullPath(path);
+        return csprojDirectory;
     }
 
-    /// <summary>
-    /// Ensures the directory existed.
-    /// </summary>
-    /// <param name="directory">The directory.</param>
-    public static void EnsureDirectoryExisted(string directory)
+    private static bool TryGetCSProjectDirecoty([NotNullWhen(true)] out string? csprojDirectory, [CallerFilePath] string? filePath = null)
     {
-        if(Directory.Exists(directory) == false)
+        var directory = Path.GetDirectoryName(filePath);
+        csprojDirectory = null;
+
+        if(directory.IsNullOrWhiteSpace())
         {
-            Directory.CreateDirectory(directory);
+            return false;
         }
+
+        var projFile = Directory.GetFiles(directory, "*.csproj")
+             .FirstOrDefault();
+
+        if(projFile is null)
+        {
+            return TryGetCSProjectDirecoty(out csprojDirectory, directory!);
+        }
+
+        csprojDirectory = Path.GetDirectoryName(projFile)!;
+
+        return true;
     }
 }

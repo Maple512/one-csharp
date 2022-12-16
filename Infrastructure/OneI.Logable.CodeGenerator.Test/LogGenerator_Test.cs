@@ -1,10 +1,6 @@
 namespace OneI.Logable;
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using OneI.Logable.Templating;
-using OneI.Logable.Templating.Properties.ValueTypes;
 using OneT.CodeGenerator;
 using VerifyXunit;
 using Xunit;
@@ -17,116 +13,37 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
     {
         // The source code to test
         var source = """
-#nullable enable
-namespace OneI.Logable.Fakes;
+            #nullable enable
+            namespace Test;
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using OneI.Logable;
+            using System;
+            using System.Collections;
+            using System.Collections.Generic;
+            using OneI.Logable;
 
-public class UserService
-{
-    public void Register()
-    {
-        var logger = new LoggerConfiguration()
-            .CreateLogger();
+            public class UserService
+            {
+                public void Register()
+                {
+                    var logger = new LoggerConfiguration()
+                        .CreateLogger();
 
-        var user = new User(){Id =1};
+                    var user = new User(){Id =1};
 
-        logger.Debug("", user);
+                    logger.Debug("", user);
 
-        Log.Debug("", user);
-    }
-}
+                    Log.Debug("", user);
+                }
+            }
 
-#nullable restore
-""";
-        // Pass the source code to our helper and snapshot test the output
+            [Serializable]
+            public class User
+            {
+                public int Id { get; set; }
+            }
+            #nullable restore
+            """;
+
         return Verify(source, new LoggerCodeGenerator());
     }
-
-    [Fact]
-    public void probable_generated_method()
-    {
-        // literal
-        var gv1 = new LiteralValue<System.Nullable<int>>(null);
-
-        var r1 = gv1.ToString();
-
-        var gv2 = new LiteralValue<System.Nullable<int>>(1);
-
-        var r2 = gv2.ToString();
-
-        // enumerable + literal
-        var ev1 = new EnumerableValue();
-        var l1 = new List<int> { 1, 2, 3 };
-        foreach(var item in l1)
-        {
-            ev1.AddPropertyValue(new LiteralValue<int>(item));
-        }
-
-        var r3 = ev1.ToString();
-
-        var ev2 = new EnumerableValue();
-        var l2 = new List<Model> { new Model(1), new Model(2) };
-        foreach(var item in l2)
-        {
-            ev2.AddPropertyValue(ToObjectValue(item));
-        }
-
-        var r4 = ev2.ToString();
-
-        // dictionary + literal
-        var dv1 = new DictionaryValue();
-        var d1 = new Dictionary<int, Model>
-        {
-            {1 , new Model(1) },
-            {2 , new Model(2) },
-            {3 , new Model(3) },
-        };
-        foreach(var item in d1)
-        {
-            dv1.Add(new LiteralValue<int>(item.Key), ToObjectValue(item.Value));
-        }
-
-        var r5 = dv1.ToString();
-    }
-
-    private static ObjectValue ToObjectValue(Model model)
-    {
-        var v = new ObjectValue();
-
-        v.AddProperty(new Property(nameof(Model.Id), new LiteralValue<int>(model.Id)));
-
-        return v;
-    }
-
-    private class Model
-    {
-        public Model(int id) => Id = id;
-
-        public int Id { get; }
-    }
 }
-
-[Serializable]
-public class User
-{
-    public int Id { get; set; }
-}
-
-[Serializable]
-public class User<T>
-{
-    public int Id { get; }
-
-    public T Value { get; }
-}
-
-public interface IModel
-{
-}
-
-public interface IModel<T>
-{ }

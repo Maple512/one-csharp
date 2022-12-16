@@ -1,5 +1,6 @@
 namespace OneI.Logable;
 
+using OneI.Diagnostics;
 using OneI.Logable.Templating;
 using OneI.Logable.Templating.Properties;
 
@@ -13,10 +14,10 @@ public class LoggerContext
         TextTemplate textTemplate,
         Exception? exception = null,
         List<Property>? properties = null,
-         string? memberName = null,
          string? filePath = null,
+         string? memberName = null,
          int? lineNumber = null)
-        : this(level, textTemplate, exception, default(Dictionary<string, PropertyValue>?), memberName, filePath, lineNumber)
+        : this(level, textTemplate, exception, default(Dictionary<string, PropertyValue>?), filePath, memberName, lineNumber)
     {
         if(properties?.Count > 0)
         {
@@ -29,8 +30,8 @@ public class LoggerContext
         TextTemplate textTemplate,
         Exception? exception = null,
         Dictionary<string, PropertyValue>? properties = null,
-         string? memberName = null,
          string? filePath = null,
+         string? memberName = null,
          int? lineNumber = null)
     {
         Timestamp = Clock.Now;
@@ -52,9 +53,9 @@ public class LoggerContext
 
     public Exception? Exception { get; }
 
-    public string? MemberName { get; }
-
     public string? FilePath { get; }
+
+    public string? MemberName { get; }
 
     public int? LineNumber { get; }
 
@@ -93,6 +94,6 @@ public class LoggerContext
             properties.Add(property.Key, property.Value);
         }
 
-        return new(Level, TextTemplate, Exception, properties);
+        return new(Level, TextTemplate, Exception, properties, FilePath, MemberName, LineNumber);
     }
 }

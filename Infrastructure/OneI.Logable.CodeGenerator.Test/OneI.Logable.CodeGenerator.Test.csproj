@@ -8,10 +8,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Logs\**" />
+      <Content Include="Logs\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\..\Test\OneT.CodeGenerator\OneT.CodeGenerator.csproj" />
         <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj" />
         <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj" />
-        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" SetTargetFramework="TargetFramework=netstandard2.0" />
+        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>
 
 </Project>

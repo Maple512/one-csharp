@@ -2,9 +2,38 @@ namespace System.Linq;
 
 using OneI;
 
+[StackTraceHidden]
 [DebuggerStepThrough]
-public static partial class EnumerableExtensions
+public static class EnumerableExtensions
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? source)
+    {
+        return source == null || source.Any() == false;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool NotNullOrEmpty<T>([NotNullWhen(true)] this IEnumerable<T>? source)
+    {
+        return source != null && source.Any() == true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string Join<T>(this IEnumerable<T> source, string separator)
+    {
+        Check.NotNull(source);
+
+        return string.Join(separator, source);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static string Join<T>(this IEnumerable<T> source, char separator = ',')
+    {
+        Check.NotNull(source);
+
+        return string.Join(separator, source);
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> WhereIf<T>(
         this IEnumerable<T> source,
@@ -43,69 +72,3 @@ public static partial class EnumerableExtensions
             : filtered.Distinct(comparer);
     }
 }
-
-#if NET7_0_OR_GREATER
-[StackTraceHidden]
-public static partial class EnumerableExtensions
-{
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? source)
-    {
-        return source == null || source.Any() == false;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool NotNullOrEmpty<T>([NotNullWhen(true)] this IEnumerable<T>? source)
-    {
-        return source != null && source.Any() == true;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string Join<T>(this IEnumerable<T> source, string separator)
-    {
-        Check.NotNull(source);
-
-        return string.Join(separator, source);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string Join<T>(this IEnumerable<T> source, char separator = ',')
-    {
-        Check.NotNull(source);
-
-        return string.Join(separator, source);
-    }
-}
-#elif NETSTANDARD2_0
-
-public static partial class EnumerableExtensions
-{
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsNullOrEmpty<T>(this IEnumerable<T>? source)
-    {
-        return source == null || source.Any() == false;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool NotNullOrEmpty<T>(this IEnumerable<T>? source)
-    {
-        return source != null && source.Any() == true;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string Join<T>(this IEnumerable<T> source, string separator)
-    {
-        Check.NotNull(source);
-
-        return string.Join(separator, source);
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string Join<T>(this IEnumerable<T> source, char separator = ',')
-    {
-        Check.NotNull(source);
-
-        return string.Join(char.ToString(separator), source);
-    }
-}
-#endif

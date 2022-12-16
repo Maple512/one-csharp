@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="../../common.props" />
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+        <RootNamespace>OneI</RootNamespace>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
+    </ItemGroup>
+
+</Project>

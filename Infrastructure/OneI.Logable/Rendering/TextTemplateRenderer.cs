@@ -52,32 +52,32 @@ public class TextTemplateRenderer : ITextRenderer
         {
             var formatted = LevelFormatter.Format(context.Level, token.Format);
 
-            RenderHelper.Padding(writer, formatted, token.Alignment);
+            RenderHelper.Padding(writer, formatted, token.Alignment, token.Indent);
         }
         else if(token.Name == PropertyNames.NewLine)
         {
-            RenderHelper.Padding(writer, Environment.NewLine, token.Alignment);
+            RenderHelper.Padding(writer, Environment.NewLine, token.Alignment, token.Indent);
         }
         else if(token.Name == PropertyNames.Exception)
         {
-            RenderHelper.Padding(writer, context.Exception?.ToString(), token.Alignment);
+            RenderHelper.Padding(writer, context.Exception?.ToString(), token.Alignment, token.Indent);
         }
         else if(token.Name == PropertyNames.MemberName)
         {
-            RenderHelper.Padding(writer, context.MemberName, token.Alignment);
+            RenderHelper.Padding(writer, context.MemberName, token.Alignment, token.Indent);
         }
         else if(token.Name == PropertyNames.FilePath)
         {
-            RenderHelper.Padding(writer, context.FilePath, token.Alignment);
+            RenderHelper.Padding(writer, context.FilePath, token.Alignment, token.Indent);
         }
         else if(token.Name == PropertyNames.LineNumber)
         {
-            RenderHelper.Padding(writer, context.LineNumber?.ToString(), token.Alignment);
+            RenderHelper.Padding(writer, context.LineNumber?.ToString(), token.Alignment, token.Indent);
         }
         else
         {
             // 在此块中，writer 可能用于缓冲输出，以便可以应用填充
-            var sw = token.Alignment.HasValue ? new StringWriter() : writer;
+            var sw = new StringWriter();
 
             if(token.Name == PropertyNames.Message)
             {
@@ -111,10 +111,7 @@ public class TextTemplateRenderer : ITextRenderer
                 }
             }
 
-            if(token.Alignment.HasValue)
-            {
-                RenderHelper.Padding(writer, ((StringWriter)sw).ToString(), token.Alignment);
-            }
+            RenderHelper.Padding(writer, ((StringWriter)sw).ToString(), token.Alignment, token.Indent);
         }
     }
 

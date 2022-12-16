@@ -18,7 +18,7 @@ internal static partial class CodePrinter
         }
 
         // 方法参数
-        builder.Append("(");
+        builder.AppendLine("(");
         using(var _ = builder.Indent())
         {
             PrintMethodParameters(builder, method);
@@ -39,33 +39,31 @@ internal static partial class CodePrinter
     {
         if(method.IsLogger)
         {
-            builder.Append($"this global::{CodeAssets.LoggerFullName} logger, ");
+            builder.AppendLine($"this global::{CodeAssets.LoggerFullName} logger, ");
         }
 
         if(method.HasLevel)
         {
-            builder.Append($"{CodeAssets.LogLevelParameterType} {CodeAssets.LogLevelParameterName}, ");
+            builder.AppendLine($"{CodeAssets.LogLevelParameterType} {CodeAssets.LogLevelParameterName}, ");
         }
 
         if(method.HasException)
         {
-            builder.Append($"{CodeAssets.ExceptionParameterType} {CodeAssets.ExceptionParameterName}, ");
+            builder.AppendLine($"{CodeAssets.ExceptionParameterType} {CodeAssets.ExceptionParameterName}, ");
         }
 
-        builder.Append($"{CodeAssets.MessageParameterType} {CodeAssets.MessageParameterName}, ");
+        builder.AppendLine($"{CodeAssets.MessageParameterType} {CodeAssets.MessageParameterName}, ");
 
         for(var i = 0; i < method.Parameters.Count; i++)
         {
             var item = method.Parameters[i];
 
-            builder.Append($"{item.Type.ToDisplayString()} {item.Name}, ");
+            builder.AppendLine($"{item.Type.ToDisplayString()} {item.Name}, ");
         }
 
-        builder.Append("[global::System.Runtime.CompilerServices.CallerMemberName] global::System.String? memberName = null, ");
-        builder.Append("[global::System.Runtime.CompilerServices.CallerFilePath] global::System.String? filePath = null, ");
-        builder.Append("[global::System.Runtime.CompilerServices.CallerLineNumber] global::System.Int32? lineNumber = null");
-
-        builder.AppendLine(")");
+        builder.AppendLine("[global::System.Runtime.CompilerServices.CallerFilePath] global::System.String? filePath = null, ");
+        builder.AppendLine("[global::System.Runtime.CompilerServices.CallerMemberName] global::System.String? memberName = null, ");
+        builder.AppendLine("[global::System.Runtime.CompilerServices.CallerLineNumber] global::System.Int32? lineNumber = null)");
 
         // 泛型约束
         foreach(var x in method.TypeArguments
@@ -90,7 +88,7 @@ internal static partial class CodePrinter
             }
             else
             {
-                builder.AppendLine($"propertyValues.Add(new global::OneI.Logable.Templating.Properties.ValueTypes.LiteralValue<{parameter.Type}>({parameter.Name}));");
+                builder.AppendLine($"propertyValues.Add(new global::OneI.Logable.Templating.Properties.LiteralValue<{parameter.Type}>({parameter.Name}));");
             }
         }
 
@@ -99,11 +97,11 @@ internal static partial class CodePrinter
         // call LoggerExtensions.Write
         if(method.IsLogger)
         {
-            builder.Append($"LoggerExtensions.PackageWrite(logger, ");
+            builder.Append($"global::OneI.Logable.LoggerExtensions.PackageWrite(logger, ");
         }
         else
         {
-            builder.Append($"LoggerExtensions.PackageWrite(_logger, ");
+            builder.Append($"global::OneI.Logable.LoggerExtensions.PackageWrite(_logger, ");
         }
 
         if(method.HasLevel)
