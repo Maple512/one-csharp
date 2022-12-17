@@ -1,8 +1,11 @@
 namespace OneI.Logable;
 
 using OneI.Diagnostics;
-using OneI.Logable.Templating;
-using OneI.Logable.Templating.Properties;
+using OneI.Logable.Formatting;
+using OneI.Textable;
+using OneI.Textable.Templating;
+using OneI.Textable.Templating.Properties;
+using static OneI.Logable.LoggerConstants;
 
 [Serializable]
 public class LoggerContext
@@ -11,23 +14,7 @@ public class LoggerContext
 
     public LoggerContext(
         LogLevel level,
-        TextTemplate textTemplate,
-        Exception? exception = null,
-        List<Property>? properties = null,
-         string? filePath = null,
-         string? memberName = null,
-         int? lineNumber = null)
-        : this(level, textTemplate, exception, default(Dictionary<string, PropertyValue>?), filePath, memberName, lineNumber)
-    {
-        if(properties?.Count > 0)
-        {
-            _properties = properties.ToDictionary(k => k.Name, v => v.Value);
-        }
-    }
-
-    private LoggerContext(
-        LogLevel level,
-        TextTemplate textTemplate,
+        TemplateContext messageTemplate,
         Exception? exception = null,
         Dictionary<string, PropertyValue>? properties = null,
          string? filePath = null,
@@ -36,7 +23,7 @@ public class LoggerContext
     {
         Timestamp = Clock.Now;
         Level = level;
-        TextTemplate = textTemplate;
+        MessageTemplate = Check.NotNull(messageTemplate);
         Exception = exception;
         _properties = properties ?? new();
 
@@ -49,7 +36,7 @@ public class LoggerContext
 
     public LogLevel Level { get; }
 
-    public TextTemplate TextTemplate { get; }
+    public TemplateContext MessageTemplate { get; }
 
     public Exception? Exception { get; }
 
@@ -61,18 +48,18 @@ public class LoggerContext
 
     public IReadOnlyDictionary<string, PropertyValue> Properties => _properties;
 
-    public LoggerContext AddOrUpdateProperty(Property property)
+    public LoggerContext AddOrUpdateProperty(string name, PropertyValue value)
     {
-        _properties[property.Name] = property.Value;
+        _properties[name] = value;
 
         return this;
     }
 
-    public LoggerContext AddPropertyIfAbsent(Property property)
+    public LoggerContext AddPropertyIfAbsent(string name, PropertyValue value)
     {
-        if(_properties.ContainsKey(property.Name) == false)
+        if(_properties.ContainsKey(name) == false)
         {
-            _properties.Add(property.Name, property.Value);
+            _properties.Add(name, value);
         }
 
         return this;
@@ -94,6 +81,22 @@ public class LoggerContext
             properties.Add(property.Key, property.Value);
         }
 
-        return new(Level, TextTemplate, Exception, properties, FilePath, MemberName, LineNumber);
+        return new(Level, MessageTemplate, Exception, properties, FilePath, MemberName, LineNumber);
+    }
+
+    public virtual PropertyCollection GetAllProperties()
+    {
+        var properties = _properties;
+
+        properties.Add(nameof(Timestamp), PropertyValue.CreateLiteral(Timestamp));
+        properties.Add(nameof(Level), PropertyValue.CreateLiteral(Level, new LevelFormatter()));
+        properties.Add(nameof(Exception), PropertyValue.CreateLiteral(Exception));
+        properties.Add(nameof(FilePath), PropertyValue.CreateLiteral(FilePath));
+        properties.Add(nameof(MemberName), PropertyValue.CreateLiteral(MemberName));
+        properties.Add(nameof(LineNumber), PropertyValue.CreateLiteral(LineNumber));
+        properties.Add(PropertyNames.NewLine, PropertyValue.CreateLiteral(null, new NewLineFormatter()));
+        properties.Add(PropertyNames.Message, PropertyValue.CreateLiteral(PropertyNames.Message, new MessageFormatter(MessageTemplate, _properties)));
+
+        return new PropertyCollection(properties);
     }
 }

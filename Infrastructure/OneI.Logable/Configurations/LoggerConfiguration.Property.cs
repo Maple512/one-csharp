@@ -1,8 +1,10 @@
 namespace OneI.Logable;
 
 using OneI.Logable.Configurations;
+using OneI.Logable.Formatting;
 using OneI.Logable.Middlewares;
-using OneI.Logable.Templating.Properties;
+using OneI.Textable;
+using OneI.Textable.Templating.Properties;
 
 public partial class LoggerConfiguration
 {
@@ -20,13 +22,13 @@ public partial class LoggerConfiguration
             return _parent.Use(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value)));
         }
 
-        public ILoggerConfiguration With<T>(string name, T value, IPropertyValueRenderer<T>? renderer)
+        public ILoggerConfiguration With<T>(string name, T value, IFormatter<T>? renderer)
         {
             return _parent.Use(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value, renderer)));
         }
 
         public ILoggerConfiguration WithSerializable<T>(string name, T value)
-            where T : IPropertyValueRenderer<T>
+            where T : IFormatter<T>
         {
             return _parent.Use(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value, value)));
         }

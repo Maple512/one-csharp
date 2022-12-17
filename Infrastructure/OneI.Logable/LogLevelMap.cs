@@ -9,10 +9,10 @@ public class LogLevelMap
 
     private LogLevelRange _range;
 
-    public LogLevelMap(LogLevel minimum = LogLevel.Information)
+    public LogLevelMap()
     {
         _overrides = new();
-        _range = new(minimum);
+        _range = new();
     }
 
     public LogLevel MinimumLevel => _range.Minimum;

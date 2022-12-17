@@ -12,8 +12,8 @@ public static class Clock
 
     public static void Initialize(
         Func<DateTimeOffset> provider,
-        [CallerMemberName] string? memeber = null,
         [CallerFilePath] string? file = null,
+        [CallerMemberName] string? memeber = null,
         [CallerLineNumber] int? line = null)
     {
         if(_provider != null)
@@ -21,7 +21,7 @@ public static class Clock
             throw new InitializationException(_location!.Value);
         }
 
-        _location = new(memeber, file, line);
+        _location = new(file, memeber, line);
 
         _provider = Check.NotNull(provider);
     }

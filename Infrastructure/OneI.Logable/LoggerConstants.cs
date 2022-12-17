@@ -20,8 +20,6 @@ public static class LoggerConstants
 
         public const string LineNumber = nameof(LineNumber);
 
-        public const string Properties = nameof(Properties);
-
         public const string SourceContext = nameof(SourceContext);
     }
 

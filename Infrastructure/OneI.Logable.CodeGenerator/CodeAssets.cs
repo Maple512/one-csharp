@@ -16,8 +16,7 @@ internal static class CodeAssets
         using System.Collections.Generic;
         using System.Linq;
         using OneI.Logable.Infrastructure;
-        using OneI.Logable.Templating;
-        using OneI.Logable.Templating.Properties;
+        using OneI.Textable.Templating.Properties;
 
         public static partial class Log
         {
@@ -242,8 +241,7 @@ internal static class CodeAssets
         using System.Collections.Generic;
         using System.Linq;
         using OneI.Logable.Infrastructure;
-        using OneI.Logable.Templating;
-        using OneI.Logable.Templating.Properties;
+        using OneI.Textable.Templating.Properties;
 
         public static partial class LoggerWriteExtensions
         {

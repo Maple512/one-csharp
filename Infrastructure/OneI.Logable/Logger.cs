@@ -2,7 +2,7 @@ namespace OneI.Logable;
 
 using OneI.Logable.Configurations;
 using OneI.Logable.Middlewares;
-using OneI.Logable.Templating.Properties;
+using OneI.Textable.Templating.Properties;
 
 internal class Logger : ILogger
 {

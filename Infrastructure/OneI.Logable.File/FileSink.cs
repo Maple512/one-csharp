@@ -39,7 +39,7 @@ public class FileSink : FileSinkBase, IFileSink, IDisposable
         }
         else if(Directory.Exists(directory) == false)
         {
-            Directory.CreateDirectory(directory);
+           Directory.CreateDirectory(directory);
         }
 
         Stream stream = _originalStream = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);

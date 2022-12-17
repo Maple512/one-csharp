@@ -22,11 +22,14 @@ public class CodeGeneratorSnapshotTest
 
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
 
+        var references = Directory.EnumerateFiles(Directory.GetCurrentDirectory(),"*.dll")
+            .Select(x=>MetadataReference.CreateFromFile(x));
+
         // 编译环境
         var compilation = CSharpCompilation.Create(
              "Tests",
              new[] { syntaxTree },
-             null,
+             references,
              new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
              ).AddReferences(assemblyKind);
 

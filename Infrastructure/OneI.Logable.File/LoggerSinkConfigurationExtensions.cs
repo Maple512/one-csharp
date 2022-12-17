@@ -3,6 +3,7 @@ namespace OneI.Logable;
 using System;
 using OneI.Logable.Configurations;
 using OneI.Logable.Rendering;
+using OneI.Textable;
 
 public static class LoggerSinkConfigurationExtensions
 {
@@ -120,7 +121,7 @@ public class LogFileOptions
     /// </summary>
     /// <param name="condition"></param>
     /// <param name="textRenderer"></param>
-    public void RenderWhen(Func<LoggerContext, bool> condition, ITextRenderer textRenderer)
+    public void RenderWhen(Func<LoggerContext, bool> condition, ILoggerRenderer textRenderer)
     {
         TextRenderers.Insert(0, new ConditionalRendererProvider(condition, textRenderer));
     }
@@ -133,6 +134,6 @@ public class LogFileOptions
     /// <param name="formatProvider"></param>
     public void RenderWhen(Func<LoggerContext, bool> condition, string template, IFormatProvider? formatProvider = null)
     {
-        TextRenderers.Insert(0, new ConditionalRendererProvider(condition, new TextTemplateRenderer(template, formatProvider)));
+        TextRenderers.Insert(0, new ConditionalRendererProvider(condition, new LoggerRenderer(TemplateParser.Parse(template), formatProvider)));
     }
 }

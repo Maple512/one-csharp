@@ -1,6 +1,8 @@
 namespace OneI.Logable;
 
+using OneI.Logable.Rendering;
+
 public interface ITextRendererProvider
 {
-    ITextRenderer? GetTextRenderer(in LoggerContext context);
+    ILoggerRenderer? GetTextRenderer(in LoggerContext context);
 }

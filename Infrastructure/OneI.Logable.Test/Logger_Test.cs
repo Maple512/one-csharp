@@ -10,14 +10,12 @@ public class Logger_Test
     {
         var logger = Fake.CreateLogger();
 
-        logger.Write(LogLevel.Information, "Information message");
+        logger.ForContext<Middleware_Test>().Error(new ArgumentException(), "error {SourceContext} message");
 
-        logger.Write(LogLevel.Debug, "Debug message");
+        logger.Error(" de {SourceContext} bug ");
 
-        logger.Write(LogLevel.Error, "error message");
+        logger.ForContext<IServiceProvider>().Error(new ArgumentException(), "error {SourceContext} message");
 
-        logger.Write(LogLevel.Error, new ArgumentException(), "error message");
-
-        logger.ForContext<Middleware_Test>().Debug("{SourceContext}");
+        logger.Error(" de {SourceContext} bug ");
     }
 }

@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "one.sln",
+    "projects": [
+      "Infrastructure\\OneI.Textable.Template.Test\\OneI.Textable.Template.Test.csproj",
+      "Infrastructure\\OneI.Textable.Template\\OneI.Textable.Template.csproj"
+    ]
+  }
+}

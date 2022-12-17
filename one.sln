@@ -105,7 +105,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "reflection", "reflection", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Reflectionable", "Infrastructure\OneI.Reflectionable\OneI.Reflectionable.csproj", "{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Utilityable.Command", "Infrastructure\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj", "{81FE7853-EC0C-4294-9E8A-498D202147DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Utilityable.Command", "Infrastructure\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj", "{81FE7853-EC0C-4294-9E8A-498D202147DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Text", "Text", "{F1725AF1-EB8A-4D62-AEBC-2F4599F2514D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Textable.Template", "Infrastructure\OneI.Textable.Template\OneI.Textable.Template.csproj", "{13B7B8C6-8CFD-4889-8074-9F4AABC704D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Textable.Template.Test", "Infrastructure\OneI.Textable.Template.Test\OneI.Textable.Template.Test.csproj", "{CB33B3A0-C03F-4D4F-8680-B0379619E2FB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -233,6 +239,14 @@ Global
 		{81FE7853-EC0C-4294-9E8A-498D202147DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81FE7853-EC0C-4294-9E8A-498D202147DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81FE7853-EC0C-4294-9E8A-498D202147DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13B7B8C6-8CFD-4889-8074-9F4AABC704D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13B7B8C6-8CFD-4889-8074-9F4AABC704D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13B7B8C6-8CFD-4889-8074-9F4AABC704D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13B7B8C6-8CFD-4889-8074-9F4AABC704D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB33B3A0-C03F-4D4F-8680-B0379619E2FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB33B3A0-C03F-4D4F-8680-B0379619E2FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB33B3A0-C03F-4D4F-8680-B0379619E2FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB33B3A0-C03F-4D4F-8680-B0379619E2FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -279,6 +293,9 @@ Global
 		{E9E65482-5206-427A-BC81-B5A526EC1B6B} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
 		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD} = {E9E65482-5206-427A-BC81-B5A526EC1B6B}
 		{81FE7853-EC0C-4294-9E8A-498D202147DA} = {C2F8B1B1-8C2A-4CE8-928A-B960041F8699}
+		{F1725AF1-EB8A-4D62-AEBC-2F4599F2514D} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
+		{13B7B8C6-8CFD-4889-8074-9F4AABC704D5} = {F1725AF1-EB8A-4D62-AEBC-2F4599F2514D}
+		{CB33B3A0-C03F-4D4F-8680-B0379619E2FB} = {F1725AF1-EB8A-4D62-AEBC-2F4599F2514D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

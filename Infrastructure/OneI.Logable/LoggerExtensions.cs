@@ -1,7 +1,7 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Templating;
-using OneI.Logable.Templating.Properties;
+using OneI.Textable;
+using OneI.Textable.Templating.Properties;
 
 public static class LoggerExtensions
 {
@@ -17,13 +17,13 @@ public static class LoggerExtensions
     {
         propertyValues ??= new List<PropertyValue>(0);
 
-        var template = TextParser.Parse(message);
+        var template = TemplateParser.Parse(message);
         var tokens = template.Properties;
 
         var count = propertyValues.Count();
         var length = Math.Max(tokens.Count, count);
 
-        var properties = new List<Property>(length);
+        var properties = new Dictionary<string, PropertyValue>(length);
 
         for(var i = 0; i < length; i++)
         {
@@ -40,7 +40,7 @@ public static class LoggerExtensions
 
             if(count > index)
             {
-                properties.Add(new(name, propertyValues.ElementAt(i)));
+                properties.Add(name, propertyValues.ElementAt(i));
             }
         }
 

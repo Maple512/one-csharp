@@ -1,6 +1,7 @@
 namespace OneI.Logable.Templating;
 
-using OneI.Logable.Rendering.Formatting;
+using OneI.Logable.Formatting;
+using OneI.Textable;
 
 public class LevelFormatter_Test
 {
@@ -18,7 +19,9 @@ public class LevelFormatter_Test
     [InlineData(LogLevel.Fatal, "3", "Fatal")]
     public void level_format(LogLevel level, string? format, string expected)
     {
-        LevelFormatter.Format(level, format)
+        var formatter = new LevelFormatter();
+
+        formatter.ToWriter(level, format)
             .ShouldBe(expected);
     }
 
@@ -29,6 +32,8 @@ public class LevelFormatter_Test
     [InlineData(LogLevel.Fatal, "5", "Fatal")]
     public void invalid_format(LogLevel level, string? format, string expected)
     {
-        LevelFormatter.Format(level, format).ShouldBe(expected);
+        var formatter = new LevelFormatter();
+
+        formatter.ToWriter(level, format).ShouldBe(expected);
     }
 }

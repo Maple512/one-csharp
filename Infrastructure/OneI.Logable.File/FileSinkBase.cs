@@ -1,5 +1,7 @@
 namespace OneI.Logable;
 
+using OneI.Logable.Rendering;
+
 public abstract class FileSinkBase : ILoggerSink
 {
     protected readonly List<ITextRendererProvider> _providers;
@@ -11,7 +13,7 @@ public abstract class FileSinkBase : ILoggerSink
 
     public abstract void Invoke(in LoggerContext context);
 
-    protected ITextRenderer GetTextRenderer(in LoggerContext context)
+    protected ILoggerRenderer GetTextRenderer(in LoggerContext context)
     {
         foreach(var provider in _providers)
         {

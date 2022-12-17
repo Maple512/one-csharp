@@ -2,7 +2,8 @@ namespace OneI.Logable.Temporaries;
 
 using System;
 using OneI.Logable.Middlewares;
-using OneI.Logable.Templating.Properties;
+using OneI.Textable;
+using OneI.Textable.Templating.Properties;
 
 /// <summary>
 /// 表示临时存放<see cref="ILoggerMiddleware"/>的容器
@@ -30,13 +31,13 @@ public static class TemporaryContainer
         return backup;
     }
 
-    public static IDisposable PushProperty<T>(string name, T value, IPropertyValueRenderer<T>? renderer = null)
+    public static IDisposable PushProperty<T>(string name, T value, IFormatter<T>? renderer = null)
     {
         return Push(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value, renderer)));
     }
 
     public static IDisposable PushProperty<T>(string name, T value)
-        where T : IPropertyValueRenderer<T>
+        where T : IFormatter<T>
     {
         return Push(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value)));
     }
