@@ -30,6 +30,6 @@ public interface ILoggerPropertyConfiguration
     /// <param name="name"></param>
     /// <param name="value"></param>
     /// <returns></returns>
-    ILoggerConfiguration WithSerializable<T>(string name, T value)
+    ILoggerConfiguration WithFormatter<T>(string name, T value)
         where T : IFormatter<T>;
 }

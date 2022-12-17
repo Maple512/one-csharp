@@ -27,7 +27,7 @@ public partial class LoggerConfiguration
             return _parent.Use(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value, renderer)));
         }
 
-        public ILoggerConfiguration WithSerializable<T>(string name, T value)
+        public ILoggerConfiguration WithFormatter<T>(string name, T value)
             where T : IFormatter<T>
         {
             return _parent.Use(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value, value)));

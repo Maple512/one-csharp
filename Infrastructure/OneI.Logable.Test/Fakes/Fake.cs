@@ -30,6 +30,7 @@ public static class Fake
 
         return config
             .Sink.File(options)
+            .Sink.Use(new TestAuditSink())
             .CreateLogger();
     }
 }

@@ -55,6 +55,11 @@ public class LoggerContext
         return this;
     }
 
+    public LoggerContext AddPropertyIfAbsent<T>(string name, T value)
+    {
+        return AddPropertyIfAbsent(name, PropertyValue.CreateLiteral(value));
+    }
+
     public LoggerContext AddPropertyIfAbsent(string name, PropertyValue value)
     {
         if(_properties.ContainsKey(name) == false)
