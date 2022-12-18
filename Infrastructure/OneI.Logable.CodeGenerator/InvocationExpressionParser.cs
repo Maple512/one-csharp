@@ -1,4 +1,6 @@
 namespace OneI.Logable;
+
+using System.Linq.Expressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -78,8 +80,6 @@ public static class InvocationExpressionParser
             // default(int)
             DefaultExpressionSyntax defaultExpression
             => semanticModel.GetSymbolInfo(defaultExpression.Type).Symbol,
-            TypeOfExpressionSyntax typeOfExpression
-            => semanticModel.GetTypeInfo(typeOfExpression).Type,
             // 对象访问
             MemberAccessExpressionSyntax memberAccess
             => semanticModel.GetSymbolInfo(memberAccess).Symbol,
@@ -89,21 +89,25 @@ public static class InvocationExpressionParser
             // 创建对象
             ObjectCreationExpressionSyntax objectCreationExpression
             => semanticModel.GetSymbolInfo(objectCreationExpression.Type).Symbol,
+            // lambda
+            ParenthesizedLambdaExpressionSyntax parenthesizedLambdaExpression
+            => semanticModel.GetSymbolInfo(parenthesizedLambdaExpression.ReturnType!).Symbol,
+
+            // typeof
+            TypeOfExpressionSyntax typeOfExpression
+            => semanticModel.GetTypeInfo(typeOfExpression).Type,
             // 常量
             LiteralExpressionSyntax literal
             => semanticModel.GetTypeInfo(literal).Type,
-            // 调用
+            // 调用, nameof
             InvocationExpressionSyntax invocationExpression
             => semanticModel.GetTypeInfo(invocationExpression).Type,
             // 强制转换
             CastExpressionSyntax castExpression
             => semanticModel.GetTypeInfo(castExpression).Type,
-            // lambda
-            ParenthesizedLambdaExpressionSyntax parenthesizedLambdaExpression
-            => semanticModel.GetSymbolInfo(parenthesizedLambdaExpression.ReturnType!).Symbol,
-            // await
-            AwaitExpressionSyntax awaitExpression
-            => TryParseExpression(awaitExpression.Expression, compilation),
+            // struct with { Id = 1}
+            WithExpressionSyntax withExpression
+            => semanticModel.GetTypeInfo(withExpression).Type,
             // array IArrayTypeSymbol
             ArrayCreationExpressionSyntax arrayCreation
             => semanticModel.GetTypeInfo(arrayCreation.Type).Type,
@@ -113,12 +117,13 @@ public static class InvocationExpressionParser
             // new {Id = 1,Name = "Maple512", Age =18};
             AnonymousObjectCreationExpressionSyntax anonymousObject
             => semanticModel.GetTypeInfo(anonymousObject).Type,
+            // await
+            AwaitExpressionSyntax awaitExpression
+            => semanticModel.GetTypeInfo(awaitExpression.Expression).Type,
+
             // array[0] or array[0..1]
             ElementAccessExpressionSyntax elementAccess
             => TryParseElementAccessExpressionSyntax(elementAccess, semanticModel),
-            // struct with { Id = 1}
-            WithExpressionSyntax withExpression
-            => semanticModel.GetTypeInfo(withExpression).Type,
 
             _ => TryParseDefault(syntax, semanticModel),
         };
@@ -130,6 +135,19 @@ public static class InvocationExpressionParser
 
         return symbol;
     }
+
+    //private static ISymbol? TryParseDefault(AwaitExpressionSyntax expression, SemanticModel semanticModel)
+    //{
+    //    var type = semanticModel.GetTypeInfo(expression).Type;
+    //    var symbol = type ?? semanticModel.GetSymbolInfo(expression).Symbol;
+
+    //    var type1 = semanticModel.GetTypeInfo(expression.Expression).Type;
+    //    var symbol2 = type ?? semanticModel.GetSymbolInfo(expression.Expression).Symbol;
+
+    //    Debug.Assert(symbol != null);
+
+    //    return type ?? symbol;
+    //}
 
     private static ISymbol? TryParseDefault(ExpressionSyntax expression, SemanticModel semanticModel)
     {

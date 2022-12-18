@@ -42,12 +42,14 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
             var a4 = await Task.FromResult(1);
 
                     Log.Debug("",
+            await Task.FromCanceled<int>(default),
+            await Task.FromResult(1),
                     a,
                     a(),
                     a4,(dynamic)1,
                     a3 with { Id = 2 },
                     a2[1],
-                    a2[..1],
+                    //a2[..1],
                     nameof(a2),
                     user.Id.ToString(),
                     typeof(UserService),
