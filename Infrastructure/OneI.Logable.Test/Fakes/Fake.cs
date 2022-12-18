@@ -1,36 +1,43 @@
 namespace OneI.Logable.Fakes;
 
+using System.IO;
 using OneT.Common;
 
 public static class Fake
 {
-    private const string ErrorTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} {SourceContext} [{Level}] {Message}{NewLine}{Exception'4}{NewLine}{FilePath'4}#L{LineNumber}@{MemberName}{NewLine}";
+    public const string ErrorTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} {SourceContext} [{Level}] {Message}{NewLine}{Exception'4}{NewLine}{FilePath'4}#L{LineNumber}@{MemberName}{NewLine}";
 
     public static ILogger CreateLogger(
-        string? path = null,
-        string? template = null,
-        Action<LoggerConfiguration>? configuration = null,
-        [CallerFilePath] string? file = null,
+        Action<ILoggerConfiguration>? configuration = null,
+        Action<LoggerFileOptions>? file = null,
+        Action<LoggerSharedFileOptions>? shared = null,
+        Action<LoggerRollFileOptions>? roll = null,
+        [CallerFilePath] string? filePath = null,
         [CallerMemberName] string? member = null)
     {
-        if(path.IsNullOrWhiteSpace())
-        {
-            var name = Path.GetFileNameWithoutExtension(file);
+        var name = Path.GetFileNameWithoutExtension(filePath);
 
-            path = Path.Combine(TestTools.GetCSProjectDirecoty()!, $"./Logs/{name}@{member}.txt");
-        }
+        var path = Path.Combine(TestTools.GetCSProjectDirecoty()!, $"./Logs/{name}@{member}.txt");
 
-        var config = new LoggerConfiguration();
+        ILoggerConfiguration config = new LoggerConfiguration();
 
         configuration?.Invoke(config);
 
-        var options = new LogFileOptions(path, template);
+        if(file is not null)
+        {
+            config = config.Sink.File(path, file);
+        }
 
-        options.RenderWhen(c => c.Exception is not null, ErrorTemplate);
+        if(shared is not null)
+        {
+            config = config.Sink.SharedFile(path, shared);
+        }
 
-        return config
-            .Sink.File(options)
-            .Sink.Use(new TestAuditSink())
-            .CreateLogger();
+        if(roll is not null)
+        {
+            config = config.Sink.RollFile(path, roll);
+        }
+
+        return config.CreateLogger();
     }
 }

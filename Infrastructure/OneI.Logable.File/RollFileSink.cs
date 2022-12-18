@@ -1,6 +1,8 @@
 namespace OneI.Logable;
 
-public class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposable
+using OneI.Textable;
+
+internal class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposable
 {
     private static readonly object _lock = new();
 
@@ -17,9 +19,9 @@ public class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposable
     private int? _currentSequence;
 
     public RollFileSink(
-        string path,
+        TemplateContext path,
         RollFrequency frequency,
-         List<ITextRendererProvider> provider,
+        ITextRendererProvider provider,
         long? fileSizeMaxBytes,
         int? retainedFileCountMax,
         TimeSpan? retainedFileTimeMax,
@@ -27,7 +29,7 @@ public class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposable
         bool buffered,
         bool shared) : base(provider)
     {
-        _roller = new PathRoller(path, frequency);
+        _roller = new PathRoller(path.Text, frequency);
         _fileSizeMaxBytes = fileSizeMaxBytes;
         _retainedFileCountMax = retainedFileCountMax;
         _retainedFileTimeMax = retainedFileTimeMax;
@@ -148,8 +150,8 @@ public class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposable
             {
                 // TODO: 滚动需要每次都重新创建吗？
                 _sink = _shared
-                    ? new SharedFileSink(path, _providers, _fileSizeMaxBytes, _encoding)
-                : new FileSink(path, _providers, _fileSizeMaxBytes, _encoding, _buffered);
+                    ? new SharedFileSink(path, _provider, _fileSizeMaxBytes, _encoding)
+                : new FileSink(path, _provider, _fileSizeMaxBytes, _encoding, _buffered);
 
                 _currentSequence = sequence;
             }

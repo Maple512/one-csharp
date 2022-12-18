@@ -2,29 +2,20 @@ namespace OneI.Logable;
 
 using OneI.Logable.Rendering;
 
-public abstract class FileSinkBase : ILoggerSink
+internal abstract class FileSinkBase : ILoggerSink
 {
-    protected readonly List<ITextRendererProvider> _providers;
+    protected readonly ITextRendererProvider _provider;
 
-    protected FileSinkBase(List<ITextRendererProvider> providers)
+    protected FileSinkBase(ITextRendererProvider provider)
     {
-        _providers = providers;
+        _provider = provider;
     }
 
     public abstract void Invoke(in LoggerContext context);
 
     protected ILoggerRenderer GetTextRenderer(in LoggerContext context)
     {
-        foreach(var provider in _providers)
-        {
-            var renderer = provider.GetTextRenderer(context);
-
-            if(renderer != null)
-            {
-                return renderer;
-            }
-        }
-
-        throw new NotSupportedException($"The renderer can not be null.");
+        return _provider.GetTextRenderer(context)
+            ?? throw new NotSupportedException($"The renderer can not be null.");
     }
 }

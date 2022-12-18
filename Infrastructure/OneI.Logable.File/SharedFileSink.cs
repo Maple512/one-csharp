@@ -3,7 +3,7 @@ namespace OneI.Logable;
 using System;
 using System.Text;
 
-public class SharedFileSink : FileSinkBase, IFileSink, IDisposable
+internal class SharedFileSink : FileSinkBase, IFileSink, IDisposable
 {
     private readonly TextWriter _writer;
     private readonly FileStream _stream;
@@ -17,7 +17,7 @@ public class SharedFileSink : FileSinkBase, IFileSink, IDisposable
 
     public SharedFileSink(
         string path,
-        List<ITextRendererProvider> rendererProvider,
+        ITextRendererProvider rendererProvider,
         long? fileSizeMaxBytes,
         Encoding? encoding) : base(rendererProvider)
     {

@@ -1,42 +1,26 @@
 namespace OneI.Logable.Rendering;
 
-using OneI.Textable;
-
 public class TextRendererProvider : ITextRendererProvider
 {
-    private readonly TemplateContext _template;
-    private readonly IFormatProvider? _formatProvider;
+    private readonly List<Func<LoggerContext, ILoggerRenderer?>> _selector;
 
-    public TextRendererProvider(string template, IFormatProvider? formatProvider = null)
+    public TextRendererProvider(List<Func<LoggerContext, ILoggerRenderer?>> selector)
     {
-        _template = TemplateParser.Parse(template);
-        _formatProvider = formatProvider;
+        _selector = selector;
     }
 
-    public virtual ILoggerRenderer? GetTextRenderer(in LoggerContext context)
+    public virtual ILoggerRenderer GetTextRenderer(in LoggerContext context)
     {
-        return new LoggerRenderer(_template, _formatProvider);
-    }
-}
-
-public class ConditionalRendererProvider : ITextRendererProvider
-{
-    private readonly Func<LoggerContext, bool> _condition;
-    private readonly ILoggerRenderer _textRenderer;
-
-    public ConditionalRendererProvider(Func<LoggerContext, bool> condition, ILoggerRenderer textRenderer)
-    {
-        _condition = condition;
-        _textRenderer = textRenderer;
-    }
-
-    public virtual ILoggerRenderer? GetTextRenderer(in LoggerContext context)
-    {
-        if(_condition(context))
+        foreach(var selector in _selector)
         {
-            return _textRenderer;
+            var renderer = selector(context);
+
+            if(renderer != null)
+            {
+                return renderer;
+            }
         }
 
-        return null;
+        throw new LoggerRendererNotFoundException();
     }
 }

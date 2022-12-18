@@ -4,5 +4,5 @@ using OneI.Logable.Rendering;
 
 public interface ITextRendererProvider
 {
-    ILoggerRenderer? GetTextRenderer(in LoggerContext context);
+    ILoggerRenderer GetTextRenderer(in LoggerContext context);
 }

@@ -5,7 +5,6 @@ namespace OneI.Logable;
 /// </summary>
 public enum RollFrequency
 {
-    Naver,
     Year,
     Month,
     Day,

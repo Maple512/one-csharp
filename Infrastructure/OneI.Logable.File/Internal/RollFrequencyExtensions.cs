@@ -6,7 +6,6 @@ internal static class RollFrequencyExtensions
     {
         return interval switch
         {
-            RollFrequency.Naver => string.Empty,
             RollFrequency.Year => "yyyy",
             RollFrequency.Month => "yyyyMM",
             RollFrequency.Day => "yyyyMMdd",
@@ -17,7 +16,7 @@ internal static class RollFrequencyExtensions
     }
 
     /// <summary>
-    /// 根据滚动频率获取时期
+    /// 根据滚动频率获取周期时段
     /// </summary>
     /// <param name="interval"></param>
     /// <param name="datetime"></param>
@@ -27,7 +26,6 @@ internal static class RollFrequencyExtensions
     {
         return interval switch
         {
-            RollFrequency.Naver => null,
             RollFrequency.Year => new DateTime(datetime.Year, 1, 1, 0, 0, 0, datetime.Kind),
             RollFrequency.Month => new DateTime(datetime.Year, datetime.Month, 1, 0, 0, 0, datetime.Kind),
             RollFrequency.Day => new DateTime(datetime.Year, datetime.Month, datetime.Day, 0, 0, 0, datetime.Kind),
@@ -38,7 +36,7 @@ internal static class RollFrequencyExtensions
     }
 
     /// <summary>
-    /// 根据滚动频率获取下一个时期
+    /// 根据滚动频率获取下一个周期时段
     /// </summary>
     /// <param name="interval"></param>
     /// <param name="datetime"></param>

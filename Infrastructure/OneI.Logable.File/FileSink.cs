@@ -1,30 +1,20 @@
 namespace OneI.Logable;
 
-public class FileSink : FileSinkBase, IFileSink, IDisposable
+internal class FileSink : FileSinkBase, IFileSink, IDisposable
 {
     private readonly TextWriter _writer;
-    /// <summary>
-    /// 原始文件流
-    /// </summary>
     private readonly FileStream _originalStream;
-
-    /// <summary>
-    /// 文件最大长度
-    /// </summary>
     private readonly long? _fileSizeMaxBytes;
-    /// <summary>
-    /// 是否开启缓冲区，当写入到流之后，是否立即刷新缓冲区
-    /// </summary>
     private readonly bool _buffered;
     private readonly StreamCounter? _counter;
 
     private static readonly object _lock = new();
 
     /// <param name="fileSizeMaxBytes">文件最大长度</param>
-    /// <param name="buffered">是否开启缓冲区，当写入到流之后，是否立即刷新缓冲区</param>
+    /// <param name="buffered">是否开启缓冲</param>
     public FileSink(
         string path,
-        List<ITextRendererProvider> rendererProvider,
+        ITextRendererProvider rendererProvider,
         long? fileSizeMaxBytes,
         Encoding? encoding,
         bool buffered) : base(rendererProvider)
@@ -39,7 +29,7 @@ public class FileSink : FileSinkBase, IFileSink, IDisposable
         }
         else if(Directory.Exists(directory) == false)
         {
-           Directory.CreateDirectory(directory);
+            Directory.CreateDirectory(directory);
         }
 
         Stream stream = _originalStream = File.Open(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Read);
@@ -60,7 +50,7 @@ public class FileSink : FileSinkBase, IFileSink, IDisposable
         lock(_lock)
         {
             _writer.Flush();
-            _originalStream.Flush();
+            _originalStream.Flush(true);
         }
     }
 
