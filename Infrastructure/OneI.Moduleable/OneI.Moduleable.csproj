@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="../../common.props" />
 
@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OneI.Moduleable.Abstractions\OneI.Moduleable.Abstractions.csproj" />
-    <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
   </ItemGroup>
 
 </Project>

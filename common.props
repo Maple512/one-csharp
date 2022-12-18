@@ -8,8 +8,13 @@
         <IsPackable>true</IsPackable>
         <IncludeMainPack>true</IncludeMainPack>
         <ImplicitUsings>true</ImplicitUsings>
+        <NeutralLanguage>zh-Hans</NeutralLanguage>
         <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
     </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Condition="'$(TargetFramework)' == 'net7.0'" Include="..\..\Shared\*.cs" />
+    </ItemGroup>
 
     <ItemGroup>
         <Using Include="System.Collections.Concurrent"/>

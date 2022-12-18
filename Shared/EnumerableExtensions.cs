@@ -1,10 +1,11 @@
 namespace System.Linq;
 
+using System.Collections.Generic;
 using OneI;
 
 [StackTraceHidden]
 [DebuggerStepThrough]
-public static class EnumerableExtensions
+internal static class EnumerableExtensions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? source)

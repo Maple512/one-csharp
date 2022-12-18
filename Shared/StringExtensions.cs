@@ -4,7 +4,7 @@ using System.Text;
 
 [StackTraceHidden]
 [DebuggerStepThrough]
-public static class StringExtensions
+internal static class StringExtensions
 {
     #region Check
 

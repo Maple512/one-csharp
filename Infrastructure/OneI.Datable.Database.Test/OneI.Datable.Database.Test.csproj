@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../common.props" />
+    <Import Project="../../common.xunit.props" />
 
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
-    </PropertyGroup>
+  </PropertyGroup>
 
 </Project>

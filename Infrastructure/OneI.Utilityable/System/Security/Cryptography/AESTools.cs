@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using OneI;
 
+[Obsolete]
 public static class AESTools
 {
     // source: https://github.com/dotnet/runtime/blob/899bf9704693661d6fe53fdb7f737f76447efa14/src/libraries/System.Security.Cryptography/src/System/Security/Cryptography/Aes.cs#L36

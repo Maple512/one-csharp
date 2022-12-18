@@ -15,7 +15,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\OneI.Applicationable.Astractions\OneI.Applicationable.Astractions.csproj" />
-        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>
 
 </Project>

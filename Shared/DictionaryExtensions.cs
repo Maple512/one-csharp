@@ -4,7 +4,7 @@ using OneI;
 
 [StackTraceHidden]
 [DebuggerStepThrough]
-public static class DictionaryExtensions
+internal static class DictionaryExtensions
 {
     public static TValue GetOrAdd<TKey, TValue>(
         this IDictionary<TKey, TValue> directory,

@@ -1,0 +1,8 @@
+{
+  "solution": {
+    "path": "one.sln",
+    "projects": [
+      "Infrastructure\\OneI.Typeable\\OneI.Typeable.csproj"
+    ]
+  }
+}

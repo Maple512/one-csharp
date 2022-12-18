@@ -15,7 +15,7 @@ internal sealed class ModuleDescriptor : IModuleDescriptor
 
         Assembly = instance.Assembly;
 
-        if(instance.IsAssignableTo<IModule>()
+        if(instance.IsAssignableTo(typeof(IModule))
             && instance.TryGetParameterlessConstructor(out var constructorInfo))
         {
             Module = Expression.Lambda<Func<IModule>>(Expression.New(constructorInfo)).Compile()();

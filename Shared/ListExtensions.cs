@@ -1,8 +1,9 @@
 namespace System.Collections.Generic;
 
+using System.Linq;
 using OneI;
 
-public static class ListExtensions
+internal static class ListExtensions
 {
     public static bool TryFindFirstIndex<T>(this IList<T> source, Predicate<T> selector, out int index)
     {

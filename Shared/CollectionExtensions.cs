@@ -1,10 +1,11 @@
 namespace System.Collections.Generic;
 
+using System.Linq;
 using OneI;
 
 [StackTraceHidden]
 [DebuggerStepThrough]
-public static partial class CollectionExtensions
+internal static partial class CollectionExtensions
 {
     public static void AddIfNotContains<T>(this ICollection<T> source, T item)
     {

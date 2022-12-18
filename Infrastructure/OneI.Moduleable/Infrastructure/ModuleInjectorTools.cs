@@ -215,6 +215,6 @@ public static class ModuleInjectorTools
         return type.IsClass
                && !type.IsAbstract
                && !type.IsGenericType
-               && (type.IsAssignableTo<IInjectableService>() || type.IsDefined<ServiceDescribeAttribute>());
+               && (type.IsAssignableTo(typeof(IInjectableService)) || type.IsDefined(typeof(ServiceDescribeAttribute)));
     }
 }

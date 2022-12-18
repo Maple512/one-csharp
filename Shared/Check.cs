@@ -1,8 +1,12 @@
 namespace OneI;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 [StackTraceHidden]
 [DebuggerStepThrough]
-public static partial class Check
+internal static partial class Check
 {
     [return: NotNull]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

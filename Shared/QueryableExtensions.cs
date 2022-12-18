@@ -5,7 +5,7 @@ using OneI;
 
 [StackTraceHidden]
 [DebuggerStepThrough]
-public static class QueryableExtensions
+internal static class QueryableExtensions
 {
     /// <summary>
     /// 分页

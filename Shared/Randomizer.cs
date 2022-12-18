@@ -1,6 +1,9 @@
 namespace OneI;
 
+using System;
+using System.Linq;
 using System.Security.Cryptography;
+using System.Collections.Generic;
 
 /// <summary>
 /// 随机数

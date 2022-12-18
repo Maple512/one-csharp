@@ -4,7 +4,7 @@ using System.Runtime.ExceptionServices;
 
 [StackTraceHidden]
 [DebuggerStepThrough]
-public static class ExceptionExtensions
+internal static class ExceptionExtensions
 {
     /// <summary>
     /// 抛出原始异常

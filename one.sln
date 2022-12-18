@@ -101,10 +101,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Logable.File", "Infras
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Logable.CodeGenerator.Test", "Infrastructure\OneI.Logable.CodeGenerator.Test\OneI.Logable.CodeGenerator.Test.csproj", "{667AD8AB-AEC3-4B93-A586-57A2BD1813F3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reflection", "Reflection", "{E9E65482-5206-427A-BC81-B5A526EC1B6B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Reflectionable", "Infrastructure\OneI.Reflectionable\OneI.Reflectionable.csproj", "{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Utilityable.Command", "Infrastructure\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj", "{81FE7853-EC0C-4294-9E8A-498D202147DA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Text", "Text", "{F1725AF1-EB8A-4D62-AEBC-2F4599F2514D}"
@@ -113,7 +109,33 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Textable.Template", "I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Textable.Template.Test", "Infrastructure\OneI.Textable.Template.Test\OneI.Textable.Template.Test.csproj", "{CB33B3A0-C03F-4D4F-8680-B0379619E2FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Logable.Extensions", "Infrastructure\OneI.Logable.Extensions\OneI.Logable.Extensions.csproj", "{54BD1D70-A380-4468-9629-79928B61900E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Logable.Extensions", "Infrastructure\OneI.Logable.Extensions\OneI.Logable.Extensions.csproj", "{54BD1D70-A380-4468-9629-79928B61900E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{13588D89-A701-4227-A650-ABD221A8BDC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Datable.Database", "Infrastructure\OneI.Datable.Database\OneI.Datable.Database.csproj", "{0D7A939B-78A6-4FA0-A8AA-0B10D8F8024F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Datable.Database.Sqlite", "Infrastructure\OneI.Datable.Database.Sqlite\OneI.Datable.Database.Sqlite.csproj", "{D0E29DCD-7A87-4AE4-A424-EE202EF42FB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Datable.Database.Test", "Infrastructure\OneI.Datable.Database.Test\OneI.Datable.Database.Test.csproj", "{428F6A5C-33F9-4D77-886A-004CC24FD1D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4A002385-E86A-43D0-9272-16FC438A0800}"
+	ProjectSection(SolutionItems) = preProject
+		Shared\Check.cs = Shared\Check.cs
+		Shared\CollectionExtensions.cs = Shared\CollectionExtensions.cs
+		Shared\DictionaryExtensions.cs = Shared\DictionaryExtensions.cs
+		Shared\DisposeAction.cs = Shared\DisposeAction.cs
+		Shared\EnumerableExtensions.cs = Shared\EnumerableExtensions.cs
+		Shared\ExceptionExtensions.cs = Shared\ExceptionExtensions.cs
+		Shared\ListExtensions.cs = Shared\ListExtensions.cs
+		Shared\QueryableExtensions.cs = Shared\QueryableExtensions.cs
+		Shared\Randomizer.cs = Shared\Randomizer.cs
+		Shared\StringExtensions.cs = Shared\StringExtensions.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Type", "Type", "{240FE18F-3292-4042-B12E-DC0C9570BE57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Typeable", "Infrastructure\OneI.Typeable\OneI.Typeable.csproj", "{23386EB5-0F40-4C3F-A74B-99AFF5C79164}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -233,10 +255,6 @@ Global
 		{667AD8AB-AEC3-4B93-A586-57A2BD1813F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{667AD8AB-AEC3-4B93-A586-57A2BD1813F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{667AD8AB-AEC3-4B93-A586-57A2BD1813F3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81FE7853-EC0C-4294-9E8A-498D202147DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{81FE7853-EC0C-4294-9E8A-498D202147DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81FE7853-EC0C-4294-9E8A-498D202147DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -253,6 +271,22 @@ Global
 		{54BD1D70-A380-4468-9629-79928B61900E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54BD1D70-A380-4468-9629-79928B61900E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54BD1D70-A380-4468-9629-79928B61900E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D7A939B-78A6-4FA0-A8AA-0B10D8F8024F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D7A939B-78A6-4FA0-A8AA-0B10D8F8024F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D7A939B-78A6-4FA0-A8AA-0B10D8F8024F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D7A939B-78A6-4FA0-A8AA-0B10D8F8024F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0E29DCD-7A87-4AE4-A424-EE202EF42FB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0E29DCD-7A87-4AE4-A424-EE202EF42FB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0E29DCD-7A87-4AE4-A424-EE202EF42FB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0E29DCD-7A87-4AE4-A424-EE202EF42FB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{428F6A5C-33F9-4D77-886A-004CC24FD1D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{428F6A5C-33F9-4D77-886A-004CC24FD1D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{428F6A5C-33F9-4D77-886A-004CC24FD1D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{428F6A5C-33F9-4D77-886A-004CC24FD1D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23386EB5-0F40-4C3F-A74B-99AFF5C79164}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23386EB5-0F40-4C3F-A74B-99AFF5C79164}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23386EB5-0F40-4C3F-A74B-99AFF5C79164}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23386EB5-0F40-4C3F-A74B-99AFF5C79164}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -296,13 +330,17 @@ Global
 		{5B085E83-7D44-4A31-ACBC-3DA1F536293C} = {C5A8AD1C-0308-4DDC-9695-7D84A2954E7C}
 		{AAEFDEA2-FA5E-4436-9DEA-507C43C4F3A9} = {C5A8AD1C-0308-4DDC-9695-7D84A2954E7C}
 		{667AD8AB-AEC3-4B93-A586-57A2BD1813F3} = {C5A8AD1C-0308-4DDC-9695-7D84A2954E7C}
-		{E9E65482-5206-427A-BC81-B5A526EC1B6B} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
-		{1B489CB3-5AA2-4544-8BFB-AEDE353388CD} = {E9E65482-5206-427A-BC81-B5A526EC1B6B}
 		{81FE7853-EC0C-4294-9E8A-498D202147DA} = {C2F8B1B1-8C2A-4CE8-928A-B960041F8699}
 		{F1725AF1-EB8A-4D62-AEBC-2F4599F2514D} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
 		{13B7B8C6-8CFD-4889-8074-9F4AABC704D5} = {F1725AF1-EB8A-4D62-AEBC-2F4599F2514D}
 		{CB33B3A0-C03F-4D4F-8680-B0379619E2FB} = {F1725AF1-EB8A-4D62-AEBC-2F4599F2514D}
 		{54BD1D70-A380-4468-9629-79928B61900E} = {C5A8AD1C-0308-4DDC-9695-7D84A2954E7C}
+		{13588D89-A701-4227-A650-ABD221A8BDC9} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
+		{0D7A939B-78A6-4FA0-A8AA-0B10D8F8024F} = {13588D89-A701-4227-A650-ABD221A8BDC9}
+		{D0E29DCD-7A87-4AE4-A424-EE202EF42FB8} = {13588D89-A701-4227-A650-ABD221A8BDC9}
+		{428F6A5C-33F9-4D77-886A-004CC24FD1D8} = {13588D89-A701-4227-A650-ABD221A8BDC9}
+		{240FE18F-3292-4042-B12E-DC0C9570BE57} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
+		{23386EB5-0F40-4C3F-A74B-99AFF5C79164} = {240FE18F-3292-4042-B12E-DC0C9570BE57}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

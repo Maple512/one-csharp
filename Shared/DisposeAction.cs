@@ -1,6 +1,9 @@
 namespace OneI;
 
-public readonly struct DisposeAction : IDisposable, IAsyncDisposable
+using System;
+using System.Threading.Tasks;
+
+internal readonly struct DisposeAction : IDisposable, IAsyncDisposable
 {
     private readonly Action? _action;
 
@@ -10,16 +13,16 @@ public readonly struct DisposeAction : IDisposable, IAsyncDisposable
 
     public void Dispose()
     {
-        _action?.Invoke();
-
         GC.SuppressFinalize(this);
+
+        _action?.Invoke();
     }
 
     public ValueTask DisposeAsync()
     {
-        _action?.Invoke();
-
         GC.SuppressFinalize(this);
+
+        _action?.Invoke();
 
         return ValueTask.CompletedTask;
     }
