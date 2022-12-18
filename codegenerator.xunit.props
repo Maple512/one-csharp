@@ -1,14 +1,18 @@
 <Project>
 
-  <Import Project="./common.xunit.props" />
+    <Import Project="./common.xunit.props" />
 
-  <ItemGroup>
-    <None Include="**\*.received.cs;**\*.verified.cs"/>
-    <Compile Remove="**\*.received.cs;**\*.verified.cs" />
-  </ItemGroup>
+    <PropertyGroup>
+        <ImplicitUsings>disable</ImplicitUsings>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Test\OneT.CodeGenerator\OneT.CodeGenerator.csproj" />
-  </ItemGroup>
-  
+    <ItemGroup>
+        <None Include="**\*.received.cs;**\*.verified.cs"/>
+        <Compile Remove="**\*.received.cs;**\*.verified.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Test\OneT.CodeGenerator\OneT.CodeGenerator.csproj" />
+    </ItemGroup>
+
 </Project>

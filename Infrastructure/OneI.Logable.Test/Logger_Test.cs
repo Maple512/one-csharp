@@ -25,5 +25,7 @@ public class Logger_Test
         logger.ForContext<IServiceProvider>().Error(new ArgumentException(), "error {SourceContext} message");
 
         logger.Error(" de {SourceContext} bug ");
+
+        logger.Error("asdf", 1, 2, 2, 2, 2, 2, 2, 2);
     }
 }

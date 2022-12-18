@@ -7,10 +7,15 @@ using OneI.Logable.Definitions;
 
 public static class TypeSymbolParser
 {
+    /// <summary>
+    /// Object类型，适用于：dynamic, anonymous
+    /// </summary>
+    private static readonly TypeDef DefaultType = new(nameof(System), nameof(Object));
+
     public static bool TryParse(ISymbol? symbol, out TypeDef? type)
     {
         type = null;
-        if(symbol == null)
+        if(symbol == null || symbol is IErrorTypeSymbol)
         {
             return false;
         }
@@ -33,7 +38,7 @@ public static class TypeSymbolParser
         var type = symbol switch
         {
             IArrayTypeSymbol array => PraseArrayType(array),
-            IDynamicTypeSymbol _ => PraseDynamicType(),
+            IDynamicTypeSymbol _ => DefaultType,
             ITypeParameterSymbol typeParameter => PraseTypeParameter(typeParameter),
             INamedTypeSymbol namedType => ParseNamedType(namedType),
             _ => throw new ArgumentException($"Unknown type symbol: {symbol.GetType().FullName}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}"),
@@ -54,6 +59,11 @@ public static class TypeSymbolParser
         {
 
             Debug.WriteLine($"SpecialType: {symbol.SpecialType}, TypeKind: {symbol.TypeKind}, FullName: {symbol}, interfaces: {symbol.AllInterfaces.Select(x => $"{x}").Join()}", nameof(ParseNamedType));
+
+            if(symbol.IsAnonymousType)
+            {
+                return DefaultType;
+            }
 
             ParseNamedTypeNames(symbol, type);
 
@@ -145,10 +155,7 @@ public static class TypeSymbolParser
         };
     }
 
-    private static TypeDef PraseDynamicType()
-    {
-        return new(nameof(System), nameof(Object));
-    }
+
 
     private static TypeDef PraseTypeParameter(ITypeParameterSymbol symbol)
     {

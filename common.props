@@ -13,7 +13,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Condition="'$(TargetFramework)' == 'net7.0'" Include="..\..\Shared\*.cs" />
+        <Compile Include="..\..\Shared\CalledLocation.cs" Link="Shared\CalledLocation.cs" />
+        <Compile Include="..\..\Shared\Check.cs" Link="Shared\Check.cs" />
+        <Compile Include="..\..\Shared\CollectionExtensions.cs" Link="Shared\CollectionExtensions.cs" />
+        <Compile Include="..\..\Shared\DictionaryExtensions.cs" Link="Shared\DictionaryExtensions.cs" />
+        <Compile Include="..\..\Shared\DisposeAction.cs" Link="Shared\DisposeAction.cs" />
+        <Compile Include="..\..\Shared\EnumerableExtensions.cs" Link="Shared\EnumerableExtensions.cs" />
+        <Compile Include="..\..\Shared\ExceptionExtensions.cs" Link="Shared\ExceptionExtensions.cs" />
+        <Compile Include="..\..\Shared\ListExtensions.cs" Link="Shared\ListExtensions.cs" />
+        <Compile Include="..\..\Shared\QueryableExtensions.cs" Link="Shared\QueryableExtensions.cs" />
+        <Compile Include="..\..\Shared\Randomizer.cs" Link="Shared\Randomizer.cs" />
+        <Compile Include="..\..\Shared\StringExtensions.cs" Link="Shared\StringExtensions.cs" />
+        <Compile Include="..\..\Shared\TypeExtensions.cs" Link="Shared\TypeExtensions.cs" />
     </ItemGroup>
 
     <ItemGroup>

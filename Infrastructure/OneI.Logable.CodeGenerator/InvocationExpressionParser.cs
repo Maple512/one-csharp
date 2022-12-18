@@ -1,5 +1,4 @@
 namespace OneI.Logable;
-
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -7,19 +6,23 @@ using OneI.Logable.Definitions;
 
 public static class InvocationExpressionParser
 {
-    public static MethodDef? TryParse(InvocationExpressionSyntax invocation, IMethodSymbol method, GeneratorSyntaxContext cts)
+    public static bool TryParse(InvocationExpressionSyntax invocation, IMethodSymbol method, Compilation cts, out MethodDef? result)
     {
+        result = null;
+
         try
         {
-            return Parse(invocation, method, cts);
+            result = Parse(invocation, method, cts);
         }
         catch(Exception)
         {
             throw;
         }
+
+        return result != null;
     }
 
-    private static MethodDef Parse(InvocationExpressionSyntax invocation, IMethodSymbol methodSymbol, GeneratorSyntaxContext cts)
+    private static MethodDef Parse(InvocationExpressionSyntax invocation, IMethodSymbol methodSymbol, Compilation cts)
     {
         var method = new MethodDef(methodSymbol.Name)
         {
@@ -66,127 +69,91 @@ public static class InvocationExpressionParser
         return method;
     }
 
-    private static ISymbol? TryParseExpression(ExpressionSyntax syntax, GeneratorSyntaxContext cts)
+    private static ISymbol? TryParseExpression(ExpressionSyntax syntax, Compilation compilation)
     {
-        return syntax switch
+        var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
+
+        var symbol = syntax switch
         {
+            // default(int)
+            DefaultExpressionSyntax defaultExpression
+            => semanticModel.GetSymbolInfo(defaultExpression.Type).Symbol,
+            TypeOfExpressionSyntax typeOfExpression
+            => semanticModel.GetTypeInfo(typeOfExpression).Type,
             // 对象访问
             MemberAccessExpressionSyntax memberAccess
-            => TryParseMemberAccessExpression(memberAccess, cts),
-
+            => semanticModel.GetSymbolInfo(memberAccess).Symbol,
             // 变量名：user ( var user = new User(); )
             IdentifierNameSyntax identifierName
-            => TryParseIndentifierName(identifierName, cts),
-
+            => semanticModel.GetSymbolInfo(identifierName).Symbol,
             // 创建对象
             ObjectCreationExpressionSyntax objectCreationExpression
-            => cts.SemanticModel.GetSymbolInfo(objectCreationExpression.Type!).Symbol,
-
+            => semanticModel.GetSymbolInfo(objectCreationExpression.Type).Symbol,
             // 常量
             LiteralExpressionSyntax literal
-            => cts.SemanticModel.GetTypeInfo(literal).Type,
-
+            => semanticModel.GetTypeInfo(literal).Type,
             // 调用
             InvocationExpressionSyntax invocationExpression
-            => cts.SemanticModel.GetSymbolInfo(invocationExpression.Expression!).Symbol,
-
+            => semanticModel.GetTypeInfo(invocationExpression).Type,
             // 强制转换
             CastExpressionSyntax castExpression
-            => cts.SemanticModel.GetTypeInfo(castExpression).Type,
-
+            => semanticModel.GetTypeInfo(castExpression).Type,
             // lambda
             ParenthesizedLambdaExpressionSyntax parenthesizedLambdaExpression
-            => TryParseParenthesizedLambda(parenthesizedLambdaExpression, cts),
-
+            => semanticModel.GetSymbolInfo(parenthesizedLambdaExpression.ReturnType!).Symbol,
             // await
             AwaitExpressionSyntax awaitExpression
-            => TryParseExpression(awaitExpression.Expression, cts),
-
-            // array
+            => TryParseExpression(awaitExpression.Expression, compilation),
+            // array IArrayTypeSymbol
             ArrayCreationExpressionSyntax arrayCreation
-            => cts.SemanticModel.GetTypeInfo(arrayCreation).Type,
-
+            => semanticModel.GetTypeInfo(arrayCreation.Type).Type,
+            // new[] {1,2,3}
             ImplicitArrayCreationExpressionSyntax implicitArrayCreation
-            => null,
+            => semanticModel.GetTypeInfo(implicitArrayCreation).Type,
+            // new {Id = 1,Name = "Maple512", Age =18};
+            AnonymousObjectCreationExpressionSyntax anonymousObject
+            => semanticModel.GetTypeInfo(anonymousObject).Type,
+            // array[0] or array[0..1]
+            ElementAccessExpressionSyntax elementAccess
+            => TryParseElementAccessExpressionSyntax(elementAccess, semanticModel),
+            // struct with { Id = 1}
+            WithExpressionSyntax withExpression
+            => semanticModel.GetTypeInfo(withExpression).Type,
 
-            _ => throw new ArgumentException($"Unknown expression type: {syntax.GetType().FullName}"),
+            _ => TryParseDefault(syntax, semanticModel),
         };
-    }
 
-    private static ISymbol? TryParseParenthesizedLambda(ParenthesizedLambdaExpressionSyntax syntax, GeneratorSyntaxContext cts)
-    {
-        if(syntax.ReturnType is not null)
+        if(symbol is null or { Kind: SymbolKind.DynamicType })
         {
-            return cts.SemanticModel.GetSymbolInfo(syntax.ReturnType!).Symbol;
-        }
-
-        return syntax.Body switch
-        {
-            ExpressionSyntax expression => TryParseExpression(expression, cts),
-            _ => throw new ArgumentException($"Unknown lambda expression type: {syntax.Body.GetType().FullName}"),
-        };
-    }
-
-    private static ISymbol? TryParseMemberAccessExpression(MemberAccessExpressionSyntax syntax, GeneratorSyntaxContext cts)
-    {
-        var symbol = cts.SemanticModel.GetSymbolInfo(syntax!).Symbol;
-
-        var kind = syntax.Name.Kind();
-
-        var vt = syntax.Name.Identifier.ValueText;
-
-        var n = symbol?.Name;
-
-        if(symbol is not null
-            && symbol.Name.Equals(syntax.Name.Identifier.ValueText, StringComparison.OrdinalIgnoreCase))
-        {
-            return symbol;
-        }
-
-        var name = syntax.Name.Identifier.ValueText;
-
-        symbol = cts.SemanticModel.Compilation.GetSymbolsWithName(name, SymbolFilter.Member)
-            .FirstOrDefault();
-
-        if(symbol is null)
-        {
-            symbol = cts.SemanticModel.GetSymbolInfo(syntax.Expression).Symbol;
-
-            return symbol switch
-            {
-                INamedTypeSymbol namedType => TrySeachMember(name, namedType),
-                _ => throw new ArgumentException($"Unknown symbol type: {symbol?.GetType()}, {symbol?.ContainingNamespace}.{symbol?.Name}"),
-            };
+            return compilation.ObjectType;
         }
 
         return symbol;
     }
 
-    private static ISymbol? TrySeachMember(string name, INamedTypeSymbol model)
+    private static ISymbol? TryParseDefault(ExpressionSyntax expression, SemanticModel semanticModel)
     {
-        var symbol = model.GetMembers(name).FirstOrDefault();
+        var type = semanticModel.GetTypeInfo(expression).Type;
+        var symbol = type ?? semanticModel.GetSymbolInfo(expression).Symbol;
 
-        if(symbol is null && model.IsType && model.BaseType is not null)
-        {
-            return TrySeachMember(name, model.BaseType);
-        }
+        Debug.Assert(symbol != null);
 
-        return symbol;
+        return type ?? symbol;
     }
 
-    private static ISymbol? TryParseIndentifierName(IdentifierNameSyntax identifierName, GeneratorSyntaxContext cts)
+    private static ISymbol? TryParseElementAccessExpressionSyntax(
+        ElementAccessExpressionSyntax elementAccess,
+        SemanticModel semanticModel)
     {
-        var ti = cts.SemanticModel.GetTypeInfo(identifierName);
-        if(ti.Type is not null
-            and ITypeSymbol type)
+        var elementType = semanticModel.GetTypeInfo(elementAccess).Type;
+
+        var arg = elementAccess.ArgumentList.Arguments[0].Expression;
+
+        if(arg is RangeExpressionSyntax range)
         {
-            return type;
+            return semanticModel.GetSymbolInfo(elementAccess.Expression).Symbol;
         }
 
-        var symbol = cts.SemanticModel.Compilation
-            .GetSymbolsWithName(identifierName.Identifier.ValueText, SymbolFilter.Member)
-            .FirstOrDefault();
-
-        return symbol;
+        return elementType;
     }
 }

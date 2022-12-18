@@ -18,7 +18,7 @@ public static class Clock
     {
         if(_provider != null)
         {
-            throw new InitializationException(_location!.Value);
+            throw new Exception($"The initialize method can only be called once. First called at: {_location}.");
         }
 
         _location = new(file, memeber, line);

@@ -2,33 +2,19 @@ namespace OneI;
 
 using System;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Collections.Generic;
+
+#if NET7_0_OR_GREATER
+using System.Security.Cryptography;
+#endif
 
 /// <summary>
 /// 随机数
 /// </summary>
-[StackTraceHidden]
 [DebuggerStepThrough]
-public static class Randomizer
+internal static partial class Randomizer
 {
     const string character_set = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_-+=[{]};:>|./?";
-
-    /// <summary>
-    /// 获取一段随机字符串
-    /// </summary>
-    /// <returns></returns>
-    public static string String(int length)
-    {
-        Span<char> span = stackalloc char[length];
-
-        for(int i = 0; i < length; i++)
-        {
-            span[i] = Item<char>(character_set);
-        }
-
-        return span.ToString();
-    }
 
     /// <summary>
     /// 获取一段随机字符串
@@ -37,22 +23,6 @@ public static class Randomizer
     public static string String()
     {
         return String(Integer(character_set.Length));
-    }
-
-    /// <summary>
-    /// 获取一个指定区间 <c>[min,max)</c> 之间的随机整数
-    /// </summary>
-    public static int Integer(int minValue, int maxValue)
-    {
-        return RandomNumberGenerator.GetInt32(minValue, maxValue);
-    }
-
-    /// <summary>
-    /// 获取一个指定区间 <c>[0,max)</c> 之间的随机整数
-    /// </summary>
-    public static int Integer(int maxValue)
-    {
-        return RandomNumberGenerator.GetInt32(maxValue);
     }
 
     /// <summary>
@@ -97,3 +67,78 @@ public static class Randomizer
         return randomList;
     }
 }
+
+#if NET7_0_OR_GREATER
+[StackTraceHidden]
+internal static partial class Randomizer
+{
+    /// <summary>
+    /// 获取一段随机字符串
+    /// </summary>
+    /// <returns></returns>
+    public static string String(int length)
+    {
+        Span<char> span = stackalloc char[length];
+
+        for(int i = 0; i < length; i++)
+        {
+            span[i] = Item<char>(character_set);
+        }
+
+        return span.ToString();
+    }
+
+    /// <summary>
+    /// 获取一个指定区间 <c>[min,max)</c> 之间的随机整数
+    /// </summary>
+    public static int Integer(int minValue, int maxValue)
+    {
+        return RandomNumberGenerator.GetInt32(minValue, maxValue);
+    }
+
+    /// <summary>
+    /// 获取一个指定区间 <c>[0,max)</c> 之间的随机整数
+    /// </summary>
+    public static int Integer(int maxValue)
+    {
+        return RandomNumberGenerator.GetInt32(maxValue);
+    }
+}
+#elif NETSTANDARD2_0_OR_GREATER
+internal static partial class Randomizer
+{
+    static Random _random = new();
+
+    /// <summary>
+    /// 获取一段随机字符串
+    /// </summary>
+    /// <returns></returns>
+    public static string String(int length)
+    {
+        var span = new StringBuilder(length);
+
+        for(int i = 0; i < length; i++)
+        {
+            span.Append(Item<char>(character_set));
+        }
+
+        return span.ToString();
+    }
+
+    /// <summary>
+    /// 获取一个指定区间 <c>[min,max)</c> 之间的随机整数
+    /// </summary>
+    public static int Integer(int minValue, int maxValue)
+    {
+        return _random.Next(minValue, maxValue);
+    }
+
+    /// <summary>
+    /// 获取一个指定区间 <c>[0,max)</c> 之间的随机整数
+    /// </summary>
+    public static int Integer(int maxValue)
+    {
+        return _random.Next(maxValue);
+    }
+}
+#endif

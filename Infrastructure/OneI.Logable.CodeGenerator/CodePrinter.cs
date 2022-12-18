@@ -18,13 +18,13 @@ internal static partial class CodePrinter
         _types.Add(type);
     }
 
-    internal static void Print(ImmutableArray<MethodDef?> methods, out SourceText tyeps, out SourceText logExtensions, out SourceText loggerExtensions)
+    internal static void Print(IEnumerable<MethodDef> methods, out SourceText tyeps, out SourceText logExtensions, out SourceText loggerExtensions)
     {
         tyeps = PrintTypes();
 
-        logExtensions = PrintLogExtensions(methods.Where(x => x?.IsLogger == false).ToList());
+        logExtensions = PrintLogExtensions(methods.Where(x => x.IsLogger == false).ToList());
 
-        loggerExtensions = PrintLoggerExtensions(methods.Where(x => x?.IsLogger == true).ToList());
+        loggerExtensions = PrintLoggerExtensions(methods.Where(x => x.IsLogger == true).ToList());
     }
 
     private static SourceText PrintTypes()
@@ -55,7 +55,7 @@ internal static partial class CodePrinter
         return SourceText.From(content.ToString(), Encoding.UTF8);
     }
 
-    private static SourceText PrintLoggerExtensions(List<MethodDef?> methods)
+    private static SourceText PrintLoggerExtensions(List<MethodDef> methods)
     {
         var content = new IndentedStringBuilder();
 
@@ -90,7 +90,7 @@ internal static partial class CodePrinter
         return SourceText.From(content.ToString(), Encoding.UTF8);
     }
 
-    private static SourceText PrintLogExtensions(List<MethodDef?> methods)
+    private static SourceText PrintLogExtensions(List<MethodDef> methods)
     {
         var content = new IndentedStringBuilder();
 

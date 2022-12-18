@@ -15,12 +15,12 @@ public class LoggerCodeGenerator : IIncrementalGenerator
     {
         RegisterDefinitionFiles(context);
 
-        var hasEnumSyntaxes = context.SyntaxProvider.CreateSyntaxProvider(
-           static (s, token) => IsSyntaxTargetForGeneration(s, token),
-           static (ctx, token) => BuildInvocationContext(ctx, token));
+        var target = context.SyntaxProvider.CreateSyntaxProvider(
+           static (s, token) => IsTargetSyntax(s, token),
+           static (ctx, token) => BuildTagetContext(ctx, token));
 
         var compilation = context.CompilationProvider
-            .Combine(hasEnumSyntaxes.Collect());
+            .Combine(target.Collect());
 
         context.RegisterSourceOutput(compilation,
             static (spc, source)
@@ -37,10 +37,7 @@ public class LoggerCodeGenerator : IIncrementalGenerator
         {
             ctx.AddSource(CodeAssets.LogFileName,
                 SourceText.From(CodeAssets.LogFileContent, Encoding.UTF8));
-        });
 
-        context.RegisterPostInitializationOutput(ctx =>
-        {
             ctx.AddSource(CodeAssets.LoggerExtensionClassFileName,
                 SourceText.From(CodeAssets.LoggerExtensionClassContent, Encoding.UTF8));
         });
@@ -51,7 +48,7 @@ public class LoggerCodeGenerator : IIncrementalGenerator
     /// </summary>
     /// <param name="node"></param>
     /// <returns></returns>
-    private static bool IsSyntaxTargetForGeneration(SyntaxNode node, CancellationToken token)
+    private static bool IsTargetSyntax(SyntaxNode node, CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
 
@@ -67,7 +64,7 @@ public class LoggerCodeGenerator : IIncrementalGenerator
         return false;
     }
 
-    private static MethodDef? BuildInvocationContext(GeneratorSyntaxContext cts, CancellationToken token)
+    private static TargetContext? BuildTagetContext(GeneratorSyntaxContext cts, CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
 
@@ -104,25 +101,52 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
         Debug.WriteLine(invocation.ToFullString(), nameof(LoggerCodeGenerator));
 
-        return InvocationExpressionParser.TryParse(invocation, method!, cts);
+        return new(invocation, method!);
     }
 
     private static void Execute(
         Compilation compilation,
-        ImmutableArray<MethodDef?> methods,
+        ImmutableArray<TargetContext?> targets,
         SourceProductionContext context)
     {
-        if(methods.IsDefaultOrEmpty)
+        if(targets.IsDefaultOrEmpty)
         {
             return;
         }
 
-        CodePrinter.Print(methods, out var types, out var logExtensions, out var loggerExtensions);
+        var methods = new List<MethodDef>();
 
-        context.AddSource(CodeAssets.LoggerPropertyCreatorClassFileName, types);
+        foreach(var item in targets.Where(x => x is not null))
+        {
+            if(InvocationExpressionParser.TryParse(item!.Value.Item1, item!.Value.Item2!, compilation, out var result))
+            {
+                methods.Add(result!);
+            }
+        }
 
-        context.AddSource(CodeAssets.LogExtensionsFileName, logExtensions);
+        if(methods.Any())
+        {
+            CodePrinter.Print(methods, out var types, out var logExtensions, out var loggerExtensions);
 
-        context.AddSource(CodeAssets.LoggerExtensionExtensionClassFileName, loggerExtensions);
+            context.AddSource(CodeAssets.LoggerPropertyCreatorClassFileName, types);
+
+            context.AddSource(CodeAssets.LogExtensionsFileName, logExtensions);
+
+            context.AddSource(CodeAssets.LoggerExtensionExtensionClassFileName, loggerExtensions);
+
+            var desc = new DiagnosticDescriptor(
+                "ONEG00001",
+                "Source Code Generator",
+                "The source generator has completed running. Welcome",
+                "PS",
+                DiagnosticSeverity.Info,
+                true);
+
+            context.ReportDiagnostic(Diagnostic.Create(desc, null));
+        }
     }
+}
+
+internal record struct TargetContext(InvocationExpressionSyntax Item1, IMethodSymbol Item2)
+{
 }

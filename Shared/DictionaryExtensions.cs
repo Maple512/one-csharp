@@ -2,7 +2,10 @@ namespace System.Collections.Generic;
 
 using OneI;
 
+#if NET7_0_OR_GREATER
 [StackTraceHidden]
+#endif
+
 [DebuggerStepThrough]
 internal static class DictionaryExtensions
 {

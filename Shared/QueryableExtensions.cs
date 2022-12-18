@@ -3,7 +3,9 @@ namespace System.Linq;
 using System.Linq.Expressions;
 using OneI;
 
+#if NET7_0_OR_GREATER
 [StackTraceHidden]
+#endif
 [DebuggerStepThrough]
 internal static class QueryableExtensions
 {

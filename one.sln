@@ -121,6 +121,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Datable.Database.Test"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4A002385-E86A-43D0-9272-16FC438A0800}"
 	ProjectSection(SolutionItems) = preProject
+		Shared\CalledLocation.cs = Shared\CalledLocation.cs
 		Shared\Check.cs = Shared\Check.cs
 		Shared\CollectionExtensions.cs = Shared\CollectionExtensions.cs
 		Shared\DictionaryExtensions.cs = Shared\DictionaryExtensions.cs
@@ -135,7 +136,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4A0023
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Type", "Type", "{240FE18F-3292-4042-B12E-DC0C9570BE57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Typeable", "Infrastructure\OneI.Typeable\OneI.Typeable.csproj", "{23386EB5-0F40-4C3F-A74B-99AFF5C79164}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Reflectable.SourceCodeGenerator", "Infrastructure\OneI.Reflectable.SourceCodeGenerator\OneI.Reflectable.SourceCodeGenerator.csproj", "{CFB17B6F-4016-4EC6-9DC2-6AA2AD05CDE2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Reflectable.SourceCodeGenerator.Test", "Infrastructure\OneI.Reflectable.SourceCodeGenerator.Test\OneI.Reflectable.SourceCodeGenerator.Test.csproj", "{E6026076-2881-40B4-AF27-E42FFCBB6F9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Reflectable.SCG.ConsoleTest", "Infrastructure\OneI.Reflectable.SCG.ConsoleTest\OneI.Reflectable.SCG.ConsoleTest.csproj", "{38308B7A-D664-41BB-9733-BE2EF9057399}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -283,10 +288,18 @@ Global
 		{428F6A5C-33F9-4D77-886A-004CC24FD1D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{428F6A5C-33F9-4D77-886A-004CC24FD1D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{428F6A5C-33F9-4D77-886A-004CC24FD1D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{23386EB5-0F40-4C3F-A74B-99AFF5C79164}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{23386EB5-0F40-4C3F-A74B-99AFF5C79164}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{23386EB5-0F40-4C3F-A74B-99AFF5C79164}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{23386EB5-0F40-4C3F-A74B-99AFF5C79164}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFB17B6F-4016-4EC6-9DC2-6AA2AD05CDE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFB17B6F-4016-4EC6-9DC2-6AA2AD05CDE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFB17B6F-4016-4EC6-9DC2-6AA2AD05CDE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFB17B6F-4016-4EC6-9DC2-6AA2AD05CDE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6026076-2881-40B4-AF27-E42FFCBB6F9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6026076-2881-40B4-AF27-E42FFCBB6F9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6026076-2881-40B4-AF27-E42FFCBB6F9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6026076-2881-40B4-AF27-E42FFCBB6F9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38308B7A-D664-41BB-9733-BE2EF9057399}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38308B7A-D664-41BB-9733-BE2EF9057399}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38308B7A-D664-41BB-9733-BE2EF9057399}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38308B7A-D664-41BB-9733-BE2EF9057399}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -340,7 +353,9 @@ Global
 		{D0E29DCD-7A87-4AE4-A424-EE202EF42FB8} = {13588D89-A701-4227-A650-ABD221A8BDC9}
 		{428F6A5C-33F9-4D77-886A-004CC24FD1D8} = {13588D89-A701-4227-A650-ABD221A8BDC9}
 		{240FE18F-3292-4042-B12E-DC0C9570BE57} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
-		{23386EB5-0F40-4C3F-A74B-99AFF5C79164} = {240FE18F-3292-4042-B12E-DC0C9570BE57}
+		{CFB17B6F-4016-4EC6-9DC2-6AA2AD05CDE2} = {240FE18F-3292-4042-B12E-DC0C9570BE57}
+		{E6026076-2881-40B4-AF27-E42FFCBB6F9E} = {240FE18F-3292-4042-B12E-DC0C9570BE57}
+		{38308B7A-D664-41BB-9733-BE2EF9057399} = {240FE18F-3292-4042-B12E-DC0C9570BE57}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

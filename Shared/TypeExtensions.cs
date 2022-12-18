@@ -4,9 +4,8 @@ using System.Linq;
 using OneI;
 
 // TODO: 使用源生成器解决反射
-[StackTraceHidden]
 [DebuggerStepThrough]
-internal static class TypeExtensions
+internal static partial class TypeExtensions
 {
     public const BindingFlags StaticBindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -46,8 +45,12 @@ internal static class TypeExtensions
     {
         return type.DisplayName(false);
     }
+}
 
-
+#if NET7_0_OR_GREATER
+[StackTraceHidden]
+internal static partial class TypeExtensions
+{
     /// <summary>
     /// 尝试获取无参构造器
     /// </summary>
@@ -62,3 +65,21 @@ internal static class TypeExtensions
             .FirstOrDefault(x => x.GetParameters().IsNullOrEmpty())) != null;
     }
 }
+#elif NETSTANDARD2_0_OR_GREATER
+internal static partial class TypeExtensions
+{
+    /// <summary>
+    /// 尝试获取无参构造器
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    [Obsolete]
+    public static bool TryGetParameterlessConstructor(
+        this Type type,
+         out ConstructorInfo? constructor)
+    {
+        return (constructor = type.GetTypeInfo().DeclaredConstructors
+            .FirstOrDefault(x => x.GetParameters().IsNullOrEmpty())) != null;
+    }
+}
+#endif
