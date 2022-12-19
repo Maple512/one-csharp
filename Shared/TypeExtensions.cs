@@ -45,6 +45,11 @@ internal static partial class TypeExtensions
     {
         return type.DisplayName(false);
     }
+
+    public static bool IsAnonymousType(this Type type)
+        => type.Name.StartsWith("<>", StringComparison.Ordinal)
+            && type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), inherit: false).Length > 0
+            && type.Name.Contains("AnonymousType");
 }
 
 #if NET7_0_OR_GREATER

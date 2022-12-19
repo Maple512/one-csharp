@@ -194,6 +194,23 @@ public class IndentedStringBuilder
         _indentPending = false;
     }
 
+    public virtual IndentedStringBuilder IncrementIndent()
+    {
+        _indent++;
+
+        return this;
+    }
+
+    public virtual IndentedStringBuilder DecrementIndent()
+    {
+        if(_indent > 0)
+        {
+            _indent--;
+        }
+
+        return this;
+    }
+
     private sealed class IndentSuspender : IDisposable
     {
         private readonly IndentedStringBuilder _stringBuilder;

@@ -113,11 +113,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Logable.Extensions", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{13588D89-A701-4227-A650-ABD221A8BDC9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Datable.Database", "Infrastructure\OneI.Datable.Database\OneI.Datable.Database.csproj", "{0D7A939B-78A6-4FA0-A8AA-0B10D8F8024F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Datable.Database", "Infrastructure\OneI.Datable.Database\OneI.Datable.Database.csproj", "{0D7A939B-78A6-4FA0-A8AA-0B10D8F8024F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Datable.Database.Sqlite", "Infrastructure\OneI.Datable.Database.Sqlite\OneI.Datable.Database.Sqlite.csproj", "{D0E29DCD-7A87-4AE4-A424-EE202EF42FB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Datable.Database.Sqlite", "Infrastructure\OneI.Datable.Database.Sqlite\OneI.Datable.Database.Sqlite.csproj", "{D0E29DCD-7A87-4AE4-A424-EE202EF42FB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Datable.Database.Test", "Infrastructure\OneI.Datable.Database.Test\OneI.Datable.Database.Test.csproj", "{428F6A5C-33F9-4D77-886A-004CC24FD1D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Datable.Database.Test", "Infrastructure\OneI.Datable.Database.Test\OneI.Datable.Database.Test.csproj", "{428F6A5C-33F9-4D77-886A-004CC24FD1D8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4A002385-E86A-43D0-9272-16FC438A0800}"
 	ProjectSection(SolutionItems) = preProject
@@ -134,13 +134,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4A0023
 		Shared\StringExtensions.cs = Shared\StringExtensions.cs
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Type", "Type", "{240FE18F-3292-4042-B12E-DC0C9570BE57}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reflectable", "Reflectable", "{240FE18F-3292-4042-B12E-DC0C9570BE57}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Reflectable.SourceCodeGenerator", "Infrastructure\OneI.Reflectable.SourceCodeGenerator\OneI.Reflectable.SourceCodeGenerator.csproj", "{CFB17B6F-4016-4EC6-9DC2-6AA2AD05CDE2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Reflectable.SourceCodeGenerator.Test", "Infrastructure\OneI.Reflectable.SourceCodeGenerator.Test\OneI.Reflectable.SourceCodeGenerator.Test.csproj", "{E6026076-2881-40B4-AF27-E42FFCBB6F9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Reflectable.SCG.ConsoleTest", "Infrastructure\OneI.Reflectable.SCG.ConsoleTest\OneI.Reflectable.SCG.ConsoleTest.csproj", "{38308B7A-D664-41BB-9733-BE2EF9057399}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Reflectable.SCG.ConsoleTest", "Infrastructure\OneI.Reflectable.SCG.ConsoleTest\OneI.Reflectable.SCG.ConsoleTest.csproj", "{38308B7A-D664-41BB-9733-BE2EF9057399}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Reflectable.Benchmark.Test", "Infrastructure\OneI.Reflectable.Benchmark.Test\OneI.Reflectable.Benchmark.Test.csproj", "{8DE792F1-DBE4-4257-BC52-3D4ECF64E517}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -300,6 +302,10 @@ Global
 		{38308B7A-D664-41BB-9733-BE2EF9057399}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38308B7A-D664-41BB-9733-BE2EF9057399}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38308B7A-D664-41BB-9733-BE2EF9057399}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DE792F1-DBE4-4257-BC52-3D4ECF64E517}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DE792F1-DBE4-4257-BC52-3D4ECF64E517}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DE792F1-DBE4-4257-BC52-3D4ECF64E517}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DE792F1-DBE4-4257-BC52-3D4ECF64E517}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -356,6 +362,7 @@ Global
 		{CFB17B6F-4016-4EC6-9DC2-6AA2AD05CDE2} = {240FE18F-3292-4042-B12E-DC0C9570BE57}
 		{E6026076-2881-40B4-AF27-E42FFCBB6F9E} = {240FE18F-3292-4042-B12E-DC0C9570BE57}
 		{38308B7A-D664-41BB-9733-BE2EF9057399} = {240FE18F-3292-4042-B12E-DC0C9570BE57}
+		{8DE792F1-DBE4-4257-BC52-3D4ECF64E517} = {240FE18F-3292-4042-B12E-DC0C9570BE57}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

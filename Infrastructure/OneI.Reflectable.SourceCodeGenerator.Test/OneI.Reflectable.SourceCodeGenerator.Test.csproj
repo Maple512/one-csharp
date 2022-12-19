@@ -4,10 +4,20 @@
 
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
+        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <Optimize>False</Optimize>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+      <Optimize>False</Optimize>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\OneI.Reflectable.SourceCodeGenerator\OneI.Reflectable.SourceCodeGenerator.csproj" />
+        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>
 
 </Project>

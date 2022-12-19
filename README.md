@@ -33,3 +33,5 @@
 ## 其他
 
 - git base: `git config --global --add core.quotepath false` 防止中文乱码
+- IL指令速查：<https://www.cnblogs.com/flyingbirds123/archive/2011/01/29/1947626.html>
+- dotnet源码速查：<https://source.dot.net/>

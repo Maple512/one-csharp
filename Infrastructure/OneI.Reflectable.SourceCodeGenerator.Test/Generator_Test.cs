@@ -30,4 +30,5 @@ public class Generator_Test : CodeGeneratorSnapshotTest
 
         return Verify(source, new TypeCodeGenerator());
     }
+    
 }

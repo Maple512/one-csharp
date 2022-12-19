@@ -2,6 +2,7 @@
   "solution": {
     "path": "one.sln",
     "projects": [
+      "Infrastructure\\OneI.Reflectable.Benchmark.Test\\OneI.Reflectable.Benchmark.Test.csproj",
       "Infrastructure\\OneI.Reflectable.SCG.ConsoleTest\\OneI.Reflectable.SCG.ConsoleTest.csproj",
       "Infrastructure\\OneI.Reflectable.SourceCodeGenerator.Test\\OneI.Reflectable.SourceCodeGenerator.Test.csproj",
       "Infrastructure\\OneI.Reflectable.SourceCodeGenerator\\OneI.Reflectable.SourceCodeGenerator.csproj"

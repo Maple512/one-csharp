@@ -109,7 +109,7 @@ public class TemplateParser_Test
     public void enable_cache()
     {
         var receiver = new List<TimeSpan>();
-        DebugWatch.Start(receiver.Add);
+        DebugWatch.Start((_, t) => receiver.Add(t));
         var result1 = TemplateParser.Parse("Maple512");
         DebugWatch.Mark();
         var result2 = TemplateParser.Parse("Maple512");
