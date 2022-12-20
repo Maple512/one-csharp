@@ -2,14 +2,8 @@
 
   <Import Project="./common.test.props"/>
 
-  <PropertyGroup>
-    <NoWarn>$(NoWarn);CA1822;</NoWarn>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
-    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.2" />
-    <PackageReference Include="ObjectLayoutInspector" Version="0.1.4" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Test\OneT.Benchmark\OneT.Benchmark.csproj" />
+    </ItemGroup>
 
 </Project>

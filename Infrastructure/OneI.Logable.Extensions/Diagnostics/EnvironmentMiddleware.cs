@@ -83,6 +83,7 @@ public static class EnvironmentMiddlewareExtensions
     /// 在管道中附加进程ID
     /// </summary>
     /// <param name="configuration"></param>
+    /// <param name="options"></param>
     /// <returns></returns>
     public static ILoggerConfiguration WithEnvironment(
         this ILoggerConfiguration configuration,

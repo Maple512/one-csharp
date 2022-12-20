@@ -5,14 +5,18 @@
         <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
         <VersionPrefix>0.0.1</VersionPrefix>
-        <IsPackable>true</IsPackable>
-        <IncludeMainPack>true</IncludeMainPack>
         <ImplicitUsings>true</ImplicitUsings>
         <NeutralLanguage>zh-Hans</NeutralLanguage>
         <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
+        <NoWarn>$(NoWarn);CS1591;</NoWarn>
     </PropertyGroup>
 
-    <ItemGroup>
+    <PropertyGroup Label="Custom Property">
+        <IncludeShared>true</IncludeShared>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup Label="Shared Class Files" Condition="$(IncludeShared)">
         <Compile Include="..\..\Shared\CalledLocation.cs" Link="Shared\CalledLocation.cs" />
         <Compile Include="..\..\Shared\Check.cs" Link="Shared\Check.cs" />
         <Compile Include="..\..\Shared\CollectionExtensions.cs" Link="Shared\CollectionExtensions.cs" />
@@ -27,17 +31,14 @@
         <Compile Include="..\..\Shared\TypeExtensions.cs" Link="Shared\TypeExtensions.cs" />
     </ItemGroup>
 
-    <ItemGroup>
+    <ItemGroup Label="Global implicit usings">
+        <Using Include="System.Collections"/>
         <Using Include="System.Collections.Concurrent"/>
         <Using Include="System.Diagnostics" />
         <Using Include="System.Diagnostics.CodeAnalysis"/>
         <Using Include="System.Runtime.CompilerServices"/>
         <Using Include="System.Text"/>
     </ItemGroup>
-
-    <PropertyGroup>
-        <NoWarn>$(NoWarn);CS1591;CS1573;CS8618;CA2252;CD1600;CD1601;CD1602;CD1603;CD1604;CD1605;CD1606;</NoWarn>
-    </PropertyGroup>
 
     <!--Root Namespace-->
     <PropertyGroup>
@@ -74,7 +75,6 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <ProjectReference Include="$(MainProjectPath)" Condition="$(MSBuildProjectName) != $(RootName) and $(IsPackable) and $(IncludeMainPack)"/>
     </ItemGroup>
 
     <!--github action-->

@@ -36,7 +36,7 @@ public static class ServiceCollectionCommonExtensions
     /// <returns></returns>
     public static T GetSingleInstance<T>(this IServiceCollection services)
     {
-       return services.GetSingleInstanceOrNull<T>()
-            ?? throw new ArgumentException($"Could not find singleton service: {typeof(T).AssemblyQualifiedName}");
+        return services.GetSingleInstanceOrNull<T>()
+             ?? throw new ArgumentException($"Could not find singleton service: {typeof(T).AssemblyQualifiedName}");
     }
 }

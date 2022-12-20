@@ -6,7 +6,7 @@ public static class DebugWatch
 {
     private static readonly long _timestampToTicks = TimeSpan.TicksPerSecond / Stopwatch.Frequency;
 
-    private static List<DebugLocationRange> _marks;
+    private static List<DebugLocationRange> _marks = new();
     private static DebugLocaltion _begin;
     private static DebugLocaltion _end;
     private static string? _catagory;
@@ -113,6 +113,7 @@ public static class DebugWatch
 /// </summary>
 /// <param name="Begin">开始的位置</param>
 /// <param name="End">结束的位置</param>
+/// <param name="Category"></param>
 /// <param name="Elapsed">从开始到结束的总耗时</param>
 internal record struct DebugLocationRange(DebugLocaltion Begin, DebugLocaltion End, string? Category, TimeSpan Elapsed)
 {

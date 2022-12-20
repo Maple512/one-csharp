@@ -648,7 +648,7 @@ public class ExpressionPrinter : ExpressionVisitor
         _stringBuilder.Append("(");
 
         var isSimpleMethodOrProperty = SimpleMethods.Contains(method.Name)
-            || methodArguments.Count < 2 ;
+            || methodArguments.Count < 2;
 
         var appendAction = isSimpleMethodOrProperty ? (Func<string, ExpressionVisitor>)Append : AppendLine;
 

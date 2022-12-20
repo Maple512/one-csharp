@@ -4,10 +4,13 @@ using OneI.Textable.Templating.Properties;
 
 public class TestAuditSink : ILoggerSink
 {
-    public static IReadOnlyDictionary<string, PropertyValue> Properties;
+    private static IReadOnlyDictionary<string, PropertyValue>? _properties;
 
     public void Invoke(in LoggerContext context)
     {
-        Properties = context.Properties;
+        _properties = context.Properties;
     }
+
+    public static IReadOnlyDictionary<string, PropertyValue> Properties
+        => _properties ?? new Dictionary<string, PropertyValue>();
 }

@@ -60,6 +60,7 @@ internal static partial class TypeExtensions
     /// 尝试获取无参构造器
     /// </summary>
     /// <param name="type"></param>
+    /// <param name="constructor"></param>
     /// <returns></returns>
     [Obsolete]
     public static bool TryGetParameterlessConstructor(
@@ -77,6 +78,7 @@ internal static partial class TypeExtensions
     /// 尝试获取无参构造器
     /// </summary>
     /// <param name="type"></param>
+    /// <param name="constructor"></param>
     /// <returns></returns>
     [Obsolete]
     public static bool TryGetParameterlessConstructor(

@@ -15,7 +15,6 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
     [Fact]
     public Task generator_simple()
     {
-        // The source code to test
         var source = """
             #nullable enable
             namespace Test;
@@ -77,6 +76,7 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
             }
             #nullable restore
             """;
+
         return Verify(source, new LoggerCodeGenerator());
     }
 

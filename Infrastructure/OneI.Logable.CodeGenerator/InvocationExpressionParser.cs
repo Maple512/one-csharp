@@ -1,9 +1,5 @@
 namespace OneI.Logable;
 
-using System.Linq.Expressions;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using OneI.Logable.Definitions;
 
 public static class InvocationExpressionParser

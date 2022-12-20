@@ -16,28 +16,31 @@ public class CodeGeneratorSnapshotTest
         string source,
         IIncrementalGenerator generator,
         ReferenceAssemblyKind assemblyKind = ReferenceAssemblyKind.NetStandard20,
+        Action<CSharpCompilationOptions>? configuration = null,
         [CallerFilePath] string? filePath = null)
     {
         var directory = Directory.GetCurrentDirectory();
 
         var syntaxTree = CSharpSyntaxTree.ParseText(source);
 
-        var references = Directory.EnumerateFiles(Directory.GetCurrentDirectory(),"*.dll")
-            .Select(x=>MetadataReference.CreateFromFile(x));
+        var references = Directory.EnumerateFiles(Directory.GetCurrentDirectory(), "*.dll")
+            .Select(x => MetadataReference.CreateFromFile(x));
+
+        var options = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
+
+        configuration?.Invoke(options);
 
         // 编译环境
         var compilation = CSharpCompilation.Create(
              "Tests",
              new[] { syntaxTree },
              references,
-             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+             options
              ).AddReferences(assemblyKind);
 
-        GeneratorDriver driver = CSharpGeneratorDriver.Create(generator);
+        var driver = CSharpGeneratorDriver.Create(generator);
 
-        driver = driver.RunGenerators(compilation);
-
-        var verify = Verifier.Verify(driver)
+        var verify = Verifier.Verify(driver.RunGenerators(compilation))
             .UseDirectory(Path.Combine(TestTools.GetCSProjectDirecoty(filePath), "Logs"))
             .AutoVerify()
             .UseUniqueDirectory();

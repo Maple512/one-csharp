@@ -5,7 +5,7 @@ namespace OneI.Logable.Formatting;
 
 public class LevelFormatter : IFormatter<LogLevel>
 {
-    public virtual void Format(LogLevel value,TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
+    public virtual void Format(LogLevel value, TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
     {
         writer.Write(LevelFormatHelper.Format(value, format));
     }

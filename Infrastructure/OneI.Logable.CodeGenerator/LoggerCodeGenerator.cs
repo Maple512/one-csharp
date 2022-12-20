@@ -1,58 +1,60 @@
 namespace OneI.Logable;
 
 using System.Collections.Immutable;
-using System.Text;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using OneI.Logable.Definitions;
 
+/// <inheritdoc/>
 [Generator]
 public class LoggerCodeGenerator : IIncrementalGenerator
 {
+    /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
-        RegisterDefinitionFiles(context);
+        context.RegisterPostInitializationOutput(RegisterPostInitializationOutput);
 
-        var target = context.SyntaxProvider.CreateSyntaxProvider(
-           static (s, token) => IsTargetSyntax(s, token),
-           static (ctx, token) => BuildTagetContext(ctx, token));
+        var target = GetTargetSyntaxNode(context.SyntaxProvider);
 
         var compilation = context.CompilationProvider
             .Combine(target.Collect());
 
         context.RegisterSourceOutput(compilation,
-            static (spc, source)
-            => Execute(source.Left, source.Right, spc));
+             (spc, source)
+             => Execute(source.Left, source.Right, spc));
     }
 
     /// <summary>
-    /// 预先注册类文件
+    /// 注册初始化之后的输出
     /// </summary>
     /// <param name="context"></param>
-    private static void RegisterDefinitionFiles(IncrementalGeneratorInitializationContext context)
+    private static void RegisterPostInitializationOutput(IncrementalGeneratorPostInitializationContext context)
     {
-        context.RegisterPostInitializationOutput(ctx =>
-        {
-            ctx.AddSource(CodeAssets.LogFileName,
-                SourceText.From(CodeAssets.LogFileContent, Encoding.UTF8));
+        context.AddSource(CodeAssets.LogFileName,
+                 SourceText.From(CodeAssets.LogFileContent, Encoding.UTF8));
 
-            ctx.AddSource(CodeAssets.LoggerExtensionClassFileName,
-                SourceText.From(CodeAssets.LoggerExtensionClassContent, Encoding.UTF8));
-        });
+        context.AddSource(CodeAssets.LoggerExtensionClassFileName,
+            SourceText.From(CodeAssets.LoggerExtensionClassContent, Encoding.UTF8));
     }
 
     /// <summary>
-    /// 查找符合条件的节点
+    /// 获取目标语法节点数据
+    /// <para>或者使用<see cref="SyntaxValueProvider.ForAttributeWithMetadataName{T}(string, Func{SyntaxNode, CancellationToken, bool}, Func{GeneratorAttributeSyntaxContext, CancellationToken, T})"/>，已实现对特定<c>Attribute</c>的筛选</para>
+    /// </summary>
+    /// <param name="provider"></param>
+    /// <returns></returns>
+    private static IncrementalValuesProvider<TargetContext?> GetTargetSyntaxNode(SyntaxValueProvider provider)
+    {
+        return provider.CreateSyntaxProvider(IsTargetSyntax, TransformTargetSyntaxNode);
+    }
+
+    /// <summary>
+    /// 初步筛查符合条件的语法节点，之后进行转换
     /// </summary>
     /// <param name="node"></param>
+    /// <param name="token"></param>
     /// <returns></returns>
     private static bool IsTargetSyntax(SyntaxNode node, CancellationToken token)
-    {
-        token.ThrowIfCancellationRequested();
-
-        // 调用
+    {// 调用
         if(node is InvocationExpressionSyntax invocation)
         {
             var ma = invocation.Expression as MemberAccessExpressionSyntax;
@@ -64,7 +66,13 @@ public class LoggerCodeGenerator : IIncrementalGenerator
         return false;
     }
 
-    private static TargetContext? BuildTagetContext(GeneratorSyntaxContext cts, CancellationToken token)
+    /// <summary>
+    /// 将符合条件的语法节点转换为目标节点
+    /// </summary>
+    /// <param name="cts"></param>
+    /// <param name="token"></param>
+    /// <returns></returns>
+    private static TargetContext? TransformTargetSyntaxNode(GeneratorSyntaxContext cts, CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
 
@@ -104,21 +112,27 @@ public class LoggerCodeGenerator : IIncrementalGenerator
         return new(invocation, method!);
     }
 
+    /// <summary>
+    /// 根据给定的语法节点，生成源码
+    /// </summary>
+    /// <param name="compilation"></param>
+    /// <param name="nodes"></param>
+    /// <param name="context"></param>
     private static void Execute(
         Compilation compilation,
-        ImmutableArray<TargetContext?> targets,
+        ImmutableArray<TargetContext?> nodes,
         SourceProductionContext context)
     {
-        if(targets.IsDefaultOrEmpty)
+        if(nodes.IsDefaultOrEmpty)
         {
             return;
         }
 
+        var targetNodes = nodes.Where(x => x is not null)!;
         var methods = new List<MethodDef>();
-
-        foreach(var item in targets.Where(x => x is not null))
+        foreach(var item in targetNodes)
         {
-            if(InvocationExpressionParser.TryParse(item!.Value.Item1, item!.Value.Item2!, compilation, out var result))
+            if(InvocationExpressionParser.TryParse(item!.Value.SyntaxNode, item!.Value.MethodSymbol!, compilation, out var result))
             {
                 methods.Add(result!);
             }
@@ -133,20 +147,11 @@ public class LoggerCodeGenerator : IIncrementalGenerator
             context.AddSource(CodeAssets.LogExtensionsFileName, logExtensions);
 
             context.AddSource(CodeAssets.LoggerExtensionExtensionClassFileName, loggerExtensions);
-
-            var desc = new DiagnosticDescriptor(
-                "ONEG00001",
-                "Source Code Generator",
-                "The source generator has completed running. Welcome",
-                "PS",
-                DiagnosticSeverity.Info,
-                true);
-
-            context.ReportDiagnostic(Diagnostic.Create(desc, null));
         }
     }
 }
 
-internal record struct TargetContext(InvocationExpressionSyntax Item1, IMethodSymbol Item2)
+/// <inheritdoc/>
+public record struct TargetContext(InvocationExpressionSyntax SyntaxNode, IMethodSymbol MethodSymbol)
 {
 }

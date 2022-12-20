@@ -1,8 +1,8 @@
 namespace OneI;
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 
 /// <summary>
 /// 表示调用时的位置
@@ -14,6 +14,7 @@ internal readonly struct CalledLocation : IEquatable<CalledLocation>
     /// </summary>
     /// <param name="filePath">文件全路径</param>
     /// <param name="memberName">方法名</param>
+    /// <param name="lineNumber"></param>
     public CalledLocation(string? filePath, string? memberName, int? lineNumber)
     {
         FilePath = filePath ?? string.Empty;

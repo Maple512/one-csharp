@@ -1,8 +1,5 @@
 namespace OneI.Logable;
 
-using System;
-using System.Collections;
-using Microsoft.CodeAnalysis;
 using OneI.Logable.Definitions;
 
 public static class TypeSymbolParser

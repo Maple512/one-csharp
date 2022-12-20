@@ -1,8 +1,5 @@
 namespace OneI.Logable;
 
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Text;
 using Microsoft.CodeAnalysis.Text;
 using OneI.Logable.Definitions;
 

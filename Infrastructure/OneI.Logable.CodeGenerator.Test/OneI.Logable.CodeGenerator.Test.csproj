@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../codegenerator.xunit.props" />
+    <Import Project="../../common.xunit.codegen.props" />
 
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>

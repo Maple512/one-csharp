@@ -10,7 +10,10 @@ internal class FileSink : FileSinkBase, IFileSink, IDisposable
 
     private static readonly object _lock = new();
 
+    /// <param name="path"></param>
+    /// <param name="rendererProvider"></param>
     /// <param name="fileSizeMaxBytes">文件最大长度</param>
+    /// <param name="encoding"></param>
     /// <param name="buffered">是否开启缓冲</param>
     public FileSink(
         string path,

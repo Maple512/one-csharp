@@ -4,6 +4,7 @@
 
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
+        <IncludeShared>false</IncludeShared>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,7 +17,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Infrastructure\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj" />
-        <ProjectReference Include="..\OneT.Common.Test\OneT.Common.Test.csproj" />
+        <ProjectReference Include="..\OneT.Common\OneT.Common.csproj" />
     </ItemGroup>
 
 </Project>

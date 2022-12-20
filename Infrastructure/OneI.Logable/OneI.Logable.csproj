@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj" />
         <ProjectReference Include="..\OneI.Textable.Template\OneI.Textable.Template.csproj" />
         <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>

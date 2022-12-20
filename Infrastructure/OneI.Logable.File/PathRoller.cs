@@ -107,7 +107,7 @@ internal class PathRoller
                 }
             }
 
-            yield return new (filename, period, inc);
+            yield return new(filename, period, inc);
         }
     }
 

@@ -9,8 +9,8 @@ using OneI.Diagnostics;
 /// </summary>
 public class Command
 {
-    private StringWriter _stdOutCapture;
-    private StringWriter _stdErrCapture;
+    private StringWriter? _stdOutCapture;
+    private StringWriter? _stdErrCapture;
     private StopwatchValue _stopwatch;
 
     private bool _running = false;
@@ -362,7 +362,7 @@ public class Command
         }
     }
 
-    private static void ProcessData(string? data, StringWriter capture)
+    private static void ProcessData(string? data, StringWriter? capture)
     {
         if(data == null)
         {

@@ -1,4 +1,4 @@
 #!/bin/bash
 git config --global core.quotepath false
 
-dotnet format --no-restore -v diag --report ./format
+dotnet format *.sln --no-restore -v diag --report ./format

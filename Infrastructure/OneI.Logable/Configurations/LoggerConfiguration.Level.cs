@@ -13,7 +13,7 @@ public partial class LoggerConfiguration
             _parent = parent;
         }
 
-        public LoggerConfiguration Use(LogLevel minimum,LogLevel? maximum = null)
+        public LoggerConfiguration Use(LogLevel minimum, LogLevel? maximum = null)
         {
             _parent._logLevelMap.Minimum(minimum);
             _parent._logLevelMap.Maximum(maximum);
