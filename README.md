@@ -18,6 +18,7 @@
     - `OneI.Logable`：主项目
     - `OneI.Logable.CodeGenerator`：源代码生成器，生成日志的扩展
     - `OneI.Logable.File`：将日志记录到文件中
+  - `Reflectable`：先使用源生成器定位，然后使用Fody补充
 - `Example`：案例
 - `Service`：服务
 
@@ -26,9 +27,11 @@
 - `Signal`: 信号，进程间异步通知
 - 创建一个泛型对象：Activator.CreateInstance
 
-## Source Code Generator
+### Source Code Generator
 
 `OutputItemType="Analyzer" ReferenceOutputAssembly="false"`
+
+- 源生成器类不能继承其他类
 
 ## 其他
 

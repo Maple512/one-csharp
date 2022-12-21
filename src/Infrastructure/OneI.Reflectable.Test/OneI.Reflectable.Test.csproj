@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="../../common.xunit.props" />
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+        <DisableFody>true</DisableFody>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FodyHelpers" Version="6.6.4" />
+        <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\OneI.Reflectable.Fody.TestAssembly\OneI.Reflectable.Fody.TestAssembly.csproj" />
+        <ProjectReference Include="..\OneI.Reflectable.Fody\OneI.Reflectable.Fody.csproj" />
+        <ProjectReference Include="..\OneI.Reflectable\OneI.Reflectable.csproj" />
+    </ItemGroup>
+
+</Project>

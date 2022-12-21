@@ -1,0 +1,15 @@
+{
+  "solution": {
+    "path": "one.sln",
+    "projects": [
+      "Infrastructure\\OneI.Reflectable.Benchmark\\OneI.Reflectable.Benchmark.csproj",
+      "Infrastructure\\OneI.Reflectable.CodeGenerator.Test\\OneI.Reflectable.CodeGenerator.Test.csproj",
+      "Infrastructure\\OneI.Reflectable.CodeGenerator\\OneI.Reflectable.CodeGenerator.csproj",
+      "Infrastructure\\OneI.Reflectable.Fody.NugetTest\\OneI.Reflectable.Fody.NugetTest.csproj",
+      "Infrastructure\\OneI.Reflectable.Fody.TestAssembly\\OneI.Reflectable.Fody.TestAssembly.csproj",
+      "Infrastructure\\OneI.Reflectable.Fody\\OneI.Reflectable.Fody.csproj",
+      "Infrastructure\\OneI.Reflectable.Test\\OneI.Reflectable.Test.csproj",
+      "Infrastructure\\OneI.Reflectable\\OneI.Reflectable.csproj"
+    ]
+  }
+}

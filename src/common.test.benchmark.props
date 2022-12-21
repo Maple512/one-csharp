@@ -1,0 +1,19 @@
+<Project>
+
+    <Import Project="./common.test.props"/>
+
+    <PropertyGroup>
+        <IncludeShared>false</IncludeShared>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Test\OneT.Benchmark\OneT.Benchmark.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="BenchmarkDotNet.Attributes"/>
+        <Using Include="BenchmarkDotNet.Running"/>
+        <Using Include="OneT.Benchmark"/>
+    </ItemGroup>
+
+</Project>

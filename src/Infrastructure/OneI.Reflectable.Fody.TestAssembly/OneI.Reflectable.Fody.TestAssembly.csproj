@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="../../common.test.props" />
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+        <IncludeShared>false</IncludeShared>
+        <DisableFody>true</DisableFody>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OneI.Reflectable\OneI.Reflectable.csproj" />
+    </ItemGroup>
+
+</Project>

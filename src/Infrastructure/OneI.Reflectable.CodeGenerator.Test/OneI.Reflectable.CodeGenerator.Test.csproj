@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="../../common.xunit.codegen.props" />
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OneI.Reflectable.CodeGenerator\OneI.Reflectable.CodeGenerator.csproj" />
+    </ItemGroup>
+
+</Project>

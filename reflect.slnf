@@ -1,8 +1,0 @@
-{
-  "solution": {
-    "path": "one.sln",
-    "projects": [
-      "Infrastructure\\OneI.Reflectable.CodeGenerator\\OneI.Reflectable.CodeGenerator.csproj"
-    ]
-  }
-}

@@ -1,9 +1,0 @@
-<Project>
-
-  <Import Project="./common.test.props"/>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\Test\OneT.Benchmark\OneT.Benchmark.csproj" />
-    </ItemGroup>
-
-</Project>
