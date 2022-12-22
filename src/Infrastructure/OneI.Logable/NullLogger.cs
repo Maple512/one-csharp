@@ -1,8 +1,8 @@
-namespace OneI.Logable.Infrastructure;
+namespace OneI.Logable;
+
 /// <summary>
 /// The null logger.
 /// </summary>
-
 public class NullLogger : ILogger
 {
     /// <summary>
