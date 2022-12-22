@@ -41,6 +41,11 @@ public static class ArgumentEscaper
         return escapedArgs;
     }
 
+    /// <summary>
+    /// Escapes the arg.
+    /// </summary>
+    /// <param name="arg">The arg.</param>
+    /// <returns>A string.</returns>
     private static string EscapeArg(string arg)
     {
         var sb = new StringBuilder();

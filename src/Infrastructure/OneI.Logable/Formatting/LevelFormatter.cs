@@ -1,15 +1,27 @@
+namespace OneI.Logable.Formatting;
 using OneI.Logable.Rendering;
 using OneI.Textable;
-
-namespace OneI.Logable.Formatting;
+/// <summary>
+/// The level formatter.
+/// </summary>
 
 public class LevelFormatter : IFormatter<LogLevel>
 {
+    /// <summary>
+    /// Formats the.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <param name="writer">The writer.</param>
+    /// <param name="format">The format.</param>
+    /// <param name="formatProvider">The format provider.</param>
     public virtual void Format(LogLevel value, TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
     {
         writer.Write(LevelFormatHelper.Format(value, format));
     }
 }
+/// <summary>
+/// The level format helper.
+/// </summary>
 
 internal static class LevelFormatHelper
 {
@@ -23,6 +35,12 @@ internal static class LevelFormatHelper
             new []{ "F", "Ftl", "Fatal" }
         };
 
+    /// <summary>
+    /// Formats the.
+    /// </summary>
+    /// <param name="level">The level.</param>
+    /// <param name="format">The format.</param>
+    /// <returns>A string.</returns>
     public static string Format(LogLevel level, string? format = null)
     {
         if(format.IsNullOrWhiteSpace()

@@ -2,6 +2,9 @@ namespace OneI.Logable;
 
 using System;
 using System.Text;
+/// <summary>
+/// The shared file sink.
+/// </summary>
 
 internal class SharedFileSink : FileSinkBase, IFileSink, IDisposable
 {
@@ -9,12 +12,25 @@ internal class SharedFileSink : FileSinkBase, IFileSink, IDisposable
     private readonly FileStream _stream;
     private readonly long? _fileSizeMaxBytes;
     private static readonly object _lock = new();
+    /// <summary>
+    /// The mutex name suffix.
+    /// </summary>
     private const string MutexNameSuffix = ".logable";
 
     // 互斥锁等待时间（ms）
+    /// <summary>
+    /// The mutex wait timeout.
+    /// </summary>
     private const int MutexWaitTimeout = 10_000;
     private readonly Mutex _mutex;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SharedFileSink"/> class.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <param name="rendererProvider">The renderer provider.</param>
+    /// <param name="fileSizeMaxBytes">The file size max bytes.</param>
+    /// <param name="encoding">The encoding.</param>
     public SharedFileSink(
         string path,
         ITextRendererProvider rendererProvider,
@@ -42,6 +58,9 @@ internal class SharedFileSink : FileSinkBase, IFileSink, IDisposable
         _mutex = new Mutex(false, $"{fullPath}.{MutexNameSuffix}");
     }
 
+    /// <summary>
+    /// Disposes the.
+    /// </summary>
     public void Dispose()
     {
         GC.SuppressFinalize(this);
@@ -53,6 +72,9 @@ internal class SharedFileSink : FileSinkBase, IFileSink, IDisposable
         }
     }
 
+    /// <summary>
+    /// Flushes the to disk.
+    /// </summary>
     public void FlushToDisk()
     {
         lock(_lock)
@@ -73,11 +95,20 @@ internal class SharedFileSink : FileSinkBase, IFileSink, IDisposable
         }
     }
 
+    /// <summary>
+    /// Invokes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
     public override void Invoke(in LoggerContext context)
     {
         Write(context);
     }
 
+    /// <summary>
+    /// Writes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns>A bool.</returns>
     public bool Write(in LoggerContext context)
     {
         lock(_lock)

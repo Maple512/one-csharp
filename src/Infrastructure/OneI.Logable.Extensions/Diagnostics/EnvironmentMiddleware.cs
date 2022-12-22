@@ -1,16 +1,29 @@
 namespace OneI.Logable.Diagnostics;
 
 using System.Runtime.InteropServices;
+/// <summary>
+/// The environment middleware.
+/// </summary>
 
 public class EnvironmentMiddleware : ILoggerMiddleware
 {
     private readonly EnvironmentOptions _options;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EnvironmentMiddleware"/> class.
+    /// </summary>
+    /// <param name="options">The options.</param>
     public EnvironmentMiddleware(EnvironmentOptions options)
     {
         _options = options;
     }
 
+    /// <summary>
+    /// Invokes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="next">The next.</param>
+    /// <returns>A LoggerVoid.</returns>
     public LoggerVoid Invoke(in LoggerContext context, in LoggerDelegate next)
     {
         if(_options.HasCommandLine)
@@ -76,6 +89,9 @@ public class EnvironmentMiddleware : ILoggerMiddleware
         return next(context);
     }
 }
+/// <summary>
+/// The environment middleware extensions.
+/// </summary>
 
 public static class EnvironmentMiddlewareExtensions
 {

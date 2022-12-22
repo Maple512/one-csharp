@@ -4,10 +4,17 @@ using System.Threading.Tasks;
 using OneT.CodeGenerator;
 using VerifyXunit;
 using Xunit;
+/// <summary>
+/// The enum generator snapshot test.
+/// </summary>
 
 [UsesVerify]
 public class EnumGeneratorSnapshotTest : CodeGeneratorSnapshotTest
 {
+    /// <summary>
+    /// Generates the enum extensions correctly.
+    /// </summary>
+    /// <returns>A Task.</returns>
     [Fact]
     public Task GeneratesEnumExtensionsCorrectly()
     {

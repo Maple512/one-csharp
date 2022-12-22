@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+/// <summary>
+/// The terminal service.
+/// </summary>
 
 internal class TerminalService : ITerminalService, IDisposable
 {
@@ -16,6 +19,12 @@ internal class TerminalService : ITerminalService, IDisposable
     private readonly IApplicationLifetimeService _applicationLifetimeService;
     private readonly ILogger _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TerminalService"/> class.
+    /// </summary>
+    /// <param name="environment">The environment.</param>
+    /// <param name="applicationLifetimeService">The application lifetime service.</param>
+    /// <param name="loggerFactory">The logger factory.</param>
     public TerminalService(
         IApplicationEnvironment environment,
         IApplicationLifetimeService applicationLifetimeService,
@@ -26,6 +35,11 @@ internal class TerminalService : ITerminalService, IDisposable
         _logger = loggerFactory.CreateLogger("OneI.Applicationable.TerminalLifetimeService");
     }
 
+    /// <summary>
+    /// Waits the for start async.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A ValueTask.</returns>
     public ValueTask WaitForStartAsync(CancellationToken cancellationToken)
     {
         _applicationStartedRegistration = _applicationLifetimeService.Started.Register(state =>
@@ -43,11 +57,19 @@ internal class TerminalService : ITerminalService, IDisposable
         return ValueTask.CompletedTask;
     }
 
+    /// <summary>
+    /// Stops the async.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A ValueTask.</returns>
     public ValueTask StopAsync(CancellationToken cancellationToken)
     {
         return ValueTask.CompletedTask;
     }
 
+    /// <summary>
+    /// Disposes the.
+    /// </summary>
     public void Dispose()
     {
         UnregisterShutdownHandlers();
@@ -58,6 +80,9 @@ internal class TerminalService : ITerminalService, IDisposable
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Ons the started.
+    /// </summary>
     private void OnStarted()
     {
         _logger.LogInformation("Application started. Press Ctrl+C to shut down.");
@@ -66,6 +91,9 @@ internal class TerminalService : ITerminalService, IDisposable
         _logger.LogInformation("Root path: {RootRoot}", _environment.RootPath);
     }
 
+    /// <summary>
+    /// Ons the stopping.
+    /// </summary>
     private void OnStopping()
     {
         _logger.LogInformation("Application is shutting down...");

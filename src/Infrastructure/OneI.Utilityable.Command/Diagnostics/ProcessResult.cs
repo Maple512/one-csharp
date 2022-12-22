@@ -4,6 +4,12 @@ using System;
 
 public readonly struct ProcessResult
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ProcessResult"/> class.
+    /// </summary>
+    /// <param name="processId">The process id.</param>
+    /// <param name="exitedCode">The exited code.</param>
+    /// <param name="totalProcessorTime">The total processor time.</param>
     public ProcessResult(
         int processId,
         int exitedCode,

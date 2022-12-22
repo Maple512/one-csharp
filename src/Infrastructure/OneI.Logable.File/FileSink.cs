@@ -1,4 +1,7 @@
 namespace OneI.Logable;
+/// <summary>
+/// The file sink.
+/// </summary>
 
 internal class FileSink : FileSinkBase, IFileSink, IDisposable
 {
@@ -10,6 +13,9 @@ internal class FileSink : FileSinkBase, IFileSink, IDisposable
 
     private static readonly object _lock = new();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FileSink"/> class.
+    /// </summary>
     /// <param name="path"></param>
     /// <param name="rendererProvider"></param>
     /// <param name="fileSizeMaxBytes">文件最大长度</param>
@@ -48,6 +54,9 @@ internal class FileSink : FileSinkBase, IFileSink, IDisposable
         _writer = new StreamWriter(stream, encoding);
     }
 
+    /// <summary>
+    /// Flushes the to disk.
+    /// </summary>
     public void FlushToDisk()
     {
         lock(_lock)
@@ -57,11 +66,20 @@ internal class FileSink : FileSinkBase, IFileSink, IDisposable
         }
     }
 
+    /// <summary>
+    /// Invokes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
     public override void Invoke(in LoggerContext context)
     {
         Write(context);
     }
 
+    /// <summary>
+    /// Writes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns>A bool.</returns>
     public bool Write(in LoggerContext context)
     {
         lock(_lock)
@@ -83,6 +101,9 @@ internal class FileSink : FileSinkBase, IFileSink, IDisposable
         }
     }
 
+    /// <summary>
+    /// Disposes the.
+    /// </summary>
     public void Dispose()
     {
         GC.SuppressFinalize(this);

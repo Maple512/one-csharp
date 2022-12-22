@@ -10,11 +10,22 @@ internal static partial class CodePrinter
 {
     private static readonly HashSet<TypeDef> _types = new();
 
+    /// <summary>
+    /// Adds the type.
+    /// </summary>
+    /// <param name="type">The type.</param>
     public static void AddType(TypeDef type)
     {
         _types.Add(type);
     }
 
+    /// <summary>
+    /// Prints the.
+    /// </summary>
+    /// <param name="methods">The methods.</param>
+    /// <param name="tyeps">The tyeps.</param>
+    /// <param name="logExtensions">The log extensions.</param>
+    /// <param name="loggerExtensions">The logger extensions.</param>
     internal static void Print(IEnumerable<MethodDef> methods, out SourceText tyeps, out SourceText logExtensions, out SourceText loggerExtensions)
     {
         tyeps = PrintTypes();
@@ -24,6 +35,10 @@ internal static partial class CodePrinter
         loggerExtensions = PrintLoggerExtensions(methods.Where(x => x.IsLogger == true).ToList());
     }
 
+    /// <summary>
+    /// Prints the types.
+    /// </summary>
+    /// <returns>A SourceText.</returns>
     private static SourceText PrintTypes()
     {
         var content = new IndentedStringBuilder();
@@ -52,6 +67,11 @@ internal static partial class CodePrinter
         return SourceText.From(content.ToString(), Encoding.UTF8);
     }
 
+    /// <summary>
+    /// Prints the logger extensions.
+    /// </summary>
+    /// <param name="methods">The methods.</param>
+    /// <returns>A SourceText.</returns>
     private static SourceText PrintLoggerExtensions(List<MethodDef> methods)
     {
         var content = new IndentedStringBuilder();
@@ -87,6 +107,11 @@ internal static partial class CodePrinter
         return SourceText.From(content.ToString(), Encoding.UTF8);
     }
 
+    /// <summary>
+    /// Prints the log extensions.
+    /// </summary>
+    /// <param name="methods">The methods.</param>
+    /// <returns>A SourceText.</returns>
     private static SourceText PrintLogExtensions(List<MethodDef> methods)
     {
         var content = new IndentedStringBuilder();

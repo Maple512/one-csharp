@@ -12,6 +12,15 @@ using VerifyXunit;
 /// </summary>
 public class CodeGeneratorSnapshotTest
 {
+    /// <summary>
+    /// Verifies the.
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <param name="generator">The generator.</param>
+    /// <param name="assemblyKind">The assembly kind.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="filePath">The file path.</param>
+    /// <returns>A Task.</returns>
     protected static Task Verify(
         string source,
         IIncrementalGenerator generator,
@@ -36,7 +45,7 @@ public class CodeGeneratorSnapshotTest
              new[] { syntaxTree },
              references,
              options
-             ).AddReferences(assemblyKind);
+             ).AddReferences(ReferenceAssemblies.Get(assemblyKind));
 
         var driver = CSharpGeneratorDriver.Create(generator);
 

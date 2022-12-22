@@ -79,6 +79,9 @@ internal static partial class TypeExtensions
     }
 }
 
+/// <summary>
+/// The type extensions.
+/// </summary>
 #if NET7_0_OR_GREATER
 [StackTraceHidden]
 internal static partial class TypeExtensions
@@ -98,12 +101,15 @@ internal static partial class TypeExtensions
             .FirstOrDefault(x => x.GetParameters().IsNullOrEmpty())) != null;
     }
 }
+#pragma warning disable CS1587 // XML 注释没有放在有效语言元素上
 /// <summary>
 /// The type extensions.
 /// </summary>
 /// <summary>
 /// The type extensions.
 /// </summary>
+
+#pragma warning restore CS1587 // XML 注释没有放在有效语言元素上
 #elif NETSTANDARD2_0_OR_GREATER
 internal static partial class TypeExtensions
 {

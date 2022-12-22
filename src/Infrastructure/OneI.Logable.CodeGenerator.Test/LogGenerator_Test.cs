@@ -1,17 +1,20 @@
 namespace OneI.Logable;
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using OneT.CodeGenerator;
 using VerifyXunit;
 using Xunit;
+/// <summary>
+/// The log generator_ test.
+/// </summary>
 
 [UsesVerify]
 public class LogGenerator_Test : CodeGeneratorSnapshotTest
 {
+    /// <summary>
+    /// generator_simples the.
+    /// </summary>
+    /// <returns>A Task.</returns>
     [Fact]
     public Task generator_simple()
     {
@@ -80,6 +83,9 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
         return Verify(source, new LoggerCodeGenerator());
     }
 
+    /// <summary>
+    /// object_parameters the.
+    /// </summary>
     [Fact]
     public async void object_parameter()
     {
@@ -93,6 +99,9 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
 
     public struct SturctModel1
     {
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
         public int Id { get; set; }
     }
 }

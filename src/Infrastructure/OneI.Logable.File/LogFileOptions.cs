@@ -2,12 +2,22 @@ namespace OneI.Logable;
 
 using OneI.Logable.Rendering;
 using OneI.Textable;
+/// <summary>
+/// The logger file options base.
+/// </summary>
 
 public class LoggerFileOptionsBase
 {
     private readonly List<Func<LoggerContext, ILoggerRenderer?>> _rendererProviders;
+    /// <summary>
+    /// The default template.
+    /// </summary>
     private const string DefaultTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}";
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LoggerFileOptionsBase"/> class.
+    /// </summary>
+    /// <param name="path">The path.</param>
     public LoggerFileOptionsBase(string path)
     {
         Path = Check.NotNullOrWhiteSpace(path);
@@ -24,6 +34,9 @@ public class LoggerFileOptionsBase
     /// </summary>
     public string? Template { get; set; } = DefaultTemplate;
 
+    /// <summary>
+    /// Gets or sets the format provider.
+    /// </summary>
     public IFormatProvider? FormatProvider { get; set; }
 
     /// <summary>
@@ -41,6 +54,10 @@ public class LoggerFileOptionsBase
     /// </summary>
     public TimeSpan? FlushRegularly { get; set; }
 
+    /// <summary>
+    /// Gets the provider.
+    /// </summary>
+    /// <returns>An ITextRendererProvider.</returns>
     internal ITextRendererProvider GetProvider()
     {
         if(Template.NotNullOrWhiteSpace())
@@ -75,9 +92,16 @@ public class LoggerFileOptionsBase
         RenderWhen(condition, new LoggerRenderer(TemplateParser.Parse(template), formatProvider));
     }
 }
+/// <summary>
+/// The logger file options.
+/// </summary>
 
 public class LoggerFileOptions : LoggerFileOptionsBase
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LoggerFileOptions"/> class.
+    /// </summary>
+    /// <param name="path">The path.</param>
     public LoggerFileOptions(string path) : base(path)
     {
     }
@@ -87,16 +111,30 @@ public class LoggerFileOptions : LoggerFileOptionsBase
     /// </summary>
     public bool Buffered { get; set; }
 }
+/// <summary>
+/// The logger shared file options.
+/// </summary>
 
 public class LoggerSharedFileOptions : LoggerFileOptionsBase
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LoggerSharedFileOptions"/> class.
+    /// </summary>
+    /// <param name="path">The path.</param>
     public LoggerSharedFileOptions(string path) : base(path)
     {
     }
 }
+/// <summary>
+/// The logger roll file options.
+/// </summary>
 
 public class LoggerRollFileOptions : LoggerFileOptions
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LoggerRollFileOptions"/> class.
+    /// </summary>
+    /// <param name="path">The path.</param>
     public LoggerRollFileOptions(string path) : base(path)
     {
     }

@@ -3,9 +3,18 @@ namespace System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+/// <summary>
+/// The process actuator.
+/// </summary>
 
 public partial class ProcessActuator
 {
+    /// <summary>
+    /// sys_kills the.
+    /// </summary>
+    /// <param name="pid">The pid.</param>
+    /// <param name="sig">The sig.</param>
+    /// <returns>An int.</returns>
     [LibraryImport("libc", EntryPoint = "kill", SetLastError = true)]
     private static partial int sys_kill(int pid, int sig);
 
@@ -13,6 +22,11 @@ public partial class ProcessActuator
 
     // source: https://github.com/dotnet/tye/blob/bb49c161641b9f182cba61641149006811f60dc2/src/Microsoft.Tye.Core/ProcessUtil.cs
 
+    /// <summary>
+    /// Runs the async.
+    /// </summary>
+    /// <param name="command">The command.</param>
+    /// <returns>A ValueTask.</returns>
     public static async ValueTask<ProcessResult> RunAsync(string command)
     {
         var args = command.Split(' ');

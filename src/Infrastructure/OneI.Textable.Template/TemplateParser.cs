@@ -4,12 +4,24 @@ using System.Collections.Generic;
 using System.Globalization;
 using OneI.Textable.Rendering;
 using OneI.Textable.Templating;
+
 using static OneI.Textable.TemplateConstants.Formatters;
+/// <summary>
+/// The template parser.
+/// </summary>
 
 public static class TemplateParser
 {
     private static readonly ConcurrentDictionary<CalledLocation, TemplateContext> _cache = new();
 
+    /// <summary>
+    /// Parses the.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="file">The file.</param>
+    /// <param name="member">The member.</param>
+    /// <param name="line">The line.</param>
+    /// <returns>A TemplateContext.</returns>
     public static TemplateContext Parse(
         string text,
         [CallerFilePath] string? file = null,
@@ -37,7 +49,7 @@ public static class TemplateParser
         }
         else
         {
-            tokens = ParseCore(text.AsSpan());
+            tokens = ParseCore(text);
         }
 
         context = new TemplateContext(text, tokens);
@@ -47,7 +59,12 @@ public static class TemplateParser
         return context;
     }
 
-    private static List<Token> ParseCore(ReadOnlySpan<char> text)
+    /// <summary>
+    /// Parses the core.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <returns>A list of Tokens.</returns>
+    private static List<Token> ParseCore(scoped ReadOnlySpan<char> text)
     {
         var result = new List<Token>();
 
@@ -121,6 +138,13 @@ public static class TemplateParser
         return result;
     }
 
+    /// <summary>
+    /// Tries the parse property token.
+    /// </summary>
+    /// <param name="bytes">The bytes.</param>
+    /// <param name="index">The index.</param>
+    /// <param name="token">The token.</param>
+    /// <returns>A bool.</returns>
     private static bool TryParsePropertyToken(ReadOnlySpan<char> bytes, int index, out PropertyToken? token)
     {
         token = null;
@@ -232,6 +256,12 @@ public static class TemplateParser
         }
     }
 
+    /// <summary>
+    /// Tries the valid property name.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="name">The name.</param>
+    /// <returns>A bool.</returns>
     private static bool TryValidPropertyName(ReadOnlySpan<char> text, [NotNullWhen(true)] out string? name)
     {
         name = null;
@@ -251,6 +281,12 @@ public static class TemplateParser
         return true;
     }
 
+    /// <summary>
+    /// Tries the valid indent.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="indent">The indent.</param>
+    /// <returns>A bool.</returns>
     private static bool TryValidIndent(ReadOnlySpan<char> text, out int? indent)
     {
         indent = 0;
@@ -266,6 +302,12 @@ public static class TemplateParser
         return indent != 0;
     }
 
+    /// <summary>
+    /// Tries the valid align.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="align">The align.</param>
+    /// <returns>A bool.</returns>
     private static bool TryValidAlign(ReadOnlySpan<char> text, [NotNullWhen(true)] out Alignment? align)
     {
         align = null;
@@ -284,6 +326,12 @@ public static class TemplateParser
         return false;
     }
 
+    /// <summary>
+    /// Tries the valid format.
+    /// </summary>
+    /// <param name="text">The text.</param>
+    /// <param name="format">The format.</param>
+    /// <returns>A bool.</returns>
     private static bool TryValidFormat(ReadOnlySpan<char> text, [NotNullWhen(true)] out string? format)
     {
         format = null;
@@ -305,6 +353,11 @@ public static class TemplateParser
         return true;
     }
 
+    /// <summary>
+    /// Are the valid format.
+    /// </summary>
+    /// <param name="c">The c.</param>
+    /// <returns>A bool.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsValidFormat(char c)
     {

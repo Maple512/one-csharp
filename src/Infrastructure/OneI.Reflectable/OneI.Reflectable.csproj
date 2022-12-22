@@ -11,4 +11,8 @@
         <PackageReference Include="FodyPackaging" Version="6.6.4" PrivateAssets="All" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\OneI.Reflectable.Fody\OneI.Reflectable.Fody.csproj" PrivateAssets="none" />
+    </ItemGroup>
+
 </Project>

@@ -72,9 +72,6 @@ internal static partial class Randomizer
     }
 }
 
-/// <summary>
-/// The randomizer.
-/// </summary>
 #if NET7_0_OR_GREATER
 [StackTraceHidden]
 internal static partial class Randomizer

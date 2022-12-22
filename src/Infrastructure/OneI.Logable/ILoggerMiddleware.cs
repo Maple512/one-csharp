@@ -5,6 +5,12 @@ namespace OneI.Logable;
 /// </summary>
 public interface ILoggerMiddleware
 {
+    /// <summary>
+    /// Invokes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="next">The next.</param>
+    /// <returns>A LoggerVoid.</returns>
     LoggerVoid Invoke(in LoggerContext context, in LoggerDelegate next);
 }
 

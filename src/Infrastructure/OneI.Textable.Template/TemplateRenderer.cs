@@ -2,9 +2,18 @@ namespace OneI.Textable;
 
 using OneI.Textable.Rendering;
 using OneI.Textable.Templating;
+/// <summary>
+/// The template renderer.
+/// </summary>
 
 public static class TemplateRenderer
 {
+    /// <summary>
+    /// Renders the.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="output">The output.</param>
+    /// <param name="options">The options.</param>
     public static void Render(in TemplateContext context, in TextWriter output, in TemplateOptions options)
     {
         foreach(var token in context.Tokens)
@@ -21,11 +30,23 @@ public static class TemplateRenderer
         }
     }
 
+    /// <summary>
+    /// Renders the text.
+    /// </summary>
+    /// <param name="output">The output.</param>
+    /// <param name="token">The token.</param>
     private static void RenderText(TextWriter output, Token token)
     {
         output.Write(token.ToString());
     }
 
+    /// <summary>
+    /// Tries the render property.
+    /// </summary>
+    /// <param name="output">The output.</param>
+    /// <param name="token">The token.</param>
+    /// <param name="options">The options.</param>
+    /// <returns>A bool.</returns>
     private static bool TryRenderProperty(TextWriter output, PropertyToken token, TemplateOptions options)
     {
         if(options.Properties.TryGetValue(token.Name, out var property) == false)

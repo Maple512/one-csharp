@@ -5,6 +5,12 @@ namespace OneI.Logable.Temporaries;
 /// </summary>
 public class TemporaryMiddleware : ILoggerMiddleware
 {
+    /// <summary>
+    /// Invokes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <param name="next">The next.</param>
+    /// <returns>A LoggerVoid.</returns>
     public LoggerVoid Invoke(in LoggerContext context, in LoggerDelegate next)
     {
         var queue = TemporaryContainer.GetOrCreateQueue();

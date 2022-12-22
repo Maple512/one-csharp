@@ -2,6 +2,9 @@ namespace OneI.Logable.Configurations;
 
 using System;
 using OneI.Logable.Middlewares;
+/// <summary>
+/// The logger audit configuration.
+/// </summary>
 
 public interface ILoggerAuditConfiguration
 {

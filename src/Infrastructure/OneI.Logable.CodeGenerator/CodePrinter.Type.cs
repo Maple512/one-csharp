@@ -8,6 +8,11 @@ using OneI.Logable.Definitions;
 /// </summary>
 internal static partial class CodePrinter
 {
+    /// <summary>
+    /// Prints the type.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="type">The type.</param>
     internal static void PrintType(IndentedStringBuilder builder, TypeDef type)
     {
         builder.AppendLine($"public static global::OneI.Textable.Templating.Properties.PropertyValue {CodeAssets.LoggerPropertyCreateMethodName}({type.ToDisplayString()} p)");
@@ -48,11 +53,20 @@ internal static partial class CodePrinter
         builder.AppendLine("}");
     }
 
+    /// <summary>
+    /// Defaults the.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="type">The type.</param>
     private static void Default(IndentedStringBuilder builder, TypeDef type)
     {
         builder.AppendLine($"return new global::OneI.Textable.Templating.Properties.LiteralValue<{type.ToDisplayString()}>(p);");
     }
 
+    /// <summary>
+    /// Builds the enumerable.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
     private static void BuildEnumerable(IndentedStringBuilder builder)
     {
         builder.AppendLine($"var array = new global::OneI.Textable.Templating.Properties.EnumerableValue();");
@@ -69,6 +83,11 @@ internal static partial class CodePrinter
         builder.AppendLine($"return array;");
     }
 
+    /// <summary>
+    /// Builds the object.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="type">The type.</param>
     private static void BuildObject(IndentedStringBuilder builder, TypeDef type)
     {
         if(type.Kind is not TypeDefKind.Object)
@@ -90,6 +109,11 @@ internal static partial class CodePrinter
         builder.AppendLine($"return valueTuple;");
     }
 
+    /// <summary>
+    /// Builds the value tuple.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="type">The type.</param>
     private static void BuildValueTuple(IndentedStringBuilder builder, TypeDef type)
     {
         if(type.Kind is not TypeDefKind.ValueTuple)
@@ -111,6 +135,11 @@ internal static partial class CodePrinter
         builder.AppendLine($"return valueTuple;");
     }
 
+    /// <summary>
+    /// Builds the nullable.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="type">The type.</param>
     public static void BuildNullable(IndentedStringBuilder builder, TypeDef type)
     {
         builder.AppendLine("if(p.HasValue)");
@@ -125,6 +154,11 @@ internal static partial class CodePrinter
         builder.AppendLine("return Create(new global::OneI.Textable.Templating.Properties.LiteralValue<object>(null));");
     }
 
+    /// <summary>
+    /// Builds the dictionary.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="type">The type.</param>
     public static void BuildDictionary(IndentedStringBuilder builder, TypeDef type)
     {
         builder.AppendLine($"var dictionary = new global::OneI.Textable.Templating.Properties.DictionaryValue();");

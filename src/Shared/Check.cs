@@ -54,10 +54,12 @@ internal static partial class Check
 
 #if NET7_0_OR_GREATER
 
+/// <summary>
+/// The check.
+/// </summary>
 [StackTraceHidden]
 internal static partial class Check
 {
-
     /// <summary>
     /// Nots the null or empty.
     /// </summary>
@@ -171,6 +173,9 @@ internal static partial class Check
 }
 
 #elif NETSTANDARD2_0_OR_GREATER
+/// <summary>
+/// The check.
+/// </summary>
 
 internal static partial class Check
 {

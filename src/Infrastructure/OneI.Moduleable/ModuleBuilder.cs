@@ -9,9 +9,19 @@ using Microsoft.Extensions.Logging;
 using OneI.Applicationable;
 using OneI.Moduleable.Infrastructure;
 using OneI.Moduleable.Internal;
+/// <summary>
+/// The module builder.
+/// </summary>
 
 public static class ModuleBuilder
 {
+    /// <summary>
+    /// Configures the services.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="services">The services.</param>
+    /// <param name="environment">The environment.</param>
+    /// <param name="logger">The logger.</param>
     public static void ConfigureServices<TStartup>(
         IConfigurationRoot configuration,
         IServiceCollection? services = null,
@@ -33,6 +43,10 @@ public static class ModuleBuilder
             logger));
     }
 
+    /// <summary>
+    /// Configures the services.
+    /// </summary>
+    /// <param name="context">The context.</param>
     public static void ConfigureServices(ModuleBuilderContext context)
     {
         context.Services.AddOptions();
@@ -46,6 +60,11 @@ public static class ModuleBuilder
         ConfigureServices(modules, context);
     }
 
+    /// <summary>
+    /// Configures the services.
+    /// </summary>
+    /// <param name="modules">The modules.</param>
+    /// <param name="context">The context.</param>
     private static void ConfigureServices(
         IReadOnlyList<IModuleDescriptor> modules,
         ModuleBuilderContext context)
@@ -95,6 +114,11 @@ public static class ModuleBuilder
         }
     }
 
+    /// <summary>
+    /// Configures the async.
+    /// </summary>
+    /// <param name="serviceProvider">The service provider.</param>
+    /// <returns>A Task.</returns>
     public static async Task<IServiceProvider> ConfigureAsync(IServiceProvider serviceProvider)
     {
         var moduleContext = serviceProvider.GetRequiredService<IModuleContainer>();
@@ -104,6 +128,12 @@ public static class ModuleBuilder
         return serviceProvider;
     }
 
+    /// <summary>
+    /// Configures the async.
+    /// </summary>
+    /// <param name="modules">The modules.</param>
+    /// <param name="serviceProvider">The service provider.</param>
+    /// <returns>A Task.</returns>
     private static async Task ConfigureAsync(IReadOnlyList<IModuleDescriptor> modules, IServiceProvider serviceProvider)
     {
         var context = new ModuleConfigureContext(serviceProvider);

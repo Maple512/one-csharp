@@ -10,8 +10,15 @@ public readonly struct StopwatchValue
 
     private readonly long _startTimestamp;
 
+    /// <summary>
+    /// Gets a value indicating whether is active.
+    /// </summary>
     public bool IsActive => _startTimestamp != 0;
 
+    /// <summary>
+    /// Prevents a default instance of the <see cref="StopwatchValue"/> class from being created.
+    /// </summary>
+    /// <param name="startTimestamp">The start timestamp.</param>
     private StopwatchValue(long startTimestamp) => _startTimestamp = startTimestamp;
 
     /// <summary>

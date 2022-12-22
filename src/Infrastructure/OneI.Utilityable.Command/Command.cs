@@ -15,6 +15,9 @@ public class Command
 
     private bool _running = false;
 
+    /// <summary>
+    /// Gets the process.
+    /// </summary>
     public Process Process { get; }
 
     // Priority order of runnable suffixes to look for and run
@@ -22,6 +25,11 @@ public class Command
                                                      ? new string[] { ".exe", ".cmd", ".bat" }
                                                      : new string[] { string.Empty };
 
+    /// <summary>
+    /// Prevents a default instance of the <see cref="Command"/> class from being created.
+    /// </summary>
+    /// <param name="executable">The executable.</param>
+    /// <param name="args">The args.</param>
     private Command(string executable, string args)
     {
         // Set the things we need
@@ -40,16 +48,34 @@ public class Command
         };
     }
 
+    /// <summary>
+    /// Creates the.
+    /// </summary>
+    /// <param name="executable">The executable.</param>
+    /// <param name="args">The args.</param>
+    /// <returns>A Command.</returns>
     public static Command Create(string executable, params string[] args)
     {
         return Create(executable, ArgumentEscaper.EscapeAndConcatenateArgArrayForProcessStart(args));
     }
 
+    /// <summary>
+    /// Creates the.
+    /// </summary>
+    /// <param name="executable">The executable.</param>
+    /// <param name="args">The args.</param>
+    /// <returns>A Command.</returns>
     public static Command Create(string executable, IEnumerable<string> args)
     {
         return Create(executable, ArgumentEscaper.EscapeAndConcatenateArgArrayForProcessStart(args));
     }
 
+    /// <summary>
+    /// Creates the.
+    /// </summary>
+    /// <param name="executable">The executable.</param>
+    /// <param name="args">The args.</param>
+    /// <returns>A Command.</returns>
     public static Command Create(string executable, string args)
     {
         ResolveExecutablePath(ref executable, ref args);
@@ -57,6 +83,11 @@ public class Command
         return new Command(executable, args);
     }
 
+    /// <summary>
+    /// Resolves the executable path.
+    /// </summary>
+    /// <param name="executable">The executable.</param>
+    /// <param name="args">The args.</param>
     private static void ResolveExecutablePath(ref string executable, ref string args)
     {
         foreach(var suffix in RunnableSuffixes)
@@ -93,6 +124,11 @@ public class Command
         }
     }
 
+    /// <summary>
+    /// Shoulds the use cmd.
+    /// </summary>
+    /// <param name="executable">The executable.</param>
+    /// <returns>A bool.</returns>
     private static bool ShouldUseCmd(string executable)
     {
         if(OperatingSystem.IsWindows())
@@ -133,6 +169,11 @@ public class Command
         return false;
     }
 
+    /// <summary>
+    /// Environments the.
+    /// </summary>
+    /// <param name="env">The env.</param>
+    /// <returns>A Command.</returns>
     public Command Environment(IDictionary<string, string> env)
     {
         if(env == null)
@@ -148,17 +189,31 @@ public class Command
         return this;
     }
 
+    /// <summary>
+    /// Environments the.
+    /// </summary>
+    /// <param name="key">The key.</param>
+    /// <param name="value">The value.</param>
+    /// <returns>A Command.</returns>
     public Command Environment(string key, string value)
     {
         Process.StartInfo.Environment[key] = value;
         return this;
     }
 
+    /// <summary>
+    /// Executes the.
+    /// </summary>
+    /// <returns>A CommandResult.</returns>
     public CommandResult Execute()
     {
         return Execute(false);
     }
 
+    /// <summary>
+    /// Starts the.
+    /// </summary>
+    /// <returns>A Command.</returns>
     public Command Start()
     {
         ThrowIfRunning();
@@ -270,12 +325,23 @@ public class Command
         return WaitForExit(expectedToFail);
     }
 
+    /// <summary>
+    /// Workings the directory.
+    /// </summary>
+    /// <param name="projectDirectory">The project directory.</param>
+    /// <returns>A Command.</returns>
     public Command WorkingDirectory(string projectDirectory)
     {
         Process.StartInfo.WorkingDirectory = projectDirectory;
         return this;
     }
 
+    /// <summary>
+    /// Environments the variable.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="value">The value.</param>
+    /// <returns>A Command.</returns>
     public Command EnvironmentVariable(string name, string? value)
     {
         value ??= "";
@@ -285,6 +351,11 @@ public class Command
         return this;
     }
 
+    /// <summary>
+    /// Removes the environment variable.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <returns>A Command.</returns>
     public Command RemoveEnvironmentVariable(string name)
     {
         Process.StartInfo.Environment.Remove(name);
@@ -303,6 +374,10 @@ public class Command
         return this;
     }
 
+    /// <summary>
+    /// Captures the std err.
+    /// </summary>
+    /// <returns>A Command.</returns>
     public Command CaptureStdErr()
     {
         ThrowIfRunning();
@@ -311,6 +386,12 @@ public class Command
         return this;
     }
 
+    /// <summary>
+    /// Formats the process info.
+    /// </summary>
+    /// <param name="info">The info.</param>
+    /// <param name="includeWorkingDirectory">If true, include working directory.</param>
+    /// <returns>A string.</returns>
     private static string FormatProcessInfo(ProcessStartInfo info, bool includeWorkingDirectory)
     {
         var prefix = includeWorkingDirectory ?
@@ -325,16 +406,27 @@ public class Command
         return prefix + " " + info.Arguments;
     }
 
+    /// <summary>
+    /// Reports the exec begin.
+    /// </summary>
     private void ReportExecBegin()
     {
         CommandReporter.BeginSection("EXEC", FormatProcessInfo(Process.StartInfo, includeWorkingDirectory: false));
     }
 
+    /// <summary>
+    /// Reports the exec wait on exit.
+    /// </summary>
     private void ReportExecWaitOnExit()
     {
         CommandReporter.SectionComment("EXEC", $"Waiting for process {Process.Id} to exit...");
     }
 
+    /// <summary>
+    /// Reports the exec end.
+    /// </summary>
+    /// <param name="exitCode">The exit code.</param>
+    /// <param name="fExpectedToFail">If true, f expected to fail.</param>
     private void ReportExecEnd(int exitCode, bool fExpectedToFail)
     {
         var success = exitCode == 0;
@@ -354,6 +446,10 @@ public class Command
             success);
     }
 
+    /// <summary>
+    /// Throws the if running.
+    /// </summary>
+    /// <param name="memberName">The member name.</param>
     private void ThrowIfRunning([CallerMemberName] string? memberName = null)
     {
         if(_running)
@@ -362,6 +458,11 @@ public class Command
         }
     }
 
+    /// <summary>
+    /// Processes the data.
+    /// </summary>
+    /// <param name="data">The data.</param>
+    /// <param name="capture">The capture.</param>
     private static void ProcessData(string? data, StringWriter? capture)
     {
         if(data == null)

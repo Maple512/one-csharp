@@ -2,9 +2,19 @@ namespace OneI.Moduleable.Infrastructure;
 
 using System;
 using System.Collections.Generic;
+/// <summary>
+/// The enumerable extensions.
+/// </summary>
 
 internal static class EnumerableExtensions
 {
+    /// <summary>
+    /// Sorts the by dependencies.
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <param name="getDependencies">The get dependencies.</param>
+    /// <param name="comparer">The comparer.</param>
+    /// <returns>A list of TS.</returns>
     public static List<T> SortByDependencies<T>(
         this IEnumerable<T> source,
         Func<T, IEnumerable<T>> getDependencies,
@@ -26,6 +36,13 @@ internal static class EnumerableExtensions
         return sorted;
     }
 
+    /// <summary>
+    /// Sorts the by dependencies visit.
+    /// </summary>
+    /// <param name="item">The item.</param>
+    /// <param name="getDependencies">The get dependencies.</param>
+    /// <param name="sorted">The sorted.</param>
+    /// <param name="visited">The visited.</param>
     private static void SortByDependenciesVisit<T>(
         T item,
         Func<T, IEnumerable<T>> getDependencies,

@@ -1,6 +1,12 @@
 namespace OneI.Logable;
+/// <summary>
+/// The file flusher.
+/// </summary>
 
-public interface IFileFlusher
+internal interface IFileFlusher
 {
+    /// <summary>
+    /// Flushes the to disk.
+    /// </summary>
     void FlushToDisk();
 }

@@ -1,6 +1,14 @@
 namespace OneI.Logable;
+/// <summary>
+/// The file sink.
+/// </summary>
 
-public interface IFileSink : ILoggerSink, IFileFlusher
+internal interface IFileSink : ILoggerSink, IFileFlusher
 {
+    /// <summary>
+    /// Writes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
+    /// <returns>A bool.</returns>
     bool Write(in LoggerContext context);
 }

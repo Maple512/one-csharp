@@ -2,9 +2,23 @@ namespace OneI.Logable;
 
 using OneI.Textable;
 using OneI.Textable.Templating.Properties;
+/// <summary>
+/// The logger extensions.
+/// </summary>
 
 public static class LoggerExtensions
 {
+    /// <summary>
+    /// Packages the write.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="level">The level.</param>
+    /// <param name="exception">The exception.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="propertyValues">The property values.</param>
+    /// <param name="filePath">The file path.</param>
+    /// <param name="memberName">The member name.</param>
+    /// <param name="lineNumber">The line number.</param>
     public static void PackageWrite(
         ILogger logger,
         LogLevel level,

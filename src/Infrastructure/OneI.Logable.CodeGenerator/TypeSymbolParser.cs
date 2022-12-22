@@ -1,6 +1,9 @@
 namespace OneI.Logable;
 
 using OneI.Logable.Definitions;
+/// <summary>
+/// The type symbol parser.
+/// </summary>
 
 public static class TypeSymbolParser
 {
@@ -9,10 +12,16 @@ public static class TypeSymbolParser
     /// </summary>
     private static readonly TypeDef DefaultType = new(nameof(System), nameof(Object));
 
+    /// <summary>
+    /// Tries the parse.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <param name="type">The type.</param>
+    /// <returns>A bool.</returns>
     public static bool TryParse(ISymbol? symbol, out TypeDef? type)
     {
         type = null;
-        if(symbol == null || symbol is IErrorTypeSymbol)
+        if(symbol is null or IErrorTypeSymbol)
         {
             return false;
         }
@@ -30,6 +39,11 @@ public static class TypeSymbolParser
         return type is not null;
     }
 
+    /// <summary>
+    /// Parses the.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <returns>A TypeDef.</returns>
     public static TypeDef Parse(ITypeSymbol symbol)
     {
         var type = symbol switch
@@ -49,6 +63,11 @@ public static class TypeSymbolParser
         return type;
     }
 
+    /// <summary>
+    /// Parses the named type.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <returns>A TypeDef.</returns>
     private static TypeDef ParseNamedType(INamedTypeSymbol symbol)
     {
         var type = new TypeDef();
@@ -142,6 +161,11 @@ public static class TypeSymbolParser
         return type;
     }
 
+    /// <summary>
+    /// Prases the array type.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <returns>A TypeDef.</returns>
     private static TypeDef PraseArrayType(IArrayTypeSymbol symbol)
     {
         var elementType = Parse(symbol.ElementType);
@@ -154,6 +178,11 @@ public static class TypeSymbolParser
 
 
 
+    /// <summary>
+    /// Prases the type parameter.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <returns>A TypeDef.</returns>
     private static TypeDef PraseTypeParameter(ITypeParameterSymbol symbol)
     {
         var type = new TypeDef(symbol.Name)
@@ -200,6 +229,11 @@ public static class TypeSymbolParser
         return type;
     }
 
+    /// <summary>
+    /// Parses the named type names.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <param name="type">The type.</param>
     private static void ParseNamedTypeNames(INamedTypeSymbol symbol, TypeDef type)
     {
         if(symbol.ContainingType is not null)
@@ -225,6 +259,11 @@ public static class TypeSymbolParser
         type.Names.Add(symbol.Name);
     }
 
+    /// <summary>
+    /// Parses the namespace.
+    /// </summary>
+    /// <param name="symbol">The symbol.</param>
+    /// <param name="type">The type.</param>
     public static void ParseNamespace(INamespaceSymbol symbol, TypeDef type)
     {
         if(symbol.IsGlobalNamespace == false)

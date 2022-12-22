@@ -1,4 +1,7 @@
 namespace OneI.Logable.Sinks;
+/// <summary>
+/// The aggregate sink.
+/// </summary>
 
 public class AggregateSink : ILoggerSink
 {
@@ -16,6 +19,10 @@ public class AggregateSink : ILoggerSink
         _isSilent = isSilent;
     }
 
+    /// <summary>
+    /// Invokes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
     public void Invoke(in LoggerContext context)
     {
         List<Exception>? exceptions = null;

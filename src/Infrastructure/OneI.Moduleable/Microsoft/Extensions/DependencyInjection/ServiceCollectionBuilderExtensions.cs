@@ -4,9 +4,17 @@ using System;
 using System.Linq;
 using System.Reflection;
 using OneI;
+/// <summary>
+/// The service collection builder extensions.
+/// </summary>
 
 public static class ServiceCollectionBuilderExtensions
 {
+    /// <summary>
+    /// Builds the service provider from factory.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <returns>An IServiceProvider.</returns>
     public static IServiceProvider BuildServiceProviderFromFactory(this IServiceCollection services)
     {
         _ = Check.NotNull(services);
@@ -39,6 +47,12 @@ public static class ServiceCollectionBuilderExtensions
         return services.BuildServiceProvider();
     }
 
+    /// <summary>
+    /// Builds the service provider with contaner.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="builderAction">The builder action.</param>
+    /// <returns>An IServiceProvider.</returns>
     public static IServiceProvider BuildServiceProviderWithContaner<TContainerBuilder>(
         this IServiceCollection services,
         Action<TContainerBuilder>? builderAction = null)

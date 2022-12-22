@@ -1,6 +1,9 @@
 namespace OneI.Logable.Rendering;
 
 using Formatters = LoggerConstants.Formatters;
+/// <summary>
+/// The render helper.
+/// </summary>
 
 public static class RenderHelper
 {

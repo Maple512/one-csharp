@@ -9,6 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OneI.Applicationable;
+/// <summary>
+/// The application.
+/// </summary>
 
 internal class Application : IApplication, IDisposable, IAsyncDisposable
 {
@@ -21,6 +24,10 @@ internal class Application : IApplication, IDisposable, IAsyncDisposable
 
     private volatile bool _stopCalled;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Application"/> class.
+    /// </summary>
+    /// <param name="serviceProvider">The service provider.</param>
     public Application(IServiceProvider serviceProvider)
     {
         ServiceProvider = serviceProvider;
@@ -31,8 +38,16 @@ internal class Application : IApplication, IDisposable, IAsyncDisposable
         _options = serviceProvider.GetRequiredService<IOptions<ApplicationOptions>>().Value;
     }
 
+    /// <summary>
+    /// Gets the service provider.
+    /// </summary>
     public IServiceProvider ServiceProvider { get; }
 
+    /// <summary>
+    /// Starts the async.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A ValueTask.</returns>
     public async ValueTask StartAsync(CancellationToken cancellationToken = default)
     {
         _logger.Starting();
@@ -62,6 +77,11 @@ internal class Application : IApplication, IDisposable, IAsyncDisposable
         _logger.Started();
     }
 
+    /// <summary>
+    /// Tries the execute background service.
+    /// </summary>
+    /// <param name="service">The service.</param>
+    /// <returns>A Task.</returns>
     private async Task TryExecuteBackgroundService(BackgroundService service)
     {
         var task = service.ExecuteTask;
@@ -96,6 +116,11 @@ internal class Application : IApplication, IDisposable, IAsyncDisposable
         }
     }
 
+    /// <summary>
+    /// Stops the async.
+    /// </summary>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A ValueTask.</returns>
     public async ValueTask StopAsync(CancellationToken cancellationToken = default)
     {
         _stopCalled = true;
@@ -150,6 +175,10 @@ internal class Application : IApplication, IDisposable, IAsyncDisposable
         _logger.Stopped();
     }
 
+    /// <summary>
+    /// Disposes the async.
+    /// </summary>
+    /// <returns>A ValueTask.</returns>
     public ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
@@ -157,6 +186,9 @@ internal class Application : IApplication, IDisposable, IAsyncDisposable
         return ValueTask.CompletedTask;
     }
 
+    /// <summary>
+    /// Disposes the.
+    /// </summary>
     public void Dispose()
     {
         GC.SuppressFinalize(this);

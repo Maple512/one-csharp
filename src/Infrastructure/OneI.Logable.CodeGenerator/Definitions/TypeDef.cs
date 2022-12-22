@@ -5,11 +5,19 @@ namespace OneI.Logable.Definitions;
 /// </summary>
 public class TypeDef
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TypeDef"/> class.
+    /// </summary>
+    /// <param name="names">The names.</param>
     public TypeDef(params string[] names)
         : this(names.ToList())
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TypeDef"/> class.
+    /// </summary>
+    /// <param name="names">The names.</param>
     public TypeDef(List<string> names)
     {
         Names = names;
@@ -44,6 +52,9 @@ public class TypeDef
     /// </summary>
     public bool IsGenericType { get; set; }
 
+    /// <summary>
+    /// Gets or sets the kind.
+    /// </summary>
     public TypeDefKind Kind { get; set; }
 
     /// <summary>
@@ -51,21 +62,38 @@ public class TypeDef
     /// </summary>
     public List<PropertyDef> Properties { get; }
 
+    /// <summary>
+    /// Equals the.
+    /// </summary>
+    /// <param name="obj">The obj.</param>
+    /// <returns>A bool.</returns>
     public override bool Equals(object obj)
     {
         return obj is TypeDef td && td.ToDisplayString() == ToDisplayString();
     }
 
+    /// <summary>
+    /// Gets the hash code.
+    /// </summary>
+    /// <returns>An int.</returns>
     public override int GetHashCode()
     {
         return ToDisplayString().GetHashCode();
     }
 
+    /// <summary>
+    /// Tos the string.
+    /// </summary>
+    /// <returns>A string.</returns>
     public override string ToString()
     {
         return Names.Join('.');
     }
 
+    /// <summary>
+    /// Tos the display string.
+    /// </summary>
+    /// <returns>A string.</returns>
     public string ToDisplayString()
     {
         var content = new StringBuilder();

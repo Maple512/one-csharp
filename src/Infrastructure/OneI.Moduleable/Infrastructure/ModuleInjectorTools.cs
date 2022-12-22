@@ -7,9 +7,16 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OneI.Moduleable.DependencyInjection;
+/// <summary>
+/// The module injector tools.
+/// </summary>
 
 public static class ModuleInjectorTools
 {
+    /// <summary>
+    /// Registrations the module.
+    /// </summary>
+    /// <param name="context">The context.</param>
     public static void RegistrationModule(ModuleRegistrationContext context)
     {
         var types = context.Assembly.GetTypes().Where(IsAllowRegistration).ToArray();
@@ -17,6 +24,11 @@ public static class ModuleInjectorTools
         RegisterTypes(context.Services, types);
     }
 
+    /// <summary>
+    /// Registers the types.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="types">The types.</param>
     private static void RegisterTypes(IServiceCollection services, params Type[] types)
     {
         foreach(var type in types)
@@ -25,6 +37,12 @@ public static class ModuleInjectorTools
         }
     }
 
+    /// <summary>
+    /// Registers the type.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="type">The type.</param>
+    [Obsolete]
     private static void RegisterType(IServiceCollection services, Type type)
     {
         var serviceDescribe = type.GetCustomAttribute<ServiceDescribeAttribute>();
@@ -97,6 +115,7 @@ public static class ModuleInjectorTools
     /// <param name="type"></param>
     /// <param name="serviceRegistrable"></param>
     /// <returns></returns>
+    [Obsolete]
     private static IEnumerable<Type> GetRegistrableServiceTypes(Type type, ServiceDescribeAttribute? serviceRegistrable = null)
     {
         var interfaces = type.GetInterfaces();
@@ -182,6 +201,13 @@ public static class ModuleInjectorTools
         );
     }
 
+    /// <summary>
+    /// Gets the redirected type or null.
+    /// </summary>
+    /// <param name="serviceType">The service type.</param>
+    /// <param name="implementationType">The implementation type.</param>
+    /// <param name="serviceTypes">The service types.</param>
+    /// <returns>A Type? .</returns>
     private static Type? GetRedirectedTypeOrNull(
         Type serviceType,
         Type implementationType,

@@ -1,4 +1,7 @@
 namespace OneI.Logable.Configurations;
+/// <summary>
+/// The logger branch configuration.
+/// </summary>
 
 public interface ILoggerBranchConfiguration
 {

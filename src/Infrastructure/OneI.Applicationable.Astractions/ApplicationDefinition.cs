@@ -1,18 +1,39 @@
 namespace OneI.Applicationable;
 
 using Microsoft.Extensions.Logging;
+/// <summary>
+/// The application definition.
+/// </summary>
 
 public static class ApplicationDefinition
 {
+    /// <summary>
+    /// The configuration keys.
+    /// </summary>
     public static class ConfigurationKeys
     {
+        /// <summary>
+        /// The environment name key.
+        /// </summary>
         public const string EnvironmentNameKey = "environment";
+        /// <summary>
+        /// The application name key.
+        /// </summary>
         public const string ApplicationNameKey = "application";
+        /// <summary>
+        /// The root path key.
+        /// </summary>
         public const string RootPathKey = "root";
     }
 
+    /// <summary>
+    /// The shutdown timeout.
+    /// </summary>
     public const int ShutdownTimeout = 30;
 
+    /// <summary>
+    /// The logger events.
+    /// </summary>
     public static class LoggerEvents
     {
         public static readonly EventId Starting = new(1, nameof(Starting));
@@ -27,10 +48,22 @@ public static class ApplicationDefinition
         public static readonly EventId BackgroundServiceStoppingHost = new(10, nameof(BackgroundServiceStoppingHost));
     }
 
+    /// <summary>
+    /// The environments.
+    /// </summary>
     public static class Environments
     {
+        /// <summary>
+        /// The development.
+        /// </summary>
         public const string Development = nameof(Development);
+        /// <summary>
+        /// The staging.
+        /// </summary>
         public const string Staging = nameof(Staging);
+        /// <summary>
+        /// The production.
+        /// </summary>
         public const string Production = nameof(Production);
     }
 }

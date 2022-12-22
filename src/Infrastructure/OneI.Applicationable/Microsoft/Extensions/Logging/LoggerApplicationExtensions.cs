@@ -3,9 +3,19 @@ namespace Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
 using OneI.Applicationable;
+/// <summary>
+/// The logger application extensions.
+/// </summary>
 
 public static class LoggerApplicationExtensions
 {
+    /// <summary>
+    /// Applications the error.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="eventId">The event id.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="exception">The exception.</param>
     public static void ApplicationError(this ILogger logger, EventId eventId, string? message, Exception? exception)
     {
         if(exception is ReflectionTypeLoadException reflectionTypeLoadException)
@@ -25,6 +35,10 @@ public static class LoggerApplicationExtensions
             exception: exception);
     }
 
+    /// <summary>
+    /// Startings the.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
     public static void Starting(this ILogger logger)
     {
         if(logger.IsEnabled(LogLevel.Debug))
@@ -35,6 +49,10 @@ public static class LoggerApplicationExtensions
         }
     }
 
+    /// <summary>
+    /// Starteds the.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
     public static void Started(this ILogger logger)
     {
         if(logger.IsEnabled(LogLevel.Debug))
@@ -45,6 +63,10 @@ public static class LoggerApplicationExtensions
         }
     }
 
+    /// <summary>
+    /// Stoppings the.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
     public static void Stopping(this ILogger logger)
     {
         if(logger.IsEnabled(LogLevel.Debug))
@@ -55,6 +77,10 @@ public static class LoggerApplicationExtensions
         }
     }
 
+    /// <summary>
+    /// Stoppeds the.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
     public static void Stopped(this ILogger logger)
     {
         if(logger.IsEnabled(LogLevel.Debug))
@@ -65,6 +91,11 @@ public static class LoggerApplicationExtensions
         }
     }
 
+    /// <summary>
+    /// Stoppeds the with exception.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="ex">The ex.</param>
     public static void StoppedWithException(this ILogger logger, Exception? ex)
     {
         if(logger.IsEnabled(LogLevel.Debug))
@@ -76,6 +107,11 @@ public static class LoggerApplicationExtensions
         }
     }
 
+    /// <summary>
+    /// Backgrounds the service faulted.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="ex">The ex.</param>
     public static void BackgroundServiceFaulted(this ILogger logger, Exception? ex)
     {
         if(logger.IsEnabled(LogLevel.Error))
@@ -87,6 +123,11 @@ public static class LoggerApplicationExtensions
         }
     }
 
+    /// <summary>
+    /// Backgrounds the service unhandled exception.
+    /// </summary>
+    /// <param name="logger">The logger.</param>
+    /// <param name="ex">The ex.</param>
     public static void BackgroundServiceUnhandledException(this ILogger logger, Exception? ex)
     {
         if(logger.IsEnabled(LogLevel.Critical))

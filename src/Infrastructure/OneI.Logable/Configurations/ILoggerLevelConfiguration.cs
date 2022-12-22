@@ -1,4 +1,7 @@
 namespace OneI.Logable.Configurations;
+/// <summary>
+/// The logger level configuration.
+/// </summary>
 
 public interface ILoggerLevelConfiguration
 {

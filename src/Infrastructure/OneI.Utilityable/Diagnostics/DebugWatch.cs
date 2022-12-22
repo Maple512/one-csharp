@@ -1,6 +1,9 @@
 namespace OneI.Diagnostics;
 
 using System.Collections.Generic;
+/// <summary>
+/// The debug watch.
+/// </summary>
 
 public static class DebugWatch
 {
@@ -16,6 +19,13 @@ public static class DebugWatch
     private static int _count;
     private static Action<int, TimeSpan>? _receiver;
 
+    /// <summary>
+    /// Starts the.
+    /// </summary>
+    /// <param name="tick">The tick.</param>
+    /// <param name="category">The category.</param>
+    /// <param name="file">The file.</param>
+    /// <param name="line">The line.</param>
     [Conditional("DEBUG")]
     public static void Start(
         Action<int, TimeSpan>? tick = null,
@@ -53,6 +63,12 @@ public static class DebugWatch
         _marked = Stopwatch.GetTimestamp();
     }
 
+    /// <summary>
+    /// Marks the.
+    /// </summary>
+    /// <param name="category">The category.</param>
+    /// <param name="file">The file.</param>
+    /// <param name="line">The line.</param>
     [Conditional("DEBUG")]
     public static void Mark(
         string? category = null,
@@ -80,6 +96,12 @@ public static class DebugWatch
         }
     }
 
+    /// <summary>
+    /// Ends the and report.
+    /// </summary>
+    /// <param name="category">The category.</param>
+    /// <param name="file">The file.</param>
+    /// <param name="line">The line.</param>
     [Conditional("DEBUG")]
     public static void EndAndReport(
         string? category = null,
@@ -98,6 +120,11 @@ public static class DebugWatch
         Debug.WriteLine($"总用时：{GetElapsedTime(_start).TotalMilliseconds:N2}ms");
     }
 
+    /// <summary>
+    /// Gets the elapsed time.
+    /// </summary>
+    /// <param name="start">The start.</param>
+    /// <returns>A TimeSpan.</returns>
     public static TimeSpan GetElapsedTime(long start)
     {
         var timestampDelta = Stopwatch.GetTimestamp() - start;
@@ -117,6 +144,10 @@ public static class DebugWatch
 /// <param name="Elapsed">从开始到结束的总耗时</param>
 internal record struct DebugLocationRange(DebugLocaltion Begin, DebugLocaltion End, string? Category, TimeSpan Elapsed)
 {
+    /// <summary>
+    /// Tos the string.
+    /// </summary>
+    /// <returns>A string.</returns>
     public override string ToString()
     {
         var builder = new StringBuilder();
@@ -140,6 +171,10 @@ internal record struct DebugLocationRange(DebugLocaltion Begin, DebugLocaltion E
 
 internal readonly record struct DebugLocaltion(string? FileName, int? LineNumber)
 {
+    /// <summary>
+    /// Tos the string.
+    /// </summary>
+    /// <returns>A string.</returns>
     public override string ToString()
     {
         return $"{FileName}#L{LineNumber}";

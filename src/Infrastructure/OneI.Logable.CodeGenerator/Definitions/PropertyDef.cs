@@ -5,11 +5,22 @@ namespace OneI.Logable.Definitions;
 /// </summary>
 public class PropertyDef
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PropertyDef"/> class.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="type">The type.</param>
     public PropertyDef(string name, TypeDef type)
         : this(name, -1, type)
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PropertyDef"/> class.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="index">The index.</param>
+    /// <param name="type">The type.</param>
     public PropertyDef(string name, int index, TypeDef type)
     {
         Name = name;
@@ -32,6 +43,10 @@ public class PropertyDef
     /// </summary>
     public TypeDef Type { get; }
 
+    /// <summary>
+    /// Tos the string.
+    /// </summary>
+    /// <returns>A string.</returns>
     public override string ToString()
     {
         return Name;

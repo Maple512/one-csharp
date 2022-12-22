@@ -2,6 +2,9 @@ namespace Microsoft.Extensions.DependencyInjection;
 
 using System;
 using OneI.Eventable;
+/// <summary>
+/// The service provider event extensions.
+/// </summary>
 
 public static class ServiceProviderEventExtensions
 {

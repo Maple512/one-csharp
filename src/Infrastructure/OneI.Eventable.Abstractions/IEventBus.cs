@@ -1,6 +1,9 @@
 namespace OneI.Eventable;
 
 using System.Threading.Tasks;
+/// <summary>
+/// The event bus.
+/// </summary>
 
 public interface IEventBus
 {

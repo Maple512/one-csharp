@@ -1,6 +1,9 @@
 namespace OneI.Logable;
 
 using OneI.Textable;
+/// <summary>
+/// The roll file sink.
+/// </summary>
 
 internal class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposable
 {
@@ -18,6 +21,18 @@ internal class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposab
     private IFileSink? _sink;
     private int? _currentSequence;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RollFileSink"/> class.
+    /// </summary>
+    /// <param name="path">The path.</param>
+    /// <param name="frequency">The frequency.</param>
+    /// <param name="provider">The provider.</param>
+    /// <param name="fileSizeMaxBytes">The file size max bytes.</param>
+    /// <param name="retainedFileCountMax">The retained file count max.</param>
+    /// <param name="retainedFileTimeMax">The retained file time max.</param>
+    /// <param name="encoding">The encoding.</param>
+    /// <param name="buffered">If true, buffered.</param>
+    /// <param name="shared">If true, shared.</param>
     public RollFileSink(
         TemplateContext path,
         RollFrequency frequency,
@@ -38,6 +53,9 @@ internal class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposab
         _shared = shared;
     }
 
+    /// <summary>
+    /// Flushes the to disk.
+    /// </summary>
     public void FlushToDisk()
     {
         lock(_lock)
@@ -46,6 +64,10 @@ internal class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposab
         }
     }
 
+    /// <summary>
+    /// Invokes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
     public override void Invoke(in LoggerContext context)
     {
         if(_disposed)
@@ -63,6 +85,9 @@ internal class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposab
         }
     }
 
+    /// <summary>
+    /// Disposes the.
+    /// </summary>
     public void Dispose()
     {
         GC.SuppressFinalize(this);
@@ -80,6 +105,11 @@ internal class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposab
         }
     }
 
+    /// <summary>
+    /// Aligns the current file to.
+    /// </summary>
+    /// <param name="datetime">The datetime.</param>
+    /// <param name="nextSequence">If true, next sequence.</param>
     private void AlignCurrentFileTo(DateTime datetime, bool nextSequence = false)
     {
         if(_nextPeroid.HasValue == false)
@@ -108,6 +138,9 @@ internal class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposab
         }
     }
 
+    /// <summary>
+    /// Closes the file.
+    /// </summary>
     private void CloseFile()
     {
         if(_sink != null)
@@ -119,6 +152,11 @@ internal class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposab
         _nextPeroid = null;
     }
 
+    /// <summary>
+    /// Opens the file.
+    /// </summary>
+    /// <param name="now">The now.</param>
+    /// <param name="minSequence">The min sequence.</param>
     private void OpenFile(DateTime now, int? minSequence = null)
     {
         var currentPeriod = _roller.GetCurrentPeriod(now);

@@ -54,7 +54,13 @@ public class ExpressionPrinter : ExpressionVisitor
         _encounteredParameters = new List<ParameterExpression>();
     }
 
+    /// <summary>
+    /// Gets or sets the character limit.
+    /// </summary>
     private int? CharacterLimit { get; set; }
+    /// <summary>
+    /// Gets or sets a value indicating whether verbose.
+    /// </summary>
     private bool Verbose { get; set; }
 
     /// <summary>
@@ -95,7 +101,9 @@ public class ExpressionPrinter : ExpressionVisitor
     /// </summary>
     /// <returns>An indenter.</returns>
     public virtual IDisposable Indent()
-        => _stringBuilder.Indent();
+    {
+        return _stringBuilder.Indent();
+    }
 
     /// <summary>
     ///     Appends the given string to current output being built.
@@ -114,7 +122,9 @@ public class ExpressionPrinter : ExpressionVisitor
     /// <param name="expression">The expression to print.</param>
     /// <returns>The printable representation.</returns>
     public static string Print(Expression expression)
-        => new ExpressionPrinter().PrintCore(expression);
+    {
+        return new ExpressionPrinter().PrintCore(expression);
+    }
 
     /// <summary>
     ///     Creates a printable verbose string representation of the given expression.
@@ -122,7 +132,9 @@ public class ExpressionPrinter : ExpressionVisitor
     /// <param name="expression">The expression to print.</param>
     /// <returns>The printable representation.</returns>
     public static string PrintDebug(Expression expression)
-        => new ExpressionPrinter().PrintCore(expression, verbose: true);
+    {
+        return new ExpressionPrinter().PrintCore(expression, verbose: true);
+    }
 
     /// <summary>
     ///     Creates a printable string representation of the given expression.
@@ -131,7 +143,9 @@ public class ExpressionPrinter : ExpressionVisitor
     /// <param name="characterLimit">An optional limit to the number of characters included. Additional output will be truncated.</param>
     /// <returns>The printable representation.</returns>
     public virtual string PrintExpression(Expression expression, int? characterLimit = null)
-        => PrintCore(expression, characterLimit);
+    {
+        return PrintCore(expression, characterLimit);
+    }
 
     /// <summary>
     ///     Creates a printable verbose string representation of the given expression.
@@ -139,8 +153,17 @@ public class ExpressionPrinter : ExpressionVisitor
     /// <param name="expression">The expression to print.</param>
     /// <returns>The printable representation.</returns>
     public virtual string PrintExpressionDebug(Expression expression)
-        => PrintCore(expression, verbose: true);
+    {
+        return PrintCore(expression, verbose: true);
+    }
 
+    /// <summary>
+    /// Prints the core.
+    /// </summary>
+    /// <param name="expression">The expression.</param>
+    /// <param name="characterLimit">The character limit.</param>
+    /// <param name="verbose">If true, verbose.</param>
+    /// <returns>A string.</returns>
     private string PrintCore(Expression expression, int? characterLimit = null, bool verbose = false)
     {
         _stringBuilder.Clear();
@@ -171,7 +194,9 @@ public class ExpressionPrinter : ExpressionVisitor
     /// <param name="expressionType">The expression type to generate binary operator for.</param>
     /// <returns>The binary operator string.</returns>
     public virtual string GenerateBinaryOperator(ExpressionType expressionType)
-        => _binaryOperandMap[expressionType];
+    {
+        return _binaryOperandMap[expressionType];
+    }
 
     /// <summary>
     ///     Visit given readonly collection of expression for printing.
@@ -433,7 +458,7 @@ public class ExpressionPrinter : ExpressionVisitor
         void PrintValue(object? value)
         {
             if(value is IEnumerable enumerable
-                && !(value is string))
+                and not string)
             {
                 _stringBuilder.Append(value.GetType().Name + " { ");
 
@@ -1020,6 +1045,13 @@ public class ExpressionPrinter : ExpressionVisitor
         return extensionExpression;
     }
 
+    /// <summary>
+    /// Visits the arguments.
+    /// </summary>
+    /// <param name="arguments">The arguments.</param>
+    /// <param name="appendAction">The append action.</param>
+    /// <param name="lastSeparator">The last separator.</param>
+    /// <param name="areConnected">If true, are connected.</param>
     private void VisitArguments(
         IReadOnlyList<Expression> arguments,
         Action<string> appendAction,
@@ -1038,6 +1070,11 @@ public class ExpressionPrinter : ExpressionVisitor
         }
     }
 
+    /// <summary>
+    /// Posts the process.
+    /// </summary>
+    /// <param name="printedExpression">The printed expression.</param>
+    /// <returns>A string.</returns>
     private static string PostProcess(string printedExpression)
     {
         var processedPrintedExpression = printedExpression
@@ -1048,6 +1085,12 @@ public class ExpressionPrinter : ExpressionVisitor
         return processedPrintedExpression;
     }
 
+    /// <summary>
+    /// Unhandleds the expression type.
+    /// </summary>
+    /// <param name="expression">The expression.</param>
     private void UnhandledExpressionType(Expression expression)
-        => AppendLine(expression.ToString());
+    {
+        AppendLine(expression.ToString());
+    }
 }

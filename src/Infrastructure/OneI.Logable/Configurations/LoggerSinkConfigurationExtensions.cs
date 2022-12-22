@@ -2,6 +2,9 @@ namespace OneI.Logable.Configurations;
 
 using System;
 using OneI.Logable.Sinks;
+/// <summary>
+/// The logger sink configuration extensions.
+/// </summary>
 
 public static class LoggerSinkConfigurationExtensions
 {

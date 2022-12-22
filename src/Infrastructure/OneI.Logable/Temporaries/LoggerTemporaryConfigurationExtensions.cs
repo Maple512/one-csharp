@@ -1,6 +1,9 @@
 namespace OneI.Logable;
 
 using OneI.Logable.Temporaries;
+/// <summary>
+/// The logger temporary configuration extensions.
+/// </summary>
 
 public static class LoggerTemporaryConfigurationExtensions
 {

@@ -6,11 +6,20 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using OneI.Applicationable.Internal;
+/// <summary>
+/// The application builder.
+/// </summary>
 
 public sealed class ApplicationBuilder : IApplicationBuilder
 {
+    /// <summary>
+    /// The diagnostic listener name.
+    /// </summary>
     private const string DiagnosticListenerName = "OneI.Applicationable";
 
+    /// <summary>
+    /// The application builder event name.
+    /// </summary>
     private const string ApplicationBuilderEventName = "ApplicationBuilding";
 
     private bool built;
@@ -18,8 +27,14 @@ public sealed class ApplicationBuilder : IApplicationBuilder
     private readonly IServiceFactoryAdapter _serviceProviderFactory = new ServiceFactoryAdapter<IServiceCollection>(new DefaultServiceProviderFactory());
 
     //private readonly ApplicationBuilderContext _builderContext;
-    private IServiceProvider _serviceProvider;
+    private IServiceProvider? _serviceProvider;
 
+    /// <summary>
+    /// Builds the.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="services">The services.</param>
+    /// <returns>An IApplication.</returns>
     public IApplication Build(IConfigurationRoot configuration, IServiceCollection services)
     {
         if(built)
@@ -36,11 +51,21 @@ public sealed class ApplicationBuilder : IApplicationBuilder
         return Resolver(_serviceProvider, diagnostic);
     }
 
+    /// <summary>
+    /// Resolvers the environment.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
+    /// <returns>An IApplicationEnvironment.</returns>
     public IApplicationEnvironment ResolverEnvironment(IConfigurationRoot configuration)
     {
         return ApplicationEnvironment.Resolver(configuration);
     }
 
+    /// <summary>
+    /// Initializes the service provider.
+    /// </summary>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="services">The services.</param>
     private void InitializeServiceProvider(IConfigurationRoot configuration, IServiceCollection services)
     {
         PopulateServiceCollection(
@@ -53,6 +78,12 @@ public sealed class ApplicationBuilder : IApplicationBuilder
         _serviceProvider = _serviceProviderFactory.CreateServiceProvider(containerBuilder);
     }
 
+    /// <summary>
+    /// Populates the service collection.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="configuration">The configuration.</param>
+    /// <param name="serviceProviderFactory">The service provider factory.</param>
     [MemberNotNull(nameof(_serviceProvider))]
     private static void PopulateServiceCollection(
         IServiceCollection services,
@@ -81,6 +112,11 @@ public sealed class ApplicationBuilder : IApplicationBuilder
         services.AddLogging();
     }
 
+    /// <summary>
+    /// Logs the building.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>A DiagnosticListener.</returns>
     private static DiagnosticListener LogBuilding(IApplicationBuilder builder)
     {
         var dl = new DiagnosticListener(DiagnosticListenerName);
@@ -94,6 +130,12 @@ public sealed class ApplicationBuilder : IApplicationBuilder
         return dl;
     }
 
+    /// <summary>
+    /// Resolvers the.
+    /// </summary>
+    /// <param name="serviceProvider">The service provider.</param>
+    /// <param name="diagnosticListener">The diagnostic listener.</param>
+    /// <returns>An IApplication.</returns>
     private static IApplication Resolver(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)
     {
         Check.NotNull(serviceProvider);
@@ -112,6 +154,12 @@ public sealed class ApplicationBuilder : IApplicationBuilder
         return application;
     }
 
+    /// <summary>
+    /// Writes the.
+    /// </summary>
+    /// <param name="source">The source.</param>
+    /// <param name="name">The name.</param>
+    /// <param name="value">The value.</param>
     [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2026:UnrecognizedReflectionPattern",
             Justification = "The values being passed into Write are being consumed by the application already.")]
     private static void Write<T>(DiagnosticSource source, string name, T value)

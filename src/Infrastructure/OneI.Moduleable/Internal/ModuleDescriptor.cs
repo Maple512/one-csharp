@@ -4,11 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+/// <summary>
+/// The module descriptor.
+/// </summary>
 
 internal sealed class ModuleDescriptor : IModuleDescriptor
 {
     private readonly List<IModuleDescriptor> _dependencies = new();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ModuleDescriptor"/> class.
+    /// </summary>
+    /// <param name="instance">The instance.</param>
+    [Obsolete]
     public ModuleDescriptor(Type instance)
     {
         StartupType = Check.NotNull(instance);
@@ -22,12 +30,24 @@ internal sealed class ModuleDescriptor : IModuleDescriptor
         }
     }
 
+    /// <summary>
+    /// Gets the startup type.
+    /// </summary>
     public Type StartupType { get; }
 
+    /// <summary>
+    /// Gets the assembly.
+    /// </summary>
     public Assembly Assembly { get; }
 
+    /// <summary>
+    /// Gets the module.
+    /// </summary>
     public IModule? Module { get; }
 
+    /// <summary>
+    /// Gets the dependencies.
+    /// </summary>
     public IReadOnlyList<IModuleDescriptor> Dependencies => _dependencies;
 
     /// <summary>
@@ -39,6 +59,11 @@ internal sealed class ModuleDescriptor : IModuleDescriptor
         _dependencies.AddIfNotContains(descriptor);
     }
 
+    /// <summary>
+    /// Tos the string.
+    /// </summary>
+    /// <returns>A string.</returns>
+    [Obsolete]
     public override string ToString()
     {
         return $"Module: {StartupType.ShortDisplayName()}";

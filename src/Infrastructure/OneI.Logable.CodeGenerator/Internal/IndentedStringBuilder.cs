@@ -3,9 +3,15 @@ namespace System.Text;
 using System;
 using System.Collections.Generic;
 using System.IO;
+/// <summary>
+/// The indented string builder.
+/// </summary>
 
 internal class IndentedStringBuilder
 {
+    /// <summary>
+    /// The indent size.
+    /// </summary>
     private const byte IndentSize = 4;
     private byte _indent;
     private readonly byte _size;
@@ -15,18 +21,29 @@ internal class IndentedStringBuilder
 
     private readonly StringBuilder _stringBuilder;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IndentedStringBuilder"/> class.
+    /// </summary>
     public IndentedStringBuilder()
     {
         _stringBuilder = new();
         _size = IndentSize;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IndentedStringBuilder"/> class.
+    /// </summary>
+    /// <param name="capacity">The capacity.</param>
+    /// <param name="size">The size.</param>
     public IndentedStringBuilder(int capacity, byte size = IndentSize)
     {
         _stringBuilder = new(capacity);
         _size = size;
     }
 
+    /// <summary>
+    /// Gets the length.
+    /// </summary>
     public virtual int Length => _stringBuilder.Length;
 
     /// <summary>
@@ -67,6 +84,10 @@ internal class IndentedStringBuilder
         return this;
     }
 
+    /// <summary>
+    /// Appends the line.
+    /// </summary>
+    /// <returns>An IndentedStringBuilder.</returns>
     public virtual IndentedStringBuilder AppendLine()
     {
         AppendLine(string.Empty);
@@ -74,6 +95,11 @@ internal class IndentedStringBuilder
         return this;
     }
 
+    /// <summary>
+    /// Appends the line.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>An IndentedStringBuilder.</returns>
     public virtual IndentedStringBuilder AppendLine(string value)
     {
         if(value.Length != 0)
@@ -88,6 +114,11 @@ internal class IndentedStringBuilder
         return this;
     }
 
+    /// <summary>
+    /// Appends the.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>An IndentedStringBuilder.</returns>
     public virtual IndentedStringBuilder Append(char value)
     {
         DoIndent();
@@ -97,6 +128,11 @@ internal class IndentedStringBuilder
         return this;
     }
 
+    /// <summary>
+    /// Appends the.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>An IndentedStringBuilder.</returns>
     public virtual IndentedStringBuilder Append(string value)
     {
         DoIndent();
@@ -106,6 +142,11 @@ internal class IndentedStringBuilder
         return this;
     }
 
+    /// <summary>
+    /// Appends the.
+    /// </summary>
+    /// <param name="values">The values.</param>
+    /// <returns>An IndentedStringBuilder.</returns>
     public virtual IndentedStringBuilder Append(IEnumerable<string> values)
     {
         DoIndent();
@@ -119,6 +160,11 @@ internal class IndentedStringBuilder
         return this;
     }
 
+    /// <summary>
+    /// Appends the.
+    /// </summary>
+    /// <param name="value">The value.</param>
+    /// <returns>An IndentedStringBuilder.</returns>
     public virtual IndentedStringBuilder Append(IEnumerable<char> value)
     {
         DoIndent();
@@ -131,6 +177,10 @@ internal class IndentedStringBuilder
         return this;
     }
 
+    /// <summary>
+    /// Tos the string.
+    /// </summary>
+    /// <returns>A string.</returns>
     public override string ToString()
     {
         return _stringBuilder.ToString();
@@ -161,6 +211,10 @@ internal class IndentedStringBuilder
         return this;
     }
 
+    /// <summary>
+    /// Clears the.
+    /// </summary>
+    /// <returns>An IndentedStringBuilder.</returns>
     public virtual IndentedStringBuilder Clear()
     {
         _stringBuilder.Clear();
@@ -188,6 +242,9 @@ internal class IndentedStringBuilder
         return new IndentSuspender(this);
     }
 
+    /// <summary>
+    /// Dos the indent.
+    /// </summary>
     private void DoIndent()
     {
         if(_indentPending && _indent > 0)
@@ -198,11 +255,18 @@ internal class IndentedStringBuilder
         _indentPending = false;
     }
 
+    /// <summary>
+    /// The indent suspender.
+    /// </summary>
     private sealed class IndentSuspender : IDisposable
     {
         private readonly IndentedStringBuilder _stringBuilder;
         private readonly byte _indent;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IndentSuspender"/> class.
+        /// </summary>
+        /// <param name="stringBuilder">The string builder.</param>
         public IndentSuspender(IndentedStringBuilder stringBuilder)
         {
             _stringBuilder = stringBuilder;
@@ -210,16 +274,26 @@ internal class IndentedStringBuilder
             _stringBuilder._indent = 0;
         }
 
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public void Dispose()
         {
             _stringBuilder._indent = _indent;
         }
     }
 
+    /// <summary>
+    /// The indenter.
+    /// </summary>
     private sealed class Indenter : IDisposable
     {
         private readonly IndentedStringBuilder _stringBuilder;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Indenter"/> class.
+        /// </summary>
+        /// <param name="stringBuilder">The string builder.</param>
         public Indenter(IndentedStringBuilder stringBuilder)
         {
             _stringBuilder = stringBuilder;
@@ -227,6 +301,9 @@ internal class IndentedStringBuilder
             _stringBuilder.Increment();
         }
 
+        /// <summary>
+        /// Disposes the.
+        /// </summary>
         public void Dispose()
         {
             _stringBuilder.Decrement();

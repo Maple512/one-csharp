@@ -9,9 +9,16 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
+/// <summary>
+/// The enum to string generator.
+/// </summary>
 [Generator]
 public class EnumToStringGenerator : IIncrementalGenerator
 {
+    /// <summary>
+    /// Initializes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(ctx =>
@@ -30,11 +37,21 @@ public class EnumToStringGenerator : IIncrementalGenerator
             static (spc, source) => Execute(source.Left, source.Right, spc));
     }
 
+    /// <summary>
+    /// Are the syntax target for generation.
+    /// </summary>
+    /// <param name="node">The node.</param>
+    /// <returns>A bool.</returns>
     private static bool IsSyntaxTargetForGeneration(SyntaxNode node)
     {
         return node is EnumDeclarationSyntax m && m.AttributeLists.Count > 0;
     }
 
+    /// <summary>
+    /// Gets the semantic target for generation.
+    /// </summary>
+    /// <param name="cts">The cts.</param>
+    /// <returns>An EnumDeclarationSyntax? .</returns>
     private static EnumDeclarationSyntax? GetSemanticTargetForGeneration(GeneratorSyntaxContext cts)
     {
         var enumSyntax = (EnumDeclarationSyntax)cts.Node;
@@ -62,6 +79,12 @@ public class EnumToStringGenerator : IIncrementalGenerator
         return null;
     }
 
+    /// <summary>
+    /// Executes the.
+    /// </summary>
+    /// <param name="compilation">The compilation.</param>
+    /// <param name="enums">The enums.</param>
+    /// <param name="context">The context.</param>
     private static void Execute(Compilation compilation, ImmutableArray<EnumDeclarationSyntax?> enums, SourceProductionContext context)
     {
         if(enums.IsDefaultOrEmpty)
@@ -86,6 +109,13 @@ public class EnumToStringGenerator : IIncrementalGenerator
         }
     }
 
+    /// <summary>
+    /// Gets the types to generate.
+    /// </summary>
+    /// <param name="compilation">The compilation.</param>
+    /// <param name="enums">The enums.</param>
+    /// <param name="ct">The ct.</param>
+    /// <returns>A list of EnumToGenerates.</returns>
     private static List<EnumToGenerate> GetTypesToGenerate(Compilation compilation, IEnumerable<EnumDeclarationSyntax?> enums, CancellationToken ct)
     {
         // Create a list to hold our output
@@ -144,6 +174,11 @@ public readonly struct EnumToGenerate
     public readonly string Name;
     public readonly List<string> Values;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="EnumToGenerate"/> class.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="values">The values.</param>
     public EnumToGenerate(string name, List<string> values)
     {
         Name = name;

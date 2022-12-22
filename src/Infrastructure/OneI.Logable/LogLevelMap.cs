@@ -1,24 +1,47 @@
 namespace OneI.Logable;
+/// <summary>
+/// The log level map.
+/// </summary>
 
 public class LogLevelMap
 {
+    /// <summary>
+    /// The minimum level default.
+    /// </summary>
     public const LogLevel MinimumLevelDefault = LogLevel.Verbose;
+    /// <summary>
+    /// The maximum level default.
+    /// </summary>
     public const LogLevel MaximumLevelDefault = LogLevel.Fatal;
 
     private readonly Dictionary<string, LogLevelRange> _overrides;
 
     private LogLevelRange _range;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LogLevelMap"/> class.
+    /// </summary>
     public LogLevelMap()
     {
         _overrides = new();
         _range = new();
     }
 
+    /// <summary>
+    /// Gets the minimum level.
+    /// </summary>
     public LogLevel MinimumLevel => _range.Minimum;
 
+    /// <summary>
+    /// Gets the maximum level.
+    /// </summary>
     public LogLevel? MaximumLevel => _range.Maximum;
 
+    /// <summary>
+    /// Minimums the.
+    /// </summary>
+    /// <param name="level">The level.</param>
+    /// <returns>A LogLevelMap.</returns>
     public LogLevelMap Minimum(LogLevel level)
     {
         if(MaximumLevel.HasValue
@@ -32,6 +55,11 @@ public class LogLevelMap
         return this;
     }
 
+    /// <summary>
+    /// Maximums the.
+    /// </summary>
+    /// <param name="level">The level.</param>
+    /// <returns>A LogLevelMap.</returns>
     public LogLevelMap Maximum(LogLevel? level)
     {
         if(MinimumLevel > level)
@@ -93,6 +121,12 @@ public class LogLevelMap
         return IsEnabled(_range, level);
     }
 
+    /// <summary>
+    /// Are the enabled.
+    /// </summary>
+    /// <param name="range">The range.</param>
+    /// <param name="level">The level.</param>
+    /// <returns>A bool.</returns>
     private static bool IsEnabled(LogLevelRange range, LogLevel level)
     {
         if(range.Minimum > level)

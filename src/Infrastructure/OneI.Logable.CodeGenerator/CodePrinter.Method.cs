@@ -8,6 +8,11 @@ using OneI.Logable.Definitions;
 /// </summary>
 internal static partial class CodePrinter
 {
+    /// <summary>
+    /// Prints the method.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="method">The method.</param>
     internal static void PrintMethod(IndentedStringBuilder builder, MethodDef method)
     {
         builder.Append($"public static void {method.Name}");
@@ -35,6 +40,11 @@ internal static partial class CodePrinter
         builder.AppendLine("}");
     }
 
+    /// <summary>
+    /// Prints the method parameters.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="method">The method.</param>
     private static void PrintMethodParameters(IndentedStringBuilder builder, MethodDef method)
     {
         if(method.IsLogger)
@@ -73,6 +83,11 @@ internal static partial class CodePrinter
         }
     }
 
+    /// <summary>
+    /// Prints the method body.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="method">The method.</param>
     private static void PrintMethodBody(IndentedStringBuilder builder, MethodDef method)
     {
         builder.AppendLine($"var propertyValues = new global::System.Collections.Generic.List<global::OneI.Textable.Templating.Properties.PropertyValue>({method.Parameters.Count});");

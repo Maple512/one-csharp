@@ -1,7 +1,14 @@
 namespace OneI;
+/// <summary>
+/// The ansi console.
+/// </summary>
 
 public class AnsiConsole
 {
+    /// <summary>
+    /// Prevents a default instance of the <see cref="AnsiConsole"/> class from being created.
+    /// </summary>
+    /// <param name="writer">The writer.</param>
     private AnsiConsole(TextWriter writer)
     {
         Writer = writer;
@@ -11,20 +18,38 @@ public class AnsiConsole
 
     private int _boldRecursion;
 
+    /// <summary>
+    /// Gets the output.
+    /// </summary>
+    /// <returns>An AnsiConsole.</returns>
     public static AnsiConsole GetOutput()
     {
         return new AnsiConsole(Console.Out);
     }
 
+    /// <summary>
+    /// Gets the error.
+    /// </summary>
+    /// <returns>An AnsiConsole.</returns>
     public static AnsiConsole GetError()
     {
         return new AnsiConsole(Console.Error);
     }
 
+    /// <summary>
+    /// Gets the writer.
+    /// </summary>
     public TextWriter Writer { get; }
 
+    /// <summary>
+    /// Gets the original foreground color.
+    /// </summary>
     public ConsoleColor OriginalForegroundColor { get; }
 
+    /// <summary>
+    /// Sets the color.
+    /// </summary>
+    /// <param name="color">The color.</param>
     private void SetColor(ConsoleColor color)
     {
         const int Light = 0x08;
@@ -36,6 +61,10 @@ public class AnsiConsole
             (ConsoleColor)(c & ~Light);                       // ensure color is dark
     }
 
+    /// <summary>
+    /// Sets the bold.
+    /// </summary>
+    /// <param name="bold">If true, bold.</param>
     private void SetBold(bool bold)
     {
         _boldRecursion += bold ? 1 : -1;
@@ -48,6 +77,10 @@ public class AnsiConsole
         SetColor(Console.ForegroundColor);
     }
 
+    /// <summary>
+    /// Writes the line.
+    /// </summary>
+    /// <param name="message">The message.</param>
     public void WriteLine(string message)
     {
         Write(message);
@@ -55,6 +88,10 @@ public class AnsiConsole
     }
 
 
+    /// <summary>
+    /// Writes the.
+    /// </summary>
+    /// <param name="message">The message.</param>
     public void Write(string message)
     {
         var escapeScan = 0;

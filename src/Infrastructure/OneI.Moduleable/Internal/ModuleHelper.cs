@@ -6,11 +6,21 @@ using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OneI.Moduleable.Infrastructure;
+/// <summary>
+/// The module helper.
+/// </summary>
 
 internal static class ModuleHelper
 {
     private static ILogger? _logger;
 
+    /// <summary>
+    /// Loads the modules.
+    /// </summary>
+    /// <param name="services">The services.</param>
+    /// <param name="startupType">The startup type.</param>
+    /// <param name="logger">The logger.</param>
+    /// <returns>A list of IModuleDescriptors.</returns>
     public static IReadOnlyList<IModuleDescriptor> LoadModules(
         IServiceCollection services,
         Type startupType,
@@ -28,6 +38,12 @@ internal static class ModuleHelper
         return modules;
     }
 
+    /// <summary>
+    /// Gets the module descriptors.
+    /// </summary>
+    /// <param name="startupType">The startup type.</param>
+    /// <returns>A list of IModuleDescriptors.</returns>
+    [Obsolete]
     private static List<IModuleDescriptor> GetModuleDescriptors(Type startupType)
     {
         var modules = new List<IModuleDescriptor>();
@@ -39,6 +55,12 @@ internal static class ModuleHelper
         return modules;
     }
 
+    /// <summary>
+    /// Sorts the by dependency.
+    /// </summary>
+    /// <param name="modules">The modules.</param>
+    /// <param name="startupType">The startup type.</param>
+    /// <returns>A list of IModuleDescriptors.</returns>
     private static List<IModuleDescriptor> SortByDependency(
         IEnumerable<IModuleDescriptor> modules,
         Type startupType)
@@ -56,6 +78,7 @@ internal static class ModuleHelper
     /// <param name="modules"></param>
     /// <param name="moduleType"></param>
     /// <returns></returns>
+    [Obsolete]
     private static void FillAllModules(ICollection<IModuleDescriptor> modules, Type moduleType)
     {
         _logger?.LogInformation("Loading module starts.");
@@ -68,6 +91,10 @@ internal static class ModuleHelper
         _logger?.LogInformation("Loading module ends.");
     }
 
+    /// <summary>
+    /// Fills the all dependencies.
+    /// </summary>
+    /// <param name="modules">The modules.</param>
     private static void FillAllDependencies(List<IModuleDescriptor> modules)
     {
         foreach(var module in modules)
@@ -101,6 +128,11 @@ internal static class ModuleHelper
         }
     }
 
+    /// <summary>
+    /// Finds the all depended types.
+    /// </summary>
+    /// <param name="moduleType">The module type.</param>
+    /// <returns>A list of Types.</returns>
     private static List<Type> FindAllDependedTypes(Type moduleType)
     {
         var moduleTypes = new List<Type>();
@@ -110,6 +142,11 @@ internal static class ModuleHelper
         return moduleTypes;
     }
 
+    /// <summary>
+    /// Are the module.
+    /// </summary>
+    /// <param name="moduleType">The module type.</param>
+    /// <returns>A bool.</returns>
     public static bool IsModule(Type moduleType)
     {
         return moduleType.IsClass
@@ -117,6 +154,12 @@ internal static class ModuleHelper
                && !moduleType.IsGenericType;
     }
 
+    /// <summary>
+    /// Adds the module with dependencies recursively.
+    /// </summary>
+    /// <param name="moduleTypes">The module types.</param>
+    /// <param name="moduleType">The module type.</param>
+    /// <param name="depth">The depth.</param>
     private static void AddModuleWithDependenciesRecursively(
         ICollection<Type> moduleTypes,
         Type moduleType,

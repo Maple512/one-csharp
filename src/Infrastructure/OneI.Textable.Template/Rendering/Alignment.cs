@@ -5,6 +5,10 @@ namespace OneI.Textable.Rendering;
 /// </summary>
 public readonly struct Alignment
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Alignment"/> class.
+    /// </summary>
+    /// <param name="width">The width.</param>
     public Alignment(int width)
     {
         Direction = width >= 0 ? Direction.Right : Direction.Left;
@@ -21,6 +25,10 @@ public readonly struct Alignment
     /// </summary>
     public int Width { get; }
 
+    /// <summary>
+    /// Tos the string.
+    /// </summary>
+    /// <returns>A string.</returns>
     public override string ToString()
     {
         return $"{Direction}, {Width}";

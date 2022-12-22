@@ -1,4 +1,7 @@
 namespace Microsoft.Extensions.DependencyInjection;
+/// <summary>
+/// The service collection common extensions.
+/// </summary>
 
 public static class ServiceCollectionCommonExtensions
 {

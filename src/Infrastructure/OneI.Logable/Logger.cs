@@ -3,6 +3,9 @@ namespace OneI.Logable;
 using OneI.Logable.Configurations;
 using OneI.Logable.Middlewares;
 using OneI.Textable.Templating.Properties;
+/// <summary>
+/// The logger.
+/// </summary>
 
 internal class Logger : ILogger
 {
@@ -10,6 +13,12 @@ internal class Logger : ILogger
     private readonly LoggerDelegate _middleware;
     private readonly ILoggerSink _sink;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Logger"/> class.
+    /// </summary>
+    /// <param name="middleware">The middleware.</param>
+    /// <param name="sink">The sink.</param>
+    /// <param name="levelMap">The level map.</param>
     internal Logger(
         LoggerDelegate middleware,
         ILoggerSink sink,
@@ -30,6 +39,10 @@ internal class Logger : ILogger
         return _levelMap.IsEnabled(level);
     }
 
+    /// <summary>
+    /// Writes the.
+    /// </summary>
+    /// <param name="context">The context.</param>
     public void Write(LoggerContext context)
     {
         if(context is not null
@@ -39,6 +52,11 @@ internal class Logger : ILogger
         }
     }
 
+    /// <summary>
+    /// Fors the context.
+    /// </summary>
+    /// <param name="middlewares">The middlewares.</param>
+    /// <returns>An ILogger.</returns>
     public ILogger ForContext(params ILoggerMiddleware[] middlewares)
     {
         var aggregate = new AggregateMiddleware(middlewares);
@@ -49,16 +67,29 @@ internal class Logger : ILogger
             .CreateLogger();
     }
 
+    /// <summary>
+    /// Fors the context.
+    /// </summary>
+    /// <param name="sourceContext">The source context.</param>
+    /// <returns>An ILogger.</returns>
     public ILogger ForContext(string sourceContext)
     {
         return ForContext(new PropertyMiddleware(LoggerConstants.PropertyNames.SourceContext, PropertyValue.CreateLiteral(sourceContext)));
     }
 
+    /// <summary>
+    /// Fors the context.
+    /// </summary>
+    /// <returns>An ILogger.</returns>
     public ILogger ForContext<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSourceContext>()
     {
         return ForContext(typeof(TSourceContext).FullName!);
     }
 
+    /// <summary>
+    /// Dispatches the.
+    /// </summary>
+    /// <param name="context">The context.</param>
     private void Dispatch(LoggerContext context)
     {
         try

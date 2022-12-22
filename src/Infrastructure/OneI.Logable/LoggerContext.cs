@@ -6,12 +6,25 @@ using OneI.Textable;
 using OneI.Textable.Templating;
 using OneI.Textable.Templating.Properties;
 using static OneI.Logable.LoggerConstants;
+/// <summary>
+/// The logger context.
+/// </summary>
 
 [Serializable]
 public class LoggerContext
 {
     private readonly Dictionary<string, PropertyValue> _properties;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LoggerContext"/> class.
+    /// </summary>
+    /// <param name="level">The level.</param>
+    /// <param name="messageTemplate">The message template.</param>
+    /// <param name="exception">The exception.</param>
+    /// <param name="properties">The properties.</param>
+    /// <param name="filePath">The file path.</param>
+    /// <param name="memberName">The member name.</param>
+    /// <param name="lineNumber">The line number.</param>
     public LoggerContext(
         LogLevel level,
         TemplateContext messageTemplate,
@@ -32,22 +45,52 @@ public class LoggerContext
         LineNumber = lineNumber;
     }
 
+    /// <summary>
+    /// Gets the timestamp.
+    /// </summary>
     public DateTimeOffset Timestamp { get; }
 
+    /// <summary>
+    /// Gets the level.
+    /// </summary>
     public LogLevel Level { get; }
 
+    /// <summary>
+    /// Gets the message template.
+    /// </summary>
     public TemplateContext MessageTemplate { get; }
 
+    /// <summary>
+    /// Gets the exception.
+    /// </summary>
     public Exception? Exception { get; }
 
+    /// <summary>
+    /// Gets the file path.
+    /// </summary>
     public string? FilePath { get; }
 
+    /// <summary>
+    /// Gets the member name.
+    /// </summary>
     public string? MemberName { get; }
 
+    /// <summary>
+    /// Gets the line number.
+    /// </summary>
     public int? LineNumber { get; }
 
+    /// <summary>
+    /// Gets the properties.
+    /// </summary>
     public IReadOnlyDictionary<string, PropertyValue> Properties => _properties;
 
+    /// <summary>
+    /// Adds the or update property.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="value">The value.</param>
+    /// <returns>A LoggerContext.</returns>
     public LoggerContext AddOrUpdateProperty(string name, PropertyValue value)
     {
         _properties[name] = value;
@@ -55,11 +98,23 @@ public class LoggerContext
         return this;
     }
 
+    /// <summary>
+    /// Adds the property if absent.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="value">The value.</param>
+    /// <returns>A LoggerContext.</returns>
     public LoggerContext AddPropertyIfAbsent<T>(string name, T value)
     {
         return AddPropertyIfAbsent(name, PropertyValue.CreateLiteral(value));
     }
 
+    /// <summary>
+    /// Adds the property if absent.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="value">The value.</param>
+    /// <returns>A LoggerContext.</returns>
     public LoggerContext AddPropertyIfAbsent(string name, PropertyValue value)
     {
         if(_properties.ContainsKey(name) == false)
@@ -70,6 +125,11 @@ public class LoggerContext
         return this;
     }
 
+    /// <summary>
+    /// Removes the property.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <returns>A LoggerContext.</returns>
     public LoggerContext RemoveProperty(string name)
     {
         _properties.Remove(name);
@@ -77,6 +137,10 @@ public class LoggerContext
         return this;
     }
 
+    /// <summary>
+    /// Copies the.
+    /// </summary>
+    /// <returns>A LoggerContext.</returns>
     internal LoggerContext Copy()
     {
         var properties = new Dictionary<string, PropertyValue>(_properties.Count);
@@ -89,6 +153,10 @@ public class LoggerContext
         return new(Level, MessageTemplate, Exception, properties, FilePath, MemberName, LineNumber);
     }
 
+    /// <summary>
+    /// Gets the all properties.
+    /// </summary>
+    /// <returns>A PropertyCollection.</returns>
     public virtual PropertyCollection GetAllProperties()
     {
         var properties = _properties;

@@ -1,9 +1,20 @@
 namespace OneI.Logable;
 
 using OneI.Logable.Definitions;
+/// <summary>
+/// The invocation expression parser.
+/// </summary>
 
 public static class InvocationExpressionParser
 {
+    /// <summary>
+    /// Tries the parse.
+    /// </summary>
+    /// <param name="invocation">The invocation.</param>
+    /// <param name="method">The method.</param>
+    /// <param name="cts">The cts.</param>
+    /// <param name="result">The result.</param>
+    /// <returns>A bool.</returns>
     public static bool TryParse(InvocationExpressionSyntax invocation, IMethodSymbol method, Compilation cts, out MethodDef? result)
     {
         result = null;
@@ -20,6 +31,13 @@ public static class InvocationExpressionParser
         return result != null;
     }
 
+    /// <summary>
+    /// Parses the.
+    /// </summary>
+    /// <param name="invocation">The invocation.</param>
+    /// <param name="methodSymbol">The method symbol.</param>
+    /// <param name="cts">The cts.</param>
+    /// <returns>A MethodDef.</returns>
     private static MethodDef Parse(InvocationExpressionSyntax invocation, IMethodSymbol methodSymbol, Compilation cts)
     {
         var method = new MethodDef(methodSymbol.Name)
@@ -67,6 +85,12 @@ public static class InvocationExpressionParser
         return method;
     }
 
+    /// <summary>
+    /// Tries the parse expression.
+    /// </summary>
+    /// <param name="syntax">The syntax.</param>
+    /// <param name="compilation">The compilation.</param>
+    /// <returns>An ISymbol? .</returns>
     private static ISymbol? TryParseExpression(ExpressionSyntax syntax, Compilation compilation)
     {
         var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
@@ -74,52 +98,49 @@ public static class InvocationExpressionParser
         var symbol = syntax switch
         {
             // default(int)
-            DefaultExpressionSyntax defaultExpression
-            => semanticModel.GetSymbolInfo(defaultExpression.Type).Symbol,
+            DefaultExpressionSyntax expression
+            => semanticModel.GetSymbolInfo(expression.Type).Symbol,
             // 对象访问
-            MemberAccessExpressionSyntax memberAccess
-            => semanticModel.GetSymbolInfo(memberAccess).Symbol,
+            MemberAccessExpressionSyntax expression
+            => semanticModel.GetSymbolInfo(expression).Symbol,
             // 变量名：user ( var user = new User(); )
-            IdentifierNameSyntax identifierName
-            => semanticModel.GetSymbolInfo(identifierName).Symbol,
+            IdentifierNameSyntax expression
+            => semanticModel.GetSymbolInfo(expression).Symbol,
             // 创建对象
-            ObjectCreationExpressionSyntax objectCreationExpression
-            => semanticModel.GetSymbolInfo(objectCreationExpression.Type).Symbol,
+            ObjectCreationExpressionSyntax expression
+            => semanticModel.GetSymbolInfo(expression.Type).Symbol,
             // lambda
-            ParenthesizedLambdaExpressionSyntax parenthesizedLambdaExpression
-            => semanticModel.GetSymbolInfo(parenthesizedLambdaExpression.ReturnType!).Symbol,
+            ParenthesizedLambdaExpressionSyntax expression
+            => semanticModel.GetSymbolInfo(expression.ReturnType!).Symbol,
 
             // typeof
-            TypeOfExpressionSyntax typeOfExpression
-            => semanticModel.GetTypeInfo(typeOfExpression).Type,
+            TypeOfExpressionSyntax expression
+            => semanticModel.GetTypeInfo(expression).Type,
             // 常量
-            LiteralExpressionSyntax literal
-            => semanticModel.GetTypeInfo(literal).Type,
+            LiteralExpressionSyntax expression
+            => semanticModel.GetTypeInfo(expression).Type,
             // 调用, nameof
-            InvocationExpressionSyntax invocationExpression
-            => semanticModel.GetTypeInfo(invocationExpression).Type,
+            InvocationExpressionSyntax expression
+            => semanticModel.GetTypeInfo(expression).Type,
             // 强制转换
-            CastExpressionSyntax castExpression
-            => semanticModel.GetTypeInfo(castExpression).Type,
+            CastExpressionSyntax expression
+            => semanticModel.GetTypeInfo(expression).Type,
             // struct with { Id = 1}
-            WithExpressionSyntax withExpression
-            => semanticModel.GetTypeInfo(withExpression).Type,
+            WithExpressionSyntax expression
+            => semanticModel.GetTypeInfo(expression).Type,
             // array IArrayTypeSymbol
-            ArrayCreationExpressionSyntax arrayCreation
-            => semanticModel.GetTypeInfo(arrayCreation.Type).Type,
+            ArrayCreationExpressionSyntax expression
+            => semanticModel.GetTypeInfo(expression).Type,
             // new[] {1,2,3}
-            ImplicitArrayCreationExpressionSyntax implicitArrayCreation
-            => semanticModel.GetTypeInfo(implicitArrayCreation).Type,
+            ImplicitArrayCreationExpressionSyntax expression => semanticModel.GetTypeInfo(expression).Type,
             // new {Id = 1,Name = "Maple512", Age =18};
-            AnonymousObjectCreationExpressionSyntax anonymousObject
-            => semanticModel.GetTypeInfo(anonymousObject).Type,
+            AnonymousObjectCreationExpressionSyntax expression => semanticModel.GetTypeInfo(expression).Type,
             // await
-            AwaitExpressionSyntax awaitExpression
-            => semanticModel.GetTypeInfo(awaitExpression.Expression).Type,
+            AwaitExpressionSyntax expression => semanticModel.GetTypeInfo(expression).Type,
 
             // array[0] or array[0..1]
-            ElementAccessExpressionSyntax elementAccess
-            => TryParseElementAccessExpressionSyntax(elementAccess, semanticModel),
+            ElementAccessExpressionSyntax expression
+            => TryParseElementAccessExpressionSyntax(expression, semanticModel),
 
             _ => TryParseDefault(syntax, semanticModel),
         };
@@ -132,19 +153,12 @@ public static class InvocationExpressionParser
         return symbol;
     }
 
-    //private static ISymbol? TryParseDefault(AwaitExpressionSyntax expression, SemanticModel semanticModel)
-    //{
-    //    var type = semanticModel.GetTypeInfo(expression).Type;
-    //    var symbol = type ?? semanticModel.GetSymbolInfo(expression).Symbol;
-
-    //    var type1 = semanticModel.GetTypeInfo(expression.Expression).Type;
-    //    var symbol2 = type ?? semanticModel.GetSymbolInfo(expression.Expression).Symbol;
-
-    //    Debug.Assert(symbol != null);
-
-    //    return type ?? symbol;
-    //}
-
+    /// <summary>
+    /// Tries the parse default.
+    /// </summary>
+    /// <param name="expression">The expression.</param>
+    /// <param name="semanticModel">The semantic model.</param>
+    /// <returns>An ISymbol? .</returns>
     private static ISymbol? TryParseDefault(ExpressionSyntax expression, SemanticModel semanticModel)
     {
         var type = semanticModel.GetTypeInfo(expression).Type;
@@ -155,6 +169,12 @@ public static class InvocationExpressionParser
         return type ?? symbol;
     }
 
+    /// <summary>
+    /// Tries the parse element access expression syntax.
+    /// </summary>
+    /// <param name="elementAccess">The element access.</param>
+    /// <param name="semanticModel">The semantic model.</param>
+    /// <returns>An ISymbol? .</returns>
     private static ISymbol? TryParseElementAccessExpressionSyntax(
         ElementAccessExpressionSyntax elementAccess,
         SemanticModel semanticModel)

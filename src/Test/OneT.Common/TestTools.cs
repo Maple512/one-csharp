@@ -1,6 +1,9 @@
 namespace OneT.Common;
 
 using System.IO;
+/// <summary>
+/// The test tools.
+/// </summary>
 
 public static class TestTools
 {
@@ -19,6 +22,12 @@ public static class TestTools
         return csprojDirectory;
     }
 
+    /// <summary>
+    /// Tries the get c s project direcoty.
+    /// </summary>
+    /// <param name="csprojDirectory">The csproj directory.</param>
+    /// <param name="filePath">The file path.</param>
+    /// <returns>A bool.</returns>
     private static bool TryGetCSProjectDirecoty([NotNullWhen(true)] out string? csprojDirectory, [CallerFilePath] string? filePath = null)
     {
         var directory = Path.GetDirectoryName(filePath);

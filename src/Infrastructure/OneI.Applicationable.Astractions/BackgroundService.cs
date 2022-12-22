@@ -3,12 +3,18 @@ namespace OneI.Applicationable;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+/// <summary>
+/// The background service.
+/// </summary>
 
 public abstract class BackgroundService : IApplicationPipelineService, IDisposable
 {
     private CancellationTokenSource? _stoppingCancellationSource;
 
     private Task? _executeTask;
+    /// <summary>
+    /// Gets the execute task.
+    /// </summary>
     public Task? ExecuteTask { get; private set; }
 
     /// <summary>
@@ -35,6 +41,11 @@ public abstract class BackgroundService : IApplicationPipelineService, IDisposab
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Executes the async.
+    /// </summary>
+    /// <param name="stoppingToken">The stopping token.</param>
+    /// <returns>A Task.</returns>
     protected abstract Task ExecuteAsync(CancellationToken stoppingToken);
 
     /// <summary>
@@ -61,6 +72,9 @@ public abstract class BackgroundService : IApplicationPipelineService, IDisposab
         }
     }
 
+    /// <summary>
+    /// Disposes the.
+    /// </summary>
     public void Dispose()
     {
         _stoppingCancellationSource?.Cancel();

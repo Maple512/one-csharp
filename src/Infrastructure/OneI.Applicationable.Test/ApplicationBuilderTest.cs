@@ -6,9 +6,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+/// <summary>
+/// The application builder test.
+/// </summary>
 
 public class ApplicationBuilderTest
 {
+    /// <summary>
+    /// Application_builds the.
+    /// </summary>
     [Fact]
     public async void Application_build()
     {

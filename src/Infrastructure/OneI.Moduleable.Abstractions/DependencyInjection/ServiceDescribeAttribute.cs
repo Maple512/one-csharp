@@ -9,9 +9,16 @@ using Microsoft.Extensions.DependencyInjection;
 [AttributeUsage(AttributeTargets.Class)]
 public class ServiceDescribeAttribute : Attribute
 {
+    /// <summary>
+    /// Prevents a default instance of the <see cref="ServiceDescribeAttribute"/> class from being created.
+    /// </summary>
     private ServiceDescribeAttribute()
     { }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ServiceDescribeAttribute"/> class.
+    /// </summary>
+    /// <param name="lifetime">The lifetime.</param>
     public ServiceDescribeAttribute(ServiceLifetime lifetime) => Lifetime = lifetime;
 
     /// <summary>

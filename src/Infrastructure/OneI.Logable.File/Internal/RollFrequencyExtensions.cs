@@ -1,7 +1,15 @@
 namespace OneI.Logable;
+/// <summary>
+/// The roll frequency extensions.
+/// </summary>
 
 internal static class RollFrequencyExtensions
 {
+    /// <summary>
+    /// Gets the format.
+    /// </summary>
+    /// <param name="interval">The interval.</param>
+    /// <returns>A string.</returns>
     public static string GetFormat(this RollFrequency interval)
     {
         return interval switch

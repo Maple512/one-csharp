@@ -2,6 +2,9 @@ namespace System.Text.Json;
 
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+/// <summary>
+/// The json serialization tools.
+/// </summary>
 
 [StackTraceHidden]
 [DebuggerStepThrough]
@@ -39,11 +42,22 @@ public static class JsonSerializationTools
         };
     }
 }
+/// <summary>
+/// The snake case naming polly.
+/// </summary>
 
 internal class SnakeCaseNamingPolly : JsonNamingPolicy
 {
+    /// <summary>
+    /// Gets the snake case.
+    /// </summary>
     public static JsonNamingPolicy SnakeCase { get; } = new SnakeCaseNamingPolly();
 
+    /// <summary>
+    /// Converts the name.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <returns>A string.</returns>
     public override string ConvertName(string name)
     {
         return name?.ToSnakeCase()!;

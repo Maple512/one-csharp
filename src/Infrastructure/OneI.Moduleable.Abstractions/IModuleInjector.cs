@@ -10,5 +10,9 @@ public interface IModuleInjector
     /// </summary>
     bool KeepDefault => true;
 
+    /// <summary>
+    /// Injects the.
+    /// </summary>
+    /// <param name="context">The context.</param>
     void Inject(ModuleRegistrationContext context);
 }

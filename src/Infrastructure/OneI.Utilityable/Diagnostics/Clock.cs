@@ -10,6 +10,13 @@ public static class Clock
     // first called at
     private static CalledLocation? _location;
 
+    /// <summary>
+    /// Initializes the.
+    /// </summary>
+    /// <param name="provider">The provider.</param>
+    /// <param name="file">The file.</param>
+    /// <param name="memeber">The memeber.</param>
+    /// <param name="line">The line.</param>
     public static void Initialize(
         Func<DateTimeOffset> provider,
         [CallerFilePath] string? file = null,
@@ -26,5 +33,8 @@ public static class Clock
         _provider = Check.NotNull(provider);
     }
 
+    /// <summary>
+    /// Gets the now.
+    /// </summary>
     public static DateTimeOffset Now => _provider?.Invoke() ?? DateTimeOffset.Now;
 }

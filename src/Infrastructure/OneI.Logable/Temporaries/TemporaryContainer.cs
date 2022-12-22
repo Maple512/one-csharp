@@ -12,6 +12,11 @@ public static class TemporaryContainer
 {
     private static readonly AsyncLocal<List<ILoggerMiddleware>> _queue = new();
 
+    /// <summary>
+    /// Pushes the.
+    /// </summary>
+    /// <param name="middlewares">The middlewares.</param>
+    /// <returns>An IDisposable.</returns>
     public static IDisposable Push(params ILoggerMiddleware[] middlewares)
     {
         var queue = GetOrCreateQueue();
@@ -31,11 +36,24 @@ public static class TemporaryContainer
         return backup;
     }
 
+    /// <summary>
+    /// Pushes the property.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="value">The value.</param>
+    /// <param name="renderer">The renderer.</param>
+    /// <returns>An IDisposable.</returns>
     public static IDisposable PushProperty<T>(string name, T value, IFormatter<T>? renderer = null)
     {
         return Push(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value, renderer)));
     }
 
+    /// <summary>
+    /// Pushes the property.
+    /// </summary>
+    /// <param name="name">The name.</param>
+    /// <param name="value">The value.</param>
+    /// <returns>An IDisposable.</returns>
     public static IDisposable PushProperty<T>(string name, T value)
         where T : IFormatter<T>
     {
@@ -68,6 +86,10 @@ public static class TemporaryContainer
         _queue.Value = new(0);
     }
 
+    /// <summary>
+    /// Gets the or create queue.
+    /// </summary>
+    /// <returns>A list of ILoggerMiddlewares.</returns>
     internal static List<ILoggerMiddleware> GetOrCreateQueue()
     {
         var queue = _queue.Value;
