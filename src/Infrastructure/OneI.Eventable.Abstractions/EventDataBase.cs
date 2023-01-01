@@ -1,10 +1,11 @@
 namespace OneI.Eventable;
 
 using System;
+using OneI.Diagnostics;
+
 /// <summary>
 /// The event data base.
 /// </summary>
-
 [Serializable]
 public abstract class EventDataBase : IEventData
 {
@@ -14,7 +15,8 @@ public abstract class EventDataBase : IEventData
     public EventDataBase()
     {
         Id = $"{Guid.NewGuid():n}";
-        CreatedTime = DateTimeOffset.Now;
+
+        CreatedTime = Clock.Now;
     }
 
     /// <summary>

@@ -23,10 +23,10 @@ public class PropertyValue_Test
     {
         var value = new DictionaryValue();
 
-        value.Add("key1", PropertyValue.CreateLiteral("value1"));
-        value.Add("key2", PropertyValue.CreateLiteral("value2"));
+        value.Add("key1", "value1");
+        value.Add("key2", "value2");
 
-        value.ToString().ShouldBe("""[{"key1": "value1"}, {"key2": "value2"}]""");
+        value.ToString().ShouldBe("""[{key1: value1}, {key2: value2}]""");
     }
 
     [Fact]
@@ -34,11 +34,11 @@ public class PropertyValue_Test
     {
         var value = new EnumerableValue();
 
-        value.AddPropertyValue(PropertyValue.CreateLiteral(1));
-        value.AddPropertyValue(PropertyValue.CreateLiteral("123123"));
-        value.AddPropertyValue(PropertyValue.CreateLiteral(1254.22m));
+        value.Add(1);
+        value.Add("123123");
+        value.Add(1254.22m);
 
-        value.ToString().ShouldBe("""[1, "123123", 1254.22]""");
+        value.ToString().ShouldBe("""[1, 123123, 1254.22]""");
     }
 
     [Fact]
@@ -46,9 +46,9 @@ public class PropertyValue_Test
     {
         var value = new ObjectValue();
 
-        value.AddProperty("Id", PropertyValue.CreateLiteral(512));
-        value.AddProperty("Name", PropertyValue.CreateLiteral("Maple512"));
+        value.AddProperty("Id", 512);
+        value.AddProperty("Name", "Maple512");
 
-        value.ToString().ShouldBe("""{ "Id": 512, "Name": "Maple512" }""");
+        value.ToString().ShouldBe("""{ Id: 512, Name: Maple512 }""");
     }
 }

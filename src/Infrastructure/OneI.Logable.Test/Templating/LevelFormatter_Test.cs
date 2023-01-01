@@ -21,7 +21,7 @@ public class LevelFormatter_Test
     {
         var formatter = new LevelFormatter();
 
-        formatter.ToWriter(level, format)
+        formatter.ToDisplayString(level, format)
             .ShouldBe(expected);
     }
 
@@ -34,6 +34,6 @@ public class LevelFormatter_Test
     {
         var formatter = new LevelFormatter();
 
-        formatter.ToWriter(level, format).ShouldBe(expected);
+        formatter.ToDisplayString(level, format).ShouldBe(expected);
     }
 }

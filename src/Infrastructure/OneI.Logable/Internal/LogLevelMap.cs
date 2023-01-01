@@ -1,29 +1,21 @@
 namespace OneI.Logable;
+
 /// <summary>
 /// The log level map.
 /// </summary>
-
-public class LogLevelMap
+internal class LogLevelMap
 {
-    /// <summary>
-    /// The minimum level default.
-    /// </summary>
     public const LogLevel MinimumLevelDefault = LogLevel.Verbose;
-    /// <summary>
-    /// The maximum level default.
-    /// </summary>
+
     public const LogLevel MaximumLevelDefault = LogLevel.Fatal;
 
     private readonly Dictionary<string, LogLevelRange> _overrides;
 
     private LogLevelRange _range;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LogLevelMap"/> class.
-    /// </summary>
     public LogLevelMap()
     {
-        _overrides = new();
+        _overrides = new(StringComparer.InvariantCulture);
         _range = new();
     }
 

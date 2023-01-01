@@ -4,6 +4,7 @@
 
   <PropertyGroup>
     <TargetFramework>$(NetFramework)</TargetFramework>
+      <IncludeShared>false</IncludeShared>
   </PropertyGroup>
 
   <ItemGroup>

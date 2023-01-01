@@ -5,6 +5,8 @@ namespace OneI.Logable;
 /// </summary>
 public interface ILoggerMiddleware
 {
+    public static readonly LoggerDelegate Nullable = static c => LoggerVoid.Instance;
+
     /// <summary>
     /// Invokes the.
     /// </summary>

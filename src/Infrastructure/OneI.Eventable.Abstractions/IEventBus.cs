@@ -1,9 +1,6 @@
 namespace OneI.Eventable;
 
 using System.Threading.Tasks;
-/// <summary>
-/// The event bus.
-/// </summary>
 
 public interface IEventBus
 {
@@ -14,16 +11,6 @@ public interface IEventBus
     /// <param name="data"></param>
     /// <returns></returns>
     ValueTask PublishAsync<TEventData>(TEventData data)
-        where TEventData : IEventData;
-
-    /// <summary>
-    /// 发布事件（并发执行事件处理程序）
-    /// </summary>
-    /// <typeparam name="TEventData"></typeparam>
-    /// <param name="data"></param>
-    /// <param name="parallelOptions"><see cref="Parallel"/> 中的参数</param>
-    /// <returns></returns>
-    ValueTask PublishAsync<TEventData>(TEventData data, ParallelOptions? parallelOptions = null)
         where TEventData : IEventData;
 
     /// <summary>

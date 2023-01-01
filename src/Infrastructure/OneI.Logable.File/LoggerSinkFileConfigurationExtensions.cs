@@ -2,10 +2,10 @@ namespace OneI.Logable;
 
 using OneI.Logable.Configurations;
 using OneI.Textable;
+
 /// <summary>
 /// The logger sink file configuration extensions.
 /// </summary>
-
 public static class LoggerSinkFileConfigurationExtensions
 {
     /// <summary>
@@ -118,7 +118,7 @@ public static class LoggerSinkFileConfigurationExtensions
     public static ILoggerConfiguration RollFile(this ILoggerSinkConfiguration logger, LoggerRollFileOptions options)
     {
         ILoggerSink sink = new RollFileSink(
-                 TemplateParser.Parse(options.Path),
+                 TextTemplate.Create(options.Path),
                  options.Frequency,
                  options.GetProvider(),
                  options.FileSizeMaxBytes,

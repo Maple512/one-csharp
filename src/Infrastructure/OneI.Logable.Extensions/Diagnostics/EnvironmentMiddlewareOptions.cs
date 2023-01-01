@@ -1,10 +1,10 @@
 namespace OneI.Logable.Diagnostics;
 
 using System.Runtime.InteropServices;
+
 /// <summary>
 /// The environment options.
 /// </summary>
-
 public class EnvironmentOptions
 {
     /// <summary>

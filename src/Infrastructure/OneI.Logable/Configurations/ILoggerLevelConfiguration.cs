@@ -1,7 +1,4 @@
 namespace OneI.Logable.Configurations;
-/// <summary>
-/// The logger level configuration.
-/// </summary>
 
 public interface ILoggerLevelConfiguration
 {
@@ -16,50 +13,43 @@ public interface ILoggerLevelConfiguration
     /// </summary>
     /// <param name="minimum"></param>
     /// <returns></returns>
-    ILoggerConfiguration Minimum(LogLevel minimum);
+    ILoggerConfiguration Minimum(LogLevel minimum) => Use(minimum, null);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Verbose"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Verbose();
+    ILoggerConfiguration Verbose() => Use(LogLevel.Verbose, null);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Debug"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Debug();
+    ILoggerConfiguration Debug() => Use(LogLevel.Debug, null);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Information"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Information();
+    ILoggerConfiguration Information() => Use(LogLevel.Information, null);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Warning"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Warning();
+    ILoggerConfiguration Warning() => Use(LogLevel.Warning, null);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Error"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Error();
+    ILoggerConfiguration Error() => Use(LogLevel.Error, null);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Fatal"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Fatal();
-
-    /// <summary>
-    /// 设置最大的日志等级
-    /// </summary>
-    /// <param name="maximum"></param>
-    /// <returns></returns>
-    ILoggerConfiguration Maximum(LogLevel maximum);
+    ILoggerConfiguration Fatal() => Use(LogLevel.Fatal, null);
 
     /// <summary>
     /// 重写来自指定命名空间或类型的日志等级
@@ -68,6 +58,16 @@ public interface ILoggerLevelConfiguration
     /// <param name="minimum">最小等级</param>
     /// <param name="maximum">最大等级</param>
     /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
     ILoggerConfiguration Override(string sourceContext, LogLevel minimum, LogLevel? maximum = null);
+
+    /// <summary>
+    /// 重写来自指定命名空间或类型的日志等级
+    /// </summary>
+    /// <typeparam name="T">指定的类型</typeparam>
+    /// <param name="minimum">最小等级</param>
+    /// <param name="maximum">最大等级</param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentNullException"></exception>
+    ILoggerConfiguration Override<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(LogLevel minimum, LogLevel? maximum = null)
+        => Override(typeof(T).FullName!, minimum, maximum);
 }

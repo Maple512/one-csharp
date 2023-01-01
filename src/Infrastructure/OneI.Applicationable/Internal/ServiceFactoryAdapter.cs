@@ -3,10 +3,10 @@ namespace OneI.Applicationable.Internal;
 using System;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+
 /// <summary>
 /// The service factory adapter.
 /// </summary>
-
 internal sealed class ServiceFactoryAdapter<TContainerBuilder>
     : IServiceFactoryAdapter
     where TContainerBuilder : notnull
@@ -17,13 +17,14 @@ internal sealed class ServiceFactoryAdapter<TContainerBuilder>
     private readonly Func<ApplicationBuilderContext, IServiceProviderFactory<TContainerBuilder>>? _factoryResolver;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ServiceFactoryAdapter"/> class.
+    /// Initializes a new instance of the <see cref="ServiceFactoryAdapter{TContainerBuilder}"/> class.
     /// </summary>
     /// <param name="serviceProviderFactory">The service provider factory.</param>
-    public ServiceFactoryAdapter(IServiceProviderFactory<TContainerBuilder> serviceProviderFactory) => _serviceProviderFactory = Check.NotNull(serviceProviderFactory);
+    public ServiceFactoryAdapter(IServiceProviderFactory<TContainerBuilder> serviceProviderFactory)
+        => _serviceProviderFactory = Check.NotNull(serviceProviderFactory);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ServiceFactoryAdapter"/> class.
+    /// Initializes a new instance of the <see cref="ServiceFactoryAdapter{TContainerBuilder}"/> class.
     /// </summary>
     /// <param name="contextResolver">The context resolver.</param>
     /// <param name="factoryResolver">The factory resolver.</param>

@@ -1,12 +1,15 @@
 namespace OneI.Logable.Formatting;
+
 using OneI.Logable.Rendering;
 using OneI.Textable;
+
 /// <summary>
 /// The level formatter.
 /// </summary>
-
 public class LevelFormatter : IFormatter<LogLevel>
 {
+    public static readonly IFormatter<LogLevel> Instance = new LevelFormatter();
+
     /// <summary>
     /// Formats the.
     /// </summary>
@@ -19,10 +22,10 @@ public class LevelFormatter : IFormatter<LogLevel>
         writer.Write(LevelFormatHelper.Format(value, format));
     }
 }
+
 /// <summary>
 /// The level format helper.
 /// </summary>
-
 internal static class LevelFormatHelper
 {
     private static readonly string[][] _levelMap =

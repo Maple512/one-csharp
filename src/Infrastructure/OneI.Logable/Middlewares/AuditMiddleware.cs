@@ -1,8 +1,8 @@
 namespace OneI.Logable.Middlewares;
+
 /// <summary>
 /// The audit middleware.
 /// </summary>
-
 public class AuditMiddleware : ILoggerMiddleware
 {
     private readonly Action<LoggerContext> _audit;

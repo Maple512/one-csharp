@@ -1,8 +1,8 @@
 namespace OneI.Logable;
+
 /// <summary>
 /// The logger constants.
 /// </summary>
-
 public static class LoggerConstants
 {
     /// <summary>
@@ -61,41 +61,6 @@ public static class LoggerConstants
     /// </summary>
     internal static class Formatters
     {
-        /// <summary>
-        /// The render_ as_ string.
-        /// </summary>
-        public const char Render_As_String = '$';
-
-        /// <summary>
-        /// The render_ as_ structure.
-        /// </summary>
-        public const char Render_As_Structure = '@';
-
-        /// <summary>
-        /// The align_ separator.
-        /// </summary>
-        public const char Align_Separator = ',';
-
-        /// <summary>
-        /// The format_ separator.
-        /// </summary>
-        public const char Format_Separator = ':';
-
-        /// <summary>
-        /// The indent_ separator.
-        /// </summary>
-        public const char Indent_Separator = '\'';
-
-        /// <summary>
-        /// The open_ separator.
-        /// </summary>
-        public const char Open_Separator = '{';
-
-        /// <summary>
-        /// The close_ separator.
-        /// </summary>
-        public const char Close_Separator = '}';
-
         /// <summary>
         /// The upper case.
         /// </summary>

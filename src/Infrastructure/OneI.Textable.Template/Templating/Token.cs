@@ -1,8 +1,8 @@
 namespace OneI.Textable.Templating;
+
 /// <summary>
 /// The token.
 /// </summary>
-
 public class Token
 {
     /// <summary>

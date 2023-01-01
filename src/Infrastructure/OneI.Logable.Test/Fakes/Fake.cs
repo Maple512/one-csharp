@@ -8,7 +8,7 @@ public static class Fake
     public const string ErrorTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} {SourceContext} [{Level}] {Message}{NewLine}{Exception'4}{NewLine}{FilePath'4}#L{LineNumber}@{MemberName}{NewLine}";
 
     public static ILogger CreateLogger(
-        Action<ILoggerConfiguration>? configuration = null,
+        Action<ILoggerConfiguration>? logger = null,
         Action<LoggerFileOptions>? file = null,
         Action<LoggerSharedFileOptions>? shared = null,
         Action<LoggerRollFileOptions>? roll = null,
@@ -19,25 +19,25 @@ public static class Fake
 
         var path = Path.Combine(TestTools.GetCSProjectDirecoty()!, $"./Logs/{name}@{member}.txt");
 
-        ILoggerConfiguration config = new LoggerConfiguration();
+        ILoggerConfiguration configuration = new LoggerConfiguration();
 
-        configuration?.Invoke(config);
+        logger?.Invoke(configuration);
 
         if(file is not null)
         {
-            config = config.Sink.File(path, file);
+            configuration = configuration.Sink.File(path, file);
         }
 
         if(shared is not null)
         {
-            config = config.Sink.SharedFile(path, shared);
+            configuration = configuration.Sink.SharedFile(path, shared);
         }
 
         if(roll is not null)
         {
-            config = config.Sink.RollFile(path, roll);
+            configuration = configuration.Sink.RollFile(path, roll);
         }
 
-        return config.CreateLogger();
+        return configuration.CreateLogger();
     }
 }

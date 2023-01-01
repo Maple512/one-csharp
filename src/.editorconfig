@@ -85,14 +85,14 @@ csharp_style_var_for_built_in_types = true
 csharp_style_var_when_type_is_apparent = true
 
 # Expression-bodied 成员
-csharp_style_expression_bodied_accessors = when_on_single_line
-csharp_style_expression_bodied_constructors = false
-csharp_style_expression_bodied_indexers = false
-csharp_style_expression_bodied_lambdas = false
-csharp_style_expression_bodied_local_functions = false
-csharp_style_expression_bodied_methods = false
-csharp_style_expression_bodied_operators = false
-csharp_style_expression_bodied_properties = when_on_single_line
+# csharp_style_expression_bodied_accessors = silent
+# csharp_style_expression_bodied_constructors = silent
+# csharp_style_expression_bodied_indexers = silent
+# csharp_style_expression_bodied_lambdas = silent
+# csharp_style_expression_bodied_local_functions = silent
+# csharp_style_expression_bodied_methods = silent
+# csharp_style_expression_bodied_operators = silent
+# csharp_style_expression_bodied_properties = silent
 
 # 模式匹配首选项
 csharp_style_pattern_matching_over_as_with_null_check = true
@@ -161,7 +161,7 @@ csharp_space_after_dot = false
 csharp_space_after_keywords_in_control_flow_statements = false
 csharp_space_after_semicolon_in_for_statement = true
 csharp_space_around_binary_operators = before_and_after
-csharp_space_around_declaration_statements = false
+csharp_space_around_declaration_statements = true
 csharp_space_before_colon_in_inheritance_clause = true
 csharp_space_before_comma = false
 csharp_space_before_dot = false
@@ -252,3 +252,4 @@ dotnet_diagnostic.IDE0059.severity = none
 # IDE0200: 删除不必要的 lambda 表达式，方法重载冲突
 dotnet_diagnostic.IDE0200.severity = none
 dotnet_diagnostic.IDE0021.severity = none
+

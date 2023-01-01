@@ -62,7 +62,7 @@ public class LoggerFileOptionsBase
     {
         if(Template.NotNullOrWhiteSpace())
         {
-            RenderWhen(_ => true, new LoggerRenderer(TemplateParser.Parse(Template), FormatProvider));
+            _rendererProviders.Add(_ => new LoggerRenderer(TextTemplate.Create(Template), FormatProvider));
         }
 
         return new TextRendererProvider(_rendererProviders);
@@ -75,10 +75,7 @@ public class LoggerFileOptionsBase
     /// <param name="textRenderer"></param>
     public void RenderWhen(Func<LoggerContext, bool> condition, ILoggerRenderer textRenderer)
     {
-        _rendererProviders.Insert(0, context =>
-        {
-            return condition(context) ? textRenderer : null;
-        });
+        _rendererProviders.Insert(0, context => condition(context) ? textRenderer : null);
     }
 
     /// <summary>
@@ -89,7 +86,7 @@ public class LoggerFileOptionsBase
     /// <param name="formatProvider"></param>
     public void RenderWhen(Func<LoggerContext, bool> condition, string template, IFormatProvider? formatProvider = null)
     {
-        RenderWhen(condition, new LoggerRenderer(TemplateParser.Parse(template), formatProvider));
+        RenderWhen(condition, new LoggerRenderer(TextTemplate.Create(template), formatProvider));
     }
 }
 /// <summary>

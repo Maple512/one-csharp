@@ -1,10 +1,10 @@
 namespace OneI.Textable.Templating.Properties;
 
 using OneI.Textable;
+
 /// <summary>
 /// The property value.
 /// </summary>
-
 public abstract class PropertyValue : IFormattable
 {
     /// <summary>
@@ -43,20 +43,15 @@ public abstract class PropertyValue : IFormattable
     /// Creates the literal.
     /// </summary>
     /// <param name="value">The value.</param>
+    /// <param name="formatter">The formatter.</param>
     /// <returns>A PropertyValue.</returns>
-    public static PropertyValue CreateLiteral<T>(T value)
+    public static PropertyValue CreateLiteral<T>(T value, IFormatter<T>? formatter = null)
     {
-        return new LiteralValue<T>(value);
-    }
+        if(formatter is null && value is IFormatter<T> valueFormatter)
+        {
+            formatter = valueFormatter;
+        }
 
-    /// <summary>
-    /// Creates the literal.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="renderer">The renderer.</param>
-    /// <returns>A PropertyValue.</returns>
-    public static PropertyValue CreateLiteral<T>(T value, IFormatter<T>? renderer)
-    {
-        return new LiteralValue<T>(value, renderer);
+        return new LiteralValue<T>(value, formatter);
     }
 }

@@ -1,7 +1,7 @@
 namespace OneI.Moduleable;
 
 /// <summary>
-/// 模块注册器
+/// 模块注入器
 /// </summary>
 public interface IModuleInjector
 {

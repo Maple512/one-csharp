@@ -34,7 +34,7 @@ internal class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposab
     /// <param name="buffered">If true, buffered.</param>
     /// <param name="shared">If true, shared.</param>
     public RollFileSink(
-        TemplateContext path,
+        TextTemplate path,
         RollFrequency frequency,
         ITextRendererProvider provider,
         long? fileSizeMaxBytes,

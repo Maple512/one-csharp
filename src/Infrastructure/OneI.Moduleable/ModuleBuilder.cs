@@ -9,10 +9,10 @@ using Microsoft.Extensions.Logging;
 using OneI.Applicationable;
 using OneI.Moduleable.Infrastructure;
 using OneI.Moduleable.Internal;
+
 /// <summary>
 /// The module builder.
 /// </summary>
-
 public static class ModuleBuilder
 {
     /// <summary>

@@ -2,18 +2,9 @@ namespace OneI.Textable.Rendering;
 
 using System.Globalization;
 using OneI.Textable;
-/// <summary>
-/// The render helper.
-/// </summary>
 
-public static class RenderHelper
+internal static class RenderHelper
 {
-    /// <summary>
-    /// Paddings the.
-    /// </summary>
-    /// <param name="writer">The writer.</param>
-    /// <param name="value">The value.</param>
-    /// <param name="alignment">The alignment.</param>
     public static void Padding(TextWriter writer, string? value, Alignment? alignment)
     {
         if(value.IsNullOrWhiteSpace())
@@ -45,15 +36,6 @@ public static class RenderHelper
         }
     }
 
-    /// <summary>
-    /// default renderer
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="value"></param>
-    /// <param name="formatter"></param>
-    /// <param name="writer"></param>
-    /// <param name="format"></param>
-    /// <param name="formatProvider"></param>
     public static void Render<T>(
         T? value,
         IFormatter<T>? formatter,

@@ -2,10 +2,10 @@ namespace OneI.Textable.Templating;
 
 using System.Globalization;
 using OneI.Textable.Rendering;
+
 /// <summary>
 /// The property token.
 /// </summary>
-
 public class PropertyToken : Token
 {
     /// <summary>

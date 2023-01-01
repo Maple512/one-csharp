@@ -33,12 +33,11 @@ internal static class CodeAssets
         using System;
         using System.Collections.Generic;
         using System.Linq;
-        using OneI.Logable.Infrastructure;
         using OneI.Textable.Templating.Properties;
 
         public static partial class Log
         {
-            private static ILogger _logger = NullLogger.Instance;
+            private static ILogger _logger = ILogger.NullLogger;
 
             /// <summary>
             /// 初始化
@@ -47,6 +46,19 @@ internal static class CodeAssets
             public static void Initialize(ILogger logger)
             {
                 _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            }
+
+            /// <summary>
+            /// 初始化
+            /// </summary>
+            /// <param name="configure"></param>
+            public static void Initialize(Action<ILoggerConfiguration> configure)
+            {
+                var configuration = new LoggerConfiguration();
+
+                configure?.Invoke(configuration);
+
+                _logger = configuration.CreateLogger();
             }
 
             public static bool IsEnable(LogLevel logLevel)
@@ -306,7 +318,6 @@ internal static class CodeAssets
         using System;
         using System.Collections.Generic;
         using System.Linq;
-        using OneI.Logable.Infrastructure;
         using OneI.Textable.Templating.Properties;
 
         public static partial class LoggerWriteExtensions

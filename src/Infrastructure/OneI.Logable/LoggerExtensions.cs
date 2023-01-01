@@ -1,13 +1,61 @@
 namespace OneI.Logable;
 
+using OneI.Logable.Middlewares;
 using OneI.Textable;
 using OneI.Textable.Templating.Properties;
+
 /// <summary>
 /// The logger extensions.
 /// </summary>
-
 public static class LoggerExtensions
 {
+    /// <summary>
+    /// Fors the context.
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <returns>An ILogger.</returns>
+    public static ILogger ForContext<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSourceContext>(this ILogger logger)
+    {
+        return logger.ForContext(typeof(TSourceContext).FullName!);
+    }
+
+    /// <summary>
+    /// Fors the context.
+    /// </summary>
+    /// <param name="logger"></param>
+    /// <param name="sourceContext">The source context.</param>
+    /// <returns>An ILogger.</returns>
+    public static ILogger ForContext(this ILogger logger, string sourceContext)
+    {
+        return logger.ForContext(new PropertyMiddleware(LoggerConstants.PropertyNames.SourceContext, PropertyValue.CreateLiteral(sourceContext)));
+    }
+
+    public static IDisposable BeginScope<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSourceContext>(this ILogger logger)
+    {
+        return logger.BeginScope(typeof(TSourceContext).FullName!);
+    }
+
+    public static IDisposable BeginScope(this ILogger logger, string sourceContext)
+        => logger.BeginScope(LoggerConstants.PropertyNames.SourceContext, sourceContext);
+
+    public static IDisposable BeginScope<T>(this ILogger logger, string name, T value)
+        => logger.BeginScope(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value)));
+
+    public static IAsyncDisposable BeginScopeAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSourceContext>(this ILogger logger)
+    {
+        return logger.BeginScopeAsync(typeof(TSourceContext).FullName!);
+    }
+
+    public static IAsyncDisposable BeginScopeAsync(this ILogger logger, string sourceContext)
+    {
+        return logger.BeginScopeAsync(LoggerConstants.PropertyNames.SourceContext, sourceContext);
+    }
+
+    public static IAsyncDisposable BeginScopeAsync<T>(this ILogger logger, string name, T value)
+    {
+        return logger.BeginScopeAsync(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value)));
+    }
+
     /// <summary>
     /// Packages the write.
     /// </summary>
@@ -31,11 +79,12 @@ public static class LoggerExtensions
     {
         propertyValues ??= new List<PropertyValue>(0);
 
-        var template = TemplateParser.Parse(message);
-        var tokens = template.Properties;
+        var template = TextTemplate.Create(message);
+
+        var propertyTokens = template.PropertyTokens;
 
         var count = propertyValues.Count();
-        var length = Math.Max(tokens.Count, count);
+        var length = Math.Max(propertyTokens.Count, count);
 
         var properties = new Dictionary<string, PropertyValue>(length);
 
@@ -43,9 +92,9 @@ public static class LoggerExtensions
         {
             var name = $"__{i}";
             var index = i;
-            if(i < tokens.Count)
+            if(i < propertyTokens.Count)
             {
-                var token = tokens[i];
+                var token = propertyTokens[i];
 
                 name = token.Name;
 

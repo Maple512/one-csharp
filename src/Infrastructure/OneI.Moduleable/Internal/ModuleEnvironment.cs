@@ -5,10 +5,10 @@ using System.IO;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using OneI.Applicationable;
+
 /// <summary>
 /// The module environment.
 /// </summary>
-
 [Serializable]
 internal class ModuleEnvironment : IApplicationEnvironment
 {

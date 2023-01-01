@@ -28,12 +28,6 @@ public interface ILoggerConfiguration : ILoggerBranchConfiguration
     ILoggerAuditConfiguration Audit { get; }
 
     /// <summary>
-    /// 组装中间件
-    /// </summary>
-    /// <returns></returns>
-    LoggerDelegate PackageMiddleware();
-
-    /// <summary>
     /// 创建一个<see cref="ILogger"/>
     /// </summary>
     /// <returns></returns>

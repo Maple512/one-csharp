@@ -46,6 +46,8 @@ public class SecondaryLoggerSink : ILoggerSink, IDisposable, IAsyncDisposable
     {
         GC.SuppressFinalize(this);
 
+        Dispose();
+
         if(_logger is IAsyncDisposable ad)
         {
             return ad.DisposeAsync();

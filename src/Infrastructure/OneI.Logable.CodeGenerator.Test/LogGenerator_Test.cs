@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using OneT.CodeGenerator;
 using VerifyXunit;
 using Xunit;
+
 /// <summary>
 /// The log generator_ test.
 /// </summary>
-
 [UsesVerify]
 public class LogGenerator_Test : CodeGeneratorSnapshotTest
 {

@@ -9,32 +9,41 @@ public class Environment_Test
     [Fact]
     public void environment_values()
     {
+        var processId = (string?)null;
+        var commandLine = (string?)null;
+        var frameworkDescription = (string?)null;
+
         var logger = Fake.CreateLogger(
-            configuration: config =>
+            logger: config =>
             {
+                config.Audit.Attach(c =>
+                {
+                    processId = c.Properties[nameof(Environment.ProcessId)].ToString();
+                    commandLine = c.Properties[nameof(Environment.CommandLine)].ToString();
+                    frameworkDescription = c.Properties[nameof(RuntimeInformation.FrameworkDescription)].ToString();
+                });
+
                 config.WithEnvironment(new EnvironmentOptions
                 {
                     HasProcessId = true,
                     HasFrameworkDescription = true,
                     HasCommandLine = true,
                 });
-
-                config.Sink.Use(new TestAuditSink());
             },
             file: options =>
             {
-                options.Template = "{ProcessId}, {FrameworkDescription}, {CommandLine}";
+                options.Template = "{ProcessId}, {FrameworkDescription}, {CommandLine}{NewLine}";
             });
 
         logger.Information("information");
 
-        TestAuditSink.Properties.ContainsKey(nameof(Environment.ProcessId)).ShouldBeTrue();
-        TestAuditSink.Properties.ContainsKey(nameof(Environment.CommandLine)).ShouldBeTrue();
-        TestAuditSink.Properties.ContainsKey(nameof(RuntimeInformation.FrameworkDescription)).ShouldBeTrue();
+        processId.ShouldNotBeNull();
+        commandLine.ShouldNotBeNull();
+        frameworkDescription.ShouldNotBeNull();
     }
 
     [Fact]
-    public void enviroment_values()
+    public void print_environment_values()
     {
         var a2 = Environment.CommandLine; // 该进程的命令行 **\one-csharp\Infrastructure\OneI.Logable.Test\bin\Debug\net7.0\testhost.dll --port 3553 --endpoint 127.0.0.1:03553 --role client --parentprocessid 12860 --telemetryoptedin true
         var a3 = Environment.CurrentDirectory;// 当前工作目录的完全限定路径 **\one-csharp\Infrastructure\OneI.Logable.Test\bin\Debug\net7.0

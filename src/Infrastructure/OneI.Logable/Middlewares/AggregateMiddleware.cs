@@ -1,8 +1,8 @@
 namespace OneI.Logable.Middlewares;
+
 /// <summary>
 /// The aggregate middleware.
 /// </summary>
-
 public class AggregateMiddleware : ILoggerMiddleware
 {
     private readonly ILoggerMiddleware[] _middlewares;
@@ -28,7 +28,8 @@ public class AggregateMiddleware : ILoggerMiddleware
         {
             try
             {
-                middleware.Invoke(context, next);
+                // 平行的中间件，无效的next
+                middleware.Invoke(context, ILoggerMiddleware.Nullable);
             }
             catch(Exception)
             {

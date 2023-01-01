@@ -2,15 +2,14 @@ namespace OneI.Logable;
 
 using OneI.Logable.Configurations;
 using OneI.Logable.Middlewares;
-using OneI.Textable.Templating.Properties;
+
 /// <summary>
 /// The logger.
 /// </summary>
-
 internal class Logger : ILogger
 {
     private readonly LogLevelMap _levelMap;
-    private readonly LoggerDelegate _middleware;
+    private AsyncLocal<LoggerDelegate> _middleware = new();
     private readonly ILoggerSink _sink;
 
     /// <summary>
@@ -24,7 +23,7 @@ internal class Logger : ILogger
         ILoggerSink sink,
         LogLevelMap levelMap)
     {
-        _middleware = middleware;
+        _middleware.Value = middleware;
         _sink = sink;
         _levelMap = levelMap;
     }
@@ -43,10 +42,9 @@ internal class Logger : ILogger
     /// Writes the.
     /// </summary>
     /// <param name="context">The context.</param>
-    public void Write(LoggerContext context)
+    public void Write(in LoggerContext context)
     {
-        if(context is not null
-            && IsEnable(context.Level))
+        if(IsEnable(context.Level))
         {
             Dispatch(context);
         }
@@ -67,23 +65,30 @@ internal class Logger : ILogger
             .CreateLogger();
     }
 
-    /// <summary>
-    /// Fors the context.
-    /// </summary>
-    /// <param name="sourceContext">The source context.</param>
-    /// <returns>An ILogger.</returns>
-    public ILogger ForContext(string sourceContext)
+    public IDisposable BeginScope(params ILoggerMiddleware[] middlewares)
     {
-        return ForContext(new PropertyMiddleware(LoggerConstants.PropertyNames.SourceContext, PropertyValue.CreateLiteral(sourceContext)));
+        return CreateScope(middlewares);
     }
 
-    /// <summary>
-    /// Fors the context.
-    /// </summary>
-    /// <returns>An ILogger.</returns>
-    public ILogger ForContext<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSourceContext>()
+    public IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares)
     {
-        return ForContext(typeof(TSourceContext).FullName!);
+        return CreateScope(middlewares);
+    }
+
+    private DisposeAction CreateScope(params ILoggerMiddleware[] middlewares)
+    {
+        var aggregate = new AggregateMiddleware(middlewares);
+
+        var old = _middleware.Value!;
+
+        _middleware.Value = @new;
+
+        return new(() => _middleware.Value = old);
+
+        LoggerVoid @new(LoggerContext context)
+        {
+            return aggregate.Invoke(context, old);
+        }
     }
 
     /// <summary>
@@ -94,7 +99,7 @@ internal class Logger : ILogger
     {
         try
         {
-            _middleware.Invoke(context);
+            _middleware.Value!.Invoke(context);
         }
         catch(Exception)
         {

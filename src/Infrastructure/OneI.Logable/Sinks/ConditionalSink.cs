@@ -1,10 +1,10 @@
 namespace OneI.Logable.Sinks;
 
 using System;
+
 /// <summary>
 /// The conditional sink.
 /// </summary>
-
 public class ConditionalSink : ILoggerSink
 {
     private readonly Func<LoggerContext, bool> _condition;

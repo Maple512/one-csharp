@@ -1,9 +1,9 @@
 namespace OneI.Textable;
+
 /// <summary>
 /// The template constants.
 /// </summary>
-
-public static class TemplateConstants
+public static class TextTemplateConstants
 {
     /// <summary>
     /// The formatters.

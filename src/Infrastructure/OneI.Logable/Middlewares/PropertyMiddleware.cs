@@ -1,11 +1,10 @@
 namespace OneI.Logable.Middlewares;
 
-using OneI.Logable;
 using OneI.Textable.Templating.Properties;
+
 /// <summary>
 /// The property middleware.
 /// </summary>
-
 public class PropertyMiddleware : ILoggerMiddleware
 {
     private readonly string _name;

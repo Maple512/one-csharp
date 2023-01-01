@@ -4,6 +4,7 @@
     "projects": [
       "Infrastructure\\OneI.Logable.CodeGenerator.Test\\OneI.Logable.CodeGenerator.Test.csproj",
       "Infrastructure\\OneI.Logable.CodeGenerator\\OneI.Logable.CodeGenerator.csproj",
+      "Infrastructure\\OneI.Logable.Extensions.Logging\\OneI.Logable.Extensions.Logging.csproj",
       "Infrastructure\\OneI.Logable.Extensions\\OneI.Logable.Extensions.csproj",
       "Infrastructure\\OneI.Logable.File\\OneI.Logable.File.csproj",
       "Infrastructure\\OneI.Logable.Test\\OneI.Logable.Test.csproj",

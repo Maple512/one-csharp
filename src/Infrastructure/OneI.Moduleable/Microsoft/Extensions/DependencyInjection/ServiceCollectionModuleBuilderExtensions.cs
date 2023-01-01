@@ -4,10 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using OneI.Applicationable;
 using OneI.Moduleable;
+
 /// <summary>
 /// The service collection module builder extensions.
 /// </summary>
-
 public static class ServiceCollectionModuleBuilderExtensions
 {
     /// <summary>

@@ -1,10 +1,8 @@
 namespace OneI.Logable.Middlewares;
 
-using OneI.Logable;
 /// <summary>
 /// The conditional middleware.
 /// </summary>
-
 public class ConditionalMiddleware : ILoggerMiddleware
 {
     private readonly Func<LoggerContext, bool> _condition;

@@ -6,33 +6,20 @@ using OneI.Textable;
 using OneI.Textable.Templating;
 using OneI.Textable.Templating.Properties;
 using static OneI.Logable.LoggerConstants;
-/// <summary>
-/// The logger context.
-/// </summary>
 
 [Serializable]
-public class LoggerContext
+public readonly struct LoggerContext
 {
     private readonly Dictionary<string, PropertyValue> _properties;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LoggerContext"/> class.
-    /// </summary>
-    /// <param name="level">The level.</param>
-    /// <param name="messageTemplate">The message template.</param>
-    /// <param name="exception">The exception.</param>
-    /// <param name="properties">The properties.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="lineNumber">The line number.</param>
     public LoggerContext(
         LogLevel level,
-        TemplateContext messageTemplate,
+        TextTemplate messageTemplate,
         Exception? exception = null,
         Dictionary<string, PropertyValue>? properties = null,
-         string? filePath = null,
-         string? memberName = null,
-         int? lineNumber = null)
+        string? filePath = null,
+        string? memberName = null,
+        int? lineNumber = null)
     {
         Timestamp = Clock.Now;
         Level = level;
@@ -58,7 +45,7 @@ public class LoggerContext
     /// <summary>
     /// Gets the message template.
     /// </summary>
-    public TemplateContext MessageTemplate { get; }
+    public TextTemplate MessageTemplate { get; }
 
     /// <summary>
     /// Gets the exception.
@@ -153,22 +140,18 @@ public class LoggerContext
         return new(Level, MessageTemplate, Exception, properties, FilePath, MemberName, LineNumber);
     }
 
-    /// <summary>
-    /// Gets the all properties.
-    /// </summary>
-    /// <returns>A PropertyCollection.</returns>
-    public virtual PropertyCollection GetAllProperties()
+    internal PropertyCollection GetAllProperties()
     {
         var properties = _properties;
 
         properties.Add(nameof(Timestamp), PropertyValue.CreateLiteral(Timestamp));
-        properties.Add(nameof(Level), PropertyValue.CreateLiteral(Level, new LevelFormatter()));
+        properties.Add(nameof(Level), PropertyValue.CreateLiteral(Level, LevelFormatter.Instance));
         properties.Add(nameof(Exception), PropertyValue.CreateLiteral(Exception));
         properties.Add(nameof(FilePath), PropertyValue.CreateLiteral(FilePath));
         properties.Add(nameof(MemberName), PropertyValue.CreateLiteral(MemberName));
         properties.Add(nameof(LineNumber), PropertyValue.CreateLiteral(LineNumber));
-        properties.Add(PropertyNames.NewLine, PropertyValue.CreateLiteral(null, new NewLineFormatter()));
-        properties.Add(PropertyNames.Message, PropertyValue.CreateLiteral(PropertyNames.Message, new MessageFormatter(MessageTemplate, _properties)));
+        properties.Add(PropertyNames.NewLine, PropertyValue.CreateLiteral(Environment.NewLine));
+        properties.Add(PropertyNames.Message, PropertyValue.CreateLiteral(string.Empty, new MessageFormatter(MessageTemplate, _properties)));
 
         return new PropertyCollection(properties);
     }

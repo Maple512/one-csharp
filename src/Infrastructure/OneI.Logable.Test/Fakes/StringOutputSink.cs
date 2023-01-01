@@ -5,26 +5,19 @@ using OneI.Textable;
 
 public sealed class StringOutputSink : ILoggerSink
 {
-    private readonly StringWriter _writer;
     private readonly ILoggerRenderer _renderer;
 
     public StringOutputSink(string tempalte)
     {
-        _writer = new();
-        _renderer = new LoggerRenderer(TemplateParser.Parse(tempalte));
+        _renderer = new LoggerRenderer(TextTemplate.Create(tempalte));
     }
 
     public void Invoke(in LoggerContext context)
     {
+        var _writer = new StringWriter();
+
         _renderer.Render(context, _writer);
 
-        _writer.Flush();
-
-        Debug.WriteLine(_writer.ToString(), nameof(StringOutputSink));
-    }
-
-    public override string ToString()
-    {
-        return _writer.ToString();
+        Debug.Write(_writer.ToString(), nameof(StringOutputSink));
     }
 }

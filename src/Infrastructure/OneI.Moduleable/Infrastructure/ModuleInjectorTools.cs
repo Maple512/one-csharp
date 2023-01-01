@@ -7,10 +7,10 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using OneI.Moduleable.DependencyInjection;
+
 /// <summary>
 /// The module injector tools.
 /// </summary>
-
 public static class ModuleInjectorTools
 {
     /// <summary>

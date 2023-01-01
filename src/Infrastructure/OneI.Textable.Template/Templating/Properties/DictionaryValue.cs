@@ -51,12 +51,7 @@ public class DictionaryValue : PropertyValue
         writer.Write(']');
     }
 
-    /// <summary>
-    /// Adds the.
-    /// </summary>
-    /// <param name="name">The name.</param>
-    /// <param name="value">The value.</param>
-    public void Add(string name, PropertyValue value)
+    public void Add<T>(string name, T value, IFormatter<T>? formatter = null)
     {
         var key = CreateLiteral(name);
         if(_properties.ContainsKey(key))
@@ -64,21 +59,6 @@ public class DictionaryValue : PropertyValue
             return;
         }
 
-        _properties.Add(key, value);
-    }
-
-    /// <summary>
-    /// Adds the.
-    /// </summary>
-    /// <param name="key">The key.</param>
-    /// <param name="value">The value.</param>
-    public void Add(PropertyValue key, PropertyValue value)
-    {
-        if(_properties.ContainsKey(key))
-        {
-            return;
-        }
-
-        _properties.Add(key, value);
+        _properties.Add(key, CreateLiteral(value, formatter));
     }
 }

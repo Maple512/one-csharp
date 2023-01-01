@@ -5,67 +5,38 @@ using System.Globalization;
 using OneI.Textable.Rendering;
 using OneI.Textable.Templating;
 
-using static OneI.Textable.TemplateConstants.Formatters;
-/// <summary>
-/// The template parser.
-/// </summary>
+using static OneI.Textable.TextTemplateConstants.Formatters;
 
-public static class TemplateParser
+internal static class TemplateParser
 {
-    private static readonly ConcurrentDictionary<CalledLocation, TemplateContext> _cache = new();
+    private static readonly ConcurrentDictionary<string, IEnumerable<Token>> _cache = new(StringComparer.InvariantCulture);
 
-    /// <summary>
-    /// Parses the.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <param name="file">The file.</param>
-    /// <param name="member">The member.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>A TemplateContext.</returns>
-    public static TemplateContext Parse(
-        string text,
-        [CallerFilePath] string? file = null,
-        [CallerMemberName] string? member = null,
-        [CallerLineNumber] int? line = null)
+    public static IEnumerable<Token> Parse(string text)
     {
-        var location = new CalledLocation(file, member, line);
-
-        if(_cache.TryGetValue(location, out var context))
+        if(_cache.TryGetValue(text, out var tokens))
         {
-            return context;
+            return tokens;
         }
 
-        context = _cache.Values.FirstOrDefault(x => x.Text.Equals(x));
+        tokens = ParseCore(text);
 
-        if(context != null)
-        {
-            return context;
-        }
+        _cache.TryAdd(text, tokens);
 
-        List<Token> tokens;
-        if(text.IsNullOrEmpty())
-        {
-            tokens = new List<Token>(0);
-        }
-        else
-        {
-            tokens = ParseCore(text);
-        }
-
-        context = new TemplateContext(text, tokens);
-
-        _cache.TryAdd(location, context);
-
-        return context;
+        return tokens;
     }
 
-    /// <summary>
-    /// Parses the core.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <returns>A list of Tokens.</returns>
-    private static List<Token> ParseCore(scoped ReadOnlySpan<char> text)
+    private static IEnumerable<Token> ParseCore(scoped ReadOnlySpan<char> text)
     {
+        if(text.IsEmpty)
+        {
+            return Enumerable.Empty<Token>();
+        }
+
+        if(text.IsWhiteSpace())
+        {
+            return new[] { new TextToken(0, new string(' ', text.Length)) };
+        }
+
         var result = new List<Token>();
 
         var index = 0;
@@ -214,7 +185,7 @@ public static class TemplateParser
             return false;
         }
 
-        token = new PropertyToken(name!, bytes[1..^1].ToString(), index, -1, format, align, indent);
+        token = new PropertyToken(name!, bytes.ToString(), index, -1, format, align, indent);
 
         return true;
 

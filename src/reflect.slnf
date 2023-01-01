@@ -1,9 +1,6 @@
 {
   "solution": {
     "path": "one.sln",
-    "projects": [
-      "Infrastructure\\OneI.Reflectable.Test\\OneI.Reflectable.Test.csproj",
-      "Infrastructure\\OneI.Reflectable\\OneI.Reflectable.csproj"
-    ]
+    "projects": []
   }
 }
