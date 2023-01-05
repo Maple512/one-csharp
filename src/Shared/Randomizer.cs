@@ -82,7 +82,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static string String(int length)
     {
-        Span<char> span = stackalloc char[length];
+        scoped Span<char> span = stackalloc char[length];
 
         for(var i = 0; i < length; i++)
         {

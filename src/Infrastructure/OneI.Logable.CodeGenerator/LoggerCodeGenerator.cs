@@ -54,7 +54,8 @@ public class LoggerCodeGenerator : IIncrementalGenerator
     /// <param name="token"></param>
     /// <returns></returns>
     private static bool IsTargetSyntax(SyntaxNode node, CancellationToken token)
-    {// 调用
+    {
+        // 调用
         if(node is InvocationExpressionSyntax invocation)
         {
             var ma = invocation.Expression as MemberAccessExpressionSyntax;
@@ -149,9 +150,8 @@ public class LoggerCodeGenerator : IIncrementalGenerator
             context.AddSource(CodeAssets.LoggerExtensionExtensionClassFileName, loggerExtensions);
         }
     }
-}
 
-/// <inheritdoc/>
-public record struct TargetContext(InvocationExpressionSyntax SyntaxNode, IMethodSymbol MethodSymbol)
-{
+    record struct TargetContext(InvocationExpressionSyntax SyntaxNode, IMethodSymbol MethodSymbol)
+    {
+    }
 }

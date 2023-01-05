@@ -106,5 +106,7 @@ internal class Logger : ILogger
         }
 
         _sink.Invoke(context);
+
+        context.Dispose();
     }
 }

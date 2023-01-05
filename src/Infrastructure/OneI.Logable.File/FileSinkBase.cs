@@ -1,10 +1,5 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Rendering;
-/// <summary>
-/// The file sink base.
-/// </summary>
-
 internal abstract class FileSinkBase : ILoggerSink
 {
     protected readonly ITextRendererProvider _provider;
@@ -28,10 +23,18 @@ internal abstract class FileSinkBase : ILoggerSink
     /// Gets the text renderer.
     /// </summary>
     /// <param name="context">The context.</param>
+    /// <param name="writer"></param>
     /// <returns>An ILoggerRenderer.</returns>
-    protected ILoggerRenderer GetTextRenderer(in LoggerContext context)
+    protected virtual void Render(in LoggerContext context, in TextWriter writer)
     {
-        return _provider.GetTextRenderer(context)
+        var renderer = _provider.GetTextRenderer(context)
             ?? throw new NotSupportedException($"The renderer can not be null.");
+
+        renderer.Render(context, writer);
+
+        if(renderer is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
     }
 }

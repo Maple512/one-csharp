@@ -5,11 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using OneI.Moduleable.Infrastructure;
+
 /// <summary>
 /// The module helper.
 /// </summary>
-
 internal static class ModuleHelper
 {
     private static ILogger? _logger;
@@ -17,12 +16,10 @@ internal static class ModuleHelper
     /// <summary>
     /// Loads the modules.
     /// </summary>
-    /// <param name="services">The services.</param>
     /// <param name="startupType">The startup type.</param>
     /// <param name="logger">The logger.</param>
     /// <returns>A list of IModuleDescriptors.</returns>
-    public static IReadOnlyList<IModuleDescriptor> LoadModules(
-        IServiceCollection services,
+    public static IReadOnlyList<IServiceModuleDescriptor> LoadModules(
         Type startupType,
         ILogger? logger = null)
     {
@@ -44,9 +41,9 @@ internal static class ModuleHelper
     /// <param name="startupType">The startup type.</param>
     /// <returns>A list of IModuleDescriptors.</returns>
     [Obsolete]
-    private static List<IModuleDescriptor> GetModuleDescriptors(Type startupType)
+    private static List<IServiceModuleDescriptor> GetModuleDescriptors(Type startupType)
     {
-        var modules = new List<IModuleDescriptor>();
+        var modules = new List<IServiceModuleDescriptor>();
 
         FillAllModules(modules, startupType);
 
@@ -61,8 +58,8 @@ internal static class ModuleHelper
     /// <param name="modules">The modules.</param>
     /// <param name="startupType">The startup type.</param>
     /// <returns>A list of IModuleDescriptors.</returns>
-    private static List<IModuleDescriptor> SortByDependency(
-        IEnumerable<IModuleDescriptor> modules,
+    private static List<IServiceModuleDescriptor> SortByDependency(
+        IEnumerable<IServiceModuleDescriptor> modules,
         Type startupType)
     {
         var sortedModules = modules.SortByDependencies(m => m.Dependencies);
@@ -79,7 +76,7 @@ internal static class ModuleHelper
     /// <param name="moduleType"></param>
     /// <returns></returns>
     [Obsolete]
-    private static void FillAllModules(ICollection<IModuleDescriptor> modules, Type moduleType)
+    private static void FillAllModules(ICollection<IServiceModuleDescriptor> modules, Type moduleType)
     {
         _logger?.LogInformation("Loading module starts.");
 
@@ -95,7 +92,7 @@ internal static class ModuleHelper
     /// Fills the all dependencies.
     /// </summary>
     /// <param name="modules">The modules.</param>
-    private static void FillAllDependencies(List<IModuleDescriptor> modules)
+    private static void FillAllDependencies(List<IServiceModuleDescriptor> modules)
     {
         foreach(var module in modules)
         {
@@ -109,10 +106,10 @@ internal static class ModuleHelper
     /// <param name="allModules"></param>
     /// <param name="module"></param>
     private static void FillDependencies(
-        IEnumerable<IModuleDescriptor> allModules,
-        IModuleDescriptor module)
+        IEnumerable<IServiceModuleDescriptor> allModules,
+        IServiceModuleDescriptor module)
     {
-        var moduleTypes = ModuleDependOnAttribute.GetAllDependedTypes(module.StartupType);
+        var moduleTypes = ServiceModuleAttribute.GetAllDependedTypes(module.StartupType);
 
         foreach(var moduleType in moduleTypes)
         {
@@ -177,7 +174,7 @@ internal static class ModuleHelper
                 "{0}- {1}", new string(' ', depth),
                 moduleType.FullName));
 
-        var dependTypes = ModuleDependOnAttribute.GetAllDependedTypes(moduleType);
+        var dependTypes = ServiceModuleAttribute.GetAllDependedTypes(moduleType);
 
         foreach(var item in dependTypes)
         {

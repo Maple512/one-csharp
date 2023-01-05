@@ -11,7 +11,7 @@ public class ParameterDef
     /// <param name="index">The index.</param>
     /// <param name="type">The type.</param>
     public ParameterDef(int index, TypeDef type)
-        : this(index, $"p{index}", type) { }
+        : this(index, $"arg{index}", type) { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ParameterDef"/> class.

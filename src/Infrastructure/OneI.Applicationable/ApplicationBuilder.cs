@@ -56,7 +56,7 @@ public sealed class ApplicationBuilder : IApplicationBuilder
     /// </summary>
     /// <param name="configuration">The configuration.</param>
     /// <returns>An IApplicationEnvironment.</returns>
-    public IApplicationEnvironment ResolverEnvironment(IConfigurationRoot configuration)
+    public IApplicationEnvironment ResolveEnvironment(IConfigurationRoot configuration)
     {
         return ApplicationEnvironment.Resolver(configuration);
     }

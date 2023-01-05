@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="../../common.test.benchmark.props" />
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <IncludeShared>true</IncludeShared>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DotNext.IO" Version="4.8.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
+    </ItemGroup>
+
+</Project>

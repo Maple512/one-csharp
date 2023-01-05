@@ -1,7 +1,4 @@
 namespace OneI.Logable.Rendering;
-/// <summary>
-/// The text renderer provider.
-/// </summary>
 
 public class TextRendererProvider : ITextRendererProvider
 {

@@ -6,11 +6,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OneI.Moduleable;
+
 /// <summary>
 /// The app program.
 /// </summary>
-
-public class AppProgram : Module
+public class AppProgram : ServiceModule
 {
     /// <summary>
     /// Runs the async.
@@ -30,7 +30,7 @@ public class AppProgram : Module
 
         var builder = new ApplicationBuilder();
 
-        var environment = builder.ResolverEnvironment(configuration);
+        var environment = builder.ResolveEnvironment(configuration);
 
         var services = new ServiceCollection();
 

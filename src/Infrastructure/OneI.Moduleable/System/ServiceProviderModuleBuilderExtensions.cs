@@ -15,6 +15,6 @@ public static class ServiceProviderModuleBuilderExtensions
     /// <returns>A ValueTask.</returns>
     public static async ValueTask<IServiceProvider> ConfigureAsync(this IServiceProvider serviceProvider)
     {
-        return await ModuleBuilder.ConfigureAsync(serviceProvider);
+        return await ServiceModuleBuilder.ConfigureAsync(serviceProvider);
     }
 }

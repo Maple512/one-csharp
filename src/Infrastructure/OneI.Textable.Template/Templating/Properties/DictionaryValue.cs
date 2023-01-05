@@ -1,8 +1,10 @@
 namespace OneI.Textable.Templating.Properties;
+
+using System.Runtime.Serialization;
+
 /// <summary>
 /// The dictionary value.
 /// </summary>
-
 public class DictionaryValue : PropertyValue
 {
     private readonly Dictionary<PropertyValue, PropertyValue> _properties;
@@ -60,5 +62,10 @@ public class DictionaryValue : PropertyValue
         }
 
         _properties.Add(key, CreateLiteral(value, formatter));
+    }
+
+    public void Add(PropertyValue key, PropertyValue value)
+    {
+        _properties.Add(key, value);
     }
 }

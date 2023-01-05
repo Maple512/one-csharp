@@ -10,11 +10,8 @@ public class Logger_Test
     public void logger_test()
     {
         var logger = Fake.CreateLogger(
-             _ => { },
-            file: options => options.RenderWhen(c =>
-            {
-                return c.Exception is not null;
-            }, Fake.ErrorTemplate));
+            _ => { },
+            options => options.RenderWhen(c => c.Exception is not null, Fake.ErrorTemplate));
 
         logger.ForContext<Middleware_Test>().Error(new ArgumentException(), "Include Source Context");
 
@@ -23,6 +20,8 @@ public class Logger_Test
         logger.ForContext<IServiceProvider>().Error(new ArgumentException(), "Include Source Context");
 
         logger.Error("Exclude Source Context");
+
+        logger.Error("{0} {1} {2} {3}{NewLine}{FilePath'4}#L{LineNumber}", "0", 1, new Dictionary<int, int> { { 2, 3 } }, new List<int> { 4, 5, 6 });
     }
 
     [Fact]
@@ -69,9 +68,9 @@ public class Logger_Test
         order[5].ShouldBe(2);
     }
 
-    class ActionMiddleware : ILoggerMiddleware
+    private class ActionMiddleware : ILoggerMiddleware
     {
-        Action _action;
+        private readonly Action _action;
 
         public ActionMiddleware(Action action)
         {

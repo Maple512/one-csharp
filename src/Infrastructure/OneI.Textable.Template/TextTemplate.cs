@@ -1,20 +1,26 @@
 namespace OneI.Textable;
 
+using System;
+using System.Xml.Linq;
 using OneI.Textable.Templating;
 using OneI.Textable.Templating.Properties;
 
 /// <summary>
 /// 文本模板
 /// </summary>
-public class TextTemplate
+public class TextTemplate : IDisposable
 {
+    private readonly ValueBuffer _buffer;
     private readonly Token[] _tokens;
     private readonly PropertyToken[] _propertyTokens;
     private readonly Dictionary<string, PropertyValue> _properties;
 
     private TextTemplate(string text, IEnumerable<Token> tokens)
     {
-        Text = text;
+        _buffer = new ValueBuffer();
+
+        _buffer.Append(text);
+
         _tokens = tokens.ToArray();
         _propertyTokens = tokens.OfType<PropertyToken>().ToArray();
         _properties = new(StringComparer.InvariantCulture);
@@ -25,11 +31,27 @@ public class TextTemplate
     /// </summary>
     /// <param name="text"></param>
     /// <returns></returns>
-    public static TextTemplate Create(string text)
+    public static TextTemplate Create(scoped in ReadOnlySpan<char> text)
     {
-        var tokens = TemplateParser.Parse(text);
+        var value = new string(text);
 
-        return new(text, tokens);
+        var tokens = TemplateParser.Parse(value);
+
+        return new(value, tokens);
+    }
+
+    public TextTemplate Append(scoped in ReadOnlySpan<char> text)
+    {
+        _buffer.Append(text);
+
+        return this;
+    }
+
+    public TextTemplate AddProperty<T>(T value, IFormatter<T>? formatter = null)
+    {
+        _properties.TryAdd($"property_{_properties.Count}", PropertyValue.CreateLiteral(value, formatter));
+
+        return this;
     }
 
     public TextTemplate AddProperty<T>(string name, T value, IFormatter<T>? formatter = null)
@@ -61,8 +83,6 @@ public class TextTemplate
         TemplateRenderer.Render(this, writer, formatProvider);
     }
 
-    public string Text { get; }
-
     public IReadOnlyList<Token> Tokens => _tokens;
 
     public IReadOnlyList<PropertyToken> PropertyTokens => _propertyTokens;
@@ -78,5 +98,12 @@ public class TextTemplate
         return writer.ToString();
     }
 
-    public override string ToString() => Text;
+    public override string ToString() => _buffer.ToString();
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+
+        _buffer.Clear();
+    }
 }

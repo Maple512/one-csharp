@@ -13,7 +13,7 @@ public interface IApplicationBuilder
     /// </summary>
     /// <param name="configuration">The configuration.</param>
     /// <returns>An IApplicationEnvironment.</returns>
-    IApplicationEnvironment ResolverEnvironment(IConfigurationRoot configuration);
+    IApplicationEnvironment ResolveEnvironment(IConfigurationRoot configuration);
 
     /// <summary>
     /// Builds the.

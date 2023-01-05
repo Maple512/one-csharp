@@ -8,9 +8,9 @@ using System.Reflection;
 /// The module descriptor.
 /// </summary>
 
-internal sealed class ModuleDescriptor : IModuleDescriptor
+internal sealed class ModuleDescriptor : IServiceModuleDescriptor
 {
-    private readonly List<IModuleDescriptor> _dependencies = new();
+    private readonly List<IServiceModuleDescriptor> _dependencies = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ModuleDescriptor"/> class.
@@ -23,10 +23,10 @@ internal sealed class ModuleDescriptor : IModuleDescriptor
 
         Assembly = instance.Assembly;
 
-        if(instance.IsAssignableTo(typeof(IModule))
+        if(instance.IsAssignableTo(typeof(IServiceModule))
             && instance.TryGetParameterlessConstructor(out var constructorInfo))
         {
-            Module = Expression.Lambda<Func<IModule>>(Expression.New(constructorInfo)).Compile()();
+            Module = Expression.Lambda<Func<IServiceModule>>(Expression.New(constructorInfo)).Compile()();
         }
     }
 
@@ -43,18 +43,18 @@ internal sealed class ModuleDescriptor : IModuleDescriptor
     /// <summary>
     /// Gets the module.
     /// </summary>
-    public IModule? Module { get; }
+    public IServiceModule? Module { get; }
 
     /// <summary>
     /// Gets the dependencies.
     /// </summary>
-    public IReadOnlyList<IModuleDescriptor> Dependencies => _dependencies;
+    public IReadOnlyList<IServiceModuleDescriptor> Dependencies => _dependencies;
 
     /// <summary>
     /// 添加模块依赖
     /// </summary>
     /// <param name="descriptor"></param>
-    public void AddDependency(IModuleDescriptor descriptor)
+    public void AddDependency(IServiceModuleDescriptor descriptor)
     {
         _dependencies.AddIfNotContains(descriptor);
     }
@@ -66,6 +66,6 @@ internal sealed class ModuleDescriptor : IModuleDescriptor
     [Obsolete]
     public override string ToString()
     {
-        return $"Module: {StartupType.ShortDisplayName()}";
+        return $"ServiceModule: {StartupType.ShortDisplayName()}";
     }
 }

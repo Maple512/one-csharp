@@ -1,10 +1,5 @@
 namespace OneI.Eventable;
 
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using OneI.Moduleable.DependencyInjection;
 
@@ -60,7 +55,7 @@ public sealed class EventBus : IEventBus, ISingletonService
 
         if(handlers.IsNullOrEmpty())
         {
-            throw new InvalidOperationException($"Could not found event handler: {handlerType.AssemblyQualifiedName}");
+            throw new InvalidOperationException($"Could not found event handler: {handlerType.FullName}");
         }
 
         return handlers!;

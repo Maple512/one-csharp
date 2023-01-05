@@ -32,38 +32,7 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
             {
                 public async Task Register()
                 {
-                    var user = new User(){Id =1};
-
-                        var a = static () => 3;
-
-                        var a1 = async () => await Task.CompletedTask;
-                            var a2 = new []{1,2,3};
-
-                                var a3 = new SturctModel1{ Id = 1 };
-
-            var a4 = await Task.FromResult(1);
-
-                    Log.Debug("",
-            await Task.FromCanceled<int>(default),
-            await Task.FromResult(1),
-                    a,
-                    a(),
-                    a4,(dynamic)1,
-                    a3 with { Id = 2 },
-                    a2[1],
-                    //a2[..1],
-                    nameof(a2),
-                    user.Id.ToString(),
-                    typeof(UserService),
-                    a1,
-                    new { Id = 1, FirstName = "James", LastName = "Bond" },
-                    a.Invoke(),
-                    user.Id,
-                    1,
-                    new object(),
-                    (object)1,
-                    default(int),
-                    new []{1,2,3});
+                    Log.Error("", "", new object(), new Dictionary<int, int>(), new List<int>());
                 }
 
             [Serializable]

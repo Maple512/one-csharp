@@ -32,7 +32,7 @@ internal class ModuleEnvironment : IApplicationEnvironment
     /// </summary>
     /// <param name="configuration">The configuration.</param>
     /// <returns>An IApplicationEnvironment.</returns>
-    internal static IApplicationEnvironment Resolver(IConfiguration configuration)
+    internal static IApplicationEnvironment Resolve(IConfiguration configuration)
     {
         var applicationName = configuration[ApplicationDefinition.ConfigurationKeys.ApplicationNameKey]!;
 

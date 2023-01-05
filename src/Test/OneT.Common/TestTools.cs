@@ -1,12 +1,35 @@
 namespace OneT.Common;
 
 using System.IO;
-/// <summary>
-/// The test tools.
-/// </summary>
+using ObjectLayoutInspector;
 
 public static class TestTools
 {
+    public static void PrintToFile(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null)
+    {
+        var name = Path.GetFileNameWithoutExtension(file);
+
+        var fullname = Path.Combine(GetCSProjectDirecoty(file), $"./Logs/{name}@{member}.txt");
+
+        var path = Path.GetDirectoryName(fullname)!;
+
+        if(Directory.Exists(path) == false)
+        {
+            Directory.CreateDirectory(path);
+        }
+
+        File.AppendAllText(fullname, message, Encoding.UTF8);
+    }
+
+    /// <summary>
+    /// 打印内存中类或结构的数据字段的物理布局
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public static void PrintLayoutToFile<T>([CallerFilePath] string? file = null, [CallerMemberName] string? member = null)
+    {
+        PrintToFile($"[{DateTime.Now:HH:mm}] {TypeLayout.GetLayout<T>()}", file, member);
+    }
+
     /// <summary>
     /// 获取项目csporj文件所在目录
     /// </summary>

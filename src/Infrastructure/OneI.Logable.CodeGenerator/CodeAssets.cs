@@ -33,6 +33,7 @@ internal static class CodeAssets
         using System;
         using System.Collections.Generic;
         using System.Linq;
+        using System.Runtime.CompilerServices;
         using OneI.Textable.Templating.Properties;
 
         public static partial class Log
@@ -68,9 +69,9 @@ internal static class CodeAssets
 
             #region Write
 
-            public static void Write(LogLevel level, string message)
+            public static void Write(LogLevel level, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, level, null, message, null);
+                LoggerExtensions.PackageWrite(_logger, level, null, message, null, filePath, member, line);
             }
 
             public static void Write(LogLevel level, string message, params object?[] args)
@@ -78,9 +79,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(_logger, level, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Write(LogLevel level, Exception exception, string message)
+            public static void Write(LogLevel level, Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, level, exception, message, null);
+                LoggerExtensions.PackageWrite(_logger, level, exception, message, null, filePath, member, line);
             }
 
             public static void Write(LogLevel level, Exception exception, string message, params object?[] args)
@@ -97,9 +98,9 @@ internal static class CodeAssets
 
             #region Verbose
 
-            public static void Verbose(string message)
+            public static void Verbose(string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Verbose, null, message);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Verbose, null, message, null, filePath, member, line);
             }
 
             public static void Verbose(string message, params object?[] args)
@@ -107,9 +108,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(_logger, LogLevel.Verbose, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Verbose(Exception exception, string message)
+            public static void Verbose(Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Verbose, exception, message, null);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Verbose, exception, message, null, filePath, member, line);
             }
 
             public static void Verbose(Exception exception, string message, params object?[] args)
@@ -121,9 +122,9 @@ internal static class CodeAssets
 
             #region Debug
 
-            public static void Debug(string message)
+            public static void Debug(string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Debug, null, message);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Debug, null, message, null, filePath, member, line);
             }
 
             public static void Debug(string message, params object?[] args)
@@ -131,9 +132,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(_logger, LogLevel.Debug, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Debug(Exception exception, string message)
+            public static void Debug(Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Debug, exception, message, null);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Debug, exception, message, null, filePath, member, line);
             }
 
             public static void Debug(Exception exception, string message, params object?[] args)
@@ -145,9 +146,9 @@ internal static class CodeAssets
 
             #region Information
 
-            public static void Information(string message)
+            public static void Information(string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Information, null, message);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Information, null, message, null, filePath, member, line);
             }
 
             public static void Information(string message, params object?[] args)
@@ -155,9 +156,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(_logger, LogLevel.Information, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Information(Exception exception, string message)
+            public static void Information(Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Information, exception, message, null);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Information, exception, message, null, filePath, member, line);
             }
 
             public static void Information(Exception exception, string message, params object?[] args)
@@ -169,9 +170,9 @@ internal static class CodeAssets
 
             #region Warning
 
-            public static void Warning(string message)
+            public static void Warning(string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Warning, null, message);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Warning, null, message, null, filePath, member, line);
             }
 
             public static void Warning(string message, params object?[] args)
@@ -179,9 +180,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(_logger, LogLevel.Warning, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Warning(Exception exception, string message)
+            public static void Warning(Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Warning, exception, message, null);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Warning, exception, message, null, filePath, member, line);
             }
 
             public static void Warning(Exception exception, string message, params object?[] args)
@@ -193,9 +194,9 @@ internal static class CodeAssets
 
             #region Error
 
-            public static void Error(string message)
+            public static void Error(string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Error, null, message);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Error, null, message, null, filePath, member, line);
             }
 
             public static void Error(string message, params object?[] args)
@@ -203,9 +204,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(_logger, LogLevel.Error, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Error(Exception exception, string message)
+            public static void Error(Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Error, exception, message, null);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Error, exception, message, null, filePath, member, line);
             }
 
             public static void Error(Exception exception, string message, params object?[] args)
@@ -217,9 +218,9 @@ internal static class CodeAssets
 
             #region Fatal
 
-            public static void Fatal(string message)
+            public static void Fatal(string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Fatal, null, message);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Fatal, null, message, null, filePath, member, line);
             }
 
             public static void Fatal(string message, params object?[] args)
@@ -227,9 +228,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(_logger, LogLevel.Fatal, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Fatal(Exception exception, string message)
+            public static void Fatal(Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(_logger, LogLevel.Fatal, exception, message, null);
+                LoggerExtensions.PackageWrite(_logger, LogLevel.Fatal, exception, message, null, filePath, member, line);
             }
 
             public static void Fatal(Exception exception, string message, params object?[] args)
@@ -318,15 +319,16 @@ internal static class CodeAssets
         using System;
         using System.Collections.Generic;
         using System.Linq;
+        using System.Runtime.CompilerServices;
         using OneI.Textable.Templating.Properties;
 
         public static partial class LoggerWriteExtensions
         {
             #region Write
 
-            public static void Write(this ILogger logger, LogLevel level, string message)
+            public static void Write(this ILogger logger, LogLevel level, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, level, null, message, null);
+                LoggerExtensions.PackageWrite(logger, level, null, message, null, filePath, member, line);
             }
 
             public static void Write(this ILogger logger, LogLevel level, string message, params object?[] args)
@@ -334,9 +336,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(logger, level, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Write(this ILogger logger, LogLevel level, Exception exception, string message)
+            public static void Write(this ILogger logger, LogLevel level, Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, level, exception, message, null);
+                LoggerExtensions.PackageWrite(logger, level, exception, message, null, filePath, member, line);
             }
 
             public static void Write(this ILogger logger, LogLevel level, Exception exception, string message, params object?[] args)
@@ -348,9 +350,9 @@ internal static class CodeAssets
 
             #region Verbose
 
-            public static void Verbose(this ILogger logger, string message)
+            public static void Verbose(this ILogger logger, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Verbose, null, message);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Verbose, null, message, null, filePath, member, line);
             }
 
             public static void Verbose(this ILogger logger, string message, params object?[] args)
@@ -358,9 +360,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(logger, LogLevel.Verbose, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Verbose(this ILogger logger, Exception exception, string message)
+            public static void Verbose(this ILogger logger, Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Verbose, exception, message, null);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Verbose, exception, message, null, filePath, member, line);
             }
 
             public static void Verbose(this ILogger logger, Exception exception, string message, params object?[] args)
@@ -372,9 +374,9 @@ internal static class CodeAssets
 
             #region Debug
 
-            public static void Debug(this ILogger logger, string message)
+            public static void Debug(this ILogger logger, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Debug, null, message);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Debug, null, message, null, filePath, member, line);
             }
 
             public static void Debug(this ILogger logger, string message, params object?[] args)
@@ -382,9 +384,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(logger, LogLevel.Debug, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Debug(this ILogger logger, Exception exception, string message)
+            public static void Debug(this ILogger logger, Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Debug, exception, message, null);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Debug, exception, message, null, filePath, member, line);
             }
 
             public static void Debug(this ILogger logger, Exception exception, string message, params object?[] args)
@@ -396,9 +398,9 @@ internal static class CodeAssets
 
             #region Information
 
-            public static void Information(this ILogger logger, string message)
+            public static void Information(this ILogger logger, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Information, null, message);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Information, null, message, null, filePath, member, line);
             }
 
             public static void Information(this ILogger logger, string message, params object?[] args)
@@ -406,9 +408,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(logger, LogLevel.Information, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Information(this ILogger logger, Exception exception, string message)
+            public static void Information(this ILogger logger, Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Information, exception, message, null);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Information, exception, message, null, filePath, member, line);
             }
 
             public static void Information(this ILogger logger, Exception exception, string message, params object?[] args)
@@ -420,9 +422,9 @@ internal static class CodeAssets
 
             #region Warning
 
-            public static void Warning(this ILogger logger, string message)
+            public static void Warning(this ILogger logger, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Warning, null, message);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Warning, null, message, null, filePath, member, line);
             }
 
             public static void Warning(this ILogger logger, string message, params object?[] args)
@@ -430,9 +432,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(logger, LogLevel.Warning, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Warning(this ILogger logger, Exception exception, string message)
+            public static void Warning(this ILogger logger, Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Warning, exception, message, null);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Warning, exception, message, null, filePath, member, line);
             }
 
             public static void Warning(this ILogger logger, Exception exception, string message, params object?[] args)
@@ -444,9 +446,9 @@ internal static class CodeAssets
 
             #region Error
 
-            public static void Error(this ILogger logger, string message)
+            public static void Error(this ILogger logger, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Error, null, message);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Error, null, message, null, filePath, member, line);
             }
 
             public static void Error(this ILogger logger, string message, params object?[] args)
@@ -454,9 +456,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(logger, LogLevel.Error, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Error(this ILogger logger, Exception exception, string message)
+            public static void Error(this ILogger logger, Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Error, exception, message, null);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Error, exception, message, null, filePath, member, line);
             }
 
             public static void Error(this ILogger logger, Exception exception, string message, params object?[] args)
@@ -468,9 +470,9 @@ internal static class CodeAssets
 
             #region Fatal
 
-            public static void Fatal(this ILogger logger, string message)
+            public static void Fatal(this ILogger logger, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Fatal, null, message);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Fatal, null, message, null, filePath, member, line);
             }
 
             public static void Fatal(this ILogger logger, string message, params object?[] args)
@@ -478,9 +480,9 @@ internal static class CodeAssets
                 LoggerExtensions.PackageWrite(logger, LogLevel.Fatal, null, message, args.Select(x => PropertyValue.CreateLiteral(x)));
             }
 
-            public static void Fatal(this ILogger logger, Exception exception, string message)
+            public static void Fatal(this ILogger logger, Exception exception, string message, [CallerFilePath] string? filePath = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
             {
-                LoggerExtensions.PackageWrite(logger, LogLevel.Fatal, exception, message, null);
+                LoggerExtensions.PackageWrite(logger, LogLevel.Fatal, exception, message, null, filePath, member, line);
             }
 
             public static void Fatal(this ILogger logger, Exception exception, string message, params object?[] args)

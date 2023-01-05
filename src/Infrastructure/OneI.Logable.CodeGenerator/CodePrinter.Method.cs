@@ -139,6 +139,6 @@ internal static partial class CodePrinter
 
         builder.Append($"{CodeAssets.MessageParameterName}, ");
 
-        builder.AppendLine($"propertyValues, memberName, filePath, lineNumber);");
+        builder.AppendLine($"propertyValues, filePath, memberName, lineNumber);");
     }
 }

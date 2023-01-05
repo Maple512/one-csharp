@@ -5,16 +5,16 @@ using System.Collections.Generic;
 /// The module container.
 /// </summary>
 
-internal class ModuleContainer : IModuleContainer
+internal class ModuleContainer : IServiceModuleContainer
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ModuleContainer"/> class.
     /// </summary>
     /// <param name="modules">The modules.</param>
-    public ModuleContainer(IReadOnlyList<IModuleDescriptor> modules) => Modules = modules;
+    public ModuleContainer(IReadOnlyList<IServiceModuleDescriptor> modules) => Modules = modules;
 
     /// <summary>
     /// Gets the modules.
     /// </summary>
-    public IReadOnlyList<IModuleDescriptor> Modules { get; }
+    public IReadOnlyList<IServiceModuleDescriptor> Modules { get; }
 }

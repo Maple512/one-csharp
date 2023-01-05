@@ -44,7 +44,7 @@ internal class RollFileSink : FileSinkBase, ILoggerSink, IFileFlusher, IDisposab
         bool buffered,
         bool shared) : base(provider)
     {
-        _roller = new PathRoller(path.Text, frequency);
+        _roller = new PathRoller(path.ToString(), frequency);
         _fileSizeMaxBytes = fileSizeMaxBytes;
         _retainedFileCountMax = retainedFileCountMax;
         _retainedFileTimeMax = retainedFileTimeMax;

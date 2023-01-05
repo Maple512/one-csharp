@@ -6,10 +6,10 @@ using OneI.Eventable;
 using OneI.Moduleable;
 using OneS.Identityable.Users;
 
-[ModuleDependOn(typeof(EventModule))]
-public sealed class DomainModule : Module
+[ServiceModule(typeof(EventModule))]
+public sealed class DomainModule : ServiceModule
 {
-    public override ValueTask ConfigureAsync(ModuleConfigureContext context)
+    public override ValueTask ConfigureAsync(ServiceModuleConfigureContext context)
     {
         context.ServiceProvider.TrySubscribeEvent<UserRegistrationEventData>();
 

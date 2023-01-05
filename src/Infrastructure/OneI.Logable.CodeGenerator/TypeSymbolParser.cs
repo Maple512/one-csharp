@@ -70,93 +70,82 @@ public static class TypeSymbolParser
     /// <returns>A TypeDef.</returns>
     private static TypeDef ParseNamedType(INamedTypeSymbol symbol)
     {
+        Debug.WriteLine($"SpecialType: {symbol.SpecialType}, TypeKind: {symbol.TypeKind}, FullName: {symbol}, interfaces: {symbol.AllInterfaces.Select(x => $"{x}").Join()}", nameof(ParseNamedType));
+
+        if(symbol.IsAnonymousType)
+        {
+            return DefaultType;
+        }
+
         var type = new TypeDef();
-        try
+
+        ParseNamedTypeNames(symbol, type);
+
+        var name = type.Names.Join('.');
+
+        if(name == "System.String")
         {
-
-            Debug.WriteLine($"SpecialType: {symbol.SpecialType}, TypeKind: {symbol.TypeKind}, FullName: {symbol}, interfaces: {symbol.AllInterfaces.Select(x => $"{x}").Join()}", nameof(ParseNamedType));
-
-            if(symbol.IsAnonymousType)
-            {
-                return DefaultType;
-            }
-
-            ParseNamedTypeNames(symbol, type);
-
-            var name = type.Names.Join('.');
-
-            if(name == "System.String")
-            {
-                type.Kind = TypeDefKind.Literal;
-                return type;
-            }
-
-            if(name == "System.Nullable")
-            {
-                type.Kind = TypeDefKind.Nullable;
-                return type;
-            }
-
-            if(name == "System.ValueTuple")
-            {
-                type.Kind = TypeDefKind.ValueTuple;
-
-                foreach(var item in symbol.TupleElements)
-                {
-                    if(TryParse(item.Type, out var tupleType))
-                    {
-                        type.Properties.Add(new PropertyDef(item.Name, tupleType!));
-                    }
-                }
-
-                return type;
-            }
-
-            var fullName = type.ToDisplayString();
-
-            var interfaces = symbol.AllInterfaces.Select(x => x.Name).ToList();
-
-            if(interfaces.Any(x => x == nameof(IDictionary)))
-            {
-                type.Kind = TypeDefKind.Dictionary;
-                return type;
-            }
-
-            if(interfaces.Any(x => x == nameof(IEnumerable)))
-            {
-                type.Kind = TypeDefKind.Enumerable;
-                return type;
-            }
-
-            if(symbol.IsSerializable)
-            {
-                var properties = symbol.GetMembers()
-                    .Where(x => x.Kind == SymbolKind.Property && x.DeclaredAccessibility == Accessibility.Public)
-                    .OfType<IPropertySymbol>();
-
-                foreach(var item in properties)
-                {
-                    if(TryParse(item.Type, out var propertyType))
-                    {
-                        type.Properties.Add(new PropertyDef(item.Name, propertyType!));
-                    }
-                }
-
-                type.Kind = TypeDefKind.Object;
-
-                return type;
-            }
-
             type.Kind = TypeDefKind.Literal;
+            return type;
+        }
 
-        }
-        finally
+        if(name == "System.Nullable")
         {
-            if(type.IsTypeParameters == false)
-            {
-                CodePrinter.AddType(type);
-            }
+            type.Kind = TypeDefKind.Nullable;
+            return type;
         }
+
+        if(name == "System.ValueTuple")
+        {
+            type.Kind = TypeDefKind.ValueTuple;
+
+            foreach(var item in symbol.TupleElements)
+            {
+                if(TryParse(item.Type, out var tupleType))
+                {
+                    type.Properties.Add(new PropertyDef(item.Name, tupleType!));
+                }
+            }
+
+            return type;
+        }
+
+        var fullName = type.ToDisplayString();
+
+        var interfaces = symbol.AllInterfaces.Select(x => x.Name).ToList();
+
+        if(interfaces.Any(x => x == nameof(IDictionary)))
+        {
+            type.Kind = TypeDefKind.Dictionary;
+            return type;
+        }
+
+        if(interfaces.Any(x => x == nameof(IEnumerable)))
+        {
+            type.Kind = TypeDefKind.Enumerable;
+            return type;
+        }
+
+        if(symbol.IsSerializable)
+        {
+            var properties = symbol.GetMembers()
+                .Where(x => x.Kind == SymbolKind.Property && x.DeclaredAccessibility == Accessibility.Public)
+                .OfType<IPropertySymbol>();
+
+            foreach(var item in properties)
+            {
+                if(TryParse(item.Type, out var propertyType))
+                {
+                    type.Properties.Add(new PropertyDef(item.Name, propertyType!));
+                }
+            }
+
+            type.Kind = TypeDefKind.Object;
+
+            return type;
+        }
+
+        type.Kind = TypeDefKind.Literal;
 
         return type;
     }

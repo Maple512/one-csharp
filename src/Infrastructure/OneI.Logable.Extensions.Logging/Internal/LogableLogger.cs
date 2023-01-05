@@ -5,12 +5,9 @@ using System;
 internal class LogableLogger : MSLogging.ILogger
 {
     ILogger _logger;
-    LogableLoggerProvider _provider;
 
-    public LogableLogger(LogableLoggerProvider provider, ILogger logger, string? name = null)
+    public LogableLogger(ILogger logger, string? name = null)
     {
-        _provider = provider;
-
         if(name.NotNullOrWhiteSpace())
         {
             _logger = logger.ForContext(name);
@@ -23,7 +20,7 @@ internal class LogableLogger : MSLogging.ILogger
 
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull
     {
-        return default;
+        return _logger.BeginScope();
     }
 
     public bool IsEnabled(MSLogging.LogLevel logLevel)

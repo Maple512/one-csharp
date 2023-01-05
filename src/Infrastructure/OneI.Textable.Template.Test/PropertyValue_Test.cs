@@ -46,8 +46,8 @@ public class PropertyValue_Test
     {
         var value = new ObjectValue();
 
-        value.AddProperty("Id", 512);
-        value.AddProperty("Name", "Maple512");
+        value.Add("Id", 512);
+        value.Add("Name", "Maple512");
 
         value.ToString().ShouldBe("""{ Id: 512, Name: Maple512 }""");
     }

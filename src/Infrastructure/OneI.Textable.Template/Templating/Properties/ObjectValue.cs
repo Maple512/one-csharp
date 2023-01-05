@@ -28,7 +28,7 @@ public class ObjectValue : PropertyValue
         writer.Write(" }");
     }
 
-    public void AddProperty<T>(string name, T value, IFormatter<T>? formatter = null)
+    public void Add<T>(string name, T value, IFormatter<T>? formatter = null)
     {
         Properties.Add(name, CreateLiteral(value, formatter));
     }

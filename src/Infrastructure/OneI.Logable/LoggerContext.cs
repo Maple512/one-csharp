@@ -8,7 +8,7 @@ using OneI.Textable.Templating.Properties;
 using static OneI.Logable.LoggerConstants;
 
 [Serializable]
-public readonly struct LoggerContext
+public struct LoggerContext : IDisposable
 {
     private readonly Dictionary<string, PropertyValue> _properties;
 
@@ -124,6 +124,13 @@ public readonly struct LoggerContext
         return this;
     }
 
+    public LoggerContext Append(scoped in ReadOnlySpan<char> text)
+    {
+        MessageTemplate.Append(text);
+
+        return this;
+    }
+
     /// <summary>
     /// Copies the.
     /// </summary>
@@ -154,5 +161,12 @@ public readonly struct LoggerContext
         properties.Add(PropertyNames.Message, PropertyValue.CreateLiteral(string.Empty, new MessageFormatter(MessageTemplate, _properties)));
 
         return new PropertyCollection(properties);
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+
+        MessageTemplate.Dispose();
     }
 }

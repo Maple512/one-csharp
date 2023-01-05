@@ -129,7 +129,7 @@ internal class SharedFileSink : FileSinkBase, IFileSink, IDisposable
                     return false;
                 }
 
-                GetTextRenderer(context).Render(context, _writer);
+                Render(context, _writer);
 
                 // 共享文件，不需要缓冲区
                 _writer.Flush();

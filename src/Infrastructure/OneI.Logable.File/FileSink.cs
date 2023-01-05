@@ -90,7 +90,7 @@ internal class FileSink : FileSinkBase, IFileSink, IDisposable
                 return false;
             }
 
-            GetTextRenderer(context).Render(context, _writer);
+            Render(context, _writer);
 
             if(!_buffered)
             {

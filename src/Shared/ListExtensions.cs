@@ -130,8 +130,8 @@ internal static class ListExtensions
     /// <param name="targetIndex">The target index.</param>
     public static void MoveFirstItemTo<T>(this List<T> source, Predicate<T> selector, int targetIndex)
     {
-        if(targetIndex >= 0
-            && targetIndex <= source.Count - 1)
+        if(targetIndex < 0
+            || targetIndex > source.Count - 1)
         {
             throw new IndexOutOfRangeException($"The {nameof(targetIndex)}({targetIndex}) should be between 0 and {source.Count - 1}");
         }
