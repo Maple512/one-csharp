@@ -2,16 +2,27 @@ namespace OneI.Utilityable;
 
 using System.Buffers;
 using DotNext.Buffers;
+using OneI.Text;
 
 public class StringBuilderBenchmark
 {
     private const string StringValue = "1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz";
 
-    [Params(5, 50)]
-    public int count;
+    public const int count = 50;
+    public const int capacity = GlobalConstants.ArrayPoolMinimumLength;
 
-    [Params(GlobalConstants.ArrayPoolMinimumLength)]
-    public int capacity;
+    [GlobalSetup]
+    public void Validate()
+    {
+        var result =  UseStringBuilder();
+
+        Check.ThrowIfFalse(UseList().Equals(result, StringComparison.InvariantCulture));
+        Check.ThrowIfFalse(UseValueStringBuilder().Equals(result, StringComparison.InvariantCulture));
+        Check.ThrowIfFalse(UseRefValueStringBuilder().Equals(result, StringComparison.InvariantCulture));
+        Check.ThrowIfFalse(UsePooledArrayBufferWriter().Equals(result, StringComparison.InvariantCulture));
+        Check.ThrowIfFalse(UseSparseBufferWriter().Equals(result, StringComparison.InvariantCulture));
+        Check.ThrowIfFalse(UseBufferWriterSlim().Equals(result, StringComparison.InvariantCulture));
+    }
 
     [Benchmark(Baseline = true)]
     public string UseStringBuilder()
@@ -77,21 +88,7 @@ public class StringBuilderBenchmark
     }
 
     [Benchmark]
-    public string UseValueStringBuffer()
-    {
-        var handler = new ValueBuffer(capacity);
-
-        for(var i = 0; i < count; i++)
-        {
-            handler.Append(StringValue);
-            handler.AppendLine();
-        }
-
-        return handler.ToStringAndClear();
-    }
-
-    [Benchmark]
-    public string BuildStringUsingPooledArrayBufferWriter()
+    public string UsePooledArrayBufferWriter()
     {
         using var writer = new PooledArrayBufferWriter<char>()
         {
@@ -108,7 +105,7 @@ public class StringBuilderBenchmark
     }
 
     [Benchmark]
-    public string BuildStringUsingSparseBufferWriter()
+    public string UseSparseBufferWriter()
     {
         using var writer = new SparseBufferWriter<char>(capacity);
         for(var i = 0; i < count; i++)
@@ -121,29 +118,9 @@ public class StringBuilderBenchmark
     }
 
     [Benchmark]
-    public string BuildStringOnStackNoPreallocatedBuffer()
+    public string UseBufferWriterSlim()
     {
         var writer = new BufferWriterSlim<char>(capacity);
-        try
-        {
-            for(var i = 0; i < count; i++)
-            {
-                writer.Write(StringValue);
-                writer.WriteLine();
-            }
-
-            return writer.ToString();
-        }
-        finally
-        {
-            writer.Dispose();
-        }
-    }
-
-    [Benchmark]
-    public string BuildStringOnStack()
-    {
-        var writer = new BufferWriterSlim<char>(stackalloc char[capacity]);
         try
         {
             for(var i = 0; i < count; i++)

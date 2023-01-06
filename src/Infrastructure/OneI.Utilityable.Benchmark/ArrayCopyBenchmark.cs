@@ -2,6 +2,7 @@ namespace OneI.Utilityable;
 
 using DotNext;
 using DotNext.Runtime;
+using ValueBuffer = ValueBuffer<char>;
 
 public unsafe class ArrayCopyBenchmark
 {
@@ -12,6 +13,7 @@ public unsafe class ArrayCopyBenchmark
     private static readonly char[] Text2 = text.ToCharArray();
     private static readonly char[] Text3 = text.ToCharArray();
     private static readonly char[] Text4 = text.ToCharArray();
+    private static readonly char[] Text5 = text.ToCharArray();
 
     [GlobalSetup]
     public void Check()
@@ -25,6 +27,8 @@ public unsafe class ArrayCopyBenchmark
         ThrowIfFalse(UseSpan().BitwiseEquals(array));
 
         ThrowIfFalse(UseArray().BitwiseEquals(array));
+
+        ThrowIfFalse(UseCharBuffer().BitwiseEquals(array));
     }
 
     [Benchmark(Baseline = true)]
@@ -73,6 +77,18 @@ public unsafe class ArrayCopyBenchmark
         var span = new Span<char>(Text4);
 
         span.CopyTo(chars);
+
+        return chars;
+    }
+
+    [Benchmark]
+    public char[] UseCharBuffer()
+    {
+        var chars = new char[length];
+
+        var span = new ValueBuffer(Text5);
+
+        span.CopyToArray(chars, 0, length);
 
         return chars;
     }

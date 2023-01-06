@@ -2,6 +2,7 @@ namespace OneI.Utilityable;
 
 using System;
 using DotNext;
+using ValueBuffer = ValueBuffer<char>;
 
 public class ArrayClearBenchmark
 {
@@ -42,7 +43,7 @@ public class ArrayClearBenchmark
     [Benchmark]
     public void UseCharBuffer()
     {
-        var buffer = new ByteBuffer(Text3);
+        var buffer = new ValueBuffer(Text3);
 
         buffer.Clear();
     }

@@ -1,5 +1,7 @@
 namespace OneI.Textable;
 
+using OneI.Text;
+
 public class TextTemplateBenchmark
 {
     const string format = "{0},{1},{2},{3},{4},{5},{0},{1}";
@@ -40,13 +42,13 @@ public class TextTemplateBenchmark
     [Benchmark]
     public string UseTextTemplate()
     {
-        using var template = TextTemplate.Create(format)
-              .AddProperty(arg1)
-              .AddProperty(arg2)
-              .AddProperty(arg3)
-              .AddProperty(arg4)
-              .AddProperty(arg5)
-              .AddProperty(arg6);
+        var template = TextTemplate.Create(format)
+             .AddProperty(arg1)
+             .AddProperty(arg2)
+             .AddProperty(arg3)
+             .AddProperty(arg4)
+             .AddProperty(arg5)
+             .AddProperty(arg6);
 
         return template.ToString();
     }

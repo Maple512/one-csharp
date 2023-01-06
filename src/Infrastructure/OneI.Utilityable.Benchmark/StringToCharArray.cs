@@ -1,6 +1,7 @@
 namespace OneI.Utilityable;
 
 using DotNext;
+using ValueBuffer = ValueBuffer<char>;
 
 public class StringToCharArray
 {
@@ -23,7 +24,7 @@ public class StringToCharArray
     public char[] UseSpan() => str.AsSpan().ToArray();
 
     [Benchmark]
-    public char[] UseCharBuffer() => CharBuffer.Create(str).ToArray();
+    public char[] UseCharBuffer() => ValueBuffer.Create(str).ToArray();
 
     static void ThrowIfFalse(bool condition)
     {

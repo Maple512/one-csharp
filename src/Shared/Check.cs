@@ -1,21 +1,8 @@
 namespace OneI;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-/// <summary>
-/// The check.
-/// </summary>
 [DebuggerStepThrough]
 internal static partial class Check
 {
-    /// <summary>
-    /// Are the in.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="data">The data.</param>
-    /// <returns>A bool.</returns>
     public static bool IsIn<T>(T? value, params T[] data)
     {
         if(value is null
@@ -35,39 +22,20 @@ internal static partial class Check
         return false;
     }
 
-    /// <summary>
-    /// Errors the message.
-    /// </summary>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="lineNumber">The line number.</param>
-    /// <returns>A string.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static string ErrorMessage(
+    private static string ValueBeNullMessage(
         string? filePath,
         string? memberName,
         int? lineNumber)
     {
-        return $"Value be not null. ({filePath}#L{lineNumber}@{memberName})";
+        return $"Value cannot be null. ({Path.GetFileName(filePath)}#L{lineNumber}@{memberName})";
     }
 }
 
 #if NET7_0_OR_GREATER
-
-/// <summary>
-/// The check.
-/// </summary>
 [StackTraceHidden]
 internal static partial class Check
 {
-    /// <summary>
-    /// Nots the null or empty.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>A string.</returns>
     [return: NotNull]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string NotNullOrEmpty(
@@ -77,18 +45,10 @@ internal static partial class Check
        [CallerLineNumber] int? line = null)
     {
         return string.IsNullOrEmpty(value)
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(filePath, memberName, line))
+            ? throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line))
             : value;
     }
 
-    /// <summary>
-    /// Nots the null or white space.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>A string.</returns>
     [return: NotNull]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string NotNullOrWhiteSpace(
@@ -98,18 +58,10 @@ internal static partial class Check
         [CallerLineNumber] int? line = null)
     {
         return string.IsNullOrWhiteSpace(value)
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(filePath, memberName, line))
+            ? throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line))
             : value;
     }
 
-    /// <summary>
-    /// Nots the null.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>A T.</returns>
     [return: NotNull]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T NotNull<T>(
@@ -119,18 +71,10 @@ internal static partial class Check
         [CallerLineNumber] int? line = null)
     {
         return value == null
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(filePath, memberName, line))
+            ? throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line))
             : value;
     }
 
-    /// <summary>
-    /// Nots the null or empty.
-    /// </summary>
-    /// <param name="data">The data.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>A list of TS.</returns>
     [return: NotNull]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> NotNullOrEmpty<T>(
@@ -141,7 +85,7 @@ internal static partial class Check
     {
         if(data?.Any() != true)
         {
-            throw new ArgumentNullException(nameof(data), ErrorMessage(filePath, memberName, line));
+            throw new ArgumentNullException(nameof(data), ValueBeNullMessage(filePath, memberName, line));
         }
         else
         {
@@ -149,14 +93,6 @@ internal static partial class Check
         }
     }
 
-    /// <summary>
-    /// Nots the null or empty.
-    /// </summary>
-    /// <param name="data">The data.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>A Dictionary.</returns>
     [return: NotNull]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Dictionary<TKey, TValue> NotNullOrEmpty<TKey, TValue>(
@@ -167,26 +103,70 @@ internal static partial class Check
         where TKey : notnull
     {
         return data == null || !data.Any()
-            ? throw new ArgumentNullException(nameof(data), ErrorMessage(filePath, memberName, line))
+            ? throw new ArgumentNullException(nameof(data), ValueBeNullMessage(filePath, memberName, line))
             : data;
+    }
+
+    /// <summary>
+    /// 当给定参数<paramref name="value"/>为<see langword="true"/>时，抛出异常
+    /// <para>
+    /// <example>
+    /// 异常包含以下文本
+    /// <code>Value("true") can not be True. at [CallerFilePath]#L[CallerLineNumber]@[CallerMemberName] (Parameter 'value')</code>
+    /// </example>
+    /// </para>
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="expression"></param>
+    /// <param name="file"></param>
+    /// <param name="member"></param>
+    /// <param name="line"></param>
+    /// <exception cref="ArgumentException"></exception>
+    public static void ThrowIfTrue(
+        [DoesNotReturnIf(true)] bool value,
+        [CallerArgumentExpression("value")] string? expression = null,
+        [CallerFilePath] string? file = null,
+        [CallerMemberName] string? member = null,
+        [CallerLineNumber] int? line = null)
+    {
+        if(value)
+        {
+            throw new ArgumentException($"Value(\"{expression}\") can not be True. at {Path.GetFileName(file)}#L{line}@{member}", nameof(value));
+        }
+    }
+
+    /// <summary>
+    /// 当给定参数<paramref name="value"/>为<see langword="false"/>时，抛出异常
+    /// <para>
+    /// <example>
+    /// 异常包含以下文本
+    /// <code>Value("[CallerArgumentExpression("value")]") can not be False. at [CallerFilePath]#L[CallerLineNumber]@[CallerMemberName] (Parameter 'value')</code>
+    /// </example>
+    /// </para>
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="expression"></param>
+    /// <param name="file"></param>
+    /// <param name="member"></param>
+    /// <param name="line"></param>
+    /// <exception cref="ArgumentException"></exception>
+    public static void ThrowIfFalse(
+        [DoesNotReturnIf(true)] bool value,
+        [CallerArgumentExpression("value")] string? expression = null,
+        [CallerFilePath] string? file = null,
+        [CallerMemberName] string? member = null,
+        [CallerLineNumber] int? line = null)
+    {
+        if(value == false)
+        {
+            throw new ArgumentException($"Value(\"{expression}\") can not be False. at {Path.GetFileName(file)}#L{line}@{member}", nameof(value));
+        }
     }
 }
 
 #elif NETSTANDARD2_0_OR_GREATER
-/// <summary>
-/// The check.
-/// </summary>
-
 internal static partial class Check
 {
-    /// <summary>
-    /// Nots the null or empty.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>A string.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string NotNullOrEmpty(
        string? value,
@@ -195,18 +175,10 @@ internal static partial class Check
        [CallerLineNumber] int? line = null)
     {
         return string.IsNullOrEmpty(value)
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(filePath, memberName, line))
+            ? throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line))
             : value!;
     }
 
-    /// <summary>
-    /// Nots the null or white space.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>A string.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string NotNullOrWhiteSpace(
         string? value,
@@ -215,18 +187,10 @@ internal static partial class Check
         [CallerLineNumber] int? line = null)
     {
         return string.IsNullOrWhiteSpace(value)
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(filePath, memberName, line))
+            ? throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line))
             : value!;
     }
 
-    /// <summary>
-    /// Nots the null.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>A T.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T NotNull<T>(
         T? value,
@@ -235,18 +199,10 @@ internal static partial class Check
         [CallerLineNumber] int? line = null)
     {
         return value == null
-            ? throw new ArgumentNullException(nameof(value), ErrorMessage(filePath, memberName, line))
+            ? throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line))
             : value;
     }
 
-    /// <summary>
-    /// Nots the null or empty.
-    /// </summary>
-    /// <param name="data">The data.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>A list of TS.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static IEnumerable<T> NotNullOrEmpty<T>(
         IEnumerable<T> data,
@@ -256,7 +212,7 @@ internal static partial class Check
     {
         if(data?.Any() != true)
         {
-            throw new ArgumentNullException(nameof(data), ErrorMessage(filePath, memberName, line));
+            throw new ArgumentNullException(nameof(data), ValueBeNullMessage(filePath, memberName, line));
         }
         else
         {
@@ -264,14 +220,6 @@ internal static partial class Check
         }
     }
 
-    /// <summary>
-    /// Nots the null or empty.
-    /// </summary>
-    /// <param name="data">The data.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="line">The line.</param>
-    /// <returns>A Dictionary.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Dictionary<TKey, TValue> NotNullOrEmpty<TKey, TValue>(
         Dictionary<TKey, TValue>? data,
@@ -281,8 +229,32 @@ internal static partial class Check
         where TKey : notnull
     {
         return data == null || !data.Any()
-            ? throw new ArgumentNullException(nameof(data), ErrorMessage(filePath, memberName, line))
+            ? throw new ArgumentNullException(nameof(data), ValueBeNullMessage(filePath, memberName, line))
             : data;
+    }
+
+    public static void ThrowIfTrue(
+        bool value,
+        [CallerFilePath] string? file = null,
+        [CallerMemberName] string? member = null,
+        [CallerLineNumber] int? line = null)
+    {
+        if(value)
+        {
+            throw new ArgumentException($"Value can not be True. at {Path.GetFileName(file)}#L{line}@{member}", nameof(value));
+        }
+    }
+
+    public static void ThrowIfFalse(
+        bool value,
+        [CallerFilePath] string? file = null,
+        [CallerMemberName] string? member = null,
+        [CallerLineNumber] int? line = null)
+    {
+        if(value == false)
+        {
+            throw new ArgumentException($"Value can not be False. at {Path.GetFileName(file)}#L{line}@{member}", nameof(value));
+        }
     }
 }
 #endif

@@ -1,6 +1,7 @@
 namespace OneI.Utilityable;
 
 using DotNext;
+using ValueBuffer = ValueBuffer<char>;
 
 public class ArraySliceBenchmark
 {
@@ -40,7 +41,7 @@ public class ArraySliceBenchmark
     [Benchmark]
     public char[] UseCharBuffer()
     {
-        var span = new ByteBuffer(Text3);
+        var span = new ValueBuffer(Text3);
 
         return span[start..end].ToArray();
     }

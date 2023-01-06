@@ -7,7 +7,7 @@ public interface ILoggerRenderer
     void Render(LoggerContext context, TextWriter writer);
 }
 
-public class LoggerRenderer : ILoggerRenderer, IDisposable
+public class LoggerRenderer : ILoggerRenderer
 {
     private readonly TextTemplate _template;
     private readonly IFormatProvider? _formatProvider;
@@ -23,12 +23,5 @@ public class LoggerRenderer : ILoggerRenderer, IDisposable
         _template.WithProperties(context.GetAllProperties());
 
         _template.Render(writer, _formatProvider);
-    }
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-
-        _template.Dispose();
     }
 }

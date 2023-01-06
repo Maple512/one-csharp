@@ -8,19 +8,16 @@ using OneI.Textable.Templating.Properties;
 /// <summary>
 /// 文本模板
 /// </summary>
-public class TextTemplate : IDisposable
+public class TextTemplate
 {
-    private readonly ValueBuffer _buffer;
+    private readonly string _buffer;
     private readonly Token[] _tokens;
     private readonly PropertyToken[] _propertyTokens;
     private readonly Dictionary<string, PropertyValue> _properties;
 
     private TextTemplate(string text, IEnumerable<Token> tokens)
     {
-        _buffer = new ValueBuffer();
-
-        _buffer.Append(text);
-
+        _buffer = text;
         _tokens = tokens.ToArray();
         _propertyTokens = tokens.OfType<PropertyToken>().ToArray();
         _properties = new(StringComparer.InvariantCulture);
@@ -40,12 +37,12 @@ public class TextTemplate : IDisposable
         return new(value, tokens);
     }
 
-    public TextTemplate Append(scoped in ReadOnlySpan<char> text)
-    {
-        _buffer.Append(text);
+    //public TextTemplate Append(scoped in ReadOnlySpan<char> text)
+    //{
+    //    _buffer.Append(text);
 
-        return this;
-    }
+    //    return this;
+    //}
 
     public TextTemplate AddProperty<T>(T value, IFormatter<T>? formatter = null)
     {
@@ -99,11 +96,4 @@ public class TextTemplate : IDisposable
     }
 
     public override string ToString() => _buffer.ToString();
-
-    public void Dispose()
-    {
-        GC.SuppressFinalize(this);
-
-        _buffer.Clear();
-    }
 }

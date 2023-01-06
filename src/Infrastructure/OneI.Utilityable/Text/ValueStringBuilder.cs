@@ -1,27 +1,27 @@
-namespace System.Text;
+namespace OneI.Text;
 
 using System;
 using System.Buffers;
 using System.Runtime.InteropServices;
 using DotNext;
-using OneI;
+using DotNext.Collections.Generic;
 
 // https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/ValueStringBuilder.cs
 public struct ValueStringBuilder
 {
     private char[]? _arrayToReturnToPool;
-    private Memory<char> _chars;
+    private ValueBuffer<char> _chars;
     private int _pos;
 
     public ValueStringBuilder(scoped Span<char> buffer)
     {
         _arrayToReturnToPool = null;
-        var span = AppendSpan(buffer.Length);
-        buffer.TryCopyTo(span);
+        //var span = AppendSpan(buffer.Length);
+        //buffer.TryCopyTo(span);
         _pos = 0;
     }
 
-    public ValueStringBuilder(Memory<char> initialBuffer)
+    public ValueStringBuilder(ValueBuffer<char> initialBuffer)
     {
         _arrayToReturnToPool = null;
         _chars = initialBuffer;
@@ -34,20 +34,11 @@ public struct ValueStringBuilder
         _pos = 0;
     }
 
-    public int Length
-    {
-        get => _pos;
-        set
-        {
-            Debug.Assert(value >= 0);
-            Debug.Assert(value <= _chars.Length);
-            _pos = value;
-        }
-    }
+    public int Length => _pos;
 
     public int Capacity => _chars.Length;
 
-    public readonly Span<char> GetSpan() => _chars.Span;
+    //public readonly Span<char> _chars => _chars.AsSpan();
 
     public void EnsureCapacity(int capacity)
     {
@@ -61,61 +52,30 @@ public struct ValueStringBuilder
         }
     }
 
-    public ref char GetPinnableReference()
-    {
-        return ref MemoryMarshal.GetReference(GetSpan());
-    }
-
-    public ref char GetPinnableReference(bool terminate)
-    {
-        if(terminate)
-        {
-            EnsureCapacity(Length + 1);
-
-            GetSpan()[Length] = '\0';
-        }
-
-        return ref MemoryMarshal.GetReference(GetSpan());
-    }
-
-    public ref char this[int index]
+    public ref readonly char this[int index]
     {
         get
         {
             Debug.Assert(index < _pos);
 
-            return ref GetSpan()[index];
+            return ref _chars[index];
         }
     }
 
     public override string ToString()
     {
-        var s = GetSpan()[.._pos].ToString();
+        var s = _chars[.._pos].ToString();
 
         Dispose();
 
         return s;
     }
 
-    public readonly Span<char> RawChars => GetSpan();
+    public ReadOnlySpan<char> AsSpan() => _chars[.._pos].AsSpan();
+    public ReadOnlySpan<char> AsSpan(int start) => _chars[start.._pos].AsSpan();
+    public ReadOnlySpan<char> AsSpan(int start, int length) => _chars.Slice(start, length).AsSpan();
 
-    public ReadOnlySpan<char> AsSpan(bool terminate)
-    {
-        if(terminate)
-        {
-            EnsureCapacity(Length + 1);
-
-            GetSpan()[Length] = '\0';
-        }
-
-        return GetSpan()[.._pos];
-    }
-
-    public ReadOnlySpan<char> AsSpan() => GetSpan()[.._pos];
-    public ReadOnlySpan<char> AsSpan(int start) => GetSpan()[start.._pos];
-    public ReadOnlySpan<char> AsSpan(int start, int length) => GetSpan().Slice(start, length);
-
-    public bool TryCopyTo(Memory<char> destination, out int charsWritten)
+    public bool TryCopyTo(ValueBuffer<char> destination, out int charsWritten)
     {
         if(_chars[.._pos].TryCopyTo(destination))
         {
@@ -140,9 +100,9 @@ public struct ValueStringBuilder
 
         var remaining = _pos - index;
 
-        GetSpan().Slice(index, remaining).CopyTo(GetSpan()[(index + count)..]);
+        _chars.Slice(index, remaining).CopyTo(_chars[(index + count)..]);
 
-        GetSpan().Slice(index, count).Fill(value);
+        _chars.Slice(index, count).Fill(value);
 
         _pos += count;
     }
@@ -163,9 +123,9 @@ public struct ValueStringBuilder
 
         var remaining = _pos - index;
 
-        GetSpan().Slice(index, remaining).CopyTo(GetSpan()[(index + count)..]);
+        _chars.Slice(index, remaining).CopyTo(_chars[(index + count)..]);
 
-        s.CopyTo(GetSpan()[index..]);
+        s.CopyTo(_chars[index..]);
 
         _pos += count;
     }
@@ -176,7 +136,7 @@ public struct ValueStringBuilder
         var pos = _pos;
         if((uint)pos < (uint)_chars.Length)
         {
-            GetSpan()[pos] = c;
+            _chars[pos] = c;
 
             _pos = pos + 1;
         }
@@ -197,7 +157,7 @@ public struct ValueStringBuilder
         var pos = _pos;
         if(s.Length == 1 && (uint)pos < (uint)_chars.Length) // very common case, e.g. appending strings from NumberFormatInfo like separators, percent symbols, etc.
         {
-            GetSpan()[pos] = s[0];
+            _chars[pos] = s[0];
 
             _pos = pos + 1;
         }
@@ -215,22 +175,21 @@ public struct ValueStringBuilder
             Grow(s.Length);
         }
 
-        s.CopyTo(GetSpan()[pos..]);
+        s.CopyTo(_chars[pos..]);
         _pos += s.Length;
     }
 
     public void Append(char c, int count)
     {
+        var length = _chars.Length;
         if(_pos > _chars.Length - count)
         {
             Grow(count);
         }
 
-        scoped Span<char> dst = GetSpan().Slice(_pos, count);
-
-        for(var i = 0; i < dst.Length; i++)
+        for(var i = 0; i < count; i++)
         {
-            dst[i] = c;
+            _chars[i + length] = c;
         }
 
         _pos += count;
@@ -244,7 +203,7 @@ public struct ValueStringBuilder
             Grow(length);
         }
 
-        var dst = GetSpan().Slice(_pos, length);
+        var dst = _chars.Slice(_pos, length);
         for(var i = 0; i < dst.Length; i++)
         {
             dst[i] = *value++;
@@ -261,23 +220,9 @@ public struct ValueStringBuilder
             Grow(value.Length);
         }
 
-        value.CopyTo(GetSpan()[_pos..]);
+        value.ToArray().CopyTo(_chars[_pos..]);
 
         _pos += value.Length;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Span<char> AppendSpan(int length)
-    {
-        var origPos = _pos;
-        if(origPos > _chars.Length - length)
-        {
-            Grow(length);
-        }
-
-        _pos = origPos + length;
-
-        return GetSpan().Slice(origPos, length);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -317,7 +262,7 @@ public struct ValueStringBuilder
         // This could also go negative if the actual required length wraps around.
         var poolArray = ArrayPool<char>.Shared.Rent(newCapacity);
 
-        GetSpan()[.._pos].CopyTo(poolArray);
+        _chars[.._pos].CopyTo(poolArray);
 
         var toReturn = _arrayToReturnToPool;
         _chars = _arrayToReturnToPool = poolArray;
@@ -375,9 +320,9 @@ public struct ValueStringBuilder
         // Query the provider (if one was supplied) for an ICustomFormatter.  If there is one,
         // it needs to be used to transform all arguments.
         var cf = (ICustomFormatter?)provider?.GetFormat(typeof(ICustomFormatter));
-
+        scoped Span<char> dest = stackalloc char[100];
         // Repeatedly find the next hole and process it.
-        int pos = 0;
+        var pos = 0;
         char ch;
         while(true)
         {
@@ -391,8 +336,8 @@ public struct ValueStringBuilder
                     return;
                 }
 
-                ReadOnlySpan<char> remainder = format.AsSpan(pos);
-                int countUntilNextBrace = remainder.IndexOfAny('{', '}');
+                var remainder = format.AsSpan(pos);
+                var countUntilNextBrace = remainder.IndexOfAny('{', '}');
                 if(countUntilNextBrace < 0)
                 {
                     Append(remainder);
@@ -405,7 +350,7 @@ public struct ValueStringBuilder
 
                 // Get the brace.  It must be followed by another character, either a copy of itself in the case of being
                 // escaped, or an arbitrary character that's part of the hole in the case of an opening brace.
-                char brace = format[pos];
+                var brace = format[pos];
                 ch = MoveNext(format, ref pos);
                 if(brace == ch)
                 {
@@ -427,8 +372,8 @@ public struct ValueStringBuilder
             // We're now positioned just after the opening brace of an argument hole, which consists of
             // an opening brace, an index, an optional width preceded by a comma, and an optional format
             // preceded by a colon, with arbitrary amounts of spaces throughout.
-            int width = 0;
-            bool leftJustify = false;
+            var width = 0;
+            var leftJustify = false;
             scoped ReadOnlySpan<char> itemFormatSpan = default; // used if itemFormat is null
 
             // First up is the index parameter, which is of the form:
@@ -437,7 +382,7 @@ public struct ValueStringBuilder
             // We've already read the first digit into ch.
             Debug.Assert(format[pos - 1] == '{');
             Debug.Assert(ch != '{');
-            int index = ch - '0';
+            var index = ch - '0';
             if((uint)index >= 10u)
             {
                 ThrowFormatInvalidString();
@@ -515,7 +460,7 @@ public struct ValueStringBuilder
 
                     // Search for the closing brace; everything in between is the format,
                     // but opening braces aren't allowed.
-                    int startingPos = pos;
+                    var startingPos = pos;
                     while(true)
                     {
                         ch = MoveNext(format, ref pos);
@@ -548,7 +493,7 @@ public struct ValueStringBuilder
             {
                 throw new FormatException("Index (zero based) must be greater than or equal to zero and less than the size of the argument list.");
             }
-            object? arg = args[index];
+            var arg = args[index];
 
             if(cf != null)
             {
@@ -562,11 +507,13 @@ public struct ValueStringBuilder
 
             if(s == null)
             {
+
+
                 // If arg is ISpanFormattable and the beginning doesn't need padding,
                 // try formatting it into the remaining current chunk.
                 if((leftJustify || width == 0) &&
                     arg is ISpanFormattable spanFormattableArg &&
-                    spanFormattableArg.TryFormat(GetSpan()[_pos..], out int charsWritten, itemFormatSpan, provider))
+                    spanFormattableArg.TryFormat(dest, out var charsWritten, itemFormatSpan, provider))
                 {
                     _pos += charsWritten;
 

@@ -21,13 +21,12 @@ public static class BenchmarkTool
              .AddLogger(ConsoleLogger.Unicode)
              .AddDiagnoser(new DisassemblyDiagnoser(new DisassemblyDiagnoserConfig(1, exportGithubMarkdown: false)))
              .AddDiagnoser(new MemoryDiagnoser(new MemoryDiagnoserConfig(true)))
-             .AddDiagnoser(new NativeMemoryProfiler())
              .AddDiagnoser(ThreadingDiagnoser.Default)
              .WithOrderer(new DefaultOrderer(SummaryOrderPolicy.FastestToSlowest, MethodOrderPolicy.Declared))
              .AddColumn(new RankColumn(NumeralSystem.Arabic))
              .AddColumnProvider(DefaultColumnProviders.Instance)
-             .AddJob(Job.Default.AsBaseline().AsDefault().WithArguments(new[] { new MsBuildArgument("/p:Optimize=true /P:AllowUnsafeBlocks=true") }))
-             .AddExporter(MarkdownExporter.GitHub, RPlotExporter.Default);
+             .AddJob(Job.Default.AsBaseline().AsDefault().WithArguments(new[] { new MsBuildArgument("/p:Optimize=true /p:AllowUnsafeBlocks=true") }))
+             .AddExporter(MarkdownExporter.GitHub, HtmlExporter.Default);
 
     public static void RunAssymbly<T>(string[]? args = null)
     {

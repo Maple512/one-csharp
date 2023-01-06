@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Using Include="OneT.Common"/>
         <Using Include="Shouldly" />
         <Using Include="Xunit"/>
     </ItemGroup>

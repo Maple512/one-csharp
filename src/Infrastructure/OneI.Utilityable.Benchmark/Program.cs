@@ -4,6 +4,8 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        BenchmarkTool.RunAssymbly<Program>(args);
+        // BenchmarkTool.RunAssymbly<Program>(args);
+
+        BenchmarkTool.Run<StringBuilderBenchmark>(args);
     }
 }
