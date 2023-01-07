@@ -22,7 +22,7 @@ public class TextTemplateBenchmark
     [Benchmark]
     public string UseValueStringBuilder()
     {
-        var builder = new ValueStringBuilder(GlobalConstants.ArrayPoolMinimumLength);
+        var builder = new ValueStringBuilder(GlobalConstants.StringFormatMinimumLength);
 
         builder.AppendFormat(format, arg1, arg2, arg3, arg4, arg5, arg6);
 
@@ -32,7 +32,7 @@ public class TextTemplateBenchmark
     [Benchmark]
     public string UseStringBuilder()
     {
-        var builder = new StringBuilder(GlobalConstants.ArrayPoolMinimumLength);
+        var builder = new StringBuilder(GlobalConstants.StringFormatMinimumLength);
 
         builder.AppendFormat(format, arg1, arg2, arg3, arg4, arg5, arg6);
 

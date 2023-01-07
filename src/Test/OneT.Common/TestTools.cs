@@ -31,6 +31,14 @@ public static class TestTools
     }
 
     /// <summary>
+    /// 打印内存中类或结构的数据字段的物理布局
+    /// </summary>
+    public static void PrintLayoutToFile(Type type, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null)
+    {
+        PrintToFile($"[{DateTime.Now:HH:mm}] {TypeLayout.GetLayout(type)}", file, member);
+    }
+
+    /// <summary>
     /// 获取项目csporj文件所在目录
     /// </summary>
     /// <param name="filePath">调用该方法的文件地址</param>

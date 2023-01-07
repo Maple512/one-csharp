@@ -278,7 +278,8 @@ public ref struct RefValueStringBuilder
         return _chars.Slice(origPos, length);
     }
 
-    public void AppendSpanFormattable<T>(T value, string? format = null, IFormatProvider? provider = null) where T : ISpanFormattable
+    public void AppendSpanFormattable<T>(T value, string? format = null, IFormatProvider? provider = null)
+        where T : ISpanFormattable
     {
         if(value.TryFormat(_chars[_pos..], out int charsWritten, format, provider))
         {

@@ -1,5 +1,10 @@
 namespace OneI;
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
 [DebuggerStepThrough]
 internal static partial class Check
 {
@@ -87,10 +92,8 @@ internal static partial class Check
         {
             throw new ArgumentNullException(nameof(data), ValueBeNullMessage(filePath, memberName, line));
         }
-        else
-        {
-            return data;
-        }
+
+        return data;
     }
 
     [return: NotNull]

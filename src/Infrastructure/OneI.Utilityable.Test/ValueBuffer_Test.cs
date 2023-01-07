@@ -4,7 +4,7 @@ using Shouldly;
 
 using ValueBuffer = ValueBuffer<char>;
 
-public class ValueBuffer_Test
+public unsafe class ValueBuffer_Test
 {
     private const string text = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static readonly char[] _chars = text.ToCharArray();
@@ -40,7 +40,7 @@ public class ValueBuffer_Test
         unsafe
         {
             ref var expected = ref Unsafe.AsRef<char>(null);
-            ref var actual = ref MemoryMarshal.GetReference(empty.AsSpan());
+            ref var actual = ref MemoryMarshal.GetReference(empty.AsReadOnlySpan());
             Unsafe.AreSame(ref expected, ref actual).ShouldBeTrue();
         }
     }
@@ -100,7 +100,7 @@ public class ValueBuffer_Test
     {
         var buffer = new ValueBuffer(_chars);
 
-        var rspan = buffer.AsSpan();
+        var rspan = buffer.AsReadOnlySpan();
 
         rspan.Length.ShouldBe(_chars.Length);
 
@@ -231,5 +231,46 @@ public class ValueBuffer_Test
         numbers.CopyTo(nb);
 
         nb.ToArray().ShouldBeEquivalentTo(numbers);
+    }
+
+    [Fact]
+    public void int_buffer()
+    {
+        var ints = stackalloc int[100];
+
+        var buffer = new ValueBuffer<int>(ints, 100);
+
+        var array = Enumerable.Range(0, 100)
+            .ToArray();
+
+        array.CopyTo(buffer);
+
+        buffer.ToArray().ShouldBeEquivalentTo(array);
+    }
+
+    [Fact]
+    public void custom_struct_buffer()
+    {
+        var ints = stackalloc Sturct1[100];
+
+        var buffer = new ValueBuffer<Sturct1>(ints, 100);
+
+        var array = Enumerable.Range(0, 100)
+            .Select(x => new Sturct1(100))
+            .ToArray();
+
+        array.CopyTo(buffer);
+
+        buffer.ToArray().ShouldBeEquivalentTo(array);
+    }
+
+    struct Sturct1
+    {
+        public int x;
+
+        public Sturct1(int x)
+        {
+            this.x = x;
+        }
     }
 }

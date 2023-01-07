@@ -155,9 +155,14 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
         return ref Unsafe.AsRef<T>(_reference);
     }
 
-    public ReadOnlySpan<T> AsSpan()
+    public ReadOnlySpan<T> AsReadOnlySpan()
     {
         return new ReadOnlySpan<T>(_reference, Length);
+    }
+
+    public Span<T> AsSpan()
+    {
+        return new Span<T>(_reference, Length);
     }
 
     /// <summary>
@@ -389,7 +394,7 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
 
     private string GetDebuggerDisplay()
     {
-        return $"[Length: {Length}]";
+        return $"[Length: {Length}, {ToString()}]";
     }
 
     public Enumerator GetEnumerator() => new(this);

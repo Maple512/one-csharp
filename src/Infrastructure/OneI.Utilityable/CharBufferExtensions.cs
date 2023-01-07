@@ -1,5 +1,7 @@
 namespace OneI;
 
+using DotNext.Runtime;
+
 public static class CharBufferExtensions
 {
     /// <summary>
@@ -179,6 +181,11 @@ public static class CharBufferExtensions
             ThrowArgumentNullException();
         }
 
+        if(array.Length > buffer.Length)
+        {
+            ThrowArgumentOutOfRangeException();
+        }
+
         if(array.Length <= buffer.Length)
         {
             var size = Unsafe.SizeOf<T>();
@@ -198,21 +205,50 @@ public static class CharBufferExtensions
             ThrowArgumentNullException();
         }
 
-        if(chars.Length <= buffer.Length)
+        if(chars.Length > buffer.Length)
         {
-            fixed(char* ptr = &chars.GetPinnableReference())
-            {
-                const int size = sizeof(char);
-
-                Buffer.MemoryCopy(
-                    ptr,
-                    buffer.GetPointer(0),
-                    buffer.Length * size,
-                    (uint)chars.Length * size);
-            }
+            ThrowArgumentOutOfRangeException();
         }
+
+        fixed(char* ptr = &chars.GetPinnableReference())
+        {
+            const int size = sizeof(char);
+
+            Buffer.MemoryCopy(
+                ptr,
+                buffer.GetPointer(0),
+                buffer.Length * size,
+                (uint)chars.Length * size);
+        }
+    }
+
+    public static unsafe void CopyTo<T>(this ReadOnlySpan<T> array, ValueBuffer<T> buffer)
+        where T : unmanaged
+    {
+        if(array.IsEmpty)
+        {
+            ThrowArgumentNullException();
+        }
+
+        if(array.Length > buffer.Length)
+        {
+            ThrowArgumentOutOfRangeException();
+        }
+
+        var reference = array.GetPinnableReference();
+
+        int size = Unsafe.SizeOf<T>();
+
+        Buffer.MemoryCopy(
+                Unsafe.AsPointer(ref reference),
+                buffer.GetPointer(0),
+                buffer.Length * size,
+                array.Length * size);
     }
 
     [DoesNotReturn]
     static void ThrowArgumentNullException() => throw new ArgumentNullException();
+
+    [DoesNotReturn]
+    static void ThrowArgumentOutOfRangeException() => throw new ArgumentOutOfRangeException();
 }

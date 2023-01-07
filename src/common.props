@@ -4,7 +4,7 @@
     <PropertyGroup>
         <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
-        <VersionPrefix>0.0.1</VersionPrefix>
+        <VersionPrefix>0.0.3</VersionPrefix>
         <ImplicitUsings>true</ImplicitUsings>
         <NeutralLanguage>zh-Hans</NeutralLanguage>
         <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
@@ -65,8 +65,6 @@
 
     <!--Nuget Packages Config-->
     <PropertyGroup>
-        <IncludeSymbols>True</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/maple512/one-csharp</RepositoryUrl>
         <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
@@ -74,6 +72,7 @@
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     </PropertyGroup>
 
+    <!-- Include symbol files (*.pdb) in the built .nupkg -->
     <PropertyGroup>
         <EmbedAllSources>true</EmbedAllSources>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>

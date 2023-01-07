@@ -9,20 +9,21 @@ public class StringBuilderBenchmark
     private const string StringValue = "1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz";
 
     public const int count = 50;
-    public const int capacity = GlobalConstants.ArrayPoolMinimumLength;
+    public const int capacity = GlobalConstants.StringFormatMinimumLength;
 
-    [GlobalSetup]
+#if DEBUG
     public void Validate()
     {
-        var result =  UseStringBuilder();
+        var result = UseStringBuilder();
 
-        Check.ThrowIfFalse(UseList().Equals(result, StringComparison.InvariantCulture));
-        Check.ThrowIfFalse(UseValueStringBuilder().Equals(result, StringComparison.InvariantCulture));
-        Check.ThrowIfFalse(UseRefValueStringBuilder().Equals(result, StringComparison.InvariantCulture));
-        Check.ThrowIfFalse(UsePooledArrayBufferWriter().Equals(result, StringComparison.InvariantCulture));
-        Check.ThrowIfFalse(UseSparseBufferWriter().Equals(result, StringComparison.InvariantCulture));
-        Check.ThrowIfFalse(UseBufferWriterSlim().Equals(result, StringComparison.InvariantCulture));
+        Shouldly.ShouldBeTestExtensions.ShouldBe(UseList(), result, StringComparer.OrdinalIgnoreCase);
+        Shouldly.ShouldBeTestExtensions.ShouldBe(UseValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
+        Shouldly.ShouldBeTestExtensions.ShouldBe(UseRefValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
+        Shouldly.ShouldBeTestExtensions.ShouldBe(UsePooledArrayBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
+        Shouldly.ShouldBeTestExtensions.ShouldBe(UseSparseBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
+        Shouldly.ShouldBeTestExtensions.ShouldBe(UseBufferWriterSlim(), result, StringComparer.OrdinalIgnoreCase);
     }
+#endif
 
     [Benchmark(Baseline = true)]
     public string UseStringBuilder()
