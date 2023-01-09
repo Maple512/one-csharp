@@ -1,8 +1,7 @@
 namespace OneI.Utilityable;
 
 using DotNext;
-using DotNext.Runtime;
-using ValueBuffer = ValueBuffer<char>;
+using ValueBuffer = Buffers.ValueBuffer<char>;
 
 public unsafe class ArrayCopyBenchmark
 {

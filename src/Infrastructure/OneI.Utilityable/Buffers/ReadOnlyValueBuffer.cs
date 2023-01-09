@@ -1,58 +1,54 @@
-namespace OneI;
+namespace OneI.Buffers;
 
-using System;
+using DotNext.Runtime;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
-/// <summary>
-/// 字符缓冲区，参考<see cref="Span{T}"/>
-/// </summary>
 [StackTraceHidden]
-[DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
+[StructLayout(LayoutKind.Auto)]
+public readonly unsafe struct ReadOnlyValueBuffer<T> : IEquatable<ReadOnlyValueBuffer<T>>
     where T : unmanaged
 {
-    private readonly uint _length;
+    private readonly int _length;
     private readonly T* _reference;
 
-    public static readonly ValueBuffer<T> Empty = default;
+    public static readonly ReadOnlyValueBuffer<T> Empty = default;
 
     /// <summary>
-    /// 在指定的数组上创建<see cref="ValueBuffer{T}"/>
+    /// 在指定的数组上创建<see cref="ReadOnlyValueBuffer{T}"/>
     /// </summary>
     /// <param name="array"></param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueBuffer(T[] array)
-        : this(array, 0, array.Length)
+    public ReadOnlyValueBuffer(T[]? array)
+        : this(array, 0, array?.Length ?? 0)
     {
+
     }
 
     /// <summary>
-    /// 创建指定长度的<see cref="ValueBuffer{T}"/>
+    /// 创建指定长度的<see cref="ReadOnlyValueBuffer{T}"/>
     /// </summary>
     /// <param name="length"></param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueBuffer(int length)
+    public ReadOnlyValueBuffer(int length)
         : this(new T[length], start: 0, length)
     {
     }
 
     /// <summary>
-    /// 从指定索引开始，创建包含数组指定长度的<see cref="ValueBuffer{T}"/>
+    /// 从指定索引开始，创建包含数组指定长度的<see cref="ReadOnlyValueBuffer{T}"/>
     /// </summary>
     /// <param name="array"></param>
     /// <param name="start"></param>
     /// <param name="length"></param>
     /// <exception cref="ArgumentNullException"></exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueBuffer(T[] array, int start, int length)
+    public ReadOnlyValueBuffer(T[]? array, int start, int length)
     {
         if(array == null || array.Length == 0)
         {
             if(start != 0 || length != 0)
             {
-                ThrowArgumentException();
+                ThrowHelper.ThrowArgumentNullException(ExceptionArgument.array);
             }
 
             this = default;
@@ -67,46 +63,45 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
 #else
         if((uint)start > (uint)array.Length || (uint)length > (uint)(array.Length - start))
         {
-            ThrowArgumentOutofRangeException();
+            ThrowHelper.ThrowArgumentOutOfRangeException();
         }
 #endif
 
-        _length = (uint)length;
+        _length = length;
 
         fixed(T* ptr = array)
         {
             _reference = ptr + start;
         }
-
-        [DoesNotReturn]
-        static void ThrowArgumentException()
-        {
-            throw new ArgumentNullException();
-        }
     }
 
     /// <summary>
-    /// 从指定的内存地址开始，创建指定长度的<see cref="ValueBuffer{T}"/>
+    /// 从指定的内存地址开始，创建指定长度的<see cref="ReadOnlyValueBuffer{T}"/>
     /// </summary>
     /// <param name="reference"></param>
     /// <param name="length"></param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueBuffer(void* reference, int length)
+    public ReadOnlyValueBuffer(void* reference, int length)
     {
-        if(length < 0)
-        {
-            ThrowArgumentOutofRangeException();
-        }
-
         _reference = (T*)reference;
-        _length = (uint)length;
+        _length = length;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ReadOnlyValueBuffer(ref T reference, int length)
+    {
+        _length = length;
+        fixed(T* ptr = &reference)
+        {
+            _reference = ptr;
+        }
     }
 
     public int Length => (int)_length;
 
     public bool IsEmpty => _length == 0;
 
-    public ref T this[int index]
+    public ref readonly T this[int index]
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -115,7 +110,7 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
 
             if(uindex >= _length)
             {
-                ThrowArgumentOutofRangeException();
+                ThrowHelper.ThrowArgumentOutOfRangeException();
             }
 
             return ref _reference[uindex];
@@ -123,37 +118,13 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
     }
 
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public T* GetPointer(int index)
-    {
-        var uindex = (uint)index;
-        if(uindex >= _length)
-        {
-            ThrowArgumentOutofRangeException();
-        }
-
-        return _reference + uindex;
-    }
-
-    public void Fill(T value)
-    {
-        if(_length > 0)
-        {
-            var index = 0;
-            do
-            {
-                *(_reference + index++) = value;
-            } while(index < _length);
-        }
-    }
+    public readonly T* GetPointer() => _reference;
 
     /// <summary>
     /// 返回对第0个元素的引用
     /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public ref readonly T GetReference()
-    {
-        return ref Unsafe.AsRef<T>(_reference);
-    }
+    public ref  T GetReference() => ref *_reference;
 
     public ReadOnlySpan<T> AsReadOnlySpan()
     {
@@ -183,6 +154,9 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
         return array;
     }
 
+    /// <summary>
+    /// 清空该实例的所有内容
+    /// </summary>
     public void Clear()
     {
         if(_length > 0)
@@ -195,7 +169,7 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
     /// 将此实例中的所有字符复制到目标<paramref name="destination"/>中
     /// </summary>
     /// <param name="destination"></param>
-    public void CopyTo(ValueBuffer<T> destination)
+    public void CopyTo(ReadOnlyValueBuffer<T> destination)
     {
         if(destination.IsEmpty || IsEmpty)
         {
@@ -210,7 +184,7 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
     /// </summary>
     /// <param name="destination"></param>
     /// <returns></returns>
-    public bool TryCopyTo(ValueBuffer<T> destination)
+    public bool TryCopyTo(ReadOnlyValueBuffer<T> destination)
     {
         if(destination.IsEmpty || IsEmpty)
         {
@@ -275,12 +249,12 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
     /// <param name="start">开始此切片的索引</param>
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public ValueBuffer<T> Slice(int start)
+    public ReadOnlyValueBuffer<T> Slice(int start)
     {
         var ustart = (uint)start;
         if(ustart > _length)
         {
-            ThrowArgumentOutofRangeException();
+            ThrowHelper.ThrowArgumentOutOfRangeException();
         }
 
         var length = _length - ustart;
@@ -295,7 +269,7 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
     /// <param name="length">此切片的长度</param>
     /// <returns></returns>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public ValueBuffer<T> Slice(int start, int length)
+    public ReadOnlyValueBuffer<T> Slice(int start, int length)
     {
         //https://github.com/dotnet/runtime/blob/6009a1064ccfc2bd9aeb96c9247b60cf6352198d/src/libraries/System.Private.CoreLib/src/System/Span.cs#L415
 #if TARGET_64BIT
@@ -306,24 +280,24 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
 #else
         if((uint)start + (uint)length > _length)
         {
-            ThrowArgumentOutofRangeException();
+            ThrowHelper.ThrowArgumentOutOfRangeException();
         }
 #endif
 
-        return new ValueBuffer<T>(_reference + start, length);
+        return new ReadOnlyValueBuffer<T>(_reference + start, length);
     }
 
-    public static implicit operator ValueBuffer<T>(T[] array)
+    public static implicit operator ReadOnlyValueBuffer<T>(T[] array)
     {
         if(array is null or { Length: 0 })
         {
             return Empty;
         }
 
-        return new ValueBuffer<T>(array);
+        return new ReadOnlyValueBuffer<T>(array);
     }
 
-    public static implicit operator ValueBuffer<T>(ArraySegment<T> segment)
+    public static implicit operator ReadOnlyValueBuffer<T>(ArraySegment<T> segment)
     {
         if(segment.Array is null
             || segment.Count is 0)
@@ -331,51 +305,57 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
             return Empty;
         }
 
-        return new ValueBuffer<T>(segment.Array[segment.Offset..segment.Count]);
+        return new ReadOnlyValueBuffer<T>(segment.Array[segment.Offset..segment.Count]);
     }
 
-    public static ValueBuffer<char> Create(in string text)
+    public static implicit operator ReadOnlyValueBuffer<T>(Span<T> span)
     {
-        fixed(char* reference = text)
+        if(span.IsEmpty)
         {
-            return new ValueBuffer<char>(reference, text.Length);
+            return Empty;
         }
+
+        return new ReadOnlyValueBuffer<T>(Unsafe.AsPointer<T>(ref span.GetPinnableReference()), span.Length);
     }
 
     public override string ToString()
     {
         if(typeof(T) == typeof(char))
         {
+            if(IsEmpty)
+            {
+                return string.Empty;
+            }
+
             return new string((char*)_reference, 0, (int)_length);
         }
 
-        return $"OneI.ValueBuffer<{typeof(T).Name}>[{_length}]";
+        return $"OneI.ReadOnlyValueBuffer<{typeof(T).Name}>[{_length}]";
     }
 
     public override bool Equals([NotNullWhen(true)] object? obj)
     {
-        return obj is ValueBuffer<T> buffer
+        return obj is ReadOnlyValueBuffer<T> buffer
             && Equals(buffer);
     }
 
-    public bool Equals(ValueBuffer<T> other)
+    public bool Equals(ReadOnlyValueBuffer<T> other)
     {
         return _reference == other._reference
             && _length == other._length;
     }
 
-    [Obsolete("GetHashCode() on Span will always throw an exception.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-#pragma warning disable CS0809 // 过时成员重写未过时成员
-    public override int GetHashCode() => throw new NotSupportedException();
-#pragma warning restore CS0809 // 过时成员重写未过时成员
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Intrinsics.PointerHashCode(_reference), _length);
+    }
 
-    public static bool operator ==(ValueBuffer<T> left, ValueBuffer<T> right)
+    public static bool operator ==(ReadOnlyValueBuffer<T> left, ReadOnlyValueBuffer<T> right)
     {
         return left.Equals(right);
     }
 
-    public static bool operator !=(ValueBuffer<T> left, ValueBuffer<T> right)
+    public static bool operator !=(ReadOnlyValueBuffer<T> left, ReadOnlyValueBuffer<T> right)
     {
         return !(left == right);
     }
@@ -383,28 +363,17 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
     private uint BitLength
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _length * (uint)Unsafe.SizeOf<T>();
-    }
-
-    [DoesNotReturn]
-    private static void ThrowArgumentOutofRangeException()
-    {
-        throw new ArgumentOutOfRangeException();
-    }
-
-    private string GetDebuggerDisplay()
-    {
-        return $"[Length: {Length}, {ToString()}]";
+        get => (uint)(_length * sizeof(T));
     }
 
     public Enumerator GetEnumerator() => new(this);
 
     public struct Enumerator
     {
-        private readonly ValueBuffer<T> _buffer;
+        private readonly ReadOnlyValueBuffer<T> _buffer;
         private int _index;
 
-        internal Enumerator(ValueBuffer<T> buffer)
+        internal Enumerator(ReadOnlyValueBuffer<T> buffer)
         {
             _buffer = buffer;
             _index = -1;
@@ -427,3 +396,4 @@ public readonly unsafe struct ValueBuffer<T> : IEquatable<ValueBuffer<T>>
         public ref readonly T Current => ref _buffer[_index];
     }
 }
+

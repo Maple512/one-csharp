@@ -1,7 +1,5 @@
 namespace OneI.Utilityable.Benchmark;
 
-using System.Reflection;
-
 internal class Program
 {
     private static void Main(string[] args)
@@ -9,11 +7,19 @@ internal class Program
         // BenchmarkTool.RunAssymbly<Program>(args);
 
 #if DEBUG
-        new InternalMethodReflectionBenchmark().Validate();
+        var validators = typeof(Program).Assembly.GetTypes()
+            .Where(x => x.IsAssignableTo(typeof(IValidator)) && x.IsClass)
+            .Select(x =>
+            {
+                return (IValidator)Activator.CreateInstance(x)!;
+            })
+            .ToArray();
+
+        foreach(var item in validators)
+        {
+            item.Validate();
+        }
 #endif
-
-        var s = IL.Fast(100);
-
-        BenchmarkTool.Run<InternalMethodReflectionBenchmark>(args);
+        BenchmarkTool.Run<ObjectEqualsBenchmark>(args);
     }
 }

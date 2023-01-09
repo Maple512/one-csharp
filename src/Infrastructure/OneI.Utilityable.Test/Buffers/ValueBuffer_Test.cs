@@ -1,13 +1,19 @@
-namespace OneI;
+namespace OneI.Buffers;
 
+using OneI;
+using DotNext;
 using Shouldly;
 
 using ValueBuffer = ValueBuffer<char>;
 
 public unsafe class ValueBuffer_Test
 {
-    private const string text = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static readonly char[] _chars = text.ToCharArray();
+    const string text = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+    public static IEnumerable<object[]> GetText()
+    {
+        yield return new object[] { text };
+    }
 
     [Fact]
     public void size_print()
@@ -16,6 +22,82 @@ public unsafe class ValueBuffer_Test
         Unsafe.SizeOf<ValueBuffer>().ShouldBe(16);
 
         TestTools.PrintLayoutToFile<ValueBuffer>();
+    }
+
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void end_with(string text)
+    {
+        var _chars = text.ToCharArray();
+        var buffer = text.AsValueBuffer();
+        var buffer1 = text[..10].AsValueBuffer();
+
+        buffer.StartsWith(buffer1).ShouldBeTrue();
+    }
+
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void index_of(string text)
+    {
+        var _chars = text.ToCharArray();
+
+        var index = text.IndexOf('0');
+
+        var buffer = new ValueBuffer(_chars);
+
+        buffer.IndexOf('0').ShouldBe(index);
+        buffer.IndexOf(' ').ShouldBe(0);
+        buffer.IndexOf(text[0]).ShouldBe(0);
+        buffer.IndexOf(text[^1]).ShouldBe(text.Length - 1);
+
+        buffer.LastIndexOf('0').ShouldBe(index);
+        buffer.LastIndexOf(' ').ShouldBe(0);
+        buffer.LastIndexOf(text[0]).ShouldBe(0);
+        buffer.LastIndexOf(text[^1]).ShouldBe(text.Length - 1);
+
+        buffer.Contains('0').ShouldBeTrue();
+        buffer.Contains(' ').ShouldBeFalse();
+    }
+
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void sequence_equals(string text)
+    {
+        var _chars = text.ToCharArray();
+
+        var index = text.IndexOf('0');
+
+        var buffer = new ValueBuffer(_chars);
+
+        buffer.SequenceEqual(new(_chars)).ShouldBeTrue();
+        //buffer.SequenceEqual(new(_chars), text.Length).ShouldBeTrue();
+        //buffer.SequenceEqual(new(_chars), text.Length + 1).ShouldBeTrue();
+
+        // 和短序列比较
+        buffer.SequenceEqual(new(_chars[..6])).ShouldBeFalse();
+
+        // 和短序列在超过的长度中比较
+        //buffer.SequenceEqual(new(_chars[..6]), 10).ShouldBeFalse();
+    }
+
+    [Fact]
+    public void implicit_conversion()
+    {
+        var array = Randomizer.String(100).ToCharArray();
+
+        ValueBuffer<char> buffer = array;
+
+        buffer.ToArray().ShouldBeEquivalentTo(array);
+
+        var span = new Span<char>(Randomizer.String(100).ToCharArray());
+
+        buffer = span;
+
+        buffer.ToArray().ShouldBeEquivalentTo(span.ToArray());
+
+        buffer.Clear();
+
+        span.ToString().ShouldBe(new string(char.MinValue, span.Length));
     }
 
     [Fact]
@@ -45,9 +127,13 @@ public unsafe class ValueBuffer_Test
         }
     }
 
-    [Fact]
-    public void ctor_array()
+    [Theory]
+    [MemberData(nameof(GetText))]
+    [MemberData(nameof(GetText))]
+    public void ctor_array(string text)
     {
+        var _chars = text.ToCharArray();
+
         var buffer = new ValueBuffer(_chars);
 
         buffer.ToArray().ShouldBeEquivalentTo(_chars);
@@ -63,9 +149,12 @@ public unsafe class ValueBuffer_Test
         buffer.ToArray().ShouldBeEquivalentTo(new char[100]);
     }
 
-    [Fact]
-    public void ctor_array_int()
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void ctor_array_int(string text)
     {
+        var _chars = text.ToCharArray();
+
         var buffer = new ValueBuffer(_chars, 1, 10);
         buffer.ToArray().ShouldBe(_chars[1..11]);
 
@@ -76,9 +165,12 @@ public unsafe class ValueBuffer_Test
         Should.Throw<ArgumentOutOfRangeException>(() => new ValueBuffer(chars, 5, 10));
     }
 
-    [Fact]
-    public unsafe void ctor_pointer()
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public unsafe void ctor_pointer(string text)
     {
+        var _chars = text.ToCharArray();
+
         Should.Throw<ArgumentOutOfRangeException>(() =>
         {
             fixed(char* ptr = &_chars[0])
@@ -95,9 +187,12 @@ public unsafe class ValueBuffer_Test
         }
     }
 
-    [Fact]
-    public void as_span()
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void as_span(string text)
     {
+        var _chars = text.ToCharArray();
+
         var buffer = new ValueBuffer(_chars);
 
         var rspan = buffer.AsReadOnlySpan();
@@ -107,18 +202,24 @@ public unsafe class ValueBuffer_Test
         rspan.ToArray().ShouldBe(_chars);
     }
 
-    [Fact]
-    public void to_array()
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void to_array(string text)
     {
+        var _chars = text.ToCharArray();
+
         var buffer = new ValueBuffer(_chars);
 
         buffer.ToArray().ShouldBeEquivalentTo(_chars);
         buffer.ToArray().ShouldNotBeSameAs(_chars);
     }
 
-    [Fact]
-    public void clear()
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void clear(string text)
     {
+        var _chars = text.ToCharArray();
+
         var buffer1 = new ValueBuffer(_chars, 1, 10);
         var buffer2 = new ValueBuffer(_chars, 1, 10);
 
@@ -129,9 +230,12 @@ public unsafe class ValueBuffer_Test
         buffer1.ToArray().ShouldBeEquivalentTo(buffer2.ToArray());
     }
 
-    [Fact]
-    public void copy_to_other()
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void copy_to_other(string text)
     {
+        var _chars = text.ToCharArray();
+
         var buffer = new ValueBuffer(_chars);
         var buffer1 = new ValueBuffer(200);
 
@@ -146,9 +250,12 @@ public unsafe class ValueBuffer_Test
         buffer.ToArray().ShouldBeEquivalentTo(array[.._chars.Length].ToArray());
     }
 
-    [Fact]
-    public void try_copy_to_other()
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void try_copy_to_other(string text)
     {
+        var _chars = text.ToCharArray();
+
         var buffer = new ValueBuffer(_chars);
         var buffer1 = new ValueBuffer(200);
 
@@ -162,9 +269,12 @@ public unsafe class ValueBuffer_Test
         buffer.ToArray().ShouldBeEquivalentTo(array[.._chars.Length].ToArray());
     }
 
-    [Fact]
-    public void slice()
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void slice(string text)
     {
+        var _chars = text.ToCharArray();
+
         var buffer = new ValueBuffer(_chars).Slice(_chars.Length);
 
         buffer.Length.ShouldBe(0);
@@ -194,15 +304,20 @@ public unsafe class ValueBuffer_Test
         var index = 0;
         while(enumerator.MoveNext())
         {
-            Unsafe.AreSame(ref Unsafe.AsRef(enumerator.Current), ref Unsafe.AsRef(span[index++])).ShouldBeTrue();
+            Unsafe.AreSame(
+                ref Unsafe.AsRef(enumerator.Current),
+                ref Unsafe.AsRef(span[index++])).ShouldBeTrue();
         }
 
         enumerator.MoveNext().ShouldBeFalse();
     }
 
-    [Fact]
-    public void reverse()
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void reverse(string text)
     {
+        var _chars = text.ToCharArray();
+
         var buffer = new ValueBuffer(_chars);
 
         var copy = buffer.ToArray();
@@ -214,9 +329,12 @@ public unsafe class ValueBuffer_Test
         buffer.ToArray().ShouldBeEquivalentTo(copy);
     }
 
-    [Fact]
-    public void type_copy()
+    [Theory]
+    [MemberData(nameof(GetText))]
+    public void type_copy(string text)
     {
+        var _chars = text.ToCharArray();
+
         var buffer = new ValueBuffer(10);
 
         var str = Randomizer.String(10);
@@ -224,6 +342,8 @@ public unsafe class ValueBuffer_Test
         str.CopyTo(buffer);
 
         buffer.ToString().ShouldBeEquivalentTo(str);
+
+        buffer.Clear();
 
         var nb = new ValueBuffer<int>(10);
         var numbers = new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };

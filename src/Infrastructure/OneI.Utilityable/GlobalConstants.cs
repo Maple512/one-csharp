@@ -3,6 +3,14 @@ namespace OneI;
 public static class GlobalConstants
 {
     /// <summary>
+    /// This is the threshold where Introspective sort switches to Insertion sort.
+    /// Empirically, 16 seems to speed up most cases without slowing down others, at least for integers.
+    /// Large value types may benefit from a smaller number.
+    /// <para>source: <see href="https://github.com/dotnet/runtime/blob/6009a1064ccfc2bd9aeb96c9247b60cf6352198d/src/libraries/System.Private.CoreLib/src/System/Array.cs#L25"/></para>
+    /// </summary>
+    public const int IntrosortSizeThreshold = 16;
+
+    /// <summary>
     /// Gets the maximum number of elements that may be contained in an array.
     /// <para>source: <see href="https://github.com/dotnet/runtime/blob/6009a1064ccfc2bd9aeb96c9247b60cf6352198d/src/libraries/System.Private.CoreLib/src/System/Array.cs#L2069"/></para>
     /// <para>Keep in sync with `inline SIZE_T MaxArrayLength()` from gchelpers and HashHelpers.MaxPrimeArrayLength.</para>

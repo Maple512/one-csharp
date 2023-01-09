@@ -3,6 +3,7 @@ namespace OneI.Text;
 using System;
 using System.Buffers;
 using DotNext;
+using OneI.Buffers;
 
 // https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/ValueStringBuilder.cs
 public partial struct ValueStringBuilder
@@ -14,8 +15,7 @@ public partial struct ValueStringBuilder
     public ValueStringBuilder(scoped Span<char> buffer)
     {
         _arrayToReturnToPool = null;
-        //var span = AppendSpan(buffer.Length);
-        //buffer.TryCopyTo(span);
+        _chars = buffer;
         _pos = 0;
     }
 
@@ -140,27 +140,6 @@ public partial struct ValueStringBuilder
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Append(string? s)
-    {
-        if(s == null)
-        {
-            return;
-        }
-
-        var pos = _pos;
-        if(s.Length == 1 && (uint)pos < (uint)_chars.Length) // very common case, e.g. appending strings from NumberFormatInfo like separators, percent symbols, etc.
-        {
-            _chars[pos] = s[0];
-
-            _pos = pos + 1;
-        }
-        else
-        {
-            AppendSlow(s);
-        }
-    }
-
     private void AppendSlow(string s)
     {
         var pos = _pos;
@@ -206,7 +185,7 @@ public partial struct ValueStringBuilder
         _pos += length;
     }
 
-    public void Append(ReadOnlySpan<char> value)
+    public void Append(scoped in ReadOnlySpan<char> value)
     {
         if(value.IsEmpty)
         {
@@ -219,7 +198,7 @@ public partial struct ValueStringBuilder
             Grow(value.Length);
         }
 
-        value.ToArray().CopyTo(_chars[_pos..]);
+        value.CopyTo(_chars[_pos..]);
 
         _pos += value.Length;
     }

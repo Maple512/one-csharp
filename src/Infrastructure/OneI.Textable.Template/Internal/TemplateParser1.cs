@@ -1,111 +1,67 @@
-namespace OneI.Textable;
+namespace OneI.Textable.Internal;
 
-using System.Collections.Generic;
-using System.Globalization;
-using DotNext.Collections.Generic;
+using DotNext.Runtime.CompilerServices;
+using OneI.Buffers;
 using OneI.Textable.Rendering;
 using OneI.Textable.Templating;
+using System.Globalization;
 
-using static OneI.Textable.TextTemplateConstants.Formatters;
-
-internal static class TemplateParser
+public static class TemplateParser1
 {
-    private static readonly ConcurrentDictionary<string, IEnumerable<Token>> _cache = new(StringComparer.InvariantCulture);
+    private static readonly ConcurrentDictionary<int, IEnumerable<Token>> _tokens = new();
 
-    public static IEnumerable<Token> Parse(string text)
+    public static IEnumerable<Token> Parse(scoped in ValueBuffer<char> text)
     {
-        if(_cache.TryGetValue(text, out var tokens))
+        var key = text.GetHashCode();
+
+        if(_tokens.TryGetValue(key, out var tokens))
         {
             return tokens;
         }
 
         tokens = ParseCore(text);
 
-        _cache.TryAdd(text, tokens);
+        _tokens.TryAdd(key, tokens);
 
         return tokens;
     }
 
-    private static IEnumerable<Token> ParseCore(scoped in ReadOnlySpan<char> text)
+    private static IEnumerable<Token> ParseCore(scoped in ValueBuffer<char> text)
     {
         if(text.IsEmpty)
         {
             return Enumerable.Empty<Token>();
         }
 
-        if(text.IsWhiteSpace())
-        {
-            return new[] { new TextToken(0, new string(' ', text.Length)) };
-        }
-
         var result = new List<Token>();
 
         var index = 0;
         var lastIndex = text.Length - 1;
-        Span<char> span = stackalloc char[text.Length];
+
+        scoped Span<char> span = stackalloc char[text.Length];
 
         var openBrace = -1;
         var closeBrace = -1;
         var propertyIndex = 0;
         var propertyTotalLength = 0;
-        do
+
+        const int IndexLimit = 1000;
+        const int WidthLimit = 1000;
+        const int IndentLimit = 1000;
+
+        // current position
+        var pos = 0;
+        char c;
+        while(true)
         {
-            var c = text[index];
-
-            span[index] = c;
-
-            if(c is Open_Separator)
+            while(true)
             {
-                openBrace = index;
-            }
-            else if(c == Close_Separator && openBrace > -1)
-            {
-                if(index != openBrace + 1)
+                if(pos >= text.Length)
                 {
-                    var length = index - openBrace - 1;
-                    var content = span.Slice(openBrace, length + 2);
-
-                    if(TryParsePropertyToken(
-                        content,
-                        propertyIndex++,
-                        out var propertyToken))
-                    {
-                        var textLength = index - 2 - length - closeBrace;
-
-                        if(textLength > 0)
-                        {
-                            var textContent = span.Slice(closeBrace + 1, textLength);
-
-                            result.Add(new TextToken(closeBrace + 1 - propertyTotalLength, textContent.ToString()));
-                        }
-
-                        propertyToken!.ResetPosition(index - propertyTotalLength - length - 1);
-
-                        result.Add(propertyToken);
-
-                        closeBrace = index;
-
-                        propertyTotalLength += length + 1;
-
-                        openBrace = -1;
-
-                        continue;
-                    }
-                }
-                else
-                {
-                    openBrace = -1;
+                    break;
                 }
             }
-
-            if(index == lastIndex
-                && closeBrace != index)
-            {
-                var textContent = span.Slice(closeBrace + 1, index - closeBrace);
-
-                result.Add(new TextToken(closeBrace + 1 - propertyTotalLength, textContent.ToString()));
-            }
-        } while(++index < lastIndex + 1);
+        }
 
         return result;
     }
@@ -137,7 +93,7 @@ internal static class TemplateParser
         for(end = 0; end < bytes.Length - 2; end++)
         {
             var c = bytes[end + 1];
-            if(c == Format_Separator && flag != 1)
+            if(c == ':' && flag != 1)
             {
                 if(TryAssignment(container) == false)
                 {
@@ -148,7 +104,7 @@ internal static class TemplateParser
                 start = end;
                 flag = 1;
             }
-            else if(c == Align_Separator && flag != 2)
+            else if(c == ',' && flag != 2)
             {
                 if(TryAssignment(container) == false)
                 {
@@ -159,7 +115,7 @@ internal static class TemplateParser
                 start = end;
                 flag = 2;
             }
-            else if(c == Indent_Separator && flag != 3)
+            else if(c == '\'' && flag != 3)
             {
                 if(TryAssignment(container) == false)
                 {
@@ -339,3 +295,4 @@ internal static class TemplateParser
             || char.IsSymbol(c); // 字符
     }
 }
+

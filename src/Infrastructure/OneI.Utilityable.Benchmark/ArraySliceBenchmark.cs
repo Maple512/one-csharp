@@ -1,7 +1,7 @@
 namespace OneI.Utilityable;
 
 using DotNext;
-using ValueBuffer = ValueBuffer<char>;
+using ValueBuffer = Buffers.ValueBuffer<char>;
 
 public class ArraySliceBenchmark
 {

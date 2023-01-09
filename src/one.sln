@@ -117,10 +117,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4A0023
 		Shared\DictionaryExtensions.cs = Shared\DictionaryExtensions.cs
 		Shared\DisposeAction.cs = Shared\DisposeAction.cs
 		Shared\EnumerableExtensions.cs = Shared\EnumerableExtensions.cs
-		Shared\ExceptionExtensions.cs = Shared\ExceptionExtensions.cs
+		Index.cs = Index.cs
 		Shared\ListExtensions.cs = Shared\ListExtensions.cs
 		Shared\QueryableExtensions.cs = Shared\QueryableExtensions.cs
 		Shared\Randomizer.cs = Shared\Randomizer.cs
+		Range.cs = Range.cs
 		Shared\StringExtensions.cs = Shared\StringExtensions.cs
 		Shared\TypeExtensions.cs = Shared\TypeExtensions.cs
 	EndProjectSection
@@ -138,6 +139,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Utilityable.Benchmark", "Infrastructure\OneI.Utilityable.Benchmark\OneI.Utilityable.Benchmark.csproj", "{41BB3ED3-73BB-418A-A286-B9EF6383CDEA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Textable.Template.Benchmark", "Infrastructure\OneI.Textable.Template.Benchmark\OneI.Textable.Template.Benchmark.csproj", "{7A5274F0-4982-4F28-84EA-F69155CA79E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Utilityable.Test.DnSpy", "Infrastructure\OneI.Utilityable.Test.DnSpy\OneI.Utilityable.Test.DnSpy.csproj", "{BE26520B-1750-41B0-BD2E-70921B3F17FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -297,6 +300,10 @@ Global
 		{7A5274F0-4982-4F28-84EA-F69155CA79E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A5274F0-4982-4F28-84EA-F69155CA79E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A5274F0-4982-4F28-84EA-F69155CA79E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE26520B-1750-41B0-BD2E-70921B3F17FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE26520B-1750-41B0-BD2E-70921B3F17FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE26520B-1750-41B0-BD2E-70921B3F17FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE26520B-1750-41B0-BD2E-70921B3F17FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -351,6 +358,7 @@ Global
 		{EE232896-5B6D-4470-B308-7FC5217542DB} = {CFF83225-126E-4C45-9527-4EDC435248F0}
 		{41BB3ED3-73BB-418A-A286-B9EF6383CDEA} = {C2F8B1B1-8C2A-4CE8-928A-B960041F8699}
 		{7A5274F0-4982-4F28-84EA-F69155CA79E8} = {F1725AF1-EB8A-4D62-AEBC-2F4599F2514D}
+		{BE26520B-1750-41B0-BD2E-70921B3F17FE} = {C2F8B1B1-8C2A-4CE8-928A-B960041F8699}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

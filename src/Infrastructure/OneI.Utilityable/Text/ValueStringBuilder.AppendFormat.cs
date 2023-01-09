@@ -144,6 +144,7 @@ public partial struct ValueStringBuilder
                     {
                         ThrowFormatInvalidString();
                     }
+
                     ch = MoveNext(format, ref pos);
                     while(char.IsAsciiDigit(ch) && width < WidthLimit)
                     {
@@ -203,6 +204,7 @@ public partial struct ValueStringBuilder
             {
                 throw new FormatException("Index (zero based) must be greater than or equal to zero and less than the size of the argument list.");
             }
+
             var arg = args[index];
 
             if(cf != null)
@@ -244,6 +246,7 @@ public partial struct ValueStringBuilder
                     {
                         itemFormat ??= new string(itemFormatSpan);
                     }
+
                     s = formattableArg.ToString(itemFormat, provider);
                 }
                 else
