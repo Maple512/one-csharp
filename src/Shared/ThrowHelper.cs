@@ -133,7 +133,7 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowArgumentException_BadComparer(object? comparer)
     {
-        throw new ArgumentException($"Unable to sort because the IComparer.Compare() method returns inconsistent results. Either a value does not compare equal to itself, or one value repeatedly compared to another value yields different results. IComparer: '{comparer}'.",nameof(comparer));
+        throw new ArgumentException($"Unable to sort because the IComparer.Compare() method returns inconsistent results. Either a value does not compare equal to itself, or one value repeatedly compared to another value yields different results. IComparer: '{comparer}'.", nameof(comparer));
     }
 
     [DoesNotReturn]
@@ -566,6 +566,12 @@ internal static class ThrowHelper
     internal static void ThrowFormatInvalidString()
     {
         throw new FormatException($"Input string was not in a correct format.");
+    }
+
+    [DoesNotReturn]
+    internal static void ThrowFormatIndexOutOfRange()
+    {
+        throw new FormatException($"Index (zero based) must be greater than or equal to zero and less than the size of the argument list.");
     }
 
     private static Exception GetArraySegmentCtorValidationFailedException(Array? array, int offset, int count)

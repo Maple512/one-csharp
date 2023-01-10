@@ -49,9 +49,14 @@ internal static partial class Check
        [CallerMemberName] string? memberName = null,
        [CallerLineNumber] int? line = null)
     {
-        return string.IsNullOrEmpty(value)
-            ? throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line))
-            : value;
+        if(string.IsNullOrEmpty(value))
+        {
+            throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line));
+        }
+        else
+        {
+            return value;
+        }
     }
 
     [return: NotNull]
@@ -62,22 +67,28 @@ internal static partial class Check
         [CallerMemberName] string? memberName = null,
         [CallerLineNumber] int? line = null)
     {
-        return string.IsNullOrWhiteSpace(value)
-            ? throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line))
-            : value;
+        if(string.IsNullOrWhiteSpace(value))
+        {
+            throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line));
+        }
+
+        return value;
     }
 
     [return: NotNull]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T NotNull<T>(
-        T? value,
+         T? value,
         [CallerFilePath] string? filePath = null,
         [CallerMemberName] string? memberName = null,
         [CallerLineNumber] int? line = null)
     {
-        return value == null
-            ? throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line))
-            : value;
+        if(value == null)
+        {
+            throw new ArgumentNullException(nameof(value), ValueBeNullMessage(filePath, memberName, line));
+        }
+
+        return value!;
     }
 
     [return: NotNull]
@@ -105,9 +116,14 @@ internal static partial class Check
         [CallerLineNumber] int? line = null)
         where TKey : notnull
     {
-        return data == null || !data.Any()
-            ? throw new ArgumentNullException(nameof(data), ValueBeNullMessage(filePath, memberName, line))
-            : data;
+        if(data == null || !data.Any())
+        {
+            throw new ArgumentNullException(nameof(data), ValueBeNullMessage(filePath, memberName, line));
+        }
+        else
+        {
+            return data;
+        }
     }
 
     /// <summary>

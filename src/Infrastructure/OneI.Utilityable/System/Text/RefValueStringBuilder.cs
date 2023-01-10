@@ -281,7 +281,7 @@ public ref struct RefValueStringBuilder
     public void AppendSpanFormattable<T>(T value, string? format = null, IFormatProvider? provider = null)
         where T : ISpanFormattable
     {
-        if(value.TryFormat(_chars[_pos..], out int charsWritten, format, provider))
+        if(value.TryFormat(_chars[_pos..], out var charsWritten, format, provider))
         {
             _pos += charsWritten;
         }
@@ -294,8 +294,8 @@ public ref struct RefValueStringBuilder
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Append(Rune rune)
     {
-        int pos = _pos;
-        Span<char> chars = _chars;
+        var pos = _pos;
+        var chars = _chars;
         if((uint)(pos + 1) < (uint)chars.Length && (uint)pos < (uint)chars.Length)
         {
             if(rune.Value <= 0xFFFF)

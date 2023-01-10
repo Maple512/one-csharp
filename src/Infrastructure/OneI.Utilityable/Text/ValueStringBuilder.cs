@@ -2,37 +2,33 @@ namespace OneI.Text;
 
 using System;
 using System.Buffers;
-using DotNext;
-using OneI.Buffers;
 
-// https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/ValueStringBuilder.cs
+/// <summary>
+/// source: <see href="https://github.com/dotnet/runtime/blob/6009a1064ccfc2bd9aeb96c9247b60cf6352198d/src/libraries/Common/src/System/Text/ValueStringBuilder.cs"/>
+/// </summary>
 public partial struct ValueStringBuilder
 {
-    private ValueBuffer<char> _chars;
     private char[]? _arrayToReturnToPool;
+    private Memory<char> _chars;
     private int _pos;
-
-    public ValueStringBuilder(scoped Span<char> buffer)
-    {
-        _arrayToReturnToPool = null;
-        _chars = buffer;
-        _pos = 0;
-    }
-
-    public ValueStringBuilder(ValueBuffer<char> initialBuffer)
-    {
-        _arrayToReturnToPool = null;
-        _chars = initialBuffer;
-        _pos = 0;
-    }
 
     public ValueStringBuilder(int initialCapacity)
     {
-        _chars = _arrayToReturnToPool = ArrayPool<char>.Shared.Rent(initialCapacity);
+        _arrayToReturnToPool = ArrayPool<char>.Shared.Rent(initialCapacity);
+        _chars = _arrayToReturnToPool;
         _pos = 0;
     }
 
-    public int Length => _pos;
+    public int Length
+    {
+        get => _pos;
+        set
+        {
+            Debug.Assert(value >= 0);
+            Debug.Assert(value <= _chars.Length);
+            _pos = value;
+        }
+    }
 
     public int Capacity => _chars.Length;
 
@@ -48,28 +44,27 @@ public partial struct ValueStringBuilder
         }
     }
 
-    public ref readonly char this[int index]
+    public ref char this[int index]
     {
         get
         {
             Debug.Assert(index < _pos);
 
-            return ref _chars[index];
+            return ref _chars.Span[index];
         }
     }
 
     public override string ToString()
     {
         var s = _chars[.._pos].ToString();
-
         Dispose();
-
         return s;
     }
 
-    public Span<char> AsSpan() => _chars[.._pos].AsSpan();
+    /// <summary>Returns the underlying storage of the builder.</summary>
+    public Span<char> RawChars => _chars.Span;
 
-    public bool TryCopyTo(ValueBuffer<char> destination, out int charsWritten)
+    public bool TryCopyTo(Memory<char> destination, out int charsWritten)
     {
         if(_chars[.._pos].TryCopyTo(destination))
         {
@@ -85,6 +80,7 @@ public partial struct ValueStringBuilder
         }
     }
 
+    #region Insert
     public void Insert(int index, char value, int count)
     {
         if(_pos > _chars.Length - count)
@@ -93,11 +89,8 @@ public partial struct ValueStringBuilder
         }
 
         var remaining = _pos - index;
-
         _chars.Slice(index, remaining).CopyTo(_chars[(index + count)..]);
-
-        _chars.Slice(index, count).Fill(value);
-
+        _chars.Slice(index, count).Span.Fill(value);
         _pos += count;
     }
 
@@ -116,28 +109,87 @@ public partial struct ValueStringBuilder
         }
 
         var remaining = _pos - index;
-
         _chars.Slice(index, remaining).CopyTo(_chars[(index + count)..]);
-
-        s.CopyTo(_chars[index..]);
-
+        s.CopyTo(_chars[index..].Span);
         _pos += count;
     }
+    #endregion Insert End
 
+    #region Append
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Append(char c)
     {
         var pos = _pos;
         if((uint)pos < (uint)_chars.Length)
         {
-            _chars[pos] = c;
-
+            _chars.Span[pos] = c;
             _pos = pos + 1;
         }
         else
         {
             GrowAndAppend(c);
         }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Append(string? s)
+    {
+        if(s == null)
+        {
+            return;
+        }
+
+        var pos = _pos;
+        if(s.Length == 1 && (uint)pos < (uint)_chars.Length) // very common case, e.g. appending strings from NumberFormatInfo like separators, percent symbols, etc.
+        {
+            _chars.Span[pos] = s[0];
+            _pos = pos + 1;
+        }
+        else
+        {
+            AppendSlow(s);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void Append(char c, int count)
+    {
+        Insert(_pos, c, count);
+    }
+
+    public void Append(scoped in ReadOnlySpan<char> value)
+    {
+        var pos = _pos;
+        if(pos > _chars.Length - value.Length)
+        {
+            Grow(value.Length);
+        }
+
+        value.CopyTo(_chars[_pos..].Span);
+
+        _pos += value.Length;
+    }
+
+    public void Append<T>(T value, string? format = null, IFormatProvider? provider = null)
+        where T : ISpanFormattable
+    {
+        if(value.TryFormat(_chars[_pos..].Span, out var charsWritten, format, provider))
+        {
+            _pos += charsWritten;
+        }
+        else
+        {
+            Append(value.ToString(format, provider));
+        }
+    }
+
+    public void AppendLine() => Append(Environment.NewLine);
+
+    public void AppendLine(string? value)
+    {
+        Append(value);
+
+        Append(Environment.NewLine);
     }
 
     private void AppendSlow(string s)
@@ -148,70 +200,9 @@ public partial struct ValueStringBuilder
             Grow(s.Length);
         }
 
-        s.CopyTo(_chars[pos..]);
+        s.CopyTo(_chars[pos..].Span);
+
         _pos += s.Length;
-    }
-
-    public void Append(char c, int count)
-    {
-        var length = _chars.Length;
-        if(_pos > _chars.Length - count)
-        {
-            Grow(count);
-        }
-
-        for(var i = 0; i < count; i++)
-        {
-            _chars[i + length] = c;
-        }
-
-        _pos += count;
-    }
-
-    public unsafe void Append(char* value, int length)
-    {
-        var pos = _pos;
-        if(pos > _chars.Length - length)
-        {
-            Grow(length);
-        }
-
-        var dst = _chars.Slice(_pos, length);
-        for(var i = 0; i < dst.Length; i++)
-        {
-            dst[i] = *value++;
-        }
-
-        _pos += length;
-    }
-
-    public void Append(scoped in ReadOnlySpan<char> value)
-    {
-        if(value.IsEmpty)
-        {
-            return;
-        }
-
-        var pos = _pos;
-        if(pos > _chars.Length - value.Length)
-        {
-            Grow(value.Length);
-        }
-
-        value.CopyTo(_chars[_pos..]);
-
-        _pos += value.Length;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AppendLine() => Append(Environment.NewLine);
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AppendLine(string? value)
-    {
-        Append(value);
-
-        Append(Environment.NewLine);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -222,6 +213,14 @@ public partial struct ValueStringBuilder
         Append(c);
     }
 
+    /// <summary>
+    /// Resize the internal buffer either by doubling current buffer size or
+    /// by adding <paramref name="additionalCapacityBeyondPos"/> to
+    /// <see cref="_pos"/> whichever is greater.
+    /// </summary>
+    /// <param name="additionalCapacityBeyondPos">
+    /// Number of chars requested beyond current position.
+    /// </param>
     [MethodImpl(MethodImplOptions.NoInlining)]
     private void Grow(int additionalCapacityBeyondPos)
     {
@@ -249,6 +248,7 @@ public partial struct ValueStringBuilder
             ArrayPool<char>.Shared.Return(toReturn);
         }
     }
+    #endregion
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose()
@@ -260,7 +260,4 @@ public partial struct ValueStringBuilder
             ArrayPool<char>.Shared.Return(toReturn);
         }
     }
-
-    private static void ThrowFormatInvalidString()
-        => throw new FormatException("Input string was not in a correct format.");
 }

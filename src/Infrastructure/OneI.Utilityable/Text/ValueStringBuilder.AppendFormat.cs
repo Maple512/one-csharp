@@ -2,7 +2,9 @@ namespace OneI.Text;
 
 public partial struct ValueStringBuilder
 {
-    public ValueStringBuilder AppendFormat([StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params object?[] args)
+    public ValueStringBuilder AppendFormat(
+        [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format,
+        params object?[] args)
     {
         Check.NotNullOrEmpty(format);
         Check.NotNull(args);
@@ -10,7 +12,10 @@ public partial struct ValueStringBuilder
         return AppendFormatHelper(null, format, args);
     }
 
-    public ValueStringBuilder AppendFormat(IFormatProvider? provider, [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format, params object?[] args)
+    public ValueStringBuilder AppendFormat(
+        IFormatProvider? provider,
+        [StringSyntax(StringSyntaxAttribute.CompositeFormat)] string format,
+        params object?[] args)
     {
         Check.NotNullOrEmpty(format);
         Check.NotNull(args);
@@ -50,7 +55,6 @@ public partial struct ValueStringBuilder
                 if(countUntilNextBrace < 0)
                 {
                     Append(remainder);
-
                     return this;
                 }
 
@@ -72,7 +76,7 @@ public partial struct ValueStringBuilder
                 // This wasn't an escape, so it must be an opening brace.
                 if(brace != '{')
                 {
-                    ThrowFormatInvalidString();
+                    ThrowHelper.ThrowFormatInvalidString();
                 }
 
                 // Proceed to parse the hole.
@@ -84,7 +88,7 @@ public partial struct ValueStringBuilder
             // preceded by a colon, with arbitrary amounts of spaces throughout.
             var width = 0;
             var leftJustify = false;
-            scoped ReadOnlySpan<char> itemFormatSpan = default; // used if itemFormat is null
+            ReadOnlySpan<char> itemFormatSpan = default; // used if itemFormat is null
 
             // First up is the index parameter, which is of the form:
             //     at least on digit
@@ -95,7 +99,7 @@ public partial struct ValueStringBuilder
             var index = ch - '0';
             if((uint)index >= 10u)
             {
-                ThrowFormatInvalidString();
+                ThrowHelper.ThrowFormatInvalidString();
             }
 
             // Common case is a single digit index followed by a closing brace.  If it's not a closing brace,
@@ -142,7 +146,7 @@ public partial struct ValueStringBuilder
                     width = ch - '0';
                     if((uint)width >= 10u)
                     {
-                        ThrowFormatInvalidString();
+                        ThrowHelper.ThrowFormatInvalidString();
                     }
 
                     ch = MoveNext(format, ref pos);
@@ -166,7 +170,7 @@ public partial struct ValueStringBuilder
                     if(ch != ':')
                     {
                         // Unexpected character
-                        ThrowFormatInvalidString();
+                        ThrowHelper.ThrowFormatInvalidString();
                     }
 
                     // Search for the closing brace; everything in between is the format,
@@ -185,7 +189,7 @@ public partial struct ValueStringBuilder
                         if(ch == '{')
                         {
                             // Braces inside the argument hole are not supported
-                            ThrowFormatInvalidString();
+                            ThrowHelper.ThrowFormatInvalidString();
                         }
                     }
 
@@ -202,7 +206,7 @@ public partial struct ValueStringBuilder
 
             if((uint)index >= (uint)args.Length)
             {
-                throw new FormatException("Index (zero based) must be greater than or equal to zero and less than the size of the argument list.");
+                ThrowHelper.ThrowFormatIndexOutOfRange();
             }
 
             var arg = args[index];
@@ -219,13 +223,11 @@ public partial struct ValueStringBuilder
 
             if(s == null)
             {
-
-
                 // If arg is ISpanFormattable and the beginning doesn't need padding,
                 // try formatting it into the remaining current chunk.
                 if((leftJustify || width == 0) &&
                     arg is ISpanFormattable spanFormattableArg &&
-                    spanFormattableArg.TryFormat(AsSpan()[_pos..], out var charsWritten, itemFormatSpan, provider))
+                    spanFormattableArg.TryFormat(_chars[_pos..].Span, out var charsWritten, itemFormatSpan, provider))
                 {
                     _pos += charsWritten;
 
@@ -282,7 +284,7 @@ public partial struct ValueStringBuilder
             pos++;
             if((uint)pos >= (uint)format.Length)
             {
-                ThrowFormatInvalidString();
+                ThrowHelper.ThrowFormatInvalidString();
             }
 
             return format[pos];

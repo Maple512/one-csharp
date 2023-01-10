@@ -1,7 +1,6 @@
 namespace OneI.Utilityable;
 
 using DotNext;
-using OneI.Buffers;
 
 public class ObjectEqualsBenchmark : IValidator
 {
@@ -17,7 +16,7 @@ public class ObjectEqualsBenchmark : IValidator
         Shouldly.ShouldBeTestExtensions.ShouldBe(UseString(), result);
         Shouldly.ShouldBeTestExtensions.ShouldBe(UseReadOnlySpan(), result);
         Shouldly.ShouldBeTestExtensions.ShouldBe(UseDotNext(), result);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseValueBufferIndexOf(), result);
+        Shouldly.ShouldBeTestExtensions.ShouldBe(UseMemory(), result);
     }
 #endif
 
@@ -139,15 +138,17 @@ public class ObjectEqualsBenchmark : IValidator
     }
 
     [Benchmark]
-    public int UseValueBufferIndexOf()
+    public int UseMemory()
     {
-        var array = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".AsValueBuffer();
+        var array = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        var buffer = array.AsMemory();
 
         var result = 0;
 
         for(var i = 0; i < count; i++)
         {
-            result = array.IndexOfCore('1');
+            result = buffer.Span.IndexOf('1');
         }
 
         return result;
