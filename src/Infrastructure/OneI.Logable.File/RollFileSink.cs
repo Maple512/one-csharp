@@ -1,6 +1,6 @@
 namespace OneI.Logable;
 
-using OneI.Textable;
+using OneI.Logable;
 /// <summary>
 /// The roll file sink.
 /// </summary>

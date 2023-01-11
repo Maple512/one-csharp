@@ -1,4 +1,4 @@
-namespace OneI.Textable.Rendering;
+namespace OneI.Logable.Rendering;
 
 /// <summary>
 /// 对齐方向

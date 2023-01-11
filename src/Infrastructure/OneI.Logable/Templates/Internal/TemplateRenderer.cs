@@ -1,8 +1,8 @@
-namespace OneI.Textable;
+namespace OneI.Logable;
 
-using OneI.Textable.Rendering;
-using OneI.Textable.Templating;
-using OneI.Textable.Templating.Properties;
+using OneI.Logable.Rendering;
+using OneI.Logable.Templating;
+using OneI.Logable.Templating.Properties;
 
 internal static class TemplateRenderer
 {

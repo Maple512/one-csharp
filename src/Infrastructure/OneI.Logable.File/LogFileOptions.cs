@@ -1,7 +1,7 @@
 namespace OneI.Logable;
 
 using OneI.Logable.Rendering;
-using OneI.Textable;
+using OneI.Logable;
 /// <summary>
 /// The logger file options base.
 /// </summary>

@@ -90,7 +90,7 @@ internal static partial class CodePrinter
     /// <param name="method">The method.</param>
     private static void PrintMethodBody(IndentedStringBuilder builder, MethodDef method)
     {
-        builder.AppendLine($"var propertyValues = new global::System.Collections.Generic.List<global::OneI.Textable.Templating.Properties.PropertyValue>({method.Parameters.Count});");
+        builder.AppendLine($"var propertyValues = new global::System.Collections.Generic.List<global::OneI.Logable.Templating.Properties.PropertyValue>({method.Parameters.Count});");
 
         builder.AppendLine();
 
@@ -103,7 +103,7 @@ internal static partial class CodePrinter
             }
             else
             {
-                builder.AppendLine($"propertyValues.Add(new global::OneI.Textable.Templating.Properties.LiteralValue<{parameter.Type}>({parameter.Name}));");
+                builder.AppendLine($"propertyValues.Add(new global::OneI.Logable.Templating.Properties.LiteralValue<{parameter.Type}>({parameter.Name}));");
             }
         }
 

@@ -1,6 +1,6 @@
-namespace OneI.Textable.Templating.Properties;
+namespace OneI.Logable.Templating.Properties;
 
-using OneI.Textable;
+using OneI.Logable;
 
 public abstract class PropertyValue : IFormattable
 {

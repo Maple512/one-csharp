@@ -1,7 +1,7 @@
 namespace OneI.Logable;
 
 using OneI.Logable.Middlewares;
-using OneI.Textable.Templating.Properties;
+using OneI.Logable.Templating.Properties;
 
 /// <summary>
 /// The logger extensions.
@@ -55,17 +55,6 @@ public static class LoggerExtensions
         return logger.BeginScopeAsync(new PropertyMiddleware(name, PropertyValue.CreateLiteral(value)));
     }
 
-    /// <summary>
-    /// Packages the write.
-    /// </summary>
-    /// <param name="logger">The logger.</param>
-    /// <param name="level">The level.</param>
-    /// <param name="exception">The exception.</param>
-    /// <param name="message">The message.</param>
-    /// <param name="propertyValues">The property values.</param>
-    /// <param name="filePath">The file path.</param>
-    /// <param name="memberName">The member name.</param>
-    /// <param name="lineNumber">The line number.</param>
     public static void PackageWrite(
         in ILogger logger,
         in LogLevel level,

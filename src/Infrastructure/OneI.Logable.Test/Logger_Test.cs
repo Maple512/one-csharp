@@ -2,7 +2,7 @@ namespace OneI.Logable;
 
 using OneI.Logable.Fakes;
 using OneI.Logable.Middlewares;
-using OneI.Textable.Templating.Properties;
+using OneI.Logable.Templating.Properties;
 
 public class Logger_Test
 {
@@ -21,7 +21,12 @@ public class Logger_Test
 
         logger.Error("Exclude Source Context");
 
-        logger.Error("{0} {1} {2} {3}{NewLine}{FileName'4}#L{LineNumber}@{MemberName}", "0", 1, new Dictionary<int, int> { { 2, 3 } }, new List<int> { 4, 5, 6 });
+        logger.Error(
+            "{0} {1} {2} {3}{NewLine}{FileName'4}#L{LineNumber}@{MemberName}",
+            "0",
+            1,
+            new Dictionary<int, int> { { 2, 3 } },
+            new List<int> { 4, 5, 6 });
     }
 
     [Fact]

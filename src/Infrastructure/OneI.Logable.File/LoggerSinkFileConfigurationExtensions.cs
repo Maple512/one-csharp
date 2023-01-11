@@ -1,7 +1,7 @@
 namespace OneI.Logable;
 
 using OneI.Logable.Configurations;
-using OneI.Textable;
+using OneI.Logable;
 
 /// <summary>
 /// The logger sink file configuration extensions.

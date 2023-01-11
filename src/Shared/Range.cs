@@ -144,3 +144,12 @@ internal readonly struct Range : IEquatable<Range>
     }
 }
 #endif
+
+internal static class RangeExtensions
+{
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool IsValid(this Range range)
+    {
+        return range.Start.Value <= range.End.Value;
+    }
+}

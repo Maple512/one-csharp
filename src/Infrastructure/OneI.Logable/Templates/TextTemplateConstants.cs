@@ -1,4 +1,4 @@
-namespace OneI.Textable;
+namespace OneI.Logable;
 
 /// <summary>
 /// The template constants.

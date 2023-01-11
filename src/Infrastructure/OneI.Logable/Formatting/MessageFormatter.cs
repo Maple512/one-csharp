@@ -2,8 +2,8 @@ namespace OneI.Logable.Formatting;
 
 using System;
 using System.Collections.Generic;
-using OneI.Textable;
-using OneI.Textable.Templating.Properties;
+using OneI.Logable;
+using OneI.Logable.Templating.Properties;
 
 public class MessageFormatter : IFormatter<string>
 {

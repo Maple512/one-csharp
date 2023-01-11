@@ -1,4 +1,4 @@
-namespace OneI.Textable.Templating.Properties;
+namespace OneI.Logable.Templating.Properties;
 
 public class EnumerableValue : PropertyValue
 {

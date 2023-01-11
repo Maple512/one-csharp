@@ -1,63 +1,17 @@
-namespace OneI.Textable;
+namespace OneI.Logable;
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using OneI.Textable.Rendering;
-using OneI.Textable.Templating;
+using System.Numerics;
+using OneI.Logable.Rendering;
+using OneI.Logable.Templating;
 
-using static OneI.Textable.TextTemplateConstants.Formatters;
+using static OneI.Logable.TextTemplateConstants.Formatters;
 
 public static class TemplateParser
 {
-    private static readonly ConcurrentDictionary<string, IEnumerable<Token>> _cache = new(StringComparer.InvariantCulture);
-    private static readonly ConcurrentDictionary<int, List<Token>> _cache1 = new();
-
-    public static IEnumerable<Token> Parse(string text, bool canCache = true)
-    {
-        IEnumerable<Token>? tokens = null;
-        if(canCache)
-        {
-            if(_cache.TryGetValue(text, out tokens))
-            {
-                return tokens;
-            }
-        }
-
-        tokens = ParseCore(text);
-
-        if(canCache)
-        {
-            _cache[text] = tokens;
-        }
-
-        return tokens;
-    }
-
-    public static List<Token> Parse111(in ReadOnlySpan<char> text, bool canCache = true)
-    {
-        var key = Unsafe.GetHashCode32(ref MemoryMarshal.GetReference(text), text.Length);
-
-        List<Token>? tokens = null;
-        if(canCache)
-        {
-            if(_cache1.TryGetValue(key, out tokens))
-            {
-                return tokens;
-            }
-        }
-
-        tokens = ParseCore(text);
-
-        if(canCache)
-        {
-            _cache1[key] = tokens;
-        }
-
-        return tokens;
-    }
-
-    private static List<Token> ParseCore(scoped in ReadOnlySpan<char> text)
+    public static List<Token> Parse(scoped in ReadOnlySpan<char> text)
     {
         if(text.IsEmpty)
         {
@@ -71,302 +25,313 @@ public static class TemplateParser
 
         var result = new List<Token>();
 
+        var textStart = 0;
+        var textEnd = 0;
         var index = 0;
-        var lastIndex = text.Length - 1;
-        Span<char> span = stackalloc char[text.Length];
+        var propertyCount = 0;
 
-        var openBrace = -1;
-        var closeBrace = -1;
-        var propertyIndex = 0;
-        var propertyTotalLength = 0;
-        do
+        while(true)
         {
-            var c = text[index];
-
-            span[index] = c;
-
-            if(c is Open_Separator)
+            if(index >= text.Length)
             {
-                openBrace = index;
+                break;
             }
-            else if(c == Close_Separator && openBrace > -1)
+
+            var remainder = text[index..];
+            var open = remainder.IndexOf(Open_Separator);
+            if(open == -1)
             {
-                if(index != openBrace + 1)
+                textEnd = index + remainder.Length;
+                break;
+            }
+            var close = remainder.IndexOf(Close_Separator);
+            if(close is -1)
+            {
+                index++;
+                continue;
+            }
+
+            if(close - open <= 1)
+            {
+                index += close + 1;
+                continue;
+            }
+
+            var start = open + 1;
+
+            var property = remainder[start..close];
+
+            if(TryParseProperty(ref index, ref property, ref propertyCount, out var token))
+            {
+                textEnd = index + open;
+                index += close + 1;
+
+                result.Add(token);
+
+                propertyCount++;
+
+                if(textStart != textEnd)
                 {
-                    var length = index - openBrace - 1;
-                    var content = span.Slice(openBrace, length + 2);
+                    var textToken = text[textStart..textEnd];
 
-                    if(TryParsePropertyToken(
-                        content,
-                        propertyIndex++,
-                        out var propertyToken))
-                    {
-                        var textLength = index - 2 - length - closeBrace;
-
-                        if(textLength > 0)
-                        {
-                            var textContent = span.Slice(closeBrace + 1, textLength);
-
-                            result.Add(new TextToken(closeBrace + 1 - propertyTotalLength, textContent.ToString()));
-                        }
-
-                        propertyToken!.ResetPosition(index - propertyTotalLength - length - 1);
-
-                        result.Add(propertyToken);
-
-                        closeBrace = index;
-
-                        propertyTotalLength += length + 1;
-
-                        openBrace = -1;
-
-                        continue;
-                    }
+                    result.Insert(result.Count - 1, new TextToken(textStart, ref textToken));
                 }
-                else
-                {
-                    openBrace = -1;
-                }
-            }
 
-            if(index == lastIndex
-                && closeBrace != index)
-            {
-                var textContent = span.Slice(closeBrace + 1, index - closeBrace);
-
-                result.Add(new TextToken(closeBrace + 1 - propertyTotalLength, textContent.ToString()));
+                textStart = index;
             }
-        } while(++index < lastIndex + 1);
+        }
+
+        if(textStart < textEnd)
+        {
+            var textToken = text[textStart..textEnd];
+
+            result.Add(new TextToken(textStart, ref textToken));
+        }
 
         return result;
     }
 
-    /// <summary>
-    /// Tries the parse property token.
-    /// </summary>
-    /// <param name="bytes">The bytes.</param>
-    /// <param name="index">The index.</param>
-    /// <param name="token">The token.</param>
-    /// <returns>A bool.</returns>
-    private static bool TryParsePropertyToken(ReadOnlySpan<char> bytes, int index, out PropertyToken? token)
+    private static bool TryParseProperty(
+        ref int start,
+        ref ReadOnlySpan<char> text,
+        ref int index,
+       [NotNullWhen(true)] out PropertyToken? token)
     {
         token = null;
 
-        if(bytes.IsEmpty || bytes.IsWhiteSpace())
+        if(text.IsEmpty)
         {
             return false;
         }
 
-        string? name = null;
-        string? format = null;
-        Alignment? align = null;
-        int? indent = null;
-        Span<char> container = stackalloc char[bytes.Length - 2];
-        var start = 0;
-        int end;
-        var flag = 0;
-        for(end = 0; end < bytes.Length - 2; end++)
+        var fi = text.IndexOf(Format_Separator);
+        var ai = text.IndexOf(Align_Separator);
+        var ii = text.IndexOf(Indent_Separator);
+
+        if(fi == 0 || ai == 0 || ii == 0)
         {
-            var c = bytes[end + 1];
-            if(c == Format_Separator && flag != 1)
-            {
-                if(TryAssignment(container) == false)
-                {
-                    return false;
-                }
+            return false;
+        }
 
-                container.Clear();
-                start = end;
-                flag = 1;
-            }
-            else if(c == Align_Separator && flag != 2)
-            {
-                if(TryAssignment(container) == false)
-                {
-                    return false;
-                }
+        var end = text.Length;
 
-                container.Clear();
-                start = end;
-                flag = 2;
-            }
-            else if(c == Indent_Separator && flag != 3)
-            {
-                if(TryAssignment(container) == false)
-                {
-                    return false;
-                }
+        if(fi == -1)
+        {
+            fi = end;
+        }
 
-                container.Clear();
-                start = end;
-                flag = 3;
+        if(ai == -1)
+        {
+            ai = end;
+        }
+
+        if(ii == -1)
+        {
+            ii = end;
+        }
+
+        var nameRange = default(Range);
+        var formatRange = default(Range);
+        var alignRange = default(Range);
+        var indentRange = default(Range);
+
+        if(ai > fi && ii > fi)
+        {
+            nameRange = new Range(0, fi);
+            if(ai > ii)
+            {
+                formatRange = new Range(fi + 1, ii);
+                alignRange = new Range(ai + 1, end);
+                indentRange = new Range(ii + 1, ai);
             }
             else
             {
-                container[end] = c;
+                formatRange = new Range(fi + 1, ai);
+                alignRange = new Range(ai + 1, ii);
+                indentRange = new Range(ii + 1, end);
             }
         }
-
-        if(TryAssignment(container) == false)
+        else if(fi > ai && fi > ii)
         {
-            return false;
-        }
-
-        if(name.IsNullOrWhiteSpace())
-        {
-            return false;
-        }
-
-        token = new PropertyToken(name!, bytes.ToString(), index, -1, format, align, indent);
-
-        return true;
-
-        bool TryAssignment(Span<char> text)
-        {
-            switch(flag)
+            formatRange = new Range(fi + 1, end);
+            if(ai > ii)
             {
-                case 1:
-                    if(TryValidFormat(text[(start + 1)..end], out format) == false)
-                    {
-                        return false;
-                    }
-
-                    break;
-                case 2:
-                    if(TryValidAlign(text[(start + 1)..end], out align) == false)
-                    {
-                        return false;
-                    }
-
-                    break;
-                case 3:
-                    if(TryValidIndent(text[(start + 1)..end], out indent) == false)
-                    {
-                        return false;
-                    }
-
-                    break;
-                default:
-                    if(TryValidPropertyName(text[start..end], out name) == false)
-                    {
-                        return false;
-                    }
-
-                    break;
+                nameRange = new Range(0, ii);
+                alignRange = new Range(ai + 1, fi);
+                indentRange = new Range(ii + 1, ai);
             }
-
-            return true;
+            else
+            {
+                nameRange = new Range(0, ai);
+                alignRange = new Range(ai + 1, ii);
+                indentRange = new Range(ii + 1, end);
+            }
         }
-    }
-
-    /// <summary>
-    /// Tries the valid property name.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <param name="name">The name.</param>
-    /// <returns>A bool.</returns>
-    private static bool TryValidPropertyName(ReadOnlySpan<char> text, [NotNullWhen(true)] out string? name)
-    {
-        name = null;
-
-        for(var i = 0; i < text.Length; i++)
+        else
         {
-            var c = text[i];
-            if(char.IsLetterOrDigit(c) == false
-                && c != '_')
+            if(ai > ii)
+            {
+                nameRange = new Range(0, ii);
+                indentRange = new Range(ii + 1, fi);
+                formatRange = new Range(fi + 1, ai);
+                alignRange = new Range(ai + 1, end);
+            }
+            else
+            {
+                nameRange = new Range(0, ai);
+                alignRange = new Range(ai + 1, fi);
+                formatRange = new Range(fi + 1, ii);
+                indentRange = new Range(ii + 1, end);
+            }
+        }
+
+        var name = text[nameRange.Start..nameRange.End];
+
+        if(name.IsEmpty || TryVerifyPropertyName(ref name) == false)
+        {
+            return false;
+        }
+
+        ReadOnlySpan<char> format = default;
+        if(formatRange.IsValid())
+        {
+            format = text[formatRange.Start..formatRange.End];
+
+            if(TryVerifyFormat(ref format) == false)
             {
                 return false;
             }
         }
 
-        name = text.ToString();
+        int? align = null;
+        if(alignRange.IsValid())
+        {
+            var alignText = text[alignRange.Start..alignRange.End];
+
+            if(TryParseAlign(ref alignText, ref align) == false)
+            {
+                return false;
+            }
+        }
+
+        int? indent = default;
+        if(indentRange.IsValid())
+        {
+            var indentText = text[indentRange.Start..indentRange.End];
+
+            if(TryPraseIndent(ref indentText, ref indent) == false)
+            {
+                return false;
+            }
+        }
+
+        var parmeterIndex = default(int?);
+
+        if(int.TryParse(name, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number)
+            && number >= 0)
+        {
+            parmeterIndex = number;
+        }
+
+        token = new PropertyToken(
+            ref name,
+            ref text,
+            index,
+            start,
+            ref format,
+            align,
+            indent,
+            parmeterIndex);
 
         return true;
     }
 
-    /// <summary>
-    /// Tries the valid indent.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <param name="indent">The indent.</param>
-    /// <returns>A bool.</returns>
-    private static bool TryValidIndent(ReadOnlySpan<char> text, out int? indent)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool TryVerifyPropertyName(ref ReadOnlySpan<char> text)
     {
-        indent = 0;
-        if(text.IsEmpty || text.IsWhiteSpace())
+        if(text.Length > PropertyToken.NameLengthLimit)
         {
             return false;
         }
 
-        int.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out var result);
+        var index = text.IndexOfAnyExcept("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_");
 
-        indent = result;
-
-        return indent != 0;
+        return index == -1;
     }
 
-    /// <summary>
-    /// Tries the valid align.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <param name="align">The align.</param>
-    /// <returns>A bool.</returns>
-    private static bool TryValidAlign(ReadOnlySpan<char> text, [NotNullWhen(true)] out Alignment? align)
+    private static bool TryVerifyFormat(ref ReadOnlySpan<char> text)
     {
-        align = null;
-        if(text.IsEmpty || text.IsWhiteSpace())
+        if(text.Length > PropertyToken.FormatLengthLimit)
         {
             return false;
         }
 
-        if(int.TryParse(text, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var width))
+        var index = 0;
+        do
         {
-            align = new Alignment(width);
+            ref readonly var c = ref text[index];
 
+            if(char.IsLetterOrDigit(c) // 字母或数字
+                || char.IsPunctuation(c) // 标点符号
+                || char.IsWhiteSpace(c) // 空格
+                || char.IsSymbol(c)) // 字符 
+            {
+                continue;
+            }
+
+            return false;
+
+        } while(index++ < text.Length - 1);
+
+        return true;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool TryPraseIndent(ref ReadOnlySpan<char> text, ref int? indent)
+    {
+        if(text.Length > 2)
+        {
+            return false;
+        }
+
+        if(text.IndexOfAnyExcept("0123456789") == -1)
+        {
+            var number = int.Parse(text);
+
+            if(number > PropertyToken.IndexNumericLimit)
+            {
+                return false;
+            }
+
+            indent = number;
             return true;
         }
 
         return false;
     }
 
-    /// <summary>
-    /// Tries the valid format.
-    /// </summary>
-    /// <param name="text">The text.</param>
-    /// <param name="format">The format.</param>
-    /// <returns>A bool.</returns>
-    private static bool TryValidFormat(ReadOnlySpan<char> text, [NotNullWhen(true)] out string? format)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool TryParseAlign(ref ReadOnlySpan<char> text, ref int? align)
     {
-        format = null;
-        if(text.IsEmpty || text.IsWhiteSpace())
+        if(text.Length > 3)
         {
             return false;
         }
 
-        foreach(var item in text)
+        if(text.IndexOfAnyExcept("0123456789-") == -1)
         {
-            if(IsValidFormat(item) == false)
+            var number = int.Parse(text);
+
+            if(number > PropertyToken.IndexNumericLimit)
             {
                 return false;
             }
+
+            align = number;
+
+            return true;
         }
 
-        format = text.ToString();
-
-        return true;
-    }
-
-    /// <summary>
-    /// Are the valid format.
-    /// </summary>
-    /// <param name="c">The c.</param>
-    /// <returns>A bool.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool IsValidFormat(char c)
-    {
-        return char.IsLetterOrDigit(c) // 字母或数字
-            || char.IsPunctuation(c) // 标点符号
-            || char.IsWhiteSpace(c) // 空格
-            || char.IsSymbol(c); // 字符
+        return false;
     }
 }

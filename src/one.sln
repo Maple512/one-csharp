@@ -98,6 +98,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4A0023
 		Shared\DisposeAction.cs = Shared\DisposeAction.cs
 		Shared\EnumerableExtensions.cs = Shared\EnumerableExtensions.cs
 		Index.cs = Index.cs
+		IOTools.cs = IOTools.cs
 		Shared\ListExtensions.cs = Shared\ListExtensions.cs
 		Shared\QueryableExtensions.cs = Shared\QueryableExtensions.cs
 		Shared\Randomizer.cs = Shared\Randomizer.cs
@@ -133,6 +134,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Logable.File", "Infrastructure\OneI.Logable.File\OneI.Logable.File.csproj", "{7B16DDCF-551B-4050-B9D0-108309AF41B3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Logable.Test", "Infrastructure\OneI.Logable.Test\OneI.Logable.Test.csproj", "{37DD02A6-3591-4A04-9295-C81954C9CBC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Logable.Benchmark", "Infrastructure\OneI.Logable.Benchmark\OneI.Logable.Benchmark.csproj", "{3734F493-6384-45E4-A570-735129DB8A07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -284,6 +287,10 @@ Global
 		{37DD02A6-3591-4A04-9295-C81954C9CBC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37DD02A6-3591-4A04-9295-C81954C9CBC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37DD02A6-3591-4A04-9295-C81954C9CBC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3734F493-6384-45E4-A570-735129DB8A07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3734F493-6384-45E4-A570-735129DB8A07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3734F493-6384-45E4-A570-735129DB8A07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3734F493-6384-45E4-A570-735129DB8A07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -335,6 +342,7 @@ Global
 		{550402BD-80BC-4995-AB8C-5A413E73B131} = {3EB9557C-DA91-4735-BEF3-A8AE4621A7D8}
 		{7B16DDCF-551B-4050-B9D0-108309AF41B3} = {3EB9557C-DA91-4735-BEF3-A8AE4621A7D8}
 		{37DD02A6-3591-4A04-9295-C81954C9CBC5} = {3EB9557C-DA91-4735-BEF3-A8AE4621A7D8}
+		{3734F493-6384-45E4-A570-735129DB8A07} = {3EB9557C-DA91-4735-BEF3-A8AE4621A7D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

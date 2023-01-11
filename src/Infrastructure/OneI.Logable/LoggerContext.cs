@@ -4,9 +4,9 @@ using System;
 using DotNext;
 using OneI.Diagnostics;
 using OneI.Logable.Formatting;
-using OneI.Textable;
-using OneI.Textable.Templating;
-using OneI.Textable.Templating.Properties;
+using OneI.Logable;
+using OneI.Logable.Templating;
+using OneI.Logable.Templating.Properties;
 using static OneI.Logable.LoggerConstants;
 
 [Serializable]

@@ -1,6 +1,6 @@
-namespace OneI.Textable.Templating;
+namespace OneI.Logable.Templating;
 
-using OneI.Textable.Templating.Properties;
+using OneI.Logable.Templating.Properties;
 
 public class PropertyCollection : Dictionary<string, PropertyValue>
 {

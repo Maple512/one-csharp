@@ -7,7 +7,14 @@ internal static partial class CodePrinter
 {
     internal static void PrintType(IndentedStringBuilder builder, TypeDef type)
     {
-        builder.AppendLine($"public static global::OneI.Textable.Templating.Properties.PropertyValue {CodeAssets.LoggerPropertyCreateMethodName}({type.ToDisplayString()} arg)");
+        if(type.Kind is not TypeDefKind.Array
+            and not TypeDefKind.Enumerable
+            and not TypeDefKind.Dictionary)
+        {
+            builder.AppendLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        }
+
+        builder.AppendLine($"public static global::OneI.Logable.Templating.Properties.PropertyValue {CodeAssets.LoggerPropertyCreateMethodName}({type.ToDisplayString()} arg)");
 
         builder.AppendLine("{");
 
@@ -52,7 +59,7 @@ internal static partial class CodePrinter
     /// <param name="type">The type.</param>
     private static void Default(IndentedStringBuilder builder, TypeDef type)
     {
-        builder.AppendLine($"return new global::OneI.Textable.Templating.Properties.LiteralValue<{type.ToDisplayString()}>(arg);");
+        builder.AppendLine($"return new global::OneI.Logable.Templating.Properties.LiteralValue<{type.ToDisplayString()}>(arg);");
     }
 
     /// <summary>
@@ -61,7 +68,7 @@ internal static partial class CodePrinter
     /// <param name="builder">The builder.</param>
     private static void BuildEnumerable(IndentedStringBuilder builder)
     {
-        builder.AppendLine($"var array = new global::OneI.Textable.Templating.Properties.EnumerableValue();");
+        builder.AppendLine($"var array = new global::OneI.Logable.Templating.Properties.EnumerableValue();");
         builder.AppendLine();
         builder.AppendLine($"foreach(var item in arg)");
         builder.AppendLine("{");
@@ -87,18 +94,18 @@ internal static partial class CodePrinter
             return;
         }
 
-        builder.AppendLine($"var valueTuple = new global::OneI.Textable.Templating.Properties.ObjectValue();");
+        builder.AppendLine($"var value = new global::OneI.Logable.Templating.Properties.ObjectValue();");
         builder.AppendLine();
 
         for(var i = 0; i < type.Properties.Count; i++)
         {
             var item = type.Properties[i];
 
-            builder.AppendLine($"valueTuple.Add(\"{item.Name}\", Create(arg.{item.Name}));");
+            builder.AppendLine($"value.Add(\"{item.Name}\", Create(arg.{item.Name}));");
         }
 
         builder.AppendLine();
-        builder.AppendLine($"return valueTuple;");
+        builder.AppendLine($"return value;");
     }
 
     /// <summary>
@@ -113,18 +120,18 @@ internal static partial class CodePrinter
             return;
         }
 
-        builder.AppendLine($"var valueTuple = new global::OneI.Textable.Templating.Properties.ObjectValue();");
+        builder.AppendLine($"var value = new global::OneI.Logable.Templating.Properties.ObjectValue();");
         builder.AppendLine();
 
         for(var i = 0; i < type.Properties.Count; i++)
         {
             var item = type.Properties[i];
 
-            builder.AppendLine($"valueTuple.AddProperty(\"{item.Name}\", Create(arg.Item{i + 1}));");
+            builder.AppendLine($"value.AddProperty(\"{item.Name}\", Create(arg.Item{i + 1}));");
         }
 
         builder.AppendLine();
-        builder.AppendLine($"return valueTuple;");
+        builder.AppendLine($"return value;");
     }
 
     /// <summary>
@@ -143,7 +150,7 @@ internal static partial class CodePrinter
 
         builder.AppendLine("}");
         builder.AppendLine();
-        builder.AppendLine("return Create(new global::OneI.Textable.Templating.Properties.LiteralValue<object>(null));");
+        builder.AppendLine("return Create(new global::OneI.Logable.Templating.Properties.LiteralValue<object>(null));");
     }
 
     /// <summary>
@@ -153,7 +160,7 @@ internal static partial class CodePrinter
     /// <param name="type">The type.</param>
     public static void BuildDictionary(IndentedStringBuilder builder, TypeDef type)
     {
-        builder.AppendLine($"var dictionary = new global::OneI.Textable.Templating.Properties.DictionaryValue();");
+        builder.AppendLine($"var dictionary = new global::OneI.Logable.Templating.Properties.DictionaryValue();");
         builder.AppendLine();
         builder.AppendLine($"foreach(var item in arg)");
         builder.AppendLine("{");

@@ -1,6 +1,6 @@
-namespace OneI.Textable.Templating.Properties;
+namespace OneI.Logable.Templating.Properties;
 
-using OneI.Textable.Rendering;
+using OneI.Logable.Rendering;
 
 public class LiteralValue<T> : PropertyValue
 {

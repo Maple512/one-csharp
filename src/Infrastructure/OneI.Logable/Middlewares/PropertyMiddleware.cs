@@ -1,6 +1,6 @@
 namespace OneI.Logable.Middlewares;
 
-using OneI.Textable.Templating.Properties;
+using OneI.Logable.Templating.Properties;
 
 /// <summary>
 /// The property middleware.

@@ -20,6 +20,6 @@ internal class Program
             item.Validate();
         }
 #endif
-        BenchmarkTool.Run<ObjectEqualsBenchmark>(args);
+        BenchmarkTool.Run<IntParseBenchmark>(args);
     }
 }

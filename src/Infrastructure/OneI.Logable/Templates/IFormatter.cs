@@ -1,4 +1,4 @@
-namespace OneI.Textable;
+namespace OneI.Logable;
 
 /// <summary>
 /// 表示指定对象的自定义格式化接口

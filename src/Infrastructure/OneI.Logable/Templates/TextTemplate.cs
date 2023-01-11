@@ -1,12 +1,10 @@
-namespace OneI.Textable;
+namespace OneI.Logable;
 
 using System;
-using System.Xml.Linq;
 using DotNext;
 using DotNext.Buffers;
-using DotNext.Threading;
-using OneI.Textable.Templating;
-using OneI.Textable.Templating.Properties;
+using OneI.Logable.Templating;
+using OneI.Logable.Templating.Properties;
 
 /// <summary>
 /// 文本模板
@@ -85,7 +83,7 @@ public class TextTemplate
 
     public void Render(TextWriter writer, IFormatProvider? formatProvider = null)
     {
-        var tokens = _tokens ?? TemplateParser.Parse111(_buffer.ToString()).ToArray();
+        var tokens = _tokens ?? TemplateParser.Parse(_buffer.ToString()).ToArray();
 
         var propertyTokens = tokens.OfType<PropertyToken>()
             .ToArray();
@@ -98,7 +96,7 @@ public class TextTemplate
         {
             //_properties.Add();
         }
-        
+
         TemplateRenderer.Render(this, writer, tokens, formatProvider);
     }
 
@@ -106,7 +104,7 @@ public class TextTemplate
     {
         get
         {
-            _tokens ??= TemplateParser.Parse111(_buffer.ToString()).ToArray();
+            _tokens ??= TemplateParser.Parse(_buffer.ToString()).ToArray();
 
             return _tokens;
         }

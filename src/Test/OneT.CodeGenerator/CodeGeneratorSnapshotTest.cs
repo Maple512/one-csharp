@@ -49,8 +49,12 @@ public class CodeGeneratorSnapshotTest
 
         var driver = CSharpGeneratorDriver.Create(generator);
 
+        var folder = Path.Combine(TestTools.GetCSProjectDirecoty(filePath), "Logs");
+
+        IOTools.EnsureDirectoryExisted(folder);
+
         var verify = Verifier.Verify(driver.RunGenerators(compilation))
-            .UseDirectory(Path.Combine(TestTools.GetCSProjectDirecoty(filePath), "Logs"))
+            .UseDirectory(folder)
             .AutoVerify()
             .UseUniqueDirectory();
 

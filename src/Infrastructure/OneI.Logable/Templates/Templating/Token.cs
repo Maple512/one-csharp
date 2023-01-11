@@ -1,4 +1,4 @@
-namespace OneI.Textable.Templating;
+namespace OneI.Logable.Templating;
 
 public class Token
 {
@@ -6,6 +6,12 @@ public class Token
     {
         Position = position;
         Text = text;
+    }
+
+    public Token(int position, ref ReadOnlySpan<char> text)
+    {
+        Position = position;
+        Text = text.ToString();
     }
 
     public int Position { get; protected set; }

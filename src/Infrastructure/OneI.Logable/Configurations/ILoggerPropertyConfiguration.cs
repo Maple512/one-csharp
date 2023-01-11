@@ -1,6 +1,6 @@
 namespace OneI.Logable.Configurations;
 
-using OneI.Textable;
+using OneI.Logable;
 /// <summary>
 /// The logger property configuration.
 /// </summary>

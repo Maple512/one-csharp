@@ -1,4 +1,4 @@
-namespace OneI.Textable.Rendering;
+namespace OneI.Logable.Rendering;
 
 /// <summary>
 /// 描述文本的对齐方向和宽度

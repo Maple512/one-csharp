@@ -1,6 +1,6 @@
 namespace OneI.Logable.Rendering;
 
-using OneI.Textable;
+using OneI.Logable;
 
 public interface ILoggerRenderer
 {
