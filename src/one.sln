@@ -135,7 +135,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Logable.File", "Infras
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Logable.Test", "Infrastructure\OneI.Logable.Test\OneI.Logable.Test.csproj", "{37DD02A6-3591-4A04-9295-C81954C9CBC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Logable.Benchmark", "Infrastructure\OneI.Logable.Benchmark\OneI.Logable.Benchmark.csproj", "{3734F493-6384-45E4-A570-735129DB8A07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Logable.Benchmark", "Infrastructure\OneI.Logable.Benchmark\OneI.Logable.Benchmark.csproj", "{3734F493-6384-45E4-A570-735129DB8A07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

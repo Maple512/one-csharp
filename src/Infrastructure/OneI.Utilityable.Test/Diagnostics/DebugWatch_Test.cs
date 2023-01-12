@@ -7,21 +7,19 @@ public class DebugWatch_Test
     {
         var output = new StringWriter();
 
-        var reciver = (int count, TimeSpan time) => output.WriteLine($"{count}: {time.TotalMilliseconds:N3} ms");
+        DebugWatch.Mark();
 
-        DebugWatch.Start(reciver);
-
-        await Task.Delay(10);
+        await Task.Delay(2 * 1000);
 
         DebugWatch.Stop();
 
-        await Task.Delay(10);
+        await Task.Delay(2 * 1000);
 
         DebugWatch.Mark();
 
-        await Task.Delay(10);
+        await Task.Delay(2 * 1000);
 
-        DebugWatch.EndAndReport();
+        DebugWatch.EndAndReport(s => output.Write(s));
 
         var result = output.ToString();
     }

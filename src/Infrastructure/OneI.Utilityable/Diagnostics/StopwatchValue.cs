@@ -1,40 +1,31 @@
 namespace OneI.Diagnostics;
 
+using System.Diagnostics.CodeAnalysis;
+
 /// <summary>
 /// 秒表
 /// </summary>
-/// <remarks>source: https://github.com/dotnet/aspnetcore/blob/main/src/Shared/ValueStopwatch/ValueStopwatch.cs</remarks>
-public readonly struct StopwatchValue
+/// <remarks>source: <see href="https://github.com/dotnet/aspnetcore/blob/main/src/Shared/ValueStopwatch/ValueStopwatch.cs"/></remarks>
+public readonly struct StopwatchValue : IEquatable<StopwatchValue>
 {
     private static readonly long _timestampToTicks = TimeSpan.TicksPerSecond / Stopwatch.Frequency;
 
     private readonly long _startTimestamp;
 
-    /// <summary>
-    /// Gets a value indicating whether is active.
-    /// </summary>
     public bool IsActive => _startTimestamp != 0;
 
-    /// <summary>
-    /// Prevents a default instance of the <see cref="StopwatchValue"/> class from being created.
-    /// </summary>
-    /// <param name="startTimestamp">The start timestamp.</param>
     private StopwatchValue(long startTimestamp) => _startTimestamp = startTimestamp;
 
-    /// <summary>
-    /// 开始一个新的计时
-    /// </summary>
-    /// <returns></returns>
     public static StopwatchValue StartNew()
     {
         return new(Stopwatch.GetTimestamp());
     }
 
-    /// <summary>
-    /// 获取从开始调用<see cref="StartNew"/>到现在经过的时间
-    /// </summary>
-    /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
+    public StopwatchValue()
+    {
+        _startTimestamp = Stopwatch.GetTimestamp();
+    }
+
     public TimeSpan GetElapsedTime()
     {
         if(!IsActive)
@@ -49,5 +40,16 @@ public readonly struct StopwatchValue
         var ticks = _timestampToTicks * timestampDelta;
 
         return new TimeSpan(ticks);
+    }
+
+    public override bool Equals([NotNullWhen(true)] object? obj)
+    {
+        return obj is StopwatchValue sv && Equals(sv);
+    }
+
+    public bool Equals(StopwatchValue other)
+    {
+        return IsActive && other.IsActive
+            && _startTimestamp == other._startTimestamp;
     }
 }

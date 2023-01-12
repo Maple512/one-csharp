@@ -1,29 +1,19 @@
 namespace OneI.Logable.Middlewares;
 
-/// <summary>
-/// The aggregate middleware.
-/// </summary>
 public class AggregateMiddleware : ILoggerMiddleware
 {
     private readonly ILoggerMiddleware[] _middlewares;
+    private readonly bool _isSilent;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AggregateMiddleware"/> class.
-    /// </summary>
-    /// <param name="middlewares">The middlewares.</param>
-    public AggregateMiddleware(ILoggerMiddleware[] middlewares)
+    public AggregateMiddleware(ILoggerMiddleware[] middlewares, bool isSilent = false)
     {
         _middlewares = middlewares;
+        _isSilent = isSilent;
     }
 
-    /// <summary>
-    /// Invokes the.
-    /// </summary>
-    /// <param name="context">The context.</param>
-    /// <param name="next">The next.</param>
-    /// <returns>A LoggerVoid.</returns>
     public LoggerVoid Invoke(in LoggerContext context, in LoggerDelegate next)
     {
+        List<Exception>? exceptions = null;
         foreach(var middleware in _middlewares)
         {
             try
@@ -31,12 +21,29 @@ public class AggregateMiddleware : ILoggerMiddleware
                 // 平行的中间件，无效的next
                 middleware.Invoke(context, ILoggerMiddleware.Nullable);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
-                // todo: log?
+                InternalLog.WriteLine($"Exception received ({middleware}): {ex}");
+
+                if(!_isSilent)
+                {
+                    exceptions ??= new List<Exception>();
+                    exceptions.Add(ex);
+                }
             }
         }
 
+        if(!_isSilent && exceptions != null)
+        {
+            ThrowAggregateException(exceptions);
+        }
+
         return next(context);
+
+        [DoesNotReturn]
+        static void ThrowAggregateException(IEnumerable<Exception> exceptions)
+        {
+            throw new AggregateException(exceptions);
+        }
     }
 }

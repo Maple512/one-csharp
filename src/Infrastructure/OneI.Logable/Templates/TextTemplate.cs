@@ -3,6 +3,7 @@ namespace OneI.Logable;
 using System;
 using DotNext;
 using DotNext.Buffers;
+using OneI.Logable.Templates;
 using OneI.Logable.Templating;
 using OneI.Logable.Templating.Properties;
 
@@ -12,7 +13,7 @@ using OneI.Logable.Templating.Properties;
 public class TextTemplate
 {
     private readonly ReadOnlyMemory<char> _buffer;
-    private Token[]? _tokens;
+    private IEnumerable<Token>? _tokens;
     private Dictionary<string, PropertyValue> _properties;
 
     private TextTemplate(in ReadOnlyMemory<char> buffer)
@@ -83,28 +84,16 @@ public class TextTemplate
 
     public void Render(TextWriter writer, IFormatProvider? formatProvider = null)
     {
-        var tokens = _tokens ?? TemplateParser.Parse(_buffer.ToString()).ToArray();
-
-        var propertyTokens = tokens.OfType<PropertyToken>()
-            .ToArray();
-
-        var count = _properties.Count;
-
-        var length = Math.Max(tokens.Length, count);
-
-        foreach(var item in propertyTokens)
-        {
-            //_properties.Add();
-        }
+        var tokens = _tokens ?? TemplateParser.Parse(_buffer.ToString());
 
         TemplateRenderer.Render(this, writer, tokens, formatProvider);
     }
 
-    public IReadOnlyList<Token> Tokens
+    public IEnumerable<Token> Tokens
     {
         get
         {
-            _tokens ??= TemplateParser.Parse(_buffer.ToString()).ToArray();
+            _tokens ??= TemplateParser.Parse(_buffer.ToString());
 
             return _tokens;
         }

@@ -1,7 +1,7 @@
 namespace OneI.Logable;
 
 using System.Globalization;
-using NLog;
+using OneI.Logable.Templates;
 using Serilog.Parsing;
 
 public class TemplateParserBenchmark
@@ -23,7 +23,7 @@ public class TemplateParserBenchmark
     [Benchmark]
     public void UseNLog()
     {
-        var _ = new LogEventInfo(NLog.LogLevel.Debug, "TemplateParserBenchmark", CultureInfo.InvariantCulture,
+        var _ = new NLog.LogEventInfo(NLog.LogLevel.Debug, "TemplateParserBenchmark", CultureInfo.InvariantCulture,
             text, new object[] { DateTime.Now }).MessageTemplateParameters;
     }
 

@@ -8,22 +8,11 @@ using OneI.Logable.Templating.Properties;
 /// </summary>
 public static class LoggerExtensions
 {
-    /// <summary>
-    /// Fors the context.
-    /// </summary>
-    /// <param name="logger"></param>
-    /// <returns>An ILogger.</returns>
     public static ILogger ForContext<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSourceContext>(this ILogger logger)
     {
         return logger.ForContext(typeof(TSourceContext).FullName!);
     }
 
-    /// <summary>
-    /// Fors the context.
-    /// </summary>
-    /// <param name="logger"></param>
-    /// <param name="sourceContext">The source context.</param>
-    /// <returns>An ILogger.</returns>
     public static ILogger ForContext(this ILogger logger, string sourceContext)
     {
         return logger.ForContext(new PropertyMiddleware(LoggerConstants.PropertyNames.SourceContext, PropertyValue.CreateLiteral(sourceContext)));
@@ -67,12 +56,7 @@ public static class LoggerExtensions
     {
         propertyValues ??= new List<PropertyValue>(0);
 
-        //var template = TextTemplate.Create(message);
-
-        //var propertyTokens = template.PropertyTokens;
-
         var count = propertyValues.Count;
-        //var length = Math.Max(propertyTokens.Count, count);
 
         var properties = new Dictionary<string, PropertyValue>(propertyValues.Count);
 
@@ -80,19 +64,8 @@ public static class LoggerExtensions
         {
             var name = $"__{i}";
             var index = i;
-            //if(i < propertyTokens.Count)
-            //{
-            //    var token = propertyTokens[i];
 
-            //    name = token.Name;
-
-            //    index = token.ParameterIndex ?? i;
-            //}
-
-            //if(count > index)
-            {
-                properties.Add(name, propertyValues[i]);
-            }
+            properties.Add(name, propertyValues[i]);
         }
 
         logger.Write(new(level, message, exception, properties, filePath, memberName, lineNumber));

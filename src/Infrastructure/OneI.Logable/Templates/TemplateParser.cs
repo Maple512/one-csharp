@@ -1,10 +1,8 @@
-namespace OneI.Logable;
+namespace OneI.Logable.Templates;
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Numerics;
-using OneI.Logable.Rendering;
 using OneI.Logable.Templating;
 
 using static OneI.Logable.TextTemplateConstants.Formatters;
@@ -44,6 +42,7 @@ public static class TemplateParser
                 textEnd = index + remainder.Length;
                 break;
             }
+
             var close = remainder.IndexOf(Close_Separator);
             if(close is -1)
             {

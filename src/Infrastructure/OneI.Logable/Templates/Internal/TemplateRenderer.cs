@@ -6,7 +6,11 @@ using OneI.Logable.Templating.Properties;
 
 internal static class TemplateRenderer
 {
-    public static void Render(in TextTemplate context, in TextWriter output, in IReadOnlyList<Token> tokens, in IFormatProvider? formatProvider = null)
+    public static void Render(
+        in TextTemplate context,
+        in TextWriter output,
+        in IEnumerable<Token> tokens,
+        in IFormatProvider? formatProvider = null)
     {
         foreach(var token in tokens)
         {

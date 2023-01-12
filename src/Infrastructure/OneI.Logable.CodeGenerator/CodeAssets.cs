@@ -20,6 +20,7 @@ internal static class CodeAssets
         using System.Runtime.CompilerServices;
         using OneI.Logable.Templating.Properties;
 
+        [global::System.Diagnostics.DebuggerStepThrough]
         public static partial class Log
         {
             private static ILogger _logger = ILogger.NullLogger;
@@ -277,6 +278,7 @@ internal static class CodeAssets
         using System.Runtime.CompilerServices;
         using OneI.Logable.Templating.Properties;
 
+        [global::System.Diagnostics.DebuggerStepThrough]
         public static partial class LogableExtensions
         {
             #region Write

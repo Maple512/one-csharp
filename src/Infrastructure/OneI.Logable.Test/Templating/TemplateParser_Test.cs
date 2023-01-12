@@ -1,5 +1,7 @@
 namespace OneI.Logable.Templating;
 
+using OneI.Logable.Templates;
+
 public class TemplateParser_Test
 {
     [Fact]

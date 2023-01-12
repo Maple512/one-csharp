@@ -99,34 +99,6 @@ internal class Logger : ILogger
     /// <param name="context">The context.</param>
     private void Dispatch(LoggerContext context)
     {
-        //var template = TextTemplate.Create(context.MessageTemplate);
-
-        ////var propertyTokens = template.PropertyTokens;
-
-        //var count = propertyValues.Count;
-        ////var length = Math.Max(propertyTokens.Count, count);
-
-        //var properties = new Dictionary<string, PropertyValue>(propertyValues.Count);
-
-        //for(var i = 0; i < propertyValues.Count; i++)
-        //{
-        //    var name = $"__{i}";
-        //    var index = i;
-        //    //if(i < propertyTokens.Count)
-        //    //{
-        //    //    var token = propertyTokens[i];
-
-        //    //    name = token.Name;
-
-        //    //    index = token.ParameterIndex ?? i;
-        //    //}
-
-        //    //if(count > index)
-        //    {
-        //        properties.Add(name, propertyValues.ElementAt(i));
-        //    }
-        //}
-
         try
         {
             _middleware.Value!.Invoke(context);

@@ -5,6 +5,7 @@
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
         <OutputType>Exe</OutputType>
+        <IncludeShared>true</IncludeShared>
     </PropertyGroup>
 
     <ItemGroup>

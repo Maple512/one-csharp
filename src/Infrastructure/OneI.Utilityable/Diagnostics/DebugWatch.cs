@@ -1,182 +1,122 @@
 namespace OneI.Diagnostics;
 
-using System.Collections.Generic;
-/// <summary>
-/// The debug watch.
-/// </summary>
+using OneI.Horology;
 
 public static class DebugWatch
 {
-    private static readonly long _timestampToTicks = TimeSpan.TicksPerSecond / Stopwatch.Frequency;
+    private static readonly List<MarkPoint> _points = new();
 
-    private static List<DebugLocationRange> _marks = new();
-    private static DebugLocaltion _begin;
-    private static DebugLocaltion _end;
-    private static string? _catagory;
-    private static long _marked;
-    private static long _start;
-    private static bool _isStop;
-    private static int _count;
-    private static Action<int, TimeSpan>? _receiver;
+    private static StopwatchValue? _watch;
 
-    /// <summary>
-    /// Starts the.
-    /// </summary>
-    /// <param name="tick">The tick.</param>
-    /// <param name="category">The category.</param>
-    /// <param name="file">The file.</param>
-    /// <param name="line">The line.</param>
-    [Conditional("DEBUG")]
-    public static void Start(
-        Action<int, TimeSpan>? tick = null,
-        string? category = null,
+    private static MarkPoint? _stop;
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Mark(
         [CallerFilePath] string? file = null,
-        [CallerLineNumber] int? line = null)
+        [CallerMemberName] string? member = null,
+        [CallerLineNumber] int line = 0)
     {
-        _marks = new();
-        _receiver = tick;
-        _catagory = category;
-        _begin = new DebugLocaltion(Path.GetFileNameWithoutExtension(file), line);
-        _start = _marked = Stopwatch.GetTimestamp();
+        if(_watch.HasValue == false)
+        {
+            _watch = StopwatchValue.StartNew();
+        }
+
+        var current = _watch.Value.GetElapsedTime();
+
+        _points.Add(new(current - (_stop?.timestamp ?? default), file!, member!, line));
     }
 
-    /// <summary>
-    /// 暂时停止，不计入耗时
-    /// </summary>
-    [Conditional("DEBUG")]
+    [Conditional(SharedConstants.DEBUG)]
     public static void Stop(
         [CallerFilePath] string? file = null,
-        [CallerLineNumber] int? line = null)
+        [CallerMemberName] string? member = null,
+        [CallerLineNumber] int line = 0)
     {
-        if(_isStop)
+        if(_watch.HasValue == false
+            || _stop.HasValue == true)
         {
             return;
         }
 
-        var elapsed = GetElapsedTime(_marked);
-        _end = new DebugLocaltion(Path.GetFileNameWithoutExtension(file), line);
-        _isStop = true;
-        _count++;
-        _marks.Add(new DebugLocationRange(_begin, _end, _catagory, elapsed));
-        _begin = _end;
-        _receiver?.Invoke(_count, elapsed);
-        _marked = Stopwatch.GetTimestamp();
+        _stop = new MarkPoint(_watch.Value.GetElapsedTime(), file!, member!, line);
     }
 
-    /// <summary>
-    /// Marks the.
-    /// </summary>
-    /// <param name="category">The category.</param>
-    /// <param name="file">The file.</param>
-    /// <param name="line">The line.</param>
-    [Conditional("DEBUG")]
-    public static void Mark(
-        string? category = null,
-        [CallerFilePath] string? file = null,
-        [CallerLineNumber] int? line = null)
-    {
-        if(_isStop)
-        {
-            _marked = Stopwatch.GetTimestamp();
-
-            _isStop = false;
-            _catagory = category;
-            _begin = new DebugLocaltion(Path.GetFileNameWithoutExtension(file), line);
-        }
-        else
-        {
-            var elapsed = GetElapsedTime(_marked);
-            _end = new DebugLocaltion(Path.GetFileNameWithoutExtension(file), line);
-            _count++;
-            _marks.Add(new DebugLocationRange(_begin, _end, _catagory, elapsed));
-            _catagory = category;
-            _begin = _end;
-            _receiver?.Invoke(_count, elapsed);
-            _marked = Stopwatch.GetTimestamp();
-        }
-    }
-
-    /// <summary>
-    /// Ends the and report.
-    /// </summary>
-    /// <param name="category">The category.</param>
-    /// <param name="file">The file.</param>
-    /// <param name="line">The line.</param>
-    [Conditional("DEBUG")]
+    [Conditional(SharedConstants.DEBUG)]
     public static void EndAndReport(
-        string? category = null,
+        Action<string>? writer = null,
         [CallerFilePath] string? file = null,
-        [CallerLineNumber] int? line = null)
+        [CallerMemberName] string? member = null,
+        [CallerLineNumber] int line = 0)
     {
-        Mark(category, file, line);
+        Mark(file, member, line);
 
-        for(var i = 0; i < _marks.Count; i++)
+        _stop = null;
+        _watch = null;
+
+        var container = new StringBuilder();
+
+        try
         {
-            var mark = _marks[i];
+            if(_points.Count == 1)
+            {
+                var point = _points[0];
 
-            Debug.WriteLine($"{i + 1}: {mark}");
+                container.AppendLine($"Total：{point.timestamp.TotalMicroseconds:N} ns");
+
+                writer?.Invoke(container.ToString());
+
+                return;
+            }
+
+            container.AppendLine();
+            TimeSpan totalTimestamp = default;
+
+            for(var i = 0; i < _points.Count - 1; i++)
+            {
+                var item = _points[i];
+                var next = _points[i + 1];
+
+                var diff = next.timestamp - item.timestamp;
+
+                container.Append($"{i + 1}：{TimeInterval.FromNanoseconds(diff.TotalMicroseconds)} (");
+
+                var itemFile = Path.GetFileNameWithoutExtension(item.filepath);
+                var nextFile = Path.GetFileNameWithoutExtension(item.filepath);
+
+                container.Append($"{itemFile}#L{item.line}");
+                container.Append($" - ");
+                container.Append($"{nextFile}#L{next.line}");
+
+                container.AppendLine(")");
+
+                totalTimestamp += diff;
+            }
+
+            var total = TimeInterval.FromNanoseconds(totalTimestamp.TotalMicroseconds);
+            var avg = total / _points.Count;
+            container.Insert(0, $"Total: {total}, Avg: {avg}");
+
+            writer?.Invoke(container.ToString());
         }
-
-        Debug.WriteLine($"总用时：{GetElapsedTime(_start).TotalMilliseconds:N2}ms");
+        finally
+        {
+            _points.Clear();
+        }
     }
 
-    /// <summary>
-    /// Gets the elapsed time.
-    /// </summary>
-    /// <param name="start">The start.</param>
-    /// <returns>A TimeSpan.</returns>
-    public static TimeSpan GetElapsedTime(long start)
+    private readonly struct MarkPoint
     {
-        var timestampDelta = Stopwatch.GetTimestamp() - start;
+        public readonly TimeSpan timestamp;
+        public readonly string filepath;
+        public readonly string member;
+        public readonly int line;
 
-        var ticks = _timestampToTicks * timestampDelta;
-
-        return new TimeSpan(ticks);
-    }
-}
-
-/// <summary>
-/// Debug位置范围记录
-/// </summary>
-/// <param name="Begin">开始的位置</param>
-/// <param name="End">结束的位置</param>
-/// <param name="Category"></param>
-/// <param name="Elapsed">从开始到结束的总耗时</param>
-internal record struct DebugLocationRange(DebugLocaltion Begin, DebugLocaltion End, string? Category, TimeSpan Elapsed)
-{
-    /// <summary>
-    /// Tos the string.
-    /// </summary>
-    /// <returns>A string.</returns>
-    public override string ToString()
-    {
-        var builder = new StringBuilder();
-
-        builder.Append($"{Elapsed.TotalMilliseconds:N4} (");
-
-        if(Category != null)
+        public MarkPoint(TimeSpan timestamp, string filepath, string member, int line)
         {
-            builder.Append($"{Category}");
+            this.timestamp = timestamp;
+            this.filepath = filepath;
+            this.member = member;
+            this.line = line;
         }
-        else
-        {
-            builder.Append($"{Begin} - {End}");
-        }
-
-        builder.Append(')');
-
-        return builder.ToString();
-    }
-}
-
-internal readonly record struct DebugLocaltion(string? FileName, int? LineNumber)
-{
-    /// <summary>
-    /// Tos the string.
-    /// </summary>
-    /// <returns>A string.</returns>
-    public override string ToString()
-    {
-        return $"{FileName}#L{LineNumber}";
     }
 }
