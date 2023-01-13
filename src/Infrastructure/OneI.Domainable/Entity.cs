@@ -122,7 +122,9 @@ public abstract class Entity<TKey> : Entity, IEntity<TKey>, IEqualityComparer<En
     /// <summary>
     /// Initializes a new instance of the <see cref="Entity"/> class.
     /// </summary>
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的 属性“Id”必须包含非 null 值。请考虑将 属性 声明为可以为 null。
     protected Entity()
+#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的 属性“Id”必须包含非 null 值。请考虑将 属性 声明为可以为 null。
     { }
 
     /// <summary>

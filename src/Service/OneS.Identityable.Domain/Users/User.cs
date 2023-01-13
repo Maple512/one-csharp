@@ -6,7 +6,15 @@ using OneI.Domainable;
 [Serializable]
 public class User : Entity<Guid>, ICreatedTime, ILastModified
 {
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的 属性“PasswordHash”必须包含非 null 值。请考虑将 属性 声明为可以为 null。
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的 属性“DisplayName”必须包含非 null 值。请考虑将 属性 声明为可以为 null。
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的 属性“EMail”必须包含非 null 值。请考虑将 属性 声明为可以为 null。
+#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的 属性“Name”必须包含非 null 值。请考虑将 属性 声明为可以为 null。
     private User()
+#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的 属性“Name”必须包含非 null 值。请考虑将 属性 声明为可以为 null。
+#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的 属性“EMail”必须包含非 null 值。请考虑将 属性 声明为可以为 null。
+#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的 属性“DisplayName”必须包含非 null 值。请考虑将 属性 声明为可以为 null。
+#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的 属性“PasswordHash”必须包含非 null 值。请考虑将 属性 声明为可以为 null。
     {
     }
 

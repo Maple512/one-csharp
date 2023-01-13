@@ -1,14 +1,23 @@
 namespace OneI.Diagnostics;
 
-using OneI.Horology;
+using Perfolizer.Horology;
 
-public static class DebugWatch
+public static class DebugWatcher
 {
+    /// <summary>
+    /// 调试报告接收器
+    /// </summary>
+    /// <param name="mssage">消息文本</param>
+    /// <param name="totalSeconds">总用时</param>
+    /// <param name="avgSeconds">平均用时</param>
+    public delegate void DebugReportReciver(string mssage, double totalSeconds, double avgSeconds);
+
     private static readonly List<MarkPoint> _points = new();
 
-    private static StopwatchValue? _watch;
+    private static StartedClock? clock;
+    private static readonly object _lock = new();
 
-    private static MarkPoint? _stop;
+    private static TimeSpan? _stop;
 
     [Conditional(SharedConstants.DEBUG)]
     public static void Mark(
@@ -16,14 +25,17 @@ public static class DebugWatch
         [CallerMemberName] string? member = null,
         [CallerLineNumber] int line = 0)
     {
-        if(_watch.HasValue == false)
+        lock(_lock)
         {
-            _watch = StopwatchValue.StartNew();
+            if(clock.HasValue == false)
+            {
+                clock = Chronometer.Start();
+            }
+
+            var current = clock.Value.GetElapsed().GetTimeSpan() - _stop.GetValueOrDefault();
+
+            _points.Add(new(current, file!, member!, line));
         }
-
-        var current = _watch.Value.GetElapsedTime();
-
-        _points.Add(new(current - (_stop?.timestamp ?? default), file!, member!, line));
     }
 
     [Conditional(SharedConstants.DEBUG)]
@@ -32,18 +44,25 @@ public static class DebugWatch
         [CallerMemberName] string? member = null,
         [CallerLineNumber] int line = 0)
     {
-        if(_watch.HasValue == false
+        if(clock == null
             || _stop.HasValue == true)
         {
             return;
         }
 
-        _stop = new MarkPoint(_watch.Value.GetElapsedTime(), file!, member!, line);
+        lock(_lock)
+        {
+            _stop = clock.Value.GetElapsed().GetTimeSpan();
+        }
     }
 
+    /// <summary>
+    /// 结束调试，并将结果输出到给定的接收器中
+    /// </summary>
+    /// <param name="receiver">结果接收器</param>
     [Conditional(SharedConstants.DEBUG)]
     public static void EndAndReport(
-        Action<string>? writer = null,
+        DebugReportReciver? receiver = null,
         [CallerFilePath] string? file = null,
         [CallerMemberName] string? member = null,
         [CallerLineNumber] int line = 0)
@@ -51,7 +70,7 @@ public static class DebugWatch
         Mark(file, member, line);
 
         _stop = null;
-        _watch = null;
+        clock = null;
 
         var container = new StringBuilder();
 
@@ -60,16 +79,17 @@ public static class DebugWatch
             if(_points.Count == 1)
             {
                 var point = _points[0];
+                var interval = TimeInterval.FromNanoseconds(point.timestamp.TotalNanoseconds);
+                container.AppendLine($"Total：{interval} ns");
 
-                container.AppendLine($"Total：{point.timestamp.TotalMicroseconds:N} ns");
-
-                writer?.Invoke(container.ToString());
+                var totalSeconds = interval.ToSeconds();
+                receiver?.Invoke(container.ToString(), totalSeconds, totalSeconds);
 
                 return;
             }
 
             container.AppendLine();
-            TimeSpan totalTimestamp = default;
+            var totalTimestamp = TimeSpan.Zero;
 
             for(var i = 0; i < _points.Count - 1; i++)
             {
@@ -78,7 +98,7 @@ public static class DebugWatch
 
                 var diff = next.timestamp - item.timestamp;
 
-                container.Append($"{i + 1}：{TimeInterval.FromNanoseconds(diff.TotalMicroseconds)} (");
+                container.Append($"{i + 1}：{TimeInterval.FromNanoseconds(diff.TotalNanoseconds)} (");
 
                 var itemFile = Path.GetFileNameWithoutExtension(item.filepath);
                 var nextFile = Path.GetFileNameWithoutExtension(item.filepath);
@@ -92,11 +112,11 @@ public static class DebugWatch
                 totalTimestamp += diff;
             }
 
-            var total = TimeInterval.FromNanoseconds(totalTimestamp.TotalMicroseconds);
+            var total = TimeInterval.FromNanoseconds(totalTimestamp.TotalNanoseconds);
             var avg = total / _points.Count;
             container.Insert(0, $"Total: {total}, Avg: {avg}");
 
-            writer?.Invoke(container.ToString());
+            receiver?.Invoke(container.ToString(), total.ToSeconds(), avg.ToSeconds());
         }
         finally
         {

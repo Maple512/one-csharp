@@ -11,12 +11,12 @@ public class ObjectEqualsBenchmark : IValidator
     {
         var result = UseInt();
 
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseEqualityComparerDefault(), result);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseEqualityComparerDefault_Short(), result);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseString(), result);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseReadOnlySpan(), result);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseDotNext(), result);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseMemory(), result);
+        Validator.Equals(UseEqualityComparerDefault(), result);
+        Validator.Equals(UseEqualityComparerDefault_Short(), result);
+        Validator.Equals(UseString(), result);
+        Validator.Equals(UseReadOnlySpan(), result);
+        Validator.Equals(UseDotNext(), result);
+        Validator.Equals(UseMemory(), result);
     }
 #endif
 

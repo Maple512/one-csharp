@@ -48,7 +48,9 @@ public sealed class ApplicationBuilder : IApplicationBuilder
 
         InitializeServiceProvider(configuration, services);
 
+#pragma warning disable CS8604 // “IApplication ApplicationBuilder.Resolver(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)”中的形参“serviceProvider”可能传入 null 引用实参。
         return Resolver(_serviceProvider, diagnostic);
+#pragma warning restore CS8604 // “IApplication ApplicationBuilder.Resolver(IServiceProvider serviceProvider, DiagnosticListener diagnosticListener)”中的形参“serviceProvider”可能传入 null 引用实参。
     }
 
     /// <summary>
@@ -68,10 +70,12 @@ public sealed class ApplicationBuilder : IApplicationBuilder
     /// <param name="services">The services.</param>
     private void InitializeServiceProvider(IConfigurationRoot configuration, IServiceCollection services)
     {
+#pragma warning disable CS8603 // 可能返回 null 引用。
         PopulateServiceCollection(
             services,
             configuration,
             () => _serviceProvider);
+#pragma warning restore CS8603 // 可能返回 null 引用。
 
         var containerBuilder = _serviceProviderFactory.CreateBuilder(services);
 

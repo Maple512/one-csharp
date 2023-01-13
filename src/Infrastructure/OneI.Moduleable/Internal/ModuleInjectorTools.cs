@@ -33,7 +33,9 @@ internal static class ModuleInjectorTools
     {
         foreach(var type in types)
         {
+#pragma warning disable CS0612 // “ModuleInjectorTools.RegisterType(IServiceCollection, Type)”已过时
             RegisterType(services, type);
+#pragma warning restore CS0612 // “ModuleInjectorTools.RegisterType(IServiceCollection, Type)”已过时
         }
     }
 

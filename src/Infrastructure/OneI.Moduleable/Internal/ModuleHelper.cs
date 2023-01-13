@@ -25,7 +25,9 @@ internal static class ModuleHelper
     {
         _logger = logger;
 
+#pragma warning disable CS0612 // “ModuleHelper.GetModuleDescriptors(Type)”已过时
         var modules = GetModuleDescriptors(startupType);
+#pragma warning restore CS0612 // “ModuleHelper.GetModuleDescriptors(Type)”已过时
 
         if(modules.Count > 1)
         {

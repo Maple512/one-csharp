@@ -11,19 +11,17 @@ public class StringBuilderBenchmark
     public const int count = 50;
     public const int capacity = GlobalConstants.StringFormatMinimumLength;
 
-#if DEBUG
     public void Validate()
     {
         var result = UseStringBuilder();
 
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseList(), result, StringComparer.OrdinalIgnoreCase);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseRefValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UsePooledArrayBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseSparseBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseBufferWriterSlim(), result, StringComparer.OrdinalIgnoreCase);
+        Validator.Equals(UseList(), result, StringComparer.OrdinalIgnoreCase);
+        Validator.Equals(UseValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
+        Validator.Equals(UseRefValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
+        Validator.Equals(UsePooledArrayBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
+        Validator.Equals(UseSparseBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
+        Validator.Equals(UseBufferWriterSlim(), result, StringComparer.OrdinalIgnoreCase);
     }
-#endif
 
     [Benchmark(Baseline = true)]
     public string UseStringBuilder()

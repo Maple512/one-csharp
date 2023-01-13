@@ -7,20 +7,28 @@ public class DebugWatch_Test
     {
         var output = new StringWriter();
 
-        DebugWatch.Mark();
+        DebugWatcher.Mark();
 
-        await Task.Delay(2 * 1000);
+        await Task.Delay(2 * 10);
 
-        DebugWatch.Stop();
+        DebugWatcher.Stop();
 
-        await Task.Delay(2 * 1000);
+        await Task.Delay(2 * 10);
 
-        DebugWatch.Mark();
+        DebugWatcher.Mark();
 
-        await Task.Delay(2 * 1000);
+        await Task.Delay(2 * 10);
 
-        DebugWatch.EndAndReport(s => output.Write(s));
+        var totalSeconds = 0D;
+        DebugWatcher.EndAndReport((s, total, _) =>
+        {
+            output.Write(s);
 
-        var result = output.ToString();
+            totalSeconds = total;
+        });
+
+        totalSeconds.ShouldBeGreaterThan(TimeSpan.FromMilliseconds(40).TotalSeconds);
+
+        Debug.WriteLine(output.ToString());
     }
 }

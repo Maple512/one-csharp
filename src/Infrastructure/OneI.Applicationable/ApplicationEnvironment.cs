@@ -19,12 +19,16 @@ public class ApplicationEnvironment : IApplicationEnvironment
     /// <summary>
     /// Gets the application name.
     /// </summary>
+#pragma warning disable CS8766 // “string? ApplicationEnvironment.ApplicationName.get”的返回类型中引用类型的为 Null 性与隐式实现的成员“string IApplicationEnvironment.ApplicationName.get”不匹配(可能是由于为 Null 性特性)。
     public string? ApplicationName { get; private set; }
+#pragma warning restore CS8766 // “string? ApplicationEnvironment.ApplicationName.get”的返回类型中引用类型的为 Null 性与隐式实现的成员“string IApplicationEnvironment.ApplicationName.get”不匹配(可能是由于为 Null 性特性)。
 
     /// <summary>
     /// Gets the root path.
     /// </summary>
+#pragma warning disable CS8766 // “string? ApplicationEnvironment.RootPath.get”的返回类型中引用类型的为 Null 性与隐式实现的成员“string IApplicationEnvironment.RootPath.get”不匹配(可能是由于为 Null 性特性)。
     public string? RootPath { get; private set; }
+#pragma warning restore CS8766 // “string? ApplicationEnvironment.RootPath.get”的返回类型中引用类型的为 Null 性与隐式实现的成员“string IApplicationEnvironment.RootPath.get”不匹配(可能是由于为 Null 性特性)。
 
     /// <summary>
     /// Resolvers the.

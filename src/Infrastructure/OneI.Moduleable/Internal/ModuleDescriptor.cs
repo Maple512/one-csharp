@@ -64,7 +64,9 @@ internal sealed class ModuleDescriptor : IServiceModuleDescriptor
     /// </summary>
     /// <returns>A string.</returns>
     [Obsolete]
+#pragma warning disable CS0809 // 过时成员“ModuleDescriptor.ToString()”重写未过时成员“object.ToString()”
     public override string ToString()
+#pragma warning restore CS0809 // 过时成员“ModuleDescriptor.ToString()”重写未过时成员“object.ToString()”
     {
         return $"ServiceModule: {StartupType.ShortDisplayName()}";
     }

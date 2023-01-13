@@ -9,18 +9,13 @@ public class StringFormatBenchmark
     private const int capacity = 256;
     private const int count = 100;
 
-#if DEBUG
     public void Validate()
     {
         var result = UseStringBuilder();
 
-        Shouldly.ShouldBeTestExtensions.ShouldBe(result, UseList());
-
-        var a = UseValueStringBuilder();
-
-        Shouldly.ShouldBeTestExtensions.ShouldBe(result, a);
+        Validator.Equals(result, UseList());
+        Validator.Equals(result, UseValueStringBuilder());
     }
-#endif
 
     [Benchmark(Baseline = true)]
     public string UseStringBuilder()

@@ -7,15 +7,13 @@ public class IntParseBenchmark : IValidator
 {
     private static readonly string number = "-87654321";
 
-#if DEBUG
     public void Validate()
     {
         var result = UseSystem();
 
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseDotNext(), result);
-        Shouldly.ShouldBeTestExtensions.ShouldBe(UseCustome(), result);
+        Validator.Equals(UseDotNext(), result);
+        Validator.Equals(UseCustome(), result);
     }
-#endif
 
     [Benchmark(Baseline = true)]
     public int UseSystem()
