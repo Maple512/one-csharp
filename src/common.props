@@ -8,7 +8,7 @@
         <ImplicitUsings>true</ImplicitUsings>
         <NeutralLanguage>zh-Hans</NeutralLanguage>
         <SatelliteResourceLanguages>zh-Hans</SatelliteResourceLanguages>
-        <NoWarn>$(NoWarn);CS1573;CS1591;CA2208;IDE0022;</NoWarn>
+        <NoWarn>$(NoWarn);CS1573;CS1591;CA2208;IDE0022;IDE0053;</NoWarn>
         <Utf8Output>true</Utf8Output>
     </PropertyGroup>
 

@@ -20,6 +20,6 @@ internal class Program
             item.Validate();
         }
 #endif
-        BenchmarkTool.Run<IntParseBenchmark>(args);
+        BenchmarkTool.Run<TextWriterSameCharBenchmark>(args);
     }
 }

@@ -11,8 +11,8 @@ public class IntParseBenchmark : IValidator
     {
         var result = UseSystem();
 
-        Validator.Equals(UseDotNext(), result);
-        Validator.Equals(UseCustome(), result);
+        IValidator.AreEquals(UseDotNext(), result);
+        IValidator.AreEquals(UseCustome(), result);
     }
 
     [Benchmark(Baseline = true)]

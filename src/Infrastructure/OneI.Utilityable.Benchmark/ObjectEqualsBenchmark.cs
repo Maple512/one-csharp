@@ -6,19 +6,17 @@ public class ObjectEqualsBenchmark : IValidator
 {
     private const int count = 1;
 
-#if DEBUG
     public void Validate()
     {
         var result = UseInt();
 
-        Validator.Equals(UseEqualityComparerDefault(), result);
-        Validator.Equals(UseEqualityComparerDefault_Short(), result);
-        Validator.Equals(UseString(), result);
-        Validator.Equals(UseReadOnlySpan(), result);
-        Validator.Equals(UseDotNext(), result);
-        Validator.Equals(UseMemory(), result);
+        IValidator.AreEquals(UseEqualityComparerDefault(), result);
+        IValidator.AreEquals(UseEqualityComparerDefault_Short(), result);
+        IValidator.AreEquals(UseString(), result);
+        IValidator.AreEquals(UseReadOnlySpan(), result);
+        IValidator.AreEquals(UseDotNext(), result);
+        IValidator.AreEquals(UseMemory(), result);
     }
-#endif
 
     [Benchmark(Baseline = true)]
     public int UseInt()

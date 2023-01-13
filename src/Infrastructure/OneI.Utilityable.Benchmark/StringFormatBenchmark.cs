@@ -2,7 +2,7 @@ namespace OneI.Utilityable;
 
 using OneI.Text;
 
-public class StringFormatBenchmark
+public class StringFormatBenchmark: IValidator
 {
     private const string format = "{0},{1}";
     private static User user = new User(512, "Maple512");
@@ -13,8 +13,8 @@ public class StringFormatBenchmark
     {
         var result = UseStringBuilder();
 
-        Validator.Equals(result, UseList());
-        Validator.Equals(result, UseValueStringBuilder());
+        IValidator.AreEquals(result, UseList());
+        IValidator.AreEquals(result, UseValueStringBuilder());
     }
 
     [Benchmark(Baseline = true)]

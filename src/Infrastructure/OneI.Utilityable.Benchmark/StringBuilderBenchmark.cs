@@ -15,12 +15,12 @@ public class StringBuilderBenchmark
     {
         var result = UseStringBuilder();
 
-        Validator.Equals(UseList(), result, StringComparer.OrdinalIgnoreCase);
-        Validator.Equals(UseValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
-        Validator.Equals(UseRefValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
-        Validator.Equals(UsePooledArrayBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
-        Validator.Equals(UseSparseBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
-        Validator.Equals(UseBufferWriterSlim(), result, StringComparer.OrdinalIgnoreCase);
+        IValidator.AreEquals(UseList(), result, StringComparer.OrdinalIgnoreCase);
+        IValidator.AreEquals(UseValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
+        IValidator.AreEquals(UseRefValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
+        IValidator.AreEquals(UsePooledArrayBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
+        IValidator.AreEquals(UseSparseBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
+        IValidator.AreEquals(UseBufferWriterSlim(), result, StringComparer.OrdinalIgnoreCase);
     }
 
     [Benchmark(Baseline = true)]
