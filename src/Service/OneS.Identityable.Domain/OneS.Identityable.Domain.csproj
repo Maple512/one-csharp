@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\OneI.Domainable\OneI.Domainable.csproj" />
     <ProjectReference Include="..\..\Infrastructure\OneI.Eventable.Local\OneI.Eventable.Local.csproj" />
   </ItemGroup>
 

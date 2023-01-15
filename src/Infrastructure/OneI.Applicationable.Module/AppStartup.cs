@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using OneI.Moduleable;
 
-public class AppProgram : ServiceModule
+public class AppStartup : ServiceModule
 {
     public static async Task RunAsync<TStartupModule>(
         Action<IConfigurationBuilder>? configurationBuilderAction = null,

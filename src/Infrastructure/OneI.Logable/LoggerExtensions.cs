@@ -85,12 +85,12 @@ public static class LoggerExtensions
         LogLevel level,
         Exception? exception,
         string message,
-        List<PropertyValue>? propertyValues = null,
+        List<ITemplatePropertyValue>? propertyValues = null,
         [CallerFilePath] string? file = null,
         [CallerMemberName] string? member = null,
         [CallerLineNumber] int? line = null)
     {
-        propertyValues ??= new List<PropertyValue>(0);
+        propertyValues ??= new List<ITemplatePropertyValue>(0);
 
         var properties = new PropertyCollection(propertyValues.Count + 10);
 

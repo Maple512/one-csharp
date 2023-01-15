@@ -10,6 +10,7 @@
 ## 项目
 
 - `Infrastructure`: 基础设施
+  - `Application`: 轻量级应用程序
   - `Utility`: 工具集
   - `Module`: 模块化支持（参考[abp](https://abp.io))
   - `Event`: 事件

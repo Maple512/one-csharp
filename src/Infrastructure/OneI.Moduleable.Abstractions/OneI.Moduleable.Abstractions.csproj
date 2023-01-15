@@ -11,8 +11,4 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MSVersion)" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OneI.Applicationable.Astractions\OneI.Applicationable.Astractions.csproj" />
-  </ItemGroup>
-
 </Project>

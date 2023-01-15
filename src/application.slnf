@@ -1,0 +1,18 @@
+{
+  "solution": {
+    "path": "one.sln",
+    "projects": [
+      "Infrastructure\\OneI.Moduleable.Abstractions\\OneI.Moduleable.Abstractions.csproj",
+      "Infrastructure\\OneI.Moduleable.TestBase\\OneI.Moduleable.TestBase.csproj",
+      "Infrastructure\\OneI.Moduleable\\OneI.Moduleable.csproj",
+      "Infrastructure\\OneI.Utilityable.Benchmark\\OneI.Utilityable.Benchmark.csproj",
+      "Infrastructure\\OneI.Utilityable.Command\\OneI.Utilityable.Command.csproj",
+      "Infrastructure\\OneI.Utilityable.Test.DnSpy\\OneI.Utilityable.Test.DnSpy.csproj",
+      "Infrastructure\\OneI.Utilityable.Test\\OneI.Utilityable.Test.csproj",
+      "Infrastructure\\OneI.Utilityable\\OneI.Utilityable.csproj",
+      "Test\\OneT.Benchmark\\OneT.Benchmark.csproj",
+      "Test\\OneT.CodeGenerator\\OneT.CodeGenerator.csproj",
+      "Test\\OneT.Common\\OneT.Common.csproj"
+    ]
+  }
+}

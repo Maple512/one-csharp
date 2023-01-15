@@ -5,16 +5,9 @@ using OneT.CodeGenerator;
 using VerifyXunit;
 using Xunit;
 
-/// <summary>
-/// The log generator_ test.
-/// </summary>
 [UsesVerify]
 public class LogGenerator_Test : CodeGeneratorSnapshotTest
 {
-    /// <summary>
-    /// generator_simples the.
-    /// </summary>
-    /// <returns>A Task.</returns>
     [Fact]
     public Task generator_simple()
     {
@@ -57,9 +50,6 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
         return Verify(source, new LoggerCodeGenerator());
     }
 
-    /// <summary>
-    /// object_parameters the.
-    /// </summary>
     [Fact]
     public async void object_parameter()
     {
