@@ -1,7 +1,5 @@
 namespace System.Collections.Generic;
 
-using OneI;
-
 #if NET7_0_OR_GREATER
 [StackTraceHidden]
 #endif
@@ -32,8 +30,6 @@ internal static class DictionaryExtensions
         TKey key,
         Func<TKey, TValue> factory)
     {
-        Check.NotNull(key);
-
         if(directory.TryGetValue(key, out var result))
         {
             return result;

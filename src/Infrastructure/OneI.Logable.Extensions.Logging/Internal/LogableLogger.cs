@@ -1,16 +1,19 @@
 namespace OneI.Logable.Internal;
 
 using System;
+using OneI.Logable.Templatizations;
 
 internal class LogableLogger : MSLogging.ILogger
 {
-    ILogger _logger;
+    public const string Scope = nameof(Scope);
+
+    private readonly ILogger _logger;
 
     public LogableLogger(ILogger logger, string? name = null)
     {
-        if(name.NotNullOrWhiteSpace())
+        if(name is { Length: > 0 })
         {
-            _logger = null; //logger.ForContext(name);
+            _logger = logger.ForContext(name);
         }
         else
         {
@@ -20,7 +23,7 @@ internal class LogableLogger : MSLogging.ILogger
 
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull
     {
-        return _logger.BeginScope();
+        return _logger.BeginScope(Scope, state);
     }
 
     public bool IsEnabled(MSLogging.LogLevel logLevel)
@@ -34,6 +37,10 @@ internal class LogableLogger : MSLogging.ILogger
         Exception? exception,
         Func<TState, Exception?, string> formatter)
     {
-        throw new NotImplementedException();
+        var level = LogLevelMapper.ToLogLevel(logLevel);
+
+        var message = formatter.Invoke(state, exception);
+
+        LoggerExtensions.Write(_logger, level, exception, message);
     }
 }

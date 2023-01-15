@@ -15,15 +15,8 @@ internal readonly partial struct DisposeAction : IDisposable
 
     public static readonly DisposeAction Nullable = new();
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DisposeAction"/> class.
-    /// </summary>
-    /// <param name="action">The action.</param>
     public DisposeAction(Action action) => _action = action;
 
-    /// <summary>
-    /// Disposes the.
-    /// </summary>
     public void Dispose()
     {
         GC.SuppressFinalize(this);
@@ -35,15 +28,46 @@ internal readonly partial struct DisposeAction : IDisposable
 #if NET7_0_OR_GREATER
 internal readonly partial struct DisposeAction : IAsyncDisposable
 {
-    /// <summary>
-    /// Disposes the async.
-    /// </summary>
-    /// <returns>A ValueTask.</returns>
     public ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
 
         _action?.Invoke();
+
+        return ValueTask.CompletedTask;
+    }
+}
+#endif
+
+internal readonly partial struct DisposeAction<T> : IDisposable
+{
+    public static readonly DisposeAction<T> Nullable = new();
+
+    private readonly Action<T>? _action;
+    private readonly T _state;
+
+    public DisposeAction(Action<T> action, T state)
+    {
+        _action = action;
+        _state = state;
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+
+        _action?.Invoke(_state);
+    }
+}
+
+#if NET
+internal readonly partial struct DisposeAction<T> : IAsyncDisposable
+{
+    public ValueTask DisposeAsync()
+    {
+        GC.SuppressFinalize(this);
+
+        _action?.Invoke(_state);
 
         return ValueTask.CompletedTask;
     }

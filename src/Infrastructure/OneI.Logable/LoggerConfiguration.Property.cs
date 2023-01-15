@@ -15,21 +15,21 @@ public partial class LoggerConfiguration
             _parent = parent;
         }
 
-        public ILoggerConfiguration Add<T>(string name, T value, IPropertyValueFormatter<T>? formatter = null)
+        public ILoggerConfiguration Add<T>(string name, T value, IPropertyValueFormatter<T?>? formatter = null)
         {
             Check.NotNullOrEmpty(name);
 
             return _parent.Use(new PropertyMiddleware<T>(name, value, formatter));
         }
 
-        public ILoggerConfiguration AddOrUpdate<T>(string name, T value, IPropertyValueFormatter<T>? formatter = null)
+        public ILoggerConfiguration AddOrUpdate<T>(string name, T value, IPropertyValueFormatter<T?>? formatter = null)
         {
             Check.NotNullOrEmpty(name);
 
             return _parent.Use(new PropertyMiddleware<T>(name, value, formatter, true));
         }
 
-        public ILoggerConfiguration Add<T>(int index, T value, IPropertyValueFormatter<T>? formatter = null)
+        public ILoggerConfiguration Add<T>(int index, T value, IPropertyValueFormatter<T?>? formatter = null)
         {
             if(index < 0)
             {
@@ -39,7 +39,7 @@ public partial class LoggerConfiguration
             return _parent.Use(new PropertyMiddleware<T>(index, value, formatter));
         }
 
-        public ILoggerConfiguration AddOrUpdate<T>(int index, T value, IPropertyValueFormatter<T>? formatter = null)
+        public ILoggerConfiguration AddOrUpdate<T>(int index, T value, IPropertyValueFormatter<T?>? formatter = null)
         {
             if(index < 0)
             {

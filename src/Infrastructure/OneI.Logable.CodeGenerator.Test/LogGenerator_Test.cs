@@ -33,6 +33,11 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
                 public async Task Register()
                 {
                     Log.Error("", "", new object(), new Dictionary<int, int>(), new List<int>());
+
+                    var logger = new LoggerConfiguration()
+                    .CreateLogger();
+
+                    logger.Error("", "", new object(), new Dictionary<int, int>(), new List<int>());
                 }
 
             [Serializable]

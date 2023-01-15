@@ -4,14 +4,14 @@ using OneI.Logable.Templatizations.Tokenizations;
 
 public class EnumerableValue : PropertyValue
 {
-    private readonly List<PropertyValue> _values;
+    private readonly List<ITemplatePropertyValue> _values;
 
     public EnumerableValue()
     {
-        _values = new List<PropertyValue>();
+        _values = new List<ITemplatePropertyValue>();
     }
 
-    public IReadOnlyList<PropertyValue> Values => _values;
+    public IReadOnlyList<ITemplatePropertyValue> Values => _values;
 
     public override void Render(TextWriter writer, in PropertyTokenType type, in string? format = null, IFormatProvider? formatProvider = null)
     {

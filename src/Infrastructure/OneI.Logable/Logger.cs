@@ -1,27 +1,29 @@
 namespace OneI.Logable;
 
+using System;
+using DotNext.Collections.Generic;
 using OneI.Logable.Middlewares;
 using OneI.Logable.Templatizations;
 
 internal class Logger : ILogger
 {
-    private readonly LogLevelMap _levelMap;
-    private readonly AsyncLocal<ILoggerMiddleware> _middleware;
-    private readonly ILoggerSink _sink;
-    private readonly ITemplateSelector _templateSelector;
+    internal readonly LogLevelMap _levelMap;
+    internal readonly AsyncLocal<ILoggerMiddleware[]> _middlewares;
+    internal readonly ILoggerSink[] _sinks;
+    internal readonly ITemplateSelector _templateSelector;
 
     internal Logger(
-        ILoggerMiddleware middleware,
-        ILoggerSink sink,
+        ILoggerMiddleware[] middleware,
+        ILoggerSink[] sinks,
         LogLevelMap levelMap,
         ITemplateSelector templateSelector)
     {
-        _middleware = new()
+        _middlewares = new()
         {
             Value = middleware,
         };
 
-        _sink = sink;
+        _sinks = sinks;
         _levelMap = levelMap;
         _templateSelector = templateSelector;
     }
@@ -29,6 +31,34 @@ internal class Logger : ILogger
     public bool IsEnable(LogLevel level)
     {
         return _levelMap.IsEnabled(level);
+    }
+
+    public ILogger ForContext(Action<ILoggerConfiguration> configure)
+    {
+        var configuration = new LoggerConfiguration();
+
+        configure.Invoke(configuration);
+
+        return configuration.CreateWithLogger(this);
+    }
+
+    public ILogger ForContext<TValue>(string name, TValue value, IPropertyValueFormatter<TValue?>? formatter = null)
+    {
+        if(name.AsSpan().Equals(LoggerConstants.PropertyNames.SourceContext, StringComparison.InvariantCulture)
+            && value is string sourceContext)
+        {
+            var range = _levelMap.GetEffectiveLevel(sourceContext);
+
+            return ForContext(configure =>
+            {
+                configure.Level.Use(range.Minimum, range.Maximum);
+            });
+        }
+
+        return ForContext(configure =>
+        {
+            configure.Use(new PropertyMiddleware<TValue>(name, value, formatter, true));
+        });
     }
 
     public void Write(in LoggerMessageContext context)
@@ -49,41 +79,48 @@ internal class Logger : ILogger
         return CreateScope(middlewares);
     }
 
-    private DisposeAction CreateScope(params ILoggerMiddleware[] middlewares)
+    private DisposeAction<LoggerScope> CreateScope(params ILoggerMiddleware[] middlewares)
     {
         if(middlewares.Length == 0)
         {
-            return DisposeAction.Nullable;
+            return DisposeAction<LoggerScope>.Nullable;
         }
 
-        var ms = new List<ILoggerMiddleware>(middlewares.Length + 1)
+        var count = middlewares.Length + _middlewares.Value!.Length;
+        var newMidddlwares = count == 0 ? Array.Empty<ILoggerMiddleware>() : new ILoggerMiddleware[count];
+
+        if(_middlewares.Value is { Length: > 0 })
         {
-            _middleware.Value!,
-        };
+            _middlewares.Value.CopyTo(newMidddlwares, 0);
+        }
 
-        ms.AddRange(middlewares);
-
-        var aggregate = new AggregateMiddleware(ms);
-
-        var old = _middleware.Value!;
-
-        _middleware.Value = new ActionMiddleware(context =>
+        if(middlewares is { Length: > 0 })
         {
-            aggregate.Invoke(context);
-        });
+            middlewares.CopyTo(newMidddlwares, _middlewares.Value.Length);
+        }
 
-        return new(() => _middleware.Value = old);
+        var scope = new LoggerScope(_middlewares.Value!);
+
+        _middlewares.Value = newMidddlwares;
+
+        return new((state) => _middlewares.Value = state.Middlewares, scope);
     }
 
     private void Dispatch(in LoggerMessageContext context)
     {
-        try
+        foreach(var item in _middlewares.Value!)
         {
-            _middleware.Value!.Invoke(context);
+            try
+            {
+                item.Invoke(context);
+            }
+            catch(Exception)
+            {
+                throw;
+            }
         }
-        catch(Exception)
-        {
-        }
+
+        var exceptions = new List<Exception>(_sinks.Length);
 
         var tokens = _templateSelector.Select(context);
 
@@ -91,6 +128,21 @@ internal class Logger : ILogger
 
         var loggerContext = new LoggerContext(tokens, properties.ToList(), context);
 
-        _sink.Invoke(loggerContext);
+        foreach(var sink in _sinks)
+        {
+            try
+            {
+                sink.Invoke(loggerContext);
+            }
+            catch(Exception ex)
+            {
+                exceptions.Add(ex);
+            }
+        }
+
+        if(exceptions is { Count: > 0 })
+        {
+            throw new AggregateException(exceptions);
+        }
     }
 }

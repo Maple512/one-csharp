@@ -13,87 +13,46 @@ internal class LogLevelMap
     public LogLevelMap()
     {
         _overrides = new(StringComparer.InvariantCulture);
-        _range = new();
+        _range = new(MinimumLevelDefault, MaximumLevelDefault);
     }
 
-    public LogLevel MinimumLevel => _range.Minimum ?? MinimumLevelDefault;
+    public LogLevel MinimumLevel => _range.Minimum;
 
     public LogLevel? MaximumLevel => _range.Maximum;
 
-    public LogLevelMap Minimum(LogLevel level)
+    public void Override(LogLevel minimum, LogLevel maximum)
     {
-        if(MaximumLevel.HasValue
-            && MaximumLevel.Value < level)
-        {
-            throw new ArgumentOutOfRangeException(nameof(Minimum), "The minimum log level cannot be greater than the maximum.");
-        }
-
-        _range = new LogLevelRange(level, _range.Maximum);
-
-        return this;
+        _range = new(minimum, maximum);
     }
 
-    public LogLevelMap Maximum(LogLevel? level)
-    {
-        if(MinimumLevel > level)
-        {
-            throw new ArgumentOutOfRangeException(nameof(Maximum), "The maximum value of the log level cannot be smaller than the minimum value.");
-        }
-
-        _range = new(_range.Minimum, level);
-
-        return this;
-    }
-
-    public LogLevelMap Override(string sourceContext, LogLevel minimum, LogLevel? maximum)
+    public LogLevelMap Override(string sourceContext, LogLevel minimum, LogLevel maximum)
     {
         Check.NotNullOrWhiteSpace(sourceContext);
 
-        maximum ??= _range.Maximum ?? MaximumLevel;
-
-        var range = new LogLevelRange(minimum, maximum);
-        if(_overrides.ContainsKey(sourceContext))
-        {
-            _overrides[sourceContext] = range;
-        }
-        else
-        {
-            _overrides.Add(sourceContext, range);
-        }
+        _overrides[sourceContext] = new LogLevelRange(minimum, maximum);
 
         return this;
     }
 
-    public bool IsEnabled(LogLevel level, string? context = null)
+    public bool IsEnabled(LogLevel level)
     {
-        if(context.NotNullOrWhiteSpace())
+        return _range.IsEnabled(level);
+    }
+
+    public LogLevelRange GetEffectiveLevel(string? context = null)
+    {
+        if(context is { Length: > 0 })
         {
             foreach(var item in _overrides)
             {
-                if(context!.StartsWith(item.Key)
+                if(context.AsSpan().StartsWith(item.Key)
                     && (context.Length == item.Key.Length || context[item.Key.Length] == '.'))
                 {
-                    return IsEnabled(level);
+                    return item.Value;
                 }
             }
         }
 
-        return IsEnabled(_range, level);
-    }
-
-    private static bool IsEnabled(LogLevelRange range, LogLevel level)
-    {
-        if(range.Minimum > level)
-        {
-            return false;
-        }
-
-        if(range.Maximum.HasValue
-            && range.Maximum.Value < level)
-        {
-            return false;
-        }
-
-        return true;
+        return _range;
     }
 }

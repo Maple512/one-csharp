@@ -6,9 +6,9 @@
         <TargetFramework>$(NetFramework)</TargetFramework>
     </PropertyGroup>
 
-    <!--<ItemGroup>
+    <ItemGroup>
       <Compile Include="**\*.verified.*" />
-    </ItemGroup>-->
+    </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj" />

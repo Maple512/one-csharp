@@ -138,6 +138,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Logable.File", "Infras
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Logable.Test", "Infrastructure\OneI.Logable.Test\OneI.Logable.Test.csproj", "{6E557925-B0AF-45DE-BAB0-58D203B83892}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Logable.Extensions.Logging.Test", "Infrastructure\OneI.Logable.Extensions.Logging.Test\OneI.Logable.Extensions.Logging.Test.csproj", "{BDC2D16C-FB1A-424C-B3F6-794F3F2AB23D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -292,6 +294,10 @@ Global
 		{6E557925-B0AF-45DE-BAB0-58D203B83892}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E557925-B0AF-45DE-BAB0-58D203B83892}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E557925-B0AF-45DE-BAB0-58D203B83892}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDC2D16C-FB1A-424C-B3F6-794F3F2AB23D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDC2D16C-FB1A-424C-B3F6-794F3F2AB23D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDC2D16C-FB1A-424C-B3F6-794F3F2AB23D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDC2D16C-FB1A-424C-B3F6-794F3F2AB23D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -344,6 +350,7 @@ Global
 		{18D0E95A-8751-47D8-8F90-CB84186C43AA} = {FCF4D373-C63B-41A0-A3F7-935189A7CE68}
 		{CEEF28C4-52C2-40A6-AD90-B438E79E4DEB} = {FCF4D373-C63B-41A0-A3F7-935189A7CE68}
 		{6E557925-B0AF-45DE-BAB0-58D203B83892} = {FCF4D373-C63B-41A0-A3F7-935189A7CE68}
+		{BDC2D16C-FB1A-424C-B3F6-794F3F2AB23D} = {FCF4D373-C63B-41A0-A3F7-935189A7CE68}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

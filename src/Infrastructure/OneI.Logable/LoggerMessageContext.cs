@@ -8,12 +8,13 @@ using static OneI.Logable.LoggerConstants;
 public class LoggerMessageContext
 {
     private readonly List<ITemplateToken> _messageTokens;
-    private readonly PropertyCollection _properties = new(20);
+    private readonly PropertyCollection _properties;
 
     public LoggerMessageContext(
         LogLevel level,
         List<ITemplateToken> tokens,
         Exception? exception,
+        PropertyCollection properties,
         string? filePath,
         string? memberName,
         int? lineNumber)
@@ -21,6 +22,7 @@ public class LoggerMessageContext
         Timestamp = DateTimeOffset.Now;
         Level = level;
         _messageTokens = tokens;
+        _properties = properties;
         Exception = exception;
         File = filePath;
         Member = memberName;

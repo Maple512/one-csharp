@@ -87,40 +87,45 @@ internal static partial class EnumerableExtensions
 [StackTraceHidden]
 internal static partial class EnumerableExtensions
 {
-    /// <summary>
-    /// Are the null or empty.
-    /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A bool.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNullOrEmpty<T>([NotNullWhen(false)] this IEnumerable<T>? source)
     {
         return source == null || source.Any() == false;
     }
 
-    /// <summary>
-    /// Nots the null or empty.
-    /// </summary>
-    /// <param name="source">The source.</param>
-    /// <returns>A bool.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool NotNullOrEmpty<T>([NotNullWhen(true)] this IEnumerable<T>? source)
     {
         return source != null && source.Any() == true;
     }
 
-    /// <summary>
-    /// Joins the.
-    /// </summary>
-    /// <param name="source">The source.</param>
-    /// <param name="separator">The separator.</param>
-    /// <returns>A string.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Join<T>(this IEnumerable<T> source, char separator = ',')
     {
         Check.NotNull(source);
 
         return string.Join(separator, source);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int GetCount<T>(this IEnumerable<T> source)
+    {
+        if(source is ICollection collection)
+        {
+            return collection.Count;
+        }
+
+        if(source is ICollection<T> c)
+        {
+            return c.Count;
+        }
+
+        if(source.TryGetNonEnumeratedCount(out var count))
+        {
+            return count;
+        }
+
+        return source.Count();
     }
 }
 

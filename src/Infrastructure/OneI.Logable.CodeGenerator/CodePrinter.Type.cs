@@ -14,7 +14,7 @@ internal static partial class CodePrinter
             builder.AppendLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         }
 
-        builder.AppendLine($"public static global::OneI.Logable.Templatizations.PropertyValue {CodeAssets.LoggerPropertyCreateMethodName}({type.ToDisplayString()} arg)");
+        builder.AppendLine($"public static global::OneI.Logable.Templatizations.ITemplatePropertyValue {CodeAssets.LoggerPropertyCreateMethodName}({type.ToDisplayString()} arg)");
 
         builder.AppendLine("{");
 

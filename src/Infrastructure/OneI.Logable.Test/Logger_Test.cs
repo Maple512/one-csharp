@@ -7,6 +7,27 @@ using OneI.Logable.Templatizations;
 public class Logger_Test
 {
     [Fact]
+    public void level_enalble_state()
+    {
+        // default level
+        var logger = new LoggerConfiguration().CreateLogger();
+
+        logger.IsEnable(LogLevel.Verbose).ShouldBeTrue();
+        logger.IsEnable(LogLevel.Fatal).ShouldBeTrue();
+
+        // override type
+        logger = new LoggerConfiguration()
+           .Level.Override<Logger_Test>(LogLevel.Information)
+           .CreateLogger() ;
+        logger.ForContext<Logger_Test>().IsEnable(LogLevel.Verbose).ShouldBeFalse();
+        logger.ForContext<Logger_Test>().IsEnable(LogLevel.Information).ShouldBeTrue();
+        logger.ForContext<Logger_Test>().IsEnable(LogLevel.Fatal).ShouldBeTrue();
+
+        // other type is true (still the default)
+        logger.ForContext<ILogger>().IsEnable(LogLevel.Verbose).ShouldBeTrue();
+    }
+
+    [Fact]
     public void begin_scope()
     {
         var order = new List<int>(100);

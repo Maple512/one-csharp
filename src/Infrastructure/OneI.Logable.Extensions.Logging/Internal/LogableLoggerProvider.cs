@@ -1,27 +1,26 @@
 namespace OneI.Logable;
 
-[MSLogging.ProviderAlias("Serilog")]
-internal class LogableLoggerProvider : MSLogging.ILoggerProvider, ILoggerMiddleware
+using OneI.Logable.Internal;
+
+[MSLogging.ProviderAlias("Logable")]
+internal class LogableLoggerProvider : MSLogging.ILoggerProvider
 {
     ILogger _logger;
 
     public LogableLoggerProvider(ILogger logger)
     {
-        //_logger = logger.ForContext(new[] { this });
+        _logger = logger;
     }
 
     public MSLogging.ILogger CreateLogger(string categoryName)
     {
-        throw new NotImplementedException();
+        return new LogableLogger(_logger, categoryName);
     }
 
     public void Dispose()
     {
-        throw new NotImplementedException();
-    }
+        GC.SuppressFinalize(this);
 
-    public void Invoke(in LoggerMessageContext context)
-    {
-        throw new NotImplementedException();
+        (_logger as IDisposable)?.Dispose();
     }
 }

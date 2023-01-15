@@ -4,15 +4,32 @@ using DotNext.Collections.Generic;
 
 public class PropertyCollection
 {
-    private readonly List<ITemplateProperty> _values;
     private readonly Dictionary<int, ITemplatePropertyValue> _indexes;
     private readonly Dictionary<string, ITemplatePropertyValue> _nameds;
 
     public PropertyCollection(int capacity)
     {
-        _values = new(capacity);
         _indexes = new(capacity);
         _nameds = new(capacity, StringComparer.InvariantCulture);
+    }
+
+    public PropertyCollection(IEnumerable<ITemplateProperty> properties)
+    {
+        var count = properties.GetCount();
+        _indexes = new(count);
+        _nameds = new(count);
+
+        foreach(var item in properties)
+        {
+            if(item is NamedProperty np)
+            {
+                _nameds.Add(np.Name, np.Value);
+            }
+            else if(item is IndexerProperty ip)
+            {
+                _indexes.Add(ip.Index, ip.Value);
+            }
+        }
     }
 
     /// <inheritdoc cref="Dictionary{TKey, TValue}.TryAdd(TKey, TValue)"/>
@@ -74,8 +91,6 @@ public class PropertyCollection
 
     internal void Add(PropertyCollection other)
     {
-        _values.AddRange(other._values);
-
         foreach(var item in other._nameds)
         {
             _nameds[item.Key] = item.Value;
@@ -87,22 +102,25 @@ public class PropertyCollection
         }
     }
 
-    public int Count => _values.Count;
-
-    public ITemplateProperty this[int index] => _values[index];
+    public int Count => _nameds.Count + _indexes.Count;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal IReadOnlyList<ITemplateProperty> ToList()
     {
-        var result = new ITemplateProperty[_values.Count + _nameds.Count + _indexes.Count];
+        var count = _nameds.Count + _indexes.Count;
+        var result = count == 0 ? Array.Empty<ITemplateProperty>() : new ITemplateProperty[count];
 
-        _values.CopyTo(result);
-        Debugger.Break();
-        _nameds.Select(x => new NamedProperty(x.Key, x.Value))
-            .ToArray().CopyTo(result, _values.Count);
+        if(_nameds.Count > 0)
+        {
+            _nameds.Select(x => new NamedProperty(x.Key, x.Value))
+            .ToArray().CopyTo(result, 0);
+        }
 
-        _indexes.Select(x => new IndexerProperty(x.Key, x.Value))
-            .ToArray().CopyTo(result, _values.Count + _nameds.Count);
+        if(_indexes.Count > 0)
+        {
+            _indexes.Select(x => new IndexerProperty(x.Key, x.Value))
+                .ToArray().CopyTo(result, _nameds.Count);
+        }
 
         return result;
     }

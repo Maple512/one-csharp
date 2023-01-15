@@ -4,14 +4,14 @@ using OneI.Logable.Templatizations.Tokenizations;
 
 public class DictionaryValue : PropertyValue
 {
-    private readonly Dictionary<PropertyValue, PropertyValue> _properties;
+    private readonly Dictionary<ITemplatePropertyValue, ITemplatePropertyValue> _properties;
 
     public DictionaryValue()
     {
         _properties = new();
     }
 
-    public IReadOnlyDictionary<PropertyValue, PropertyValue> Values => _properties;
+    public IReadOnlyDictionary<ITemplatePropertyValue, ITemplatePropertyValue> Values => _properties;
 
     public override void Render(TextWriter writer, in PropertyTokenType type, in string? format = null, IFormatProvider? formatProvider = null)
     {
@@ -50,7 +50,7 @@ public class DictionaryValue : PropertyValue
         _properties.Add(key, CreateLiteral(value, formatter));
     }
 
-    public void Add(PropertyValue key, PropertyValue value)
+    public void Add(ITemplatePropertyValue key, ITemplatePropertyValue value)
     {
         _properties.Add(key, value);
     }

@@ -26,41 +26,23 @@ internal static partial class StringExtensions
 {
     #region Check
 
-    /// <summary>
-    /// Is null or empty.
-    /// </summary>
-    /// <param name="str">The str.</param>
-    /// <returns>A bool.</returns>
+    [Obsolete]
     public static bool IsNullOrEmpty([NotNullWhen(false)] this string? str)
     {
         return string.IsNullOrEmpty(str);
     }
 
-    /// <summary>
-    /// Not the null or empty.
-    /// </summary>
-    /// <param name="str">The str.</param>
-    /// <returns>A bool.</returns>
+    [Obsolete]
     public static bool NotNullOrEmpty([NotNullWhen(true)] this string? str)
     {
         return string.IsNullOrEmpty(str) == false;
     }
 
-    /// <summary>
-    /// Is null or white space.
-    /// </summary>
-    /// <param name="str">The str.</param>
-    /// <returns>A bool.</returns>
     public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? str)
     {
         return string.IsNullOrWhiteSpace(str);
     }
 
-    /// <summary>
-    /// Not the null or white space.
-    /// </summary>
-    /// <param name="str">The str.</param>
-    /// <returns>A bool.</returns>
     public static bool NotNullOrWhiteSpace([NotNullWhen(true)] this string? str)
     {
         return string.IsNullOrWhiteSpace(str) == false;
@@ -197,41 +179,23 @@ internal static partial class StringExtensions
 {
 #region Check
 
-    /// <summary>
-    /// Is null or empty.
-    /// </summary>
-    /// <param name="str">The str.</param>
-    /// <returns>A bool.</returns>
+    [Obsolete]
     public static bool IsNullOrEmpty(this string? str)
     {
         return string.IsNullOrEmpty(str);
     }
 
-    /// <summary>
-    /// Not the null or empty.
-    /// </summary>
-    /// <param name="str">The str.</param>
-    /// <returns>A bool.</returns>
+    [Obsolete]
     public static bool NotNullOrEmpty(this string? str)
     {
         return string.IsNullOrEmpty(str) == false;
     }
 
-    /// <summary>
-    /// Is null or white space.
-    /// </summary>
-    /// <param name="str">The str.</param>
-    /// <returns>A bool.</returns>
     public static bool IsNullOrWhiteSpace(this string? str)
     {
         return string.IsNullOrWhiteSpace(str);
     }
 
-    /// <summary>
-    /// Not the null or white space.
-    /// </summary>
-    /// <param name="str">The str.</param>
-    /// <returns>A bool.</returns>
     public static bool NotNullOrWhiteSpace(this string? str)
     {
         return string.IsNullOrWhiteSpace(str) == false;

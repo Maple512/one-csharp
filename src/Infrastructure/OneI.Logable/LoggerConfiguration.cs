@@ -1,5 +1,7 @@
 namespace OneI.Logable;
 
+using System;
+using DotNext.Collections.Generic;
 using OneI.Logable.Configurations;
 using OneI.Logable.Middlewares;
 using OneI.Logable.Sinks;
@@ -9,7 +11,7 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
 {
     public const string DefaultTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}";
 
-    private readonly List<ILoggerMiddleware> _components;
+    private readonly List<ILoggerMiddleware> _middlewares;
     private readonly List<Func<LoggerMessageContext, string?>> _templateTokens;
     private string? _defaultTemplate;
     private readonly List<ILoggerSink> _sinks;
@@ -20,7 +22,7 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
         _templateTokens = new(5);
         _sinks = new(10);
         _logLevelMap = new();
-        _components = new(10);
+        _middlewares = new(10);
 
         Level = new LoggerLevelConfiguration(this);
         Properties = new LoggerPropertyConfiguration(this);
@@ -41,7 +43,7 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
 
     public virtual ILoggerConfiguration Use(ILoggerMiddleware middleware)
     {
-        _components.Add(middleware);
+        _middlewares.Add(middleware);
 
         return this;
     }
@@ -86,14 +88,47 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
 
     public ILogger CreateLogger()
     {
-        var sink = new AggregateSink(_sinks, true);
-
-        var middlewares = _components.ToArray();
-
         _defaultTemplate ??= DefaultTemplate;
 
         var templateSelector = new TemplateSelector(_defaultTemplate, _templateTokens);
 
-        return new Logger(new AggregateMiddleware(middlewares), sink, _logLevelMap, templateSelector);
+        return new Logger(_middlewares.ToArray(), _sinks.ToArray(), _logLevelMap, templateSelector);
+    }
+
+    internal ILogger CreateWithLogger(Logger logger)
+    {
+        _defaultTemplate ??= DefaultTemplate;
+
+        var loggerMiddlwares = logger._middlewares.Value ?? Array.Empty<ILoggerMiddleware>();
+
+        var middlewareCount = loggerMiddlwares.Length + _middlewares.Count;
+        var middlewares = middlewareCount == 0 ? Array.Empty<ILoggerMiddleware>() : new ILoggerMiddleware[middlewareCount];
+
+        if(loggerMiddlwares.Length > 0)
+        {
+            loggerMiddlwares.CopyTo(middlewares, 0);
+        }
+
+        if(_middlewares.Count > 0)
+        {
+            _middlewares.CopyTo(middlewares, loggerMiddlwares.Length);
+        }
+
+        var sinkCount = _sinks.Count + logger._sinks.Length;
+        var sinks = sinkCount == 0 ? Array.Empty<ILoggerSink>() : new ILoggerSink[sinkCount];
+
+        if(logger._sinks.Length > 0)
+        {
+            logger._sinks.CopyTo(sinks, 0);
+        }
+
+        if(_sinks.Count > 0)
+        {
+            _sinks.CopyTo(sinks, logger._sinks.Length);
+        }
+
+        var templateSelector = new TemplateSelector(_defaultTemplate, _templateTokens);
+
+        return new Logger(middlewares, sinks, _logLevelMap, templateSelector);
     }
 }

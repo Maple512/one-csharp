@@ -15,20 +15,16 @@ public partial class LoggerConfiguration
 
         public ILoggerConfiguration Use(LogLevel minimum, LogLevel? maximum = null)
         {
-            _parent._logLevelMap.Minimum(minimum);
-            _parent._logLevelMap.Maximum(maximum);
+            _parent._logLevelMap.Override(minimum, maximum ?? LogLevelMap.MaximumLevelDefault);
 
             return _parent;
         }
 
         public ILoggerConfiguration Override(string sourceContext, LogLevel minimum, LogLevel? maximum = null)
         {
-            if(sourceContext.IsNullOrWhiteSpace())
-            {
-                throw new ArgumentNullException(nameof(sourceContext));
-            }
+            Check.NotNullOrWhiteSpace(sourceContext);
 
-            _parent._logLevelMap.Override(sourceContext, minimum, maximum);
+            _parent._logLevelMap.Override(sourceContext, minimum, maximum ?? LogLevelMap.MaximumLevelDefault);
 
             return _parent;
         }

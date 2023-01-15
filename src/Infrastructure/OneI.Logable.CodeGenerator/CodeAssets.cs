@@ -45,6 +45,9 @@ internal static class CodeAssets
                 return _logger.IsEnable(logLevel);
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public static ILogger GetLogger() => _logger;
+
             #region Write
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

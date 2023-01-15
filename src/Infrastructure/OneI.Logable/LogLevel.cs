@@ -1,9 +1,6 @@
 namespace OneI.Logable;
 
-/// <summary>
-/// The log level.
-/// </summary>
-public enum LogLevel : byte
+public enum LogLevel : sbyte
 {
     /// <summary>
     /// 包含最详细消息的日志。 这些消息可能包含敏感应用程序数据。 这些消息默认情况下处于禁用状态，并且绝不应在生产环境中启用
