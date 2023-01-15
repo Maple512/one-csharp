@@ -7,7 +7,6 @@ using static OneI.Logable.LoggerConstants;
 
 public class LoggerMessageContext
 {
-    private readonly List<ITemplateToken> _templateTokens = new(20);
     private readonly List<ITemplateToken> _messageTokens;
     private readonly PropertyCollection _properties = new(20);
 
@@ -115,10 +114,5 @@ public class LoggerMessageContext
         _messageTokens.Add(new TextToken(_messageTokens.Count, text));
 
         return this;
-    }
-
-    internal ReadOnlyMessageContext ToReadOnly()
-    {
-        return new ReadOnlyMessageContext(Timestamp, Level, Exception, File, FileName, FileNameWithoutExtension, FileExtension, Member, Line);
     }
 }

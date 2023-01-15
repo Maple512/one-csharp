@@ -5,7 +5,7 @@ using OneI.Logable;
 
 public static class Fake
 {
-    const string Template = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}";
+    private const string Template = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}";
     public const string ErrorTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} {SourceContext} [{Level}] {Message}{NewLine}{Exception'4}{NewLine}{FilePath'4}#L{LineNumber}@{MemberName}{NewLine}";
 
     public static ILogger CreateLogger(
@@ -21,7 +21,8 @@ public static class Fake
 
         var path = Path.Combine(TestTools.GetCSProjectDirecoty()!, $"./Logs/{name}@{member}.txt");
 
-        ILoggerConfiguration configuration = new LoggerConfiguration(template ?? Template);
+        var configuration = new LoggerConfiguration()
+            .Template.Default(template ?? Template);
 
         logger?.Invoke(configuration);
 

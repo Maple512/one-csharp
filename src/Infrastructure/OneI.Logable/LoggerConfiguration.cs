@@ -10,25 +10,23 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
     public const string DefaultTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}";
 
     private readonly List<ILoggerMiddleware> _components;
-    private readonly List<ILoggerMiddleware> _lastComponents;
     private readonly List<Func<LoggerMessageContext, string?>> _templateTokens;
-    private readonly string _defaultTemplate;
+    private string? _defaultTemplate;
     private readonly List<ILoggerSink> _sinks;
     private readonly LogLevelMap _logLevelMap;
 
-    public LoggerConfiguration(string template = DefaultTemplate)
+    public LoggerConfiguration()
     {
-        _defaultTemplate = Check.NotNullOrEmpty(template);
         _templateTokens = new(5);
-        _sinks = new();
+        _sinks = new(10);
         _logLevelMap = new();
-        _components = new();
-        _lastComponents = new();
+        _components = new(10);
 
         Level = new LoggerLevelConfiguration(this);
         Properties = new LoggerPropertyConfiguration(this);
         Sink = new LoggerSinkConfiguration(this);
         Template = new TemplateConfiguration(this);
+        Audit = new AuditConfiguration(this);
     }
 
     public ILoggerTemplateConfiguration Template { get; }
@@ -38,6 +36,8 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
     public ILoggerLevelConfiguration Level { get; }
 
     public ILoggerPropertyConfiguration Properties { get; }
+
+    public ILoggerAuditConfiguration Audit { get; }
 
     public virtual ILoggerConfiguration Use(ILoggerMiddleware middleware)
     {
@@ -88,10 +88,9 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
     {
         var sink = new AggregateSink(_sinks, true);
 
-        var middlewares = new ILoggerMiddleware[_components.Count + _lastComponents.Count];
+        var middlewares = _components.ToArray();
 
-        _components.CopyTo(middlewares);
-        _lastComponents.CopyTo(middlewares, _components.Count);
+        _defaultTemplate ??= DefaultTemplate;
 
         var templateSelector = new TemplateSelector(_defaultTemplate, _templateTokens);
 

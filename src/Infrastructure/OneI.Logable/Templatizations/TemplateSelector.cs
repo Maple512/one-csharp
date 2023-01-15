@@ -5,6 +5,8 @@ using OneI.Logable.Templatizations.Tokenizations;
 
 public class TemplateSelector : ITemplateSelector
 {
+    private readonly Dictionary<string, List<ITemplateToken>> _cache = new(5, EqualityComparer<string>.Default);
+
     private readonly string _default;
     private readonly List<Func<LoggerMessageContext, string?>>? _providers;
 
@@ -20,14 +22,14 @@ public class TemplateSelector : ITemplateSelector
         {
             foreach(var item in _providers)
             {
-                var template = item(context);
+                var template = item.Invoke(context);
                 if(template != null)
                 {
-                    return TemplateParser.Parse(template);
+                    return _cache.GetOrAdd(template, TemplateParser.Parse(template));
                 }
             }
         }
 
-        return TemplateParser.Parse(_default);
+        return _cache.GetOrAdd(_default, TemplateParser.Parse(_default));
     }
 }

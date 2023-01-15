@@ -24,6 +24,8 @@ public interface ILoggerConfiguration : ILoggerPipelineConfiguration
     /// </summary>
     ILoggerSinkConfiguration Sink { get; }
 
+    ILoggerAuditConfiguration Audit { get; }
+
     /// <summary>
     /// 创建一个<see cref="ILogger"/>
     /// </summary>

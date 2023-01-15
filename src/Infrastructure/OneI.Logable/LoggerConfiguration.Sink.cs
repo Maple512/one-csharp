@@ -4,7 +4,7 @@ using OneI.Logable.Configurations;
 
 public partial class LoggerConfiguration
 {
-    private class LoggerSinkConfiguration : ILoggerSinkConfiguration
+    internal class LoggerSinkConfiguration : ILoggerSinkConfiguration
     {
         private readonly LoggerConfiguration _parent;
 

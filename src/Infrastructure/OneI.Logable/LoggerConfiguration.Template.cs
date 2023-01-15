@@ -14,6 +14,13 @@ public partial class LoggerConfiguration
             _parent = parent;
         }
 
+        public ILoggerConfiguration Default(string template)
+        {
+            _parent._defaultTemplate = template;
+
+            return _parent;
+        }
+
         public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, string template)
         {
             _parent._templateTokens.Add(context =>

@@ -10,7 +10,7 @@ public class PropertyCollection
 
     public PropertyCollection(int capacity)
     {
-        _values = new(capacity * 2);
+        _values = new(capacity);
         _indexes = new(capacity);
         _nameds = new(capacity, StringComparer.InvariantCulture);
     }
@@ -75,6 +75,16 @@ public class PropertyCollection
     internal void Add(PropertyCollection other)
     {
         _values.AddRange(other._values);
+
+        foreach(var item in other._nameds)
+        {
+            _nameds[item.Key] = item.Value;
+        }
+
+        foreach(var item in other._indexes)
+        {
+            _indexes[item.Key] = item.Value;
+        }
     }
 
     public int Count => _values.Count;

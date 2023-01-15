@@ -14,4 +14,10 @@ public interface ILoggerSinkConfiguration
 
     ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, Action<LoggerContext> sink)
         => Use(new ConditionalSink(condition, new ActionSink(sink)));
+
+    ILoggerConfiguration Logger(ILogger logger, bool autoDispose = false)
+        => Use(new SecondaryLoggerSink(logger, autoDispose));
+
+    ILoggerConfiguration LoggerWhen(Func<LoggerContext, bool> condition, ILogger logger, bool autoDispose = false)
+        => UseWhen(condition, new SecondaryLoggerSink(logger, autoDispose));
 }

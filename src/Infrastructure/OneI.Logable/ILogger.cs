@@ -8,6 +8,15 @@ public interface ILogger
 
     void Write(in LoggerMessageContext context) { }
 
+    ILogger ForContext(ILoggerMiddleware middleware)
+    {
+        var configuration = new LoggerConfiguration()
+            .Use(middleware)
+            .Sink.Logger(this);
+
+        return configuration.CreateLogger();
+    }
+
     IDisposable BeginScope(params ILoggerMiddleware[] middlewares)
         => DisposeAction.Nullable;
 

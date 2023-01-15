@@ -51,7 +51,19 @@ internal class Logger : ILogger
 
     private DisposeAction CreateScope(params ILoggerMiddleware[] middlewares)
     {
-        var aggregate = new AggregateMiddleware(middlewares);
+        if(middlewares.Length == 0)
+        {
+            return DisposeAction.Nullable;
+        }
+
+        var ms = new List<ILoggerMiddleware>(middlewares.Length + 1)
+        {
+            _middleware.Value!,
+        };
+
+        ms.AddRange(middlewares);
+
+        var aggregate = new AggregateMiddleware(ms);
 
         var old = _middleware.Value!;
 
@@ -77,7 +89,7 @@ internal class Logger : ILogger
 
         var properties = context.GetProperties();
 
-        var loggerContext = new LoggerContext(tokens, properties.ToList(), context.ToReadOnly());
+        var loggerContext = new LoggerContext(tokens, properties.ToList(), context);
 
         _sink.Invoke(loggerContext);
     }

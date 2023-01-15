@@ -10,7 +10,7 @@ public class PropertyMiddleware<T> : ILoggerMiddleware
     private readonly IPropertyValueFormatter<T?>? _formatter;
     private readonly bool _addOrUpdate;
 
-    public PropertyMiddleware(string? name, T? value, IPropertyValueFormatter<T>? formatter = null, bool addOrUpdate = false)
+    public PropertyMiddleware(string? name, T? value, IPropertyValueFormatter<T?>? formatter = null, bool addOrUpdate = false)
     {
         _name = name;
         _value = value;
@@ -18,7 +18,7 @@ public class PropertyMiddleware<T> : ILoggerMiddleware
         _addOrUpdate = addOrUpdate;
     }
 
-    public PropertyMiddleware(int? index, T? value, IPropertyValueFormatter<T>? formatter = null, bool addOrUpdate = false)
+    public PropertyMiddleware(int? index, T? value, IPropertyValueFormatter<T?>? formatter = null, bool addOrUpdate = false)
     {
         _index = index;
         _value = value;

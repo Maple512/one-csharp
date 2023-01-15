@@ -6,6 +6,16 @@ using OneI.Logable.Templatizations.Tokenizations;
 
 public static class LoggerExtensions
 {
+    public static ILogger ForContext<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSourceContext>(this ILogger logger)
+    {
+        return logger.ForContext(typeof(TSourceContext).FullName!);
+    }
+
+    public static ILogger ForContext(this ILogger logger, string sourceContext)
+    {
+        return logger.ForContext(new PropertyMiddleware<string>(LoggerConstants.PropertyNames.SourceContext, sourceContext, null, true));
+    }
+
     public static IDisposable BeginScope<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSourceContext>(this ILogger logger)
     {
         return logger.BeginScope(typeof(TSourceContext).FullName!);
@@ -48,7 +58,7 @@ public static class LoggerExtensions
 
         var properties = new Dictionary<string, PropertyValue>(propertyValues.Count);
 
-        var tokens = TemplateParser.Parse(message);
+        var tokens = _cache.GetOrAdd(message.GetHashCode(), TemplateParser.Parse(message));
 
         logger.Write(new LoggerMessageContext(
             level,
@@ -59,28 +69,5 @@ public static class LoggerExtensions
             line));
     }
 
-    public static void Write(
-        ILogger logger,
-        LogLevel level,
-        Exception? exception,
-        List<ITemplateToken> tokens,
-        List<PropertyValue>? propertyValues = null,
-        [CallerFilePath] string? file = null,
-        [CallerMemberName] string? member = null,
-        [CallerLineNumber] int? line = null)
-    {
-        propertyValues ??= new List<PropertyValue>(0);
-
-        var count = propertyValues.Count;
-
-        var properties = new Dictionary<string, PropertyValue>(propertyValues.Count);
-
-        logger.Write(new LoggerMessageContext(
-            level,
-            tokens,
-            exception,
-            file,
-            member,
-            line));
-    }
+    private readonly static Dictionary<int, List<ITemplateToken>> _cache = new(20);
 }

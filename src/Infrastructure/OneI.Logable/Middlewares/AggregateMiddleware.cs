@@ -2,10 +2,10 @@ namespace OneI.Logable.Middlewares;
 
 public class AggregateMiddleware : ILoggerMiddleware
 {
-    private readonly ILoggerMiddleware[] _middlewares;
+    private readonly IEnumerable<ILoggerMiddleware> _middlewares;
     private readonly bool _isSilent;
 
-    public AggregateMiddleware(ILoggerMiddleware[] middlewares, bool isSilent = false)
+    public AggregateMiddleware(IEnumerable<ILoggerMiddleware> middlewares, bool isSilent = false)
     {
         _middlewares = middlewares;
         _isSilent = isSilent;

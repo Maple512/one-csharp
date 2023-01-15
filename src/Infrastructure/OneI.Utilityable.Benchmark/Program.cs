@@ -6,7 +6,6 @@ internal class Program
     {
         // BenchmarkTool.RunAssymbly<Program>(args);
 
-#if DEBUG
         var validators = typeof(Program).Assembly.GetTypes()
             .Where(x => x.IsAssignableTo(typeof(IValidator)) && x.IsClass)
             .Select(x =>
@@ -19,7 +18,7 @@ internal class Program
         {
             item.Validate();
         }
-#endif
-        BenchmarkTool.Run<TextWriterSameCharBenchmark>(args);
+
+        BenchmarkTool.Run<DictionaryCacheBenchmark>(args);
     }
 }
