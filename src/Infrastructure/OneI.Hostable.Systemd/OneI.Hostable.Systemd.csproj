@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <TargetOS>unix</TargetOS>
+    </PropertyGroup>
+
+    <Import Project="../../common.props" />
+
+    <ItemGroup>
+      <ProjectReference Include="..\OneI.Hostable\OneI.Hostable.csproj" />
+    </ItemGroup>
+
+</Project>

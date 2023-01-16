@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../common.test.props" />
-
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
         <IncludeShared>false</IncludeShared>
@@ -15,5 +13,7 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
+    
+    <Import Project="../../common.test.props" />
 
 </Project>

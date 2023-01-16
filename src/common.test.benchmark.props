@@ -1,7 +1,5 @@
 <Project>
 
-    <Import Project="./common.test.props"/>
-
     <PropertyGroup>
         <IncludeShared>false</IncludeShared>
     </PropertyGroup>
@@ -22,5 +20,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
+
+    <Import Project="./common.test.props"/>
 
 </Project>

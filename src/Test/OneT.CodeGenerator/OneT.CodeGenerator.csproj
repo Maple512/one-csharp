@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../common.test.props" />
-
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
     </PropertyGroup>
@@ -18,5 +16,7 @@
         <ProjectReference Include="..\..\Infrastructure\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj" />
         <ProjectReference Include="..\OneT.Common\OneT.Common.csproj" />
     </ItemGroup>
+
+    <Import Project="../../common.test.props" />
 
 </Project>

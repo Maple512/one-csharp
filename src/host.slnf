@@ -1,0 +1,13 @@
+{
+  "solution": {
+    "path": "one.sln",
+    "projects": [
+      "Infrastructure\\OneI.Hostable.Abstractions\\OneI.Hostable.Abstractions.csproj",
+      "Infrastructure\\OneI.Hostable.Systemd\\OneI.Hostable.Systemd.csproj",
+      "Infrastructure\\OneI.Hostable.Test\\OneI.Hostable.Test.csproj",
+      "Infrastructure\\OneI.Hostable.Web\\OneI.Hostable.Web.csproj",
+      "Infrastructure\\OneI.Hostable.Windows\\OneI.Hostable.Windows.csproj",
+      "Infrastructure\\OneI.Hostable\\OneI.Hostable.csproj"
+    ]
+  }
+}

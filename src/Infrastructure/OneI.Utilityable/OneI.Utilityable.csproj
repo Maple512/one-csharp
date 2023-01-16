@@ -1,7 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../common.props" />
-
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
         <RootNamespace>OneI</RootNamespace>
@@ -21,5 +19,7 @@
         <PackageReference Include="InlineIL.Fody" Version="1.7.4" PrivateAssets="All" />
         <PackageReference Include="Perfolizer" Version="0.2.1" />
     </ItemGroup>
+
+    <Import Project="../../common.props" />
 
 </Project>

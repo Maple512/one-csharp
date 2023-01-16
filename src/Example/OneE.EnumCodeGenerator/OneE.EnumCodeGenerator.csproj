@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../common.test.props" />
-
   <PropertyGroup>
     <TargetFramework>$(NetFramework)</TargetFramework>
   </PropertyGroup>
@@ -9,5 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.1" PrivateAssets="all" />
   </ItemGroup>
-  
+
+    <Import Project="../../common.test.props" />
+
 </Project>

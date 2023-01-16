@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <TargetOS>windows</TargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.ServiceProcess.ServiceController" Version="$(MSVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OneI.Hostable\OneI.Hostable.csproj" />
+    </ItemGroup>
+
+    <Import Project="../../common.props" />
+
+</Project>

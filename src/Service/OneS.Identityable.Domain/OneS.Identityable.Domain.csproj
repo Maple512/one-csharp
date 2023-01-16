@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../common.props" />
-
   <PropertyGroup>
     <TargetFramework>$(NetFramework)</TargetFramework>
   </PropertyGroup>
@@ -9,5 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\OneI.Eventable.Local\OneI.Eventable.Local.csproj" />
   </ItemGroup>
+
+  <Import Project="../../common.props" />
 
 </Project>

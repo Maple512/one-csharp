@@ -65,12 +65,12 @@ public readonly struct CommandResult
 
             if(!suppressOutput)
             {
-                if(StandardOutput.NotNullOrEmpty())
+                if(StandardOutput is { Length: > 0 })
                 {
                     message.AppendLine($"{Environment.NewLine}Standard Output:{Environment.NewLine}{StandardOutput}");
                 }
 
-                if(StandardError.NotNullOrEmpty())
+                if(StandardError is { Length: > 0 })
                 {
                     message.AppendLine($"{Environment.NewLine}Standard Error:{Environment.NewLine}{StandardError}");
                 }

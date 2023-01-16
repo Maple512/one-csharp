@@ -1,7 +1,5 @@
 <Project>
 
-    <Import Project="./common.xunit.props" />
-
     <PropertyGroup>
         <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
@@ -14,5 +12,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Test\OneT.CodeGenerator\OneT.CodeGenerator.csproj" />
     </ItemGroup>
+
+    <Import Project="./common.xunit.props" />
 
 </Project>

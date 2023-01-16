@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../common.codegen.props" />
-
     <PropertyGroup>
         <TargetFramework>$(NetStandard)</TargetFramework>
     </PropertyGroup>
+
+    <Import Project="../../common.codegen.props" />
 
 </Project>

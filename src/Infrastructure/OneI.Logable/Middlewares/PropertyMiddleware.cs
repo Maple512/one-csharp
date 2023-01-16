@@ -39,7 +39,7 @@ public class PropertyMiddleware<T> : ILoggerMiddleware
                 context.AddProperty(_index.Value, _value, _formatter);
             }
         }
-        else if(_name.NotNullOrEmpty())
+        else if(_name is { Length: > 0 })
         {
             if(_addOrUpdate)
             {

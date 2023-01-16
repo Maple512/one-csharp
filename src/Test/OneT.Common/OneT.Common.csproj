@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../common.test.props" />
-
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
+
+    <Import Project="../../common.test.props" />
 
 </Project>

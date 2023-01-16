@@ -1,0 +1,18 @@
+<Project>
+
+    <PropertyGroup Label="Custom Property">
+        <!--https://github.com/dotnet/runtime/blob/ac2ffdf4ff87e7e3a5506a8ef69ce633f6fcda85/src/libraries/System.Private.CoreLib/src/System.Private.CoreLib.Shared.projitems#L22-->
+        <TARGET_WINDOWS Condition="'$([MSBuild]::GetTargetPlatformIdentifier($(TargetFramework)))' == 'windows'">true</TARGET_WINDOWS>
+        <NETStandard Condition="$([MSBuild]::GetTargetFrameworkIdentifier($(TargetFramework))) == '.NETStandard'">true</NETStandard>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <DefineConstants>$(DefineConstants);$([MSBuild]::GetTargetFrameworkIdentifier($(TargetFramework)));AA</DefineConstants>
+    </PropertyGroup>
+
+    <ItemGroup Label="Shared Class Files" Condition="$(IncludeShared)">
+        <Compile Conditoin="$(NETStandard) == 'true'" Include="..\..\Shared\NETStandard\*.cs" Link="Shared\%(FileName).cs" />
+        <Compile Condition="$(AllowUnsafeBlocks) == 'true' and $(TARGET_WINDOWS) == 'true'" Include="..\..\Shared\Interop\*.cs" Link="Shared\%(FileName).cs" />
+    </ItemGroup>
+
+</Project>

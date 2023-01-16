@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="../../common.props" />
-
   <PropertyGroup>
     <TargetFramework>$(NetFramework)</TargetFramework>
   </PropertyGroup>
+
+  <Import Project="../../common.props" />
 
 </Project>

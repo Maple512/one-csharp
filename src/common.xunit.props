@@ -1,7 +1,5 @@
 <Project>
 
-    <Import Project="./common.test.props"/>
-
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0-preview-20221221-03" />
         <PackageReference Include="xunit" Version="2.4.2" />
@@ -25,5 +23,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Test\OneT.Common\OneT.Common.csproj" />
     </ItemGroup>
+
+    <Import Project="./common.test.props"/>
 
 </Project>

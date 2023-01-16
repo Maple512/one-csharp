@@ -17,6 +17,10 @@
         <IsPackable>true</IsPackable>
         <!--https://github.com/dotnet/runtime/blob/ac2ffdf4ff87e7e3a5506a8ef69ce633f6fcda85/src/libraries/System.Private.CoreLib/src/System.Private.CoreLib.Shared.projitems#L22-->
         <Is64Bit Condition="'$(Platform)' == 'arm64' or '$(Platform)' == 'x64' or '$(Platform)' == 's390x' or '$(Platform)' == 'loongarch64' or '$(Platform)' == 'ppc64le'">true</Is64Bit>
+
+        <Target_Windows Condition="'$(TargetOS)' == 'windows'">true</Target_Windows>
+        <Target_Unix Condition="'$(TargetOS)' == 'unix'">true</Target_Unix>
+        <Target_Standard Condition="'$([MSBuild]::GetTargetFrameworkIdentifier($(TargetFramework)))' == '.NETStandard'">true</Target_Standard>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -24,8 +28,20 @@
         <DefineConstants Condition="'$(Is64Bit)' == 'true'">$(DefineConstants);TARGET_64BIT</DefineConstants>
     </PropertyGroup>
 
-    <ItemGroup Label="Shared Class Files" Condition="$(IncludeShared)">
-        <Compile Include="..\..\Shared\*.cs" Link="Shared\%(FileName).cs" />
+    <ItemGroup Label="Common Shard Files" Condition="$(IncludeShared)">
+        <Compile Include="..\..\Shared\Common\*.cs" Link="Shared\%(FileName).cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(IncludeShared) == 'true' and $(Target_Standard) == 'true'">
+        <Compile Include="..\..\Shared\NETStandard\*.cs" Link="Shared\%(FileName).cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(IncludeShared) == 'true' and $(AllowUnsafeBlocks) == 'true' and $(Target_Windows) == 'true'">
+        <Compile Include="..\..\Shared\Interop\*.cs" Link="Shared\%(FileName).cs" />
+    </ItemGroup>
+
+    <ItemGroup Condition="$(IncludeShared) == 'true' and $(AllowUnsafeBlocks) == 'true' and $(Target_Unix) == 'true'">
+        <Compile Include="..\..\Shared\Unix\*.cs" Link="Shared\%(FileName).cs" />
     </ItemGroup>
 
     <ItemGroup Label="Global implicit usings">

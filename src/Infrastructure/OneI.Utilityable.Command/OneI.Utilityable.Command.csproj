@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../common.props" />
-
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
         <RootNamespace>OneI</RootNamespace>
@@ -11,5 +9,7 @@
     <ItemGroup>
         <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>
+
+    <Import Project="../../common.props" />
 
 </Project>

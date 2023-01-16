@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../common.xunit.codegen.props" />
-
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
     </PropertyGroup>
@@ -14,5 +12,7 @@
         <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj" />
         <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj" />
     </ItemGroup>
-    
+
+    <Import Project="../../common.xunit.codegen.props" />
+
 </Project>
