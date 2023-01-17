@@ -1,6 +1,6 @@
 namespace OneI.Logable.Templatizations;
 
-internal static class Constants
+internal static class TemplateConstants
 {
     public static class Property
     {

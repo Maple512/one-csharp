@@ -2,8 +2,8 @@ namespace OneI.Logable.Templatizations;
 
 using System.Globalization;
 using OneI.Logable.Templatizations.Tokenizations;
-using static Constants.Formatters;
-using static Constants.Property;
+using static TemplateConstants.Formatters;
+using static TemplateConstants.Property;
 
 public static class TemplateParser
 {

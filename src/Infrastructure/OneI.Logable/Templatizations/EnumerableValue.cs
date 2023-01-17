@@ -13,7 +13,7 @@ public class EnumerableValue : PropertyValue
 
     public IReadOnlyList<ITemplatePropertyValue> Values => _values;
 
-    public override void Render(TextWriter writer, in PropertyTokenType type, in string? format = null, IFormatProvider? formatProvider = null)
+    public override void Render(TextWriter writer, in PropertyTokenType type, in string? format, IFormatProvider? formatProvider)
     {
         writer.Write('[');
 
@@ -21,7 +21,7 @@ public class EnumerableValue : PropertyValue
 
         for(var i = 0; i < length; i++)
         {
-            _values[i].Render(writer, type, format, formatProvider);
+            _values[i].Render(writer, type, null, formatProvider);
 
             if(i != length - 1)
             {

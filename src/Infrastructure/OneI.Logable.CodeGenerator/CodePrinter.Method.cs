@@ -109,14 +109,14 @@ internal static partial class CodePrinter
 
         builder.AppendLine();
 
-        // call LoggerExtensions.Write
+        // call LoggerExtensions.WriteCore
         if(method.IsLogger)
         {
-            builder.Append($"global::OneI.Logable.LoggerExtensions.Write(logger, ");
+            builder.Append($"global::OneI.Logable.LoggerExtensions.WriteCore(logger, ");
         }
         else
         {
-            builder.Append($"global::OneI.Logable.LoggerExtensions.Write(_logger, ");
+            builder.Append($"global::OneI.Logable.LoggerExtensions.WriteCore(_logger, ");
         }
 
         if(method.HasLevel)

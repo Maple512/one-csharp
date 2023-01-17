@@ -25,6 +25,8 @@ public class Logger_Test
 
         // other type is true (still the default)
         logger.ForContext<ILogger>().IsEnable(LogLevel.Verbose).ShouldBeTrue();
+
+        logger.Information("", 1, 2, 3, 4, 5);
     }
 
     [Fact]

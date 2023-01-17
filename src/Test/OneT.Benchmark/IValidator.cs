@@ -2,6 +2,8 @@ namespace OneT.Benchmark;
 
 public interface IValidator
 {
+    public void Initialize(){}
+
     void Validate();
 
     [StackTraceHidden]

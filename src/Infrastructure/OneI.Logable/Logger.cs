@@ -1,7 +1,6 @@
 namespace OneI.Logable;
 
 using System;
-using DotNext.Collections.Generic;
 using OneI.Logable.Middlewares;
 using OneI.Logable.Templatizations;
 
@@ -143,6 +142,29 @@ internal class Logger : ILogger
         if(exceptions is { Count: > 0 })
         {
             throw new AggregateException(exceptions);
+        }
+    }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+
+        foreach(var item in _sinks)
+        {
+            (item as IDisposable)?.Dispose();
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        GC.SuppressFinalize(this);
+
+        foreach(var item in _sinks)
+        {
+            if(item is IAsyncDisposable disposable)
+            {
+                await disposable.DisposeAsync();
+            }
         }
     }
 }

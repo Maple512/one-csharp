@@ -3,6 +3,8 @@ namespace OneI.Logable.Fakes;
 using System.IO;
 using OneI.Logable;
 
+using static LoggerConstants.PropertyNames;
+
 public static class Fake
 {
     private const string Template = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}";
@@ -11,35 +13,15 @@ public static class Fake
     public static ILogger CreateLogger(
         string? template = null,
         Action<ILoggerConfiguration>? logger = null,
-        Action<LoggerFileOptions>? file = null,
-        Action<LoggerSharedFileOptions>? shared = null,
-        Action<LoggerRollFileOptions>? roll = null,
-        [CallerFilePath] string? filePath = null,
-        [CallerMemberName] string? member = null)
+        Action<LogFileOptions>? file = null)
     {
-        var name = Path.GetFileNameWithoutExtension(filePath);
-
-        var path = Path.Combine(TestTools.GetCSProjectDirecoty()!, $"./Logs/{name}@{member}.txt");
+        var path = Path.Combine(TestTools.GetCSProjectDirecoty()!, "Logs", $"{{{FileNameWithoutExtension}}}@{{{Member}}}.txt");
 
         var configuration = new LoggerConfiguration()
-            .Template.Default(template ?? Template);
+            .Template.Default(template ?? Template)
+            .Sink.File(path, file);
 
         logger?.Invoke(configuration);
-
-        if(file is not null)
-        {
-            configuration = configuration.Sink.File(path, file);
-        }
-
-        if(shared is not null)
-        {
-            configuration = configuration.Sink.SharedFile(path, shared);
-        }
-
-        if(roll is not null)
-        {
-            configuration = configuration.Sink.RollFile(path, roll);
-        }
 
         return configuration.CreateLogger();
     }

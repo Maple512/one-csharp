@@ -4,7 +4,7 @@ using OneI.Logable.Templatizations.Tokenizations;
 
 public abstract class PropertyValue : ITemplatePropertyValue
 {
-    public abstract void Render(TextWriter writer, in PropertyTokenType type, in string? format = null, IFormatProvider? formatProvider = null);
+    public abstract void Render(TextWriter writer, in PropertyTokenType type, in string? format, IFormatProvider? formatProvider);
 
     public string ToString(string? format, IFormatProvider? formatProvider)
     {

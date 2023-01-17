@@ -80,12 +80,124 @@ public static class LoggerExtensions
 
     #endregion
 
-    public static void Write(
+    #region Write
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Write(this ILogger logger, LogLevel level, string message, params object?[] args)
+    {
+        WriteCore(logger, level, null, message, null);
+    }
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Write(this ILogger logger, LogLevel level, Exception exception, string message, params object?[] args)
+    {
+        WriteCore(logger, level, exception, message, null);
+    }
+
+    #endregion Write
+
+    #region Verbose
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Verbose(this ILogger logger, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Verbose, null, message, null);
+    }
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Verbose(this ILogger logger, Exception exception, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Verbose, exception, message, null);
+    }
+
+    #endregion Verbose
+
+    #region Debug
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Debug(this ILogger logger, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Debug, null, message, null);
+    }
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Debug(this ILogger logger, Exception exception, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Debug, exception, message, null);
+    }
+
+    #endregion Debug
+
+    #region Information
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Information(this ILogger logger, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Information, null, message, null);
+    }
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Information(this ILogger logger, Exception exception, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Information, exception, message, null);
+    }
+
+    #endregion Information
+
+    #region Warning
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Warning(this ILogger logger, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Warning, null, message, null);
+    }
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Warning(this ILogger logger, Exception exception, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Warning, exception, message, null);
+    }
+
+    #endregion Warning
+
+    #region Error
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Error(this ILogger logger, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Error, null, message, null);
+    }
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Error(this ILogger logger, Exception exception, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Error, exception, message, null);
+    }
+
+    #endregion Error
+
+    #region Fatal
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Fatal(this ILogger logger, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Fatal, null, message, null);
+    }
+
+    [Conditional(SharedConstants.DEBUG)]
+    public static void Fatal(this ILogger logger, Exception exception, string message, params object?[] args)
+    {
+        WriteCore(logger, LogLevel.Fatal, exception, message, null);
+    }
+
+    #endregion Fatal
+
+    public static void WriteCore(
         ILogger logger,
         LogLevel level,
         Exception? exception,
         string message,
-        List<ITemplatePropertyValue>? propertyValues = null,
+        List<ITemplatePropertyValue>? propertyValues,
         [CallerFilePath] string? file = null,
         [CallerMemberName] string? member = null,
         [CallerLineNumber] int? line = null)

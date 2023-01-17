@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
@@ -10,9 +10,15 @@
       <PackageReference Include="log4net" Version="2.0.15" />
       <PackageReference Include="NLog" Version="5.1.1" />
       <PackageReference Include="Serilog" Version="2.12.0" />
+      <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj"
+                        OutputItemType="Analyzer"
+                        ReferenceOutputAssembly="false"  />
+      <ProjectReference Include="..\OneI.Logable.Extensions\OneI.Logable.Extensions.csproj" />
+      <ProjectReference Include="..\OneI.Logable.File\OneI.Logable.File.csproj" />
       <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj" />
       <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>

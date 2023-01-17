@@ -47,7 +47,7 @@ internal static partial class Check
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string NotNullOrWhiteSpace(in string? value)
     {
-        if(string.IsNullOrWhiteSpace(value))
+        if(value.IsNullOrWhiteSpace())
         {
             throw new ArgumentNullException(nameof(value));
         }

@@ -7,12 +7,13 @@ using System.Linq;
 
 #if NET
 using System.Security.Cryptography;
+using System.Text;
 #endif
 
 /// <summary>
 /// 随机数
 /// </summary>
-[DebuggerStepThrough]
+//[DebuggerStepThrough]
 internal static partial class Randomizer
 {
     /// <summary>
@@ -69,6 +70,71 @@ internal static partial class Randomizer
         }
 
         return randomList;
+    }
+
+    /// <summary>
+    /// 获取随机中文字符
+    /// </summary>
+    /// <param name="length"></param>
+    /// <returns></returns>
+    public static string StringChinese(int length)
+    {
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+        Encoding gb2312 = Encoding.GetEncoding("gb2312");
+
+        var bytes = "0123456789abcdef"u8.ToArray();
+
+        var builder = new StringBuilder(length);
+
+        for(var i = 0; i < length; i++)
+        {
+            var r1 = Integer(11, 14);
+            var b1 = bytes[r1];
+
+            //区位码第2位 
+            int r2;
+            if(r1 == 13)
+            {
+                r2 = Integer(0, 7);
+            }
+            else
+            {
+                r2 = Integer(0, 16);
+            }
+
+            var b2 = bytes[r2];
+
+            //区位码第3位 
+            var r3 = Integer(10, 16);
+            var b3 = bytes[r3];
+
+            //区位码第4位 
+            int r4;
+            if(r3 == 10)
+            {
+                r4 = Integer(1, 16);
+            }
+            else if(r3 == 15)
+            {
+                r4 = Integer(0, 15);
+            }
+            else
+            {
+                r4 = Integer(0, 16);
+            }
+
+            var b4 = bytes[r4];
+
+            var byte1 = Convert.ToByte(Encoding.UTF8.GetString(new byte[] { b1, b2 }), 16);
+            var byte2 = Convert.ToByte(Encoding.UTF8.GetString(new byte[] { b3, b4 }), 16);
+
+            var result = gb2312.GetString(new byte[] { byte1, byte2 });
+
+            builder.Append(result);
+        }
+
+        return builder.ToString();
     }
 }
 

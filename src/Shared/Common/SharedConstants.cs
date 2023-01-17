@@ -1,6 +1,6 @@
 namespace OneI;
 
-internal static class SharedConstants
+internal static partial class SharedConstants
 {
     public const string DEBUG = nameof(DEBUG);
 

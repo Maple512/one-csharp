@@ -39,8 +39,25 @@ public static class BenchmarkTool
 
     public static void Run<T>(string[]? args = null, Action<IConfig>? configure = null)
     {
+        var startType = typeof(T);
+#if DEBUG
+        var validators = startType.Assembly.GetTypes()
+            .Where(x => x.IsAssignableTo(typeof(IValidator)) && x.IsClass)
+            .Select(x =>
+            {
+                return (IValidator)Activator.CreateInstance(x)!;
+            })
+            .ToArray();
+
+        foreach(var item in validators)
+        {
+            item.Initialize();
+
+            item.Validate();
+        }
+#endif
         configure?.Invoke(config);
 
-        BenchmarkRunner.Run(typeof(T), config, args);
+        BenchmarkRunner.Run(startType, config, args);
     }
 }

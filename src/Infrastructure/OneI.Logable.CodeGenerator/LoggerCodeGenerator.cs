@@ -31,9 +31,6 @@ public class LoggerCodeGenerator : IIncrementalGenerator
     {
         context.AddSource(CodeAssets.LogFileName,
                  SourceText.From(CodeAssets.LogFileContent, Encoding.UTF8));
-
-        context.AddSource(CodeAssets.LoggerExtensionClassFileName,
-            SourceText.From(CodeAssets.LoggerExtensionClassContent, Encoding.UTF8));
     }
 
     /// <summary>

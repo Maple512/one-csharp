@@ -2,7 +2,7 @@ namespace OneI.Logable;
 
 public static class LoggerConstants
 {
-    internal static class PropertyNames
+    public static class PropertyNames
     {
         public const string Level = nameof(Level);
 

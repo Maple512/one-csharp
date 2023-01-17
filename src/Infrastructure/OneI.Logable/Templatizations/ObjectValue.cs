@@ -13,7 +13,7 @@ public class ObjectValue : PropertyValue
 
     public IReadOnlyDictionary<string, ITemplatePropertyValue> Properties => _properties;
 
-    public override void Render(TextWriter writer, in PropertyTokenType type, in string? format = null, IFormatProvider? formatProvider = null)
+    public override void Render(TextWriter writer, in PropertyTokenType type, in string? format, IFormatProvider? formatProvider)
     {
         writer.Write("{ ");
         var index = 0;

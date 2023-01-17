@@ -1,9 +1,5 @@
-using BenchmarkDotNet.Configs;
 using OneI.Logable;
 
-BenchmarkTool.Run<TemplateParserBenchmark>(args, config =>
-{
-    config.WithOptions(ConfigOptions.DisableOptimizationsValidator);
-});
+BenchmarkTool.Run<LogFileBenchmark>(args);
 
 Console.ReadLine();

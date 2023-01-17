@@ -1,20 +1,12 @@
 namespace System.IO;
 
+using Microsoft.Win32.SafeHandles;
 using OneI;
-/// <summary>
-/// The i o tools.
-/// </summary>
 
 [StackTraceHidden]
 [DebuggerStepThrough]
 public static class IOTools
 {
-    /// <summary>
-    /// Gets the relative path.
-    /// </summary>
-    /// <param name="directory">The directory.</param>
-    /// <param name="file">The file.</param>
-    /// <returns>A string.</returns>
     public static string GetRelativePath(string directory, string file)
     {
         var fullPath = Path.Combine(directory, file);
@@ -28,10 +20,6 @@ public static class IOTools
         return fullPath[(directory.Length + 1)..];
     }
 
-    /// <summary>
-    /// Ensures the directory existed.
-    /// </summary>
-    /// <param name="filePath">The file path.</param>
     public static void EnsureDirectoryExisted(string filePath)
     {
         Check.NotNullOrWhiteSpace(filePath);
