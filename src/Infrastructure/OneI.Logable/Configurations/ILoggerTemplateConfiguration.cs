@@ -1,7 +1,5 @@
 namespace OneI.Logable.Configurations;
 
-using OneI.Logable;
-
 public interface ILoggerTemplateConfiguration
 {
     /// <summary>
@@ -17,5 +15,5 @@ public interface ILoggerTemplateConfiguration
     /// <param name="condition">条件</param>
     /// <param name="template">模板</param>
     /// <returns></returns>
-    ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, string template);
+    ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, scoped ReadOnlySpan<char> template);
 }

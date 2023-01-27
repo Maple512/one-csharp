@@ -9,7 +9,7 @@ public class ActionMiddleware : ILoggerMiddleware
         _action = action;
     }
 
-    public void Invoke(in LoggerMessageContext context)
+    public void Invoke(LoggerMessageContext context)
     {
         _action.Invoke(context);
     }

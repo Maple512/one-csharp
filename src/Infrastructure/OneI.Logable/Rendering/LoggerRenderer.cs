@@ -1,6 +1,5 @@
 namespace OneI.Logable.Rendering;
 
-using System.IO;
 using OneI.Logable.Templatizations;
 
 public class LoggerRenderer : ILoggerRenderer
@@ -14,8 +13,6 @@ public class LoggerRenderer : ILoggerRenderer
 
     public void Render(LoggerContext context, TextWriter writer)
     {
-        var template = new TemplateContext(context.Tokens, context.Properties);
-
-        template.Render(writer, _formatProvider);
+        TemplateContext.Render(writer, context.Tokens, context.MessageContext, _formatProvider);
     }
 }

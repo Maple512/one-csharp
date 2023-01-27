@@ -1,7 +1,5 @@
 namespace OneI.Logable.Sinks;
 
-using System;
-
 public class ConditionalSink : ILoggerSink
 {
     private readonly Func<LoggerContext, bool> _condition;
@@ -13,7 +11,7 @@ public class ConditionalSink : ILoggerSink
         _sink = sink;
     }
 
-    public void Invoke(in LoggerContext context)
+    public void Invoke(LoggerContext context)
     {
         if(_condition(context))
         {

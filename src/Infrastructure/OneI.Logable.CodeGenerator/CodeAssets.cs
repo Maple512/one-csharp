@@ -51,31 +51,31 @@ internal static class CodeAssets
             #region Write
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Write(LogLevel level, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Write(LogLevel level, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, level, null, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, level, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Write(LogLevel level, string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, level, null, message, new (0));
+                LoggerExtensions.WriteCore(_logger, level, null, message.AsMemory(), default);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Write(LogLevel level, Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Write(LogLevel level, Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, level, exception, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, level, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Write(LogLevel level, Exception exception, string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, level, exception, message, new (0));
+                LoggerExtensions.WriteCore(_logger, level, exception, message.AsMemory(), default);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Write(in LoggerMessageContext context)
+            public static void Write(LoggerMessageContext context)
             {
                 _logger?.Write(context);
             }
@@ -85,27 +85,27 @@ internal static class CodeAssets
             #region Verbose
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Verbose(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Verbose(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Verbose, null, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Verbose, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Verbose(string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Verbose, null, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Verbose, null, message.AsMemory(), default);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Verbose(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Verbose(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Verbose, exception, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Verbose, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Verbose(Exception exception, string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Verbose, exception, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Verbose, exception, message.AsMemory(), default);
             }
 
             #endregion Verbose
@@ -113,27 +113,27 @@ internal static class CodeAssets
             #region Debug
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Debug(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Debug(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Debug, null, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Debug, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Debug(string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Debug, null, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Debug, null, message.AsMemory(), default);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Debug(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Debug(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Debug, exception, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Debug, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Debug(Exception exception, string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Debug, exception, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Debug, exception, message.AsMemory(), default);
             }
 
             #endregion Debug
@@ -141,27 +141,27 @@ internal static class CodeAssets
             #region Information
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Information(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Information(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Information, null, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Information, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Information(string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Information, null, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Information, null, message.AsMemory(), default);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Information(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Information(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Information, exception, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Information, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Information(Exception exception, string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Information, exception, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Information, exception, message.AsMemory(), default);
             }
 
             #endregion Information
@@ -169,27 +169,27 @@ internal static class CodeAssets
             #region Warning
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Warning(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Warning(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Warning, null, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Warning, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Warning(string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Warning, null, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Warning, null, message.AsMemory(), default);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Warning(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Warning(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Warning, exception, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Warning, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Warning(Exception exception, string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Warning, exception, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Warning, exception, message.AsMemory(), default);
             }
 
             #endregion Warning
@@ -197,27 +197,27 @@ internal static class CodeAssets
             #region Error
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Error(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Error(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Error, null, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Error, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Error(string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Error, null, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Error, null, message.AsMemory(), default);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Error(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Error(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Error, exception, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Error, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Error(Exception exception, string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Error, exception, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Error, exception, message.AsMemory(), default);
             }
 
             #endregion Error
@@ -225,27 +225,27 @@ internal static class CodeAssets
             #region Fatal
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Fatal(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Fatal(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Fatal, null, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Fatal, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Fatal(string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Fatal, null, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Fatal, null, message.AsMemory(), default);
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Fatal(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int? line = null)
+            public static void Fatal(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Fatal, exception, message, null, file, member, line);
+                LoggerExtensions.WriteCore(_logger, LogLevel.Fatal, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
             }
 
             [Conditional("DEBUG")]
             public static void Fatal(Exception exception, string message, params object?[] args)
             {
-                LoggerExtensions.WriteCore(_logger, LogLevel.Fatal, exception, message, new (0));
+                LoggerExtensions.WriteCore(_logger, LogLevel.Fatal, exception, message.AsMemory(), default);
             }
 
             #endregion Fatal

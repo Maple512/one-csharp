@@ -1,8 +1,5 @@
 namespace OneI.Hostable.Internal;
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
@@ -46,14 +43,14 @@ public class Host : IHost, IAsyncDisposable
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+
 
         DisposeAsync().AsTask().GetAwaiter().GetResult();
     }
 
     public async ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
+
 
         // The user didn't change the FileProvider instance, we can dispose it
         if(ReferenceEquals(_environment.FileProvider, _defaultProvider))

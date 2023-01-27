@@ -11,7 +11,7 @@ public class AggregateMiddleware : ILoggerMiddleware
         _isSilent = isSilent;
     }
 
-    public void Invoke(in LoggerMessageContext context)
+    public void Invoke(LoggerMessageContext context)
     {
         List<Exception>? exceptions = null;
         foreach(var middleware in _middlewares)

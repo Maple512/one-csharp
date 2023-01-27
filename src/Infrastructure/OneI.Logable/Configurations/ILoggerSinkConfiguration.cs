@@ -1,7 +1,6 @@
 namespace OneI.Logable.Configurations;
 
-using OneI.Logable;
-using OneI.Logable.Sinks;
+using Sinks;
 
 public interface ILoggerSinkConfiguration
 {
@@ -20,4 +19,22 @@ public interface ILoggerSinkConfiguration
 
     ILoggerConfiguration LoggerWhen(Func<LoggerContext, bool> condition, ILogger logger, bool autoDispose = false)
         => UseWhen(condition, new SecondaryLoggerSink(logger, autoDispose));
+
+    ILoggerConfiguration Logger(Action<ILoggerConfiguration> configure, bool autoDispose = false)
+    {
+        var configuration = new LoggerConfiguration();
+        configure(configuration);
+        var logger = configuration.CreateLogger();
+
+        return Logger(logger, autoDispose);
+    }
+
+    ILoggerConfiguration LoggerWhen(Func<LoggerContext, bool> condition, Action<ILoggerConfiguration> configure, bool autoDispose = false)
+    {
+        var configuration = new LoggerConfiguration();
+        configure(configuration);
+        var logger = configuration.CreateLogger();
+
+        return LoggerWhen(condition, logger, autoDispose);
+    }
 }

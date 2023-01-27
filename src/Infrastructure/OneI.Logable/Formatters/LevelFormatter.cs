@@ -1,15 +1,14 @@
 namespace OneI.Logable.Formatters;
 
-using OneI.Logable;
-using OneI.Logable.Templatizations;
+using Templatizations;
+using static LoggerConstants;
 
-using static OneI.Logable.LoggerConstants;
-
+[Obsolete]
 public class LevelFormatter : IPropertyValueFormatter<LogLevel>
 {
     public static readonly IPropertyValueFormatter<LogLevel> Instance = new LevelFormatter();
 
-    public virtual void Format(in LogLevel value, TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
+    public virtual void Format(LogLevel value, TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
     {
         writer.Write(LevelFormatHelper.Format(value, format));
     }
@@ -64,8 +63,7 @@ internal static class LevelFormatHelper
         return Casing(moniker, @case)!;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? Casing(in string? value, in string? format = null)
+    public static string? Casing(string? value, string? format = null)
     {
         return format switch
         {

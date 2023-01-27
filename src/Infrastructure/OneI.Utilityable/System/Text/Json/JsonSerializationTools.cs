@@ -1,7 +1,8 @@
 namespace System.Text.Json;
 
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
+using Encodings.Web;
+using Unicode;
+
 /// <summary>
 /// The json serialization tools.
 /// </summary>

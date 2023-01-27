@@ -1,6 +1,7 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Definitions;
+using Definitions;
+
 /// <summary>
 /// The type symbol parser.
 /// </summary>
@@ -83,31 +84,28 @@ public static class TypeSymbolParser
 
         var name = type.Names.Join('.');
 
-        if(name == "System.String")
+        switch(name)
         {
-            type.Kind = TypeDefKind.Literal;
-            return type;
-        }
-
-        if(name == "System.Nullable")
-        {
-            type.Kind = TypeDefKind.Nullable;
-            return type;
-        }
-
-        if(name == "System.ValueTuple")
-        {
-            type.Kind = TypeDefKind.ValueTuple;
-
-            foreach(var item in symbol.TupleElements)
+            case "System.String":
+                type.Kind = TypeDefKind.Literal;
+                return type;
+            case "System.Nullable":
+                type.Kind = TypeDefKind.Nullable;
+                return type;
+            case "System.ValueTuple":
             {
-                if(TryParse(item.Type, out var tupleType))
-                {
-                    type.Properties.Add(new PropertyDef(item.Name, tupleType!));
-                }
-            }
+                type.Kind = TypeDefKind.ValueTuple;
 
-            return type;
+                foreach(var item in symbol.TupleElements)
+                {
+                    if(TryParse(item.Type, out var tupleType))
+                    {
+                        type.Properties.Add(new PropertyDef(item.Name, tupleType!));
+                    }
+                }
+
+                return type;
+            }
         }
 
         var fullName = type.ToDisplayString();

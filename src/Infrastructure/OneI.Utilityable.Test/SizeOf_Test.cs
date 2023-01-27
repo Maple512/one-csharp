@@ -37,10 +37,4 @@ public class SizeOf_Test
         sizeof(double*).ShouldBe(8);
         sizeof(decimal*).ShouldBe(8);
     }
-
-    [Fact]
-    public unsafe void get_full_path()
-    {
-        // SafeFileHandle
-    }
 }

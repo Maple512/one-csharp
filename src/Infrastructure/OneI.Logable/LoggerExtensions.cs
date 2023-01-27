@@ -1,8 +1,9 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Middlewares;
-using OneI.Logable.Templatizations;
-using OneI.Logable.Templatizations.Tokenizations;
+using System;
+using System.ComponentModel;
+using Middlewares;
+using Templatizations;
 
 public static class LoggerExtensions
 {
@@ -83,111 +84,113 @@ public static class LoggerExtensions
     #region Write
 
     [Conditional(SharedConstants.DEBUG)]
-    public static void Write(this ILogger logger, LogLevel level, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Write(this ILogger logger, LogLevel level, string? message, params object?[] args)
     {
-        WriteCore(logger, level, null, message, null);
+        WriteCore(logger, level, null, message.AsMemory(), null);
     }
 
     [Conditional(SharedConstants.DEBUG)]
-    public static void Write(this ILogger logger, LogLevel level, Exception exception, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Write(this ILogger logger, LogLevel level, Exception exception, string? message, params object?[] args)
     {
-        WriteCore(logger, level, exception, message, null);
+        WriteCore(logger, level, exception, message.AsMemory(), null);
     }
 
     #endregion Write
 
     #region Verbose
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Verbose(this ILogger logger, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Verbose(this ILogger logger, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Verbose, null, message, null);
+        WriteCore(logger, LogLevel.Verbose, null, message.AsMemory(), null);
     }
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Verbose(this ILogger logger, Exception exception, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Verbose(this ILogger logger, Exception exception, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Verbose, exception, message, null);
+        WriteCore(logger, LogLevel.Verbose, exception, message.AsMemory(), null);
     }
 
     #endregion Verbose
 
     #region Debug
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Debug(this ILogger logger, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Debug(this ILogger logger, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Debug, null, message, null);
+        WriteCore(logger, LogLevel.Debug, null, message.AsMemory(), null);
     }
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Debug(this ILogger logger, Exception exception, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Debug(this ILogger logger, Exception exception, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Debug, exception, message, null);
+        WriteCore(logger, LogLevel.Debug, exception, message.AsMemory(), null);
     }
 
     #endregion Debug
 
     #region Information
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Information(this ILogger logger, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Information(this ILogger logger, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Information, null, message, null);
+        WriteCore(logger, LogLevel.Information, null, message.AsMemory(), null);
     }
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Information(this ILogger logger, Exception exception, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Information(this ILogger logger, Exception exception, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Information, exception, message, null);
+        WriteCore(logger, LogLevel.Information, exception, message.AsMemory(), null);
     }
 
     #endregion Information
 
     #region Warning
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Warning(this ILogger logger, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Warning(this ILogger logger, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Warning, null, message, null);
+        WriteCore(logger, LogLevel.Warning, null, message.AsMemory(), null);
     }
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Warning(this ILogger logger, Exception exception, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Warning(this ILogger logger, Exception exception, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Warning, exception, message, null);
+        WriteCore(logger, LogLevel.Warning, exception, message.AsMemory(), null);
     }
 
     #endregion Warning
 
     #region Error
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Error(this ILogger logger, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Error(this ILogger logger, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Error, null, message, null);
+        WriteCore(logger, LogLevel.Error, null, message.AsMemory(), null);
     }
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Error(this ILogger logger, Exception exception, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Error(this ILogger logger, Exception exception, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Error, exception, message, null);
+        WriteCore(logger, LogLevel.Error, exception, message.AsMemory(), null);
     }
 
     #endregion Error
 
     #region Fatal
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Fatal(this ILogger logger, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Fatal(this ILogger logger, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Fatal, null, message, null);
+        WriteCore(logger, LogLevel.Fatal, null, message.AsMemory(), null);
     }
-
     [Conditional(SharedConstants.DEBUG)]
-    public static void Fatal(this ILogger logger, Exception exception, string message, params object?[] args)
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public static void Fatal(this ILogger logger, Exception exception, string? message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Fatal, exception, message, null);
+        WriteCore(logger, LogLevel.Fatal, exception, message.AsMemory(), null);
     }
 
     #endregion Fatal
@@ -195,33 +198,34 @@ public static class LoggerExtensions
     public static void WriteCore(
         ILogger logger,
         LogLevel level,
-        Exception? exception,
-        string message,
-        List<ITemplatePropertyValue>? propertyValues,
-        [CallerFilePath] string? file = null,
-        [CallerMemberName] string? member = null,
-        [CallerLineNumber] int? line = null)
+        in Exception? exception,
+        ReadOnlyMemory<char> message,
+        ReadOnlyMemory<ITemplatePropertyValue> propertyValues,
+        ReadOnlyMemory<char> file = default,
+        ReadOnlyMemory<char> member = default,
+        int line = 0)
     {
-        propertyValues ??= new List<ITemplatePropertyValue>(0);
+        ValueDictionary<string, ITemplatePropertyValue> properties = default;
 
-        var properties = new PropertyCollection(propertyValues.Count + 10);
-
-        foreach(var item in propertyValues)
+        if(propertyValues is { Length: > 0 })
         {
-            properties.Add(properties.Count, item);
+            properties = new ValueDictionary<string, ITemplatePropertyValue>(propertyValues.Length);
+
+            foreach(var item in propertyValues.Span)
+            {
+                properties.Add($"__{properties.Length}", item);
+            }
         }
 
-        var tokens = _cache.GetOrAdd(message.GetHashCode(), TemplateParser.Parse(message));
-
-        logger.Write(new LoggerMessageContext(
+        var context = new LoggerMessageContext(
             level,
-            tokens,
+            message,
             exception,
             properties,
             file,
             member,
-            line));
-    }
+            line);
 
-    private static readonly Dictionary<int, List<ITemplateToken>> _cache = new(20);
+        logger.Write(context);
+    }
 }

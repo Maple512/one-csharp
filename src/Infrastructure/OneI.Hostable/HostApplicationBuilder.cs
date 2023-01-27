@@ -1,9 +1,9 @@
 namespace OneI.Hostable;
 
+using Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using OneI.Hostable.Internal;
 
 public class HostApplicationBuilder
 {

@@ -1,6 +1,6 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Configurations;
+using Configurations;
 
 public static class LoggerSinkFileConfigurationExtensions
 {

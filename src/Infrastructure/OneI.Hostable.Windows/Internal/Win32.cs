@@ -1,7 +1,5 @@
 namespace OneI.Hostable.Internal;
 
-using System.Runtime.Versioning;
-
 internal static class Win32
 {
     public static unsafe Process? GetParentProcess()

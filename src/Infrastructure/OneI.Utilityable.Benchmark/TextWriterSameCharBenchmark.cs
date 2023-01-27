@@ -1,7 +1,5 @@
 namespace OneI.Utilityable;
 
-using System.Buffers;
-
 public class TextWriterSameCharBenchmark : IValidator
 {
     private const int count = 100;

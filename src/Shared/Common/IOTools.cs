@@ -1,10 +1,7 @@
 namespace OneI;
 
-using System;
-using System.IO;
-
 [DebuggerStepThrough]
-internal static partial class IOTools
+internal static class IOTools
 {
     public static void EnsureExistedDirectory(string path)
     {

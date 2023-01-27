@@ -1,7 +1,5 @@
 namespace OneI.Hostable;
 
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 public class SystemdLifetime : IHostLifetime, IDisposable
@@ -63,7 +61,7 @@ public class SystemdLifetime : IHostLifetime, IDisposable
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+
 
         UnregisterShutdownHandlers();
 

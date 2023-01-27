@@ -4,8 +4,8 @@ public class DictionaryCacheBenchmark
 {
     private const int length = 10;
 
-    public string[] StringValue = new[] { "", "abccdah87jwgr", "wfjwkhwfhgeg", "wfjwkhugteg", "wfjwkhugteg", "wfjwkhugteg", "wfjwkhwfhgewjugteg" };
-
+    public string[] StringValue = { "", "abccdah87jwgr", "wfjwkhwfhgeg", "wfjwkhugteg", "wfjwkhugteg", "wfjwkhugteg", "wfjwkhwfhgewjugteg" };
+    //2
     [Benchmark(Baseline = true)]
     public void UseString_Default()
     {
@@ -19,7 +19,7 @@ public class DictionaryCacheBenchmark
             }
         }
     }
-
+    //3
     [Benchmark]
     public void UseString_EqualityComparer()
     {
@@ -33,7 +33,7 @@ public class DictionaryCacheBenchmark
             }
         }
     }
-
+    //4
     [Benchmark]
     public void UseHashCode_Default()
     {
@@ -47,7 +47,7 @@ public class DictionaryCacheBenchmark
             }
         }
     }
-
+    //1
     [Benchmark]
     public void UseHashCode_EqualityComparer()
     {

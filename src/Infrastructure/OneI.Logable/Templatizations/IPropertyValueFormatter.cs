@@ -6,5 +6,5 @@ namespace OneI.Logable.Templatizations;
 /// <typeparam name="T"></typeparam>
 public interface IPropertyValueFormatter<T>
 {
-    void Format(in T? value, TextWriter writer, string? format = null, IFormatProvider? formatProvider = null);
+    void Format(T? value, TextWriter writer, string? format = null, IFormatProvider? formatProvider = null);
 }

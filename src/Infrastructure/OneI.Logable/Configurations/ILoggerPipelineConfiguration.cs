@@ -1,7 +1,6 @@
 namespace OneI.Logable.Configurations;
 
-using OneI.Logable;
-using OneI.Logable.Middlewares;
+using Middlewares;
 
 public interface ILoggerPipelineConfiguration
 {

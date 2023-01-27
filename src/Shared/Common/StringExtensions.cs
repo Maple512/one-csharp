@@ -1,7 +1,5 @@
 namespace System;
 
-using System.Text;
-
 [DebuggerStepThrough]
 internal static partial class StringExtensions
 {

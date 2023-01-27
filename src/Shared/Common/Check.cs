@@ -1,9 +1,5 @@
 namespace OneI;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 [DebuggerStepThrough]
 internal static partial class Check
 {
@@ -33,7 +29,7 @@ internal static partial class Check
 {
     [return: NotNull]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrEmpty(in string? value)
+    public static string NotNullOrEmpty(string? value)
     {
         if(string.IsNullOrEmpty(value))
         {
@@ -45,7 +41,7 @@ internal static partial class Check
 
     [return: NotNull]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrWhiteSpace(in string? value)
+    public static string NotNullOrWhiteSpace(string? value)
     {
         if(value.IsNullOrWhiteSpace())
         {
@@ -57,7 +53,7 @@ internal static partial class Check
 
     [return: NotNull]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T NotNull<T>(in T? value)
+    public static T NotNull<T>(T? value)
     {
         if(value == null)
         {
@@ -84,7 +80,7 @@ internal static partial class Check
 internal static partial class Check
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrEmpty(in string? value )
+    public static string NotNullOrEmpty(string? value)
     {
         return string.IsNullOrEmpty(value)
             ? throw new ArgumentNullException(nameof(value))
@@ -92,7 +88,7 @@ internal static partial class Check
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrWhiteSpace(in string? value )
+    public static string NotNullOrWhiteSpace(string? value)
     {
         return string.IsNullOrWhiteSpace(value)
             ? throw new ArgumentNullException(nameof(value))
@@ -100,7 +96,7 @@ internal static partial class Check
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T NotNull<T>(in T? value)
+    public static T NotNull<T>(T? value)
     {
         return value == null
             ? throw new ArgumentNullException(nameof(value))

@@ -1,65 +1,77 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Formatters;
-using OneI.Logable.Templatizations;
-using OneI.Logable.Templatizations.Tokenizations;
-using static OneI.Logable.LoggerConstants;
+using DotNext;
+using Formatters;
+using Templatizations;
+using static LoggerConstants;
 
-public class LoggerMessageContext
+public readonly struct LoggerMessageContext
 {
-    private readonly List<ITemplateToken> _messageTokens;
-    private readonly PropertyCollection _properties;
-
-    public LoggerMessageContext(
+    internal LoggerMessageContext(
         LogLevel level,
-        List<ITemplateToken> tokens,
-        Exception? exception,
-        PropertyCollection properties,
-        string? filePath,
-        string? memberName,
-        int? lineNumber)
+        ReadOnlyMemory<char> message,
+        in Exception? exception,
+        ValueDictionary<string, ITemplatePropertyValue> properties,
+        ReadOnlyMemory<char> filePath,
+        ReadOnlyMemory<char> memberName,
+        int line)
     {
         Timestamp = DateTimeOffset.Now;
         Level = level;
-        _messageTokens = tokens;
-        _properties = properties;
+        Message = message;
+        Properties = properties;
         Exception = exception;
         File = filePath;
         Member = memberName;
-        Line = lineNumber;
+        Line = line;
 
-        if(filePath.NotNullOrWhiteSpace())
-        {
-            FileName = Path.GetFileName(filePath);
-            FileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
-            FileExtension = Path.GetExtension(filePath);
-        }
+        //if(filePath is not { Length: > 0 })
+        //{
+        //    return;
+        //}
+        //scoped var path = File.AsSpan();
+
+        //var index = path.LastIndexOf(Path.DirectorySeparatorChar) + 1;
+        //var fileName = path[index..];
+        //var i2 = fileName.LastIndexOf('.');
+
+        //FileName = fileName.ToString();
+        //FileNameWithoutExtension = fileName[..i2].ToString();
+        //FileExtension = fileName[i2..].ToString();
     }
 
     public DateTimeOffset Timestamp { get; }
 
     public LogLevel Level { get; }
 
+    public ReadOnlyMemory<char> Message { get; }
+
     public Exception? Exception { get; }
 
-    public string? FileName { get; }
+    public ReadOnlyMemory<char> FileName { get; }
 
-    public string? FileNameWithoutExtension { get; }
+    public ReadOnlyMemory<char> FileNameWithoutExtension { get; }
 
-    public string? FileExtension { get; }
+    public ReadOnlyMemory<char> FileExtension { get; }
 
-    public string? File { get; }
+    public ReadOnlyMemory<char> File { get; }
 
-    public string? Member { get; }
+    public ReadOnlyMemory<char> Member { get; }
 
-    public int? Line { get; }
+    public ValueDictionary<string, ITemplatePropertyValue> Properties
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get;
+    }
+
+    public int Line { get; }
 
     /// <inheritdoc cref="PropertyCollection.Add(string, ITemplatePropertyValue)"/>
     public LoggerMessageContext AddProperty<T>(string name, T value, IPropertyValueFormatter<T>? formatter = null)
     {
         Check.NotNull(name);
 
-        _properties.Add(name, PropertyValue.CreateLiteral(value, formatter));
+        Properties.Add(name, PropertyValue.CreateLiteral(value, formatter));
 
         return this;
     }
@@ -69,51 +81,37 @@ public class LoggerMessageContext
     {
         Check.NotNull(name);
 
-        _properties.AddOrUpdate(name, PropertyValue.CreateLiteral(value, formatter));
+        Properties.Add(name, PropertyValue.CreateLiteral(value, formatter));
 
         return this;
     }
 
-    /// <inheritdoc cref="PropertyCollection.Add(int, ITemplatePropertyValue)"/>
-    public LoggerMessageContext AddProperty<T>(int index, T value, IPropertyValueFormatter<T>? formatter = null)
+    [Obsolete]
+    internal ValueDictionary<string, ITemplatePropertyValue> GetProperties()
     {
-        _properties.Add(index, PropertyValue.CreateLiteral(value, formatter));
+        var properties = new ValueDictionary<string, ITemplatePropertyValue>(Properties, 11);
 
-        return this;
-    }
-
-    /// <inheritdoc cref="PropertyCollection.AddOrUpdate(int, ITemplatePropertyValue)"/>
-    public LoggerMessageContext AddOrUpdateProperty<T>(int index, T value, IPropertyValueFormatter<T>? formatter = null)
-    {
-        _properties.AddOrUpdate(index, PropertyValue.CreateLiteral(value, formatter));
-
-        return this;
-    }
-
-    internal PropertyCollection GetProperties()
-    {
-        var properties = new PropertyCollection(_properties.Count + 9);
-        properties.Add(_properties);
-
-        properties.Add(PropertyNames.Timestamp, PropertyValue.CreateLiteral(Timestamp));
-        properties.Add(PropertyNames.Level, PropertyValue.CreateLiteral(Level, LevelFormatter.Instance));
-        properties.Add(PropertyNames.Exception, PropertyValue.CreateLiteral(Exception));
-        properties.Add(PropertyNames.File, PropertyValue.CreateLiteral(File));
-        properties.Add(PropertyNames.FileName, PropertyValue.CreateLiteral(FileName));
-        properties.Add(PropertyNames.FileNameWithoutExtension, PropertyValue.CreateLiteral(FileNameWithoutExtension));
-        properties.Add(PropertyNames.FileExtension, PropertyValue.CreateLiteral(FileExtension));
-        properties.Add(PropertyNames.Member, PropertyValue.CreateLiteral(Member));
-        properties.Add(PropertyNames.Line, PropertyValue.CreateLiteral(Line));
-        properties.Add(PropertyNames.NewLine, PropertyValue.CreateLiteral(Environment.NewLine));
-        properties.Add(PropertyNames.Message, PropertyValue.CreateLiteral(string.Empty,
-            new MessageFormatter(_messageTokens, _properties)));
+        properties.Add(PropertyNames.Timestamp, new LiteralValue<DateTimeOffset>(Timestamp));
+        properties.Add(PropertyNames.Level, new LiteralValue<LogLevel>(Level, LevelFormatter.Instance));
+        properties.Add(PropertyNames.Exception, new LiteralValue<Exception?>(Exception));
+        properties.Add(PropertyNames.File, new LiteralValue<ReadOnlyMemory<char>>(File));
+        properties.Add(PropertyNames.FileName, new LiteralValue<ReadOnlyMemory<char>>(FileName));
+        properties.Add(PropertyNames.FileNameWithoutExtension, new LiteralValue<ReadOnlyMemory<char>>(FileNameWithoutExtension));
+        properties.Add(PropertyNames.FileExtension, new LiteralValue<ReadOnlyMemory<char>>(FileExtension));
+        properties.Add(PropertyNames.Member, new LiteralValue<ReadOnlyMemory<char>>(Member));
+        properties.Add(PropertyNames.Line, new LiteralValue<int>(Line));
+        properties.Add(PropertyNames.NewLine, new LiteralValue<string>(Environment.NewLine));
+        properties.Add(PropertyNames.Message, new LiteralValue<ReadOnlyMemory<char>>(Message));
 
         return properties;
     }
 
-    public LoggerMessageContext AppendText(string text)
+    public LoggerMessageContext AppendText(scoped ReadOnlySpan<char> text)
     {
-        _messageTokens.Add(new TextToken(_messageTokens.Count, text));
+        if(!text.IsEmpty)
+        {
+            Message.Span.Concat(text);
+        }
 
         return this;
     }

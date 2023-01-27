@@ -1,13 +1,11 @@
-namespace OneI.Logable.Rendering;
-
-using OneI.Logable.Templatizations;
+namespace OneI.Logable.Templatizations;
 
 /// <summary>
 /// 描述文本的对齐方向和宽度
 /// </summary>
 public readonly struct TextAlignment
 {
-    public TextAlignment(in int width)
+    public TextAlignment(int width)
     {
         Direction = width >= 0 ? TextDirection.Right : TextDirection.Left;
         Width = width;

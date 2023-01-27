@@ -1,7 +1,5 @@
 namespace OneI;
 
-using System;
-
 #if NET
 using System.Threading.Tasks;
 #endif
@@ -16,7 +14,7 @@ internal readonly partial struct DisposeAction : IDisposable
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+
 
         _action?.Invoke();
     }
@@ -27,7 +25,7 @@ internal readonly partial struct DisposeAction : IAsyncDisposable
 {
     public ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
+
 
         _action?.Invoke();
 
@@ -51,7 +49,7 @@ internal readonly partial struct DisposeAction<T> : IDisposable
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+
 
         _action?.Invoke(_state);
     }
@@ -62,7 +60,7 @@ internal readonly partial struct DisposeAction<T> : IAsyncDisposable
 {
     public ValueTask DisposeAsync()
     {
-        GC.SuppressFinalize(this);
+
 
         _action?.Invoke(_state);
 

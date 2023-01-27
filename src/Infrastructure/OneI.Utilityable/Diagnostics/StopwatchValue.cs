@@ -1,7 +1,5 @@
 namespace OneI.Diagnostics;
 
-using System.Diagnostics.CodeAnalysis;
-
 /// <summary>
 /// 秒表
 /// </summary>

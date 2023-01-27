@@ -110,6 +110,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Open", "Open", "{6FCD5C17-C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Openable", "Infrastructure\OneI.Openable\OneI.Openable.csproj", "{5C53F91B-52D1-4F08-84D8-D7A3F2ABB877}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Logable.Test.Console", "Infrastructure\OneI.Logable.Test.Console\OneI.Logable.Test.Console.csproj", "{F28B5A44-A09C-49ED-92C0-F57EABB6F4BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -220,6 +222,10 @@ Global
 		{5C53F91B-52D1-4F08-84D8-D7A3F2ABB877}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C53F91B-52D1-4F08-84D8-D7A3F2ABB877}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C53F91B-52D1-4F08-84D8-D7A3F2ABB877}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F28B5A44-A09C-49ED-92C0-F57EABB6F4BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F28B5A44-A09C-49ED-92C0-F57EABB6F4BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F28B5A44-A09C-49ED-92C0-F57EABB6F4BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F28B5A44-A09C-49ED-92C0-F57EABB6F4BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -257,6 +263,7 @@ Global
 		{C2F41635-786D-4F2C-A282-B4DB13918778} = {6FCD5C17-C5C5-41F2-8C47-88BEEC0FE9FF}
 		{6FCD5C17-C5C5-41F2-8C47-88BEEC0FE9FF} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
 		{5C53F91B-52D1-4F08-84D8-D7A3F2ABB877} = {6FCD5C17-C5C5-41F2-8C47-88BEEC0FE9FF}
+		{F28B5A44-A09C-49ED-92C0-F57EABB6F4BD} = {FCF4D373-C63B-41A0-A3F7-935189A7CE68}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

@@ -8,23 +8,15 @@ internal readonly struct LogLevelRange
         Maximum = maximum;
     }
 
-    public LogLevel Minimum { get; }
-
-    public LogLevel Maximum { get; }
-
-    public bool IsEnabled(LogLevel level)
+    public LogLevel Minimum
     {
-        var sl = (sbyte)level;
-        if((sbyte)Minimum > (sbyte)level)
-        {
-            return false;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get;
+    }
 
-        if((sbyte)Maximum < sl)
-        {
-            return false;
-        }
-
-        return true;
+    public LogLevel Maximum
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get;
     }
 }

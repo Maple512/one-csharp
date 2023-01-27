@@ -1,7 +1,7 @@
 namespace OneI.Logable;
 
-using System;
-using OneI.Logable.Configurations;
+using Configurations;
+using OneI.Logable.Templatizations;
 
 public partial class LoggerConfiguration
 {
@@ -16,22 +16,14 @@ public partial class LoggerConfiguration
 
         public ILoggerConfiguration Default(string template)
         {
-            _parent._defaultTemplate = template;
+            _parent._defaultTemplate = template.AsMemory();
 
             return _parent;
         }
 
-        public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, string template)
+        public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, scoped ReadOnlySpan<char> template)
         {
-            _parent._templateTokens.Add(context =>
-            {
-                if(condition(context))
-                {
-                    return template;
-                }
-
-                return null;
-            });
+            _parent._templateTokens.Add(new TemplateProvider(condition, template));
 
             return _parent;
         }

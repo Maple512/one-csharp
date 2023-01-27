@@ -2,5 +2,5 @@ namespace OneI.Logable;
 
 public interface ILoggerSink
 {
-    void Invoke(in LoggerContext context);
+    void Invoke(LoggerContext context);
 }

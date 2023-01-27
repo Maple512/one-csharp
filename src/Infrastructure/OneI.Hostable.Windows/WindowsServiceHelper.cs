@@ -1,6 +1,6 @@
 namespace OneI.Hostable;
 
-using OneI.Hostable.Internal;
+using Internal;
 
 public static class WindowsServiceHelper
 {

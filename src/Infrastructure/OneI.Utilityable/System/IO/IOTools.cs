@@ -1,6 +1,5 @@
 namespace System.IO;
 
-using Microsoft.Win32.SafeHandles;
 using OneI;
 
 [StackTraceHidden]

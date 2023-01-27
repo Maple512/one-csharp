@@ -1,5 +1,5 @@
-// This file defines an internal static class used to throw exceptions in BCL code.
-// The main purpose is to reduce code size.
+// This file defines an internal static class used to throw exceptions (BCL code.
+// The ma(purpose is to reduce code size.
 //
 // The old way to throw an exception generates quite a lot IL code and assembly code.
 // Following is an example:
@@ -32,17 +32,11 @@
 
 namespace System;
 #if NET
-using System.Buffers;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices;
-using System.Runtime.Intrinsics;
-using System.Runtime.Serialization;
+using Buffers;
+using Numerics;
+using Runtime.ExceptionServices;
+using Runtime.Intrinsics;
+using Runtime.Serialization;
 
 /// <summary>
 /// source <see href="https://github.com/dotnet/runtime/blob/6009a1064ccfc2bd9aeb96c9247b60cf6352198d/src/libraries/System.Private.CoreLib/src/System/ThrowHelper.cs"/>
@@ -193,7 +187,7 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRange_BadYearMonthDay()
     {
-        throw new ArgumentOutOfRangeException(null, $"Year, Month, and Day parameters describe an un-representable DateTime.");
+        throw new ArgumentOutOfRangeException(null, "Year, Month, and Day parameters describe an un-representable DateTime.");
     }
 
     [DoesNotReturn]
@@ -529,7 +523,7 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRangeException_SymbolDoesNotFit()
     {
-        throw new ArgumentOutOfRangeException("symbol", $"Format specifier was invalid.");
+        throw new ArgumentOutOfRangeException("symbol", "Format specifier was invalid.");
     }
 
     /// <summary>
@@ -540,13 +534,13 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRangeException_NeedNonNegNum(string paramName)
     {
-        throw new ArgumentOutOfRangeException(paramName, $"Non-negative number required.");
+        throw new ArgumentOutOfRangeException(paramName, "Non-negative number required.");
     }
 
     [DoesNotReturn]
     internal static void ArgumentOutOfRangeException_Enum_Value()
     {
-        throw new ArgumentOutOfRangeException("value", $"Enum value was out of legal range.");
+        throw new ArgumentOutOfRangeException("value", "Enum value was out of legal range.");
     }
 
     [DoesNotReturn]
@@ -571,13 +565,13 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowFormatInvalidString()
     {
-        throw new FormatException($"Input string was not in a correct format.");
+        throw new FormatException("Input string was not in a correct format.");
     }
 
     [DoesNotReturn]
     internal static void ThrowFormatIndexOutOfRange()
     {
-        throw new FormatException($"Index (zero based) must be greater than or equal to zero and less than the size of the argument list.");
+        throw new FormatException("Index (zero based) must be greater than or equal to zero and less than the size of the argument list.");
     }
 
     private static Exception GetArraySegmentCtorValidationFailedException(Array? array, int offset, int count)
@@ -639,7 +633,7 @@ internal static class ThrowHelper
 
     private static ArgumentOutOfRangeException GetArgumentOutOfRangeException(ExceptionArgument argument, int paramNumber, ExceptionResource resource)
     {
-        return new ArgumentOutOfRangeException(GetArgumentName(argument) + "[" + paramNumber.ToString() + "]", GetResourceString(resource));
+        return new ArgumentOutOfRangeException(GetArgumentName(argument) + "[" + paramNumber + "]", GetResourceString(resource));
     }
 
     private static InvalidOperationException GetInvalidOperationException_EnumCurrent(int index)
@@ -657,7 +651,7 @@ internal static class ThrowHelper
     internal static void IfNullAndNullsAreIllegalThenThrow<T>(object? value, ExceptionArgument argName)
     {
         // Note that default(T) is not equal to null for value types except when T is Nullable<U>.
-        if(!(default(T) == null) && value == null)
+        if(default(T) != null && value == null)
         {
             ThrowArgumentNullException(argName);
         }

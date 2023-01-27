@@ -1,9 +1,6 @@
 namespace OneI.Logable.Internal;
 
-using System;
 using System.Buffers;
-using System.Text;
-using DotNext;
 using Microsoft.Win32.SafeHandles;
 
 internal class FileWriter : TextWriter
@@ -12,10 +9,11 @@ internal class FileWriter : TextWriter
     private long _position;
     private readonly Encoding _encoding;
 
-    public FileWriter(SafeFileHandle file, Encoding encoding)
+    public FileWriter(SafeFileHandle file, Encoding encoding, long position = 0)
     {
         _file = file;
         _encoding = encoding;
+        _position = position;
     }
 
     public override Encoding Encoding => _encoding;
@@ -168,6 +166,8 @@ internal class FileWriter : TextWriter
 
     internal void ResetNewFile(SafeFileHandle file)
     {
+        _file.Dispose();
+        _file = default!;
         _file = file;
         _position = 0;
     }

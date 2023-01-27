@@ -1,21 +1,16 @@
 namespace OneI.Text;
 
-using System;
-using System.Buffers;
-
 /// <summary>
 /// source: <see href="https://github.com/dotnet/runtime/blob/6009a1064ccfc2bd9aeb96c9247b60cf6352198d/src/libraries/Common/src/System/Text/ValueStringBuilder.cs"/>
 /// </summary>
 public partial struct ValueStringBuilder
 {
-    private char[]? _arrayToReturnToPool;
-    private Memory<char> _chars;
     private int _pos;
+    private Memory<char> _chars;
 
     public ValueStringBuilder(int initialCapacity)
     {
-        _arrayToReturnToPool = ArrayPool<char>.Shared.Rent(initialCapacity);
-        _chars = _arrayToReturnToPool;
+        _chars = new char[initialCapacity];
         _pos = 0;
     }
 
@@ -44,43 +39,20 @@ public partial struct ValueStringBuilder
         }
     }
 
-    public ref char this[int index]
-    {
-        get
-        {
-            Debug.Assert(index < _pos);
-
-            return ref _chars.Span[index];
-        }
-    }
-
     public override string ToString()
     {
-        var s = _chars[.._pos].ToString();
+        var result = new string(_chars.ToArray());
+
         Dispose();
-        return s;
+
+        return result;
     }
 
     /// <summary>Returns the underlying storage of the builder.</summary>
     public Span<char> RawChars => _chars.Span;
 
-    public bool TryCopyTo(Memory<char> destination, out int charsWritten)
-    {
-        if(_chars[.._pos].TryCopyTo(destination))
-        {
-            charsWritten = _pos;
-            Dispose();
-            return true;
-        }
-        else
-        {
-            charsWritten = 0;
-            Dispose();
-            return false;
-        }
-    }
-
     #region Insert
+
     public void Insert(int index, char value, int count)
     {
         if(_pos > _chars.Length - count)
@@ -89,8 +61,8 @@ public partial struct ValueStringBuilder
         }
 
         var remaining = _pos - index;
-        _chars.Slice(index, remaining).CopyTo(_chars[(index + count)..]);
-        _chars.Slice(index, count).Span.Fill(value);
+        _chars[index..remaining].CopyTo(_chars[(index + count)..]);
+        _chars.Span[index..count].Fill(value);
         _pos += count;
     }
 
@@ -109,13 +81,17 @@ public partial struct ValueStringBuilder
         }
 
         var remaining = _pos - index;
-        _chars.Slice(index, remaining).CopyTo(_chars[(index + count)..]);
+
+        _chars[index..remaining].CopyTo(_chars[(index + count)..]);
+
         s.CopyTo(_chars[index..].Span);
+
         _pos += count;
     }
     #endregion Insert End
 
     #region Append
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Append(char c)
     {
@@ -129,6 +105,11 @@ public partial struct ValueStringBuilder
         {
             GrowAndAppend(c);
         }
+    }
+
+    public void Append(char[] buffer, int index, int count)
+    {
+        Append(buffer[index..count]);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -157,15 +138,16 @@ public partial struct ValueStringBuilder
         Insert(_pos, c, count);
     }
 
-    public void Append(scoped in ReadOnlySpan<char> value)
+    public void Append(scoped ReadOnlySpan<char> value)
     {
         var pos = _pos;
+
         if(pos > _chars.Length - value.Length)
         {
             Grow(value.Length);
         }
 
-        value.CopyTo(_chars[_pos..].Span);
+        value.CopyTo(_chars.Span[_pos..]);
 
         _pos += value.Length;
     }
@@ -173,7 +155,7 @@ public partial struct ValueStringBuilder
     public void Append<T>(T value, string? format = null, IFormatProvider? provider = null)
         where T : ISpanFormattable
     {
-        if(value.TryFormat(_chars[_pos..].Span, out var charsWritten, format, provider))
+        if(value.TryFormat(_chars.Span[_pos..], out var charsWritten, format, provider))
         {
             _pos += charsWritten;
         }
@@ -181,6 +163,26 @@ public partial struct ValueStringBuilder
         {
             Append(value.ToString(format, provider));
         }
+    }
+
+    public void Append(StringBuilder? value)
+        => Append(value, 0, value?.Length ?? 0);
+
+    public void Append(StringBuilder? value, int startIndex, int count)
+    {
+        if(value is null)
+        {
+            throw new ArgumentNullException(nameof(value));
+        }
+
+        var newLength = Length + count;
+
+        if((uint)newLength > SharedConstants.ArrayMaxLength)
+        {
+            throw new ArgumentOutOfRangeException(nameof(Capacity), "Capacity exceeds maximum capacity.");
+        }
+
+        value.CopyTo(startIndex, _chars.Span, count);
     }
 
     public void AppendLine() => Append(Environment.NewLine);
@@ -200,7 +202,7 @@ public partial struct ValueStringBuilder
             Grow(s.Length);
         }
 
-        s.CopyTo(_chars[pos..].Span);
+        s.CopyTo(_chars.Span[pos..]);
 
         _pos += s.Length;
     }
@@ -227,37 +229,24 @@ public partial struct ValueStringBuilder
         Debug.Assert(additionalCapacityBeyondPos > 0);
         Debug.Assert(_pos > _chars.Length - additionalCapacityBeyondPos, "Grow called incorrectly, no resize is needed.");
 
-        const uint ArrayMaxLength = 0x7FFFFFC7; // same as Array.MaxLength
-
         // Increase to at least the required size (_pos + additionalCapacityBeyondPos), but try
         // to double the size if possible, bounding the doubling to not go beyond the max array length.
         var newCapacity = (int)Math.Max(
             (uint)(_pos + additionalCapacityBeyondPos),
-            Math.Min((uint)_chars.Length * 2, ArrayMaxLength));
+            Math.Min((uint)_chars.Length * 2, SharedConstants.ArrayMaxLength));
 
-        // Make sure to let Rent throw an exception if the caller has a bug and the desired capacity is negative.
-        // This could also go negative if the actual required length wraps around.
-        var poolArray = ArrayPool<char>.Shared.Rent(newCapacity);
+        var poolArray = new char[newCapacity];
 
-        _chars[.._pos].CopyTo(poolArray);
+        _chars.Span[.._pos].CopyTo(poolArray);
 
-        var toReturn = _arrayToReturnToPool;
-        _chars = _arrayToReturnToPool = poolArray;
-        if(toReturn != null)
-        {
-            ArrayPool<char>.Shared.Return(toReturn);
-        }
+        _chars = poolArray;
     }
+
     #endregion
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose()
     {
-        var toReturn = _arrayToReturnToPool;
         this = default; // for safety, to avoid using pooled array if this instance is erroneously appended to again
-        if(toReturn != null)
-        {
-            ArrayPool<char>.Shared.Return(toReturn);
-        }
     }
 }

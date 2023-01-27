@@ -1,6 +1,5 @@
 namespace System.Collections.Generic;
 
-using System.Linq;
 using OneI;
 
 /// <summary>
@@ -10,7 +9,7 @@ using OneI;
 [StackTraceHidden]
 #endif
 [DebuggerStepThrough]
-internal static partial class CollectionExtensions
+internal static class CollectionExtensions
 {
     /// <summary>
     /// Adds the if not contains.

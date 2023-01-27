@@ -1,8 +1,8 @@
 namespace OneI.Logable.Templatizations;
 
-using OneI.Logable.Templatizations.Tokenizations;
+using Tokenizations;
 
 public interface ITemplateSelector
 {
-    List<ITemplateToken> Select(in LoggerMessageContext context);
+    IReadOnlyList<ITemplateToken> Select(LoggerMessageContext context);
 }

@@ -1,7 +1,5 @@
 namespace OneI.Text;
 
-using System.Numerics;
-
 public class ValueStringBulder_Test
 {
     [Fact]
@@ -16,7 +14,7 @@ public class ValueStringBulder_Test
     {
         var builder = new ValueStringBuilder(256);
 
-        builder.AppendFormat("{0}", (object)"Maple512");
+        builder.AppendFormat("{0}", "Maple512");
 
         builder.ToString().ShouldBe("");
     }
@@ -36,7 +34,7 @@ public class ValueStringBulder_Test
     {
         var builder = new ValueStringBuilder(256);
 
-        builder.AppendFormat("{0}", (object)123);
+        builder.AppendFormat("{0}", 123);
 
         var a = builder.ToString();
 

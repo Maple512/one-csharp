@@ -11,7 +11,7 @@ public static class Clock
     {
         if(_provider != null)
         {
-            throw new Exception($"The initialize method can only be called once.");
+            throw new Exception("The initialize method can only be called once.");
         }
 
         _provider = Check.NotNull(provider);

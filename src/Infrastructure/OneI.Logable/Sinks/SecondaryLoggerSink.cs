@@ -1,7 +1,5 @@
 namespace OneI.Logable.Sinks;
 
-using System.Threading.Tasks;
-
 public class SecondaryLoggerSink : ILoggerSink, IDisposable, IAsyncDisposable
 {
     private readonly ILogger _secondaryLogger;
@@ -13,14 +11,14 @@ public class SecondaryLoggerSink : ILoggerSink, IDisposable, IAsyncDisposable
         _autoDispose = autoDispose;
     }
 
-    public void Invoke(in LoggerContext context)
+    public void Invoke(LoggerContext context)
     {
         _secondaryLogger.Write(context.MessageContext);
     }
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+
 
         if(_autoDispose && _secondaryLogger is IDisposable d)
         {
@@ -32,7 +30,7 @@ public class SecondaryLoggerSink : ILoggerSink, IDisposable, IAsyncDisposable
     {
         if(_autoDispose && _secondaryLogger is IAsyncDisposable ad)
         {
-            GC.SuppressFinalize(this);
+
 
             await ad.DisposeAsync();
             return;

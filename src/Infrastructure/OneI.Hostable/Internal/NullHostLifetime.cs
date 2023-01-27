@@ -1,8 +1,5 @@
 namespace OneI.Hostable.Internal;
 
-using System.Threading;
-using System.Threading.Tasks;
-
 public class NullHostLifetime : IHostLifetime
 {
     public Task StartAsync(CancellationToken cancellationToken)

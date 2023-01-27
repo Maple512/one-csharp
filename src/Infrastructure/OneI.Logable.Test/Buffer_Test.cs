@@ -1,7 +1,6 @@
 namespace OneI.Logable;
 
 using System.Buffers;
-using System.Text;
 using DotNext.Buffers;
 
 public class Buffer_Test

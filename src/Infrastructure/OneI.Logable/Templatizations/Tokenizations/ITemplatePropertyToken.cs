@@ -1,7 +1,5 @@
 namespace OneI.Logable.Templatizations.Tokenizations;
 
-using OneI.Logable.Rendering;
-
 public interface ITemplatePropertyToken : ITemplateToken
 {
     PropertyTokenType Type { get; }
@@ -11,4 +9,6 @@ public interface ITemplatePropertyToken : ITemplateToken
     TextAlignment? Alignment { get; }
 
     int? Indent { get; }
+
+    void ResetIndex(int index);
 }

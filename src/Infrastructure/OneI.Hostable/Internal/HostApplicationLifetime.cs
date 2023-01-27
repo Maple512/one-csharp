@@ -1,8 +1,7 @@
 namespace OneI.Hostable.Internal;
 
-using System.Threading;
 using Microsoft.Extensions.Logging;
-using static OneI.Hostable.HostableConstants;
+using static HostableConstants;
 
 public class HostApplicationLifetime : IHostApplicationLifetime
 {

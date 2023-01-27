@@ -1,13 +1,13 @@
 namespace OneI.Logable.Templatizations;
 
 using System.Globalization;
-using OneI.Logable.Templatizations.Tokenizations;
+using Tokenizations;
 using static TemplateConstants.Formatters;
 using static TemplateConstants.Property;
 
 public static class TemplateParser
 {
-    public static List<ITemplateToken> Parse(scoped in ReadOnlySpan<char> text)
+    public static List<ITemplateToken> Parse(scoped ReadOnlySpan<char> text)
     {
 
         if(text.IsEmpty)
@@ -59,25 +59,22 @@ public static class TemplateParser
 
             var property = remainder[start..close];
 
-            if(TryParseProperty(ref index, ref property, ref propertyCount, out var token))
+            if(TryParseProperty(property, propertyCount, out var token))
             {
-
                 textEnd = index + open;
                 index += close + 1;
-
-                result.Add(token);
-
                 propertyCount++;
 
                 if(textStart != textEnd)
                 {
                     var textToken = text[textStart..textEnd];
 
-                    result.Insert(result.Count - 1, new TextToken(textStart, textToken.ToString()));
+                    result.Add(new TextToken(result.Count, textToken.ToString()));
                 }
 
                 textStart = index;
-
+                token.ResetIndex(result.Count);
+                result.Add(token);
             }
         }
 
@@ -85,17 +82,16 @@ public static class TemplateParser
         {
             var textToken = text[textStart..textEnd];
 
-            result.Add(new TextToken(textStart, textToken.ToString()));
+            result.Add(new TextToken(result.Count, textToken.ToString()));
         }
 
         return result;
     }
 
     private static bool TryParseProperty(
-        ref int position,
-        ref ReadOnlySpan<char> text,
-        ref int index,
-       [NotNullWhen(true)] out ITemplateToken? token)
+        ReadOnlySpan<char> text,
+        int index,
+        [NotNullWhen(true)] out ITemplatePropertyToken? token)
     {
         token = null;
 
@@ -242,11 +238,11 @@ public static class TemplateParser
 
         if(parameterIndex != null)
         {
-            token = new IndexerPropertyToken(parameterIndex.Value, type, format.ToString(), index, align, indent);
+            token = new IndexerPropertyToken(parameterIndex.Value, type, format.ToString(), 0, align, indent);
         }
         else
         {
-            token = new NamedPropertyToken(name.ToString(), type, format.ToString(), index, align, indent);
+            token = new NamedPropertyToken(name.ToString(), type, format.ToString(), 0, align, indent);
         }
 
         return true;
@@ -280,7 +276,7 @@ public static class TemplateParser
             if(char.IsLetterOrDigit(c) // 字母或数字
                 || char.IsPunctuation(c) // 标点符号
                 || char.IsWhiteSpace(c) // 空格
-                || char.IsSymbol(c)) // 字符 
+                || char.IsSymbol(c)) // 字符
             {
                 continue;
             }

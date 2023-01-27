@@ -12,7 +12,7 @@ public static class InternalLog
 
     public static void Initialize(TextWriter writer)
     {
-        _writer = (string message) =>
+        _writer = message =>
         {
             writer.Write(message);
 
@@ -20,7 +20,7 @@ public static class InternalLog
         };
     }
 
-    public static void Write(in string message)
+    public static void Write(string message)
     {
         _writer?.Invoke(message);
     }
@@ -30,7 +30,7 @@ public static class InternalLog
         _writer?.Invoke(Environment.NewLine);
     }
 
-    public static void WriteLine(in string message)
+    public static void WriteLine(string message)
     {
         _writer?.Invoke(message);
         _writer?.Invoke(Environment.NewLine);

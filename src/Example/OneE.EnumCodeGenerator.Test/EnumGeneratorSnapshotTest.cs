@@ -1,9 +1,7 @@
 namespace OneE.EnumCodeGenerator.Test;
 
-using System.Threading.Tasks;
 using OneT.CodeGenerator;
-using VerifyXunit;
-using Xunit;
+
 /// <summary>
 /// The enum generator snapshot test.
 /// </summary>

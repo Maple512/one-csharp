@@ -1,7 +1,7 @@
 namespace OneI.Logable.Templatizations;
 
 using System.Globalization;
-using OneI.Logable.Templatizations.Tokenizations;
+using Tokenizations;
 
 public static class TemplateRenderHelper
 {

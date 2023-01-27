@@ -2,30 +2,24 @@ namespace OneI.Utilityable;
 
 using System.Buffers;
 using DotNext.Buffers;
-using OneI.Text;
+using Text;
 
 public class StringBuilderBenchmark
 {
-    private const string StringValue = "1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz";
-
     public const int count = 50;
-    public const int capacity = GlobalConstants.StringFormatMinimumLength;
 
-    public void Validate()
-    {
-        var result = UseStringBuilder();
+    [Params(50, 10000)]
+    public int stringCount;
 
-        IValidator.AreEquals(UseList(), result, StringComparer.OrdinalIgnoreCase);
-        IValidator.AreEquals(UseValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
-        IValidator.AreEquals(UseRefValueStringBuilder(), result, StringComparer.OrdinalIgnoreCase);
-        IValidator.AreEquals(UsePooledArrayBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
-        IValidator.AreEquals(UseSparseBufferWriter(), result, StringComparer.OrdinalIgnoreCase);
-        IValidator.AreEquals(UseBufferWriterSlim(), result, StringComparer.OrdinalIgnoreCase);
-    }
+    [Params(50, 10000)]
+    public int capacity;
 
+    // 2
     [Benchmark(Baseline = true)]
     public string UseStringBuilder()
     {
+        var StringValue = Randomizer.String(stringCount);
+
         var writer = new StringBuilder(capacity);
         try
         {
@@ -44,9 +38,11 @@ public class StringBuilderBenchmark
         }
     }
 
+    //4
     [Benchmark]
     public string UseList()
     {
+        var StringValue = Randomizer.String(stringCount);
         var builder = new List<string>();
 
         for(var i = 0; i < count; i++)
@@ -55,12 +51,14 @@ public class StringBuilderBenchmark
             builder.Add(Environment.NewLine);
         }
 
-        return string.Join(null, builder);
+        return string.Concat(builder);
     }
 
+    // 2
     [Benchmark]
     public string UseValueStringBuilder()
     {
+        var StringValue = Randomizer.String(stringCount);
         var builder = new ValueStringBuilder(capacity);
 
         for(var i = 0; i < count; i++)
@@ -71,10 +69,11 @@ public class StringBuilderBenchmark
 
         return builder.ToString();
     }
-
+    // 1
     [Benchmark]
     public string UseRefValueStringBuilder()
     {
+        var StringValue = Randomizer.String(stringCount);
         using scoped var builder = new RefValueStringBuilder(capacity);
 
         for(var i = 0; i < count; i++)
@@ -86,10 +85,12 @@ public class StringBuilderBenchmark
         return builder.ToString();
     }
 
+    //2
     [Benchmark]
     public string UsePooledArrayBufferWriter()
     {
-        using var writer = new PooledArrayBufferWriter<char>()
+        var StringValue = Randomizer.String(stringCount);
+        using var writer = new PooledArrayBufferWriter<char>
         {
             Capacity = capacity
         };
@@ -103,9 +104,11 @@ public class StringBuilderBenchmark
         return writer.ToString();
     }
 
+    // 5
     [Benchmark]
     public string UseSparseBufferWriter()
     {
+        var StringValue = Randomizer.String(stringCount);
         using var writer = new SparseBufferWriter<char>(capacity);
         for(var i = 0; i < count; i++)
         {
@@ -115,10 +118,11 @@ public class StringBuilderBenchmark
 
         return writer.ToString();
     }
-
+    //3
     [Benchmark]
     public string UseBufferWriterSlim()
     {
+        var StringValue = Randomizer.String(stringCount);
         var writer = new BufferWriterSlim<char>(capacity);
         try
         {

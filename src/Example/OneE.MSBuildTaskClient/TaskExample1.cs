@@ -85,34 +85,24 @@ namespace OneE.MSBuildTaskClient
         {
             try
             {
-                // So far only few types are supported values.
-                if("string".Equals(type))
+                switch(type)
                 {
-                    return (true, value);
+                    // So far only few types are supported values.
+                    case "string":
+                        return (true, value);
+                    case "int":
+                        return (true, int.Parse(value));
+                    case "long":
+                        return (true, long.Parse(value));
+                    case "guid":
+                        return (true, Guid.Parse(value));
+                    case "bool":
+                        return (true, bool.Parse(value));
+                    default:
+                        Log.LogError($"Type not supported -> {type}");
+                        return (false, null);
                 }
 
-                if("int".Equals(type))
-                {
-                    return (true, int.Parse(value));
-                }
-
-                if("long".Equals(type))
-                {
-                    return (true, long.Parse(value));
-                }
-
-                if("guid".Equals(type))
-                {
-                    return (true, Guid.Parse(value));
-                }
-
-                if("bool".Equals(type))
-                {
-                    return (true, bool.Parse(value));
-                }
-
-                Log.LogError($"Type not supported -> {type}");
-                return (false, null);
             }
             catch
             {
@@ -156,47 +146,34 @@ namespace OneE.MSBuildTaskClient
 
         private string GetTypeString(string typeName)
         {
-            if("String".Equals(typeName))
+            switch(typeName)
             {
-                return "string";
+                case "String":
+                    return "string";
+                case "Boolean":
+                    return "bool";
+                case "Int32":
+                    return "int";
+                case "Int64":
+                    return "long";
+                default:
+                    return typeName;
             }
-
-            if("Boolean".Equals(typeName))
-            {
-                return "bool";
-            }
-
-            if("Int32".Equals(typeName))
-            {
-                return "int";
-            }
-
-            if("Int64".Equals(typeName))
-            {
-                return "long";
-            }
-
-            return typeName;
         }
 
         private static object GetValueString(KeyValuePair<string, object> keyValuePair, string typeName)
         {
-            if("Guid".Equals(typeName))
+            switch(typeName)
             {
-                return $"Guid.Parse(\"{keyValuePair.Value}\")";
+                case "Guid":
+                    return $"Guid.Parse(\"{keyValuePair.Value}\")";
+                case "string":
+                    return $"\"{keyValuePair.Value}\"";
+                case "bool":
+                    return $"{keyValuePair.Value.ToString().ToLower()}";
+                default:
+                    return keyValuePair.Value;
             }
-
-            if("string".Equals(typeName))
-            {
-                return $"\"{keyValuePair.Value}\"";
-            }
-
-            if("bool".Equals(typeName))
-            {
-                return $"{keyValuePair.Value.ToString().ToLower()}";
-            }
-
-            return keyValuePair.Value;
         }
     }
 }

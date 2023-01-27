@@ -1,7 +1,6 @@
 namespace OneI.Logable;
 
-using System.Text;
-using OneI.Logable.Definitions;
+using Definitions;
 
 internal static partial class CodePrinter
 {
@@ -59,18 +58,18 @@ internal static partial class CodePrinter
 
     private static void BuildEnumerable(IndentedStringBuilder builder)
     {
-        builder.AppendLine($"var array = new global::OneI.Logable.Templatizations.EnumerableValue();");
+        builder.AppendLine("var array = new global::OneI.Logable.Templatizations.EnumerableValue();");
         builder.AppendLine();
-        builder.AppendLine($"foreach(var item in arg)");
+        builder.AppendLine("foreach(var item in arg)");
         builder.AppendLine("{");
         using(var _ = builder.Indent())
         {
-            builder.AppendLine($"array.Add(Create(item));");
+            builder.AppendLine("array.Add(Create(item));");
         }
 
         builder.AppendLine("}");
         builder.AppendLine();
-        builder.AppendLine($"return array;");
+        builder.AppendLine("return array;");
     }
 
     private static void BuildObject(IndentedStringBuilder builder, TypeDef type)
@@ -80,7 +79,7 @@ internal static partial class CodePrinter
             return;
         }
 
-        builder.AppendLine($"var value = new global::OneI.Logable.Templatizations.ObjectValue();");
+        builder.AppendLine("var value = new global::OneI.Logable.Templatizations.ObjectValue();");
         builder.AppendLine();
 
         for(var i = 0; i < type.Properties.Count; i++)
@@ -91,7 +90,7 @@ internal static partial class CodePrinter
         }
 
         builder.AppendLine();
-        builder.AppendLine($"return value;");
+        builder.AppendLine("return value;");
     }
 
     private static void BuildValueTuple(IndentedStringBuilder builder, TypeDef type)
@@ -101,7 +100,7 @@ internal static partial class CodePrinter
             return;
         }
 
-        builder.AppendLine($"var value = new global::OneI.Logable.Templatizations.ObjectValue();");
+        builder.AppendLine("var value = new global::OneI.Logable.Templatizations.ObjectValue();");
         builder.AppendLine();
 
         for(var i = 0; i < type.Properties.Count; i++)
@@ -112,7 +111,7 @@ internal static partial class CodePrinter
         }
 
         builder.AppendLine();
-        builder.AppendLine($"return value;");
+        builder.AppendLine("return value;");
     }
 
     public static void BuildNullable(IndentedStringBuilder builder, TypeDef type)
@@ -131,17 +130,17 @@ internal static partial class CodePrinter
 
     public static void BuildDictionary(IndentedStringBuilder builder, TypeDef type)
     {
-        builder.AppendLine($"var dictionary = new global::OneI.Logable.Templatizations.DictionaryValue();");
+        builder.AppendLine("var dictionary = new global::OneI.Logable.Templatizations.DictionaryValue();");
         builder.AppendLine();
-        builder.AppendLine($"foreach(var item in arg)");
+        builder.AppendLine("foreach(var item in arg)");
         builder.AppendLine("{");
         using(var _ = builder.Indent())
         {
-            builder.AppendLine($"dictionary.Add(Create(item.Key), Create(item.Value));");
+            builder.AppendLine("dictionary.Add(Create(item.Key), Create(item.Value));");
         }
 
         builder.AppendLine("}");
         builder.AppendLine();
-        builder.AppendLine($"return dictionary;");
+        builder.AppendLine("return dictionary;");
     }
 }

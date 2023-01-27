@@ -1,9 +1,7 @@
 namespace System.Diagnostics;
 
-using System;
-using System.Collections.Generic;
-using System.Text;
 using OneI;
+
 /// <summary>
 /// The process parameter.
 /// </summary>

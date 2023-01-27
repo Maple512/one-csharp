@@ -1,7 +1,7 @@
 namespace OneI.Logable.Templating;
 
-using OneI.Logable.Templatizations;
-using OneI.Logable.Templatizations.Tokenizations;
+using Templatizations;
+using Templatizations.Tokenizations;
 
 public class TemplateParser_Test
 {

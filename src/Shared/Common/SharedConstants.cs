@@ -2,6 +2,9 @@ namespace OneI;
 
 internal static partial class SharedConstants
 {
+    public const int ArrayMaxLength = 0X7FFFFFC7;
+    public const int StringFormatMinimumLength = 256;
+
     public const string DEBUG = nameof(DEBUG);
 
     public static class OSPlatformName

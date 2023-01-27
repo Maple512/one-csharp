@@ -1,8 +1,8 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Rendering;
-using OneI.Logable.Templatizations;
-using OneI.Logable.Templatizations.Tokenizations;
+using Rendering;
+using Templatizations;
+using Templatizations.Tokenizations;
 
 public class LogFileOptions
 {
@@ -17,17 +17,17 @@ public class LogFileOptions
 
     public IReadOnlyList<ITemplateToken> Tokens { get; }
 
-    public IFormatProvider? FormatProvider { get; init; }
+    public IFormatProvider? FormatProvider { get; set; }
 
     /// <summary>
-    /// 文件最大长度
+    /// 文件最大长度（单位：字节）
     /// </summary>
-    public long? SizeLimit { get; init; }
+    public ulong SizeLimit { get; set; } = 0;
 
     /// <summary>
     /// 文件编码
     /// </summary>
-    public Encoding Encoding { get; init; } = Encoding.UTF8;
+    public Encoding Encoding { get; set; } = Encoding.UTF8;
 
     /// <summary>
     /// 文件滚动周期，默认：<see cref="RollFrequency.Hour"/>
@@ -37,12 +37,17 @@ public class LogFileOptions
     /// <summary>
     /// 数量限制
     /// </summary>
-    public int? CountLimit { get; set; }
+    public uint CountLimit { get; set; } = 1;
 
     /// <summary>
-    /// 时间限制
+    /// 文件过期时间
     /// </summary>
-    public TimeSpan? ExpiredTime { get; set; }
+    public TimeSpan ExpiredTime { get; set; }
+
+    /// <summary>
+    /// 用于缓冲的缓冲区 FileStream 的大小。 默认缓冲区大小为 4096。 0 或 1 表示应禁用缓冲。 不允许负值
+    /// </summary>
+    public uint BufferSize { get; set; } = 4096;
 
     /// <summary>
     /// 日志文本渲染器
@@ -50,6 +55,6 @@ public class LogFileOptions
     public ILoggerRenderer Renderer
     {
         get => _renderer ?? new LoggerRenderer(FormatProvider);
-        init => _renderer = value;
+        set => _renderer = value;
     }
 }

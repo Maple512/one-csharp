@@ -1,6 +1,5 @@
 namespace System.Linq;
 
-using System.Collections.Generic;
 using OneI;
 
 /// <summary>
@@ -96,7 +95,7 @@ internal static partial class EnumerableExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool NotNullOrEmpty<T>([NotNullWhen(true)] this IEnumerable<T>? source)
     {
-        return source != null && source.Any() == true;
+        return source != null && source.Any();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -110,14 +109,12 @@ internal static partial class EnumerableExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int GetCount<T>(this IEnumerable<T> source)
     {
-        if(source is ICollection collection)
+        switch(source)
         {
-            return collection.Count;
-        }
-
-        if(source is ICollection<T> c)
-        {
-            return c.Count;
+            case ICollection collection:
+                return collection.Count;
+            case ICollection<T> c:
+                return c.Count;
         }
 
         if(source.TryGetNonEnumeratedCount(out var count))

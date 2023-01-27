@@ -1,7 +1,5 @@
 namespace OneI.Logable.Templatizations.Tokenizations;
 
-using OneI.Logable.Rendering;
-
 public class IndexerPropertyToken : ITemplatePropertyToken
 {
     public IndexerPropertyToken(
@@ -30,7 +28,12 @@ public class IndexerPropertyToken : ITemplatePropertyToken
 
     public int? Indent { get; }
 
-    public int Index { get; }
+    public int Index { get; private set; }
+
+    public void ResetIndex(int index)
+    {
+        Index = index;
+    }
 
     public override int GetHashCode() => HashCode.Combine(ParameterIndex, Type, Format, Alignment, Indent, Index);
 

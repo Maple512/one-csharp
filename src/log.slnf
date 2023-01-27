@@ -7,6 +7,7 @@
       "Infrastructure\\OneI.Logable.CodeGenerator\\OneI.Logable.CodeGenerator.csproj",
       "Infrastructure\\OneI.Logable.Extensions\\OneI.Logable.Extensions.csproj",
       "Infrastructure\\OneI.Logable.File\\OneI.Logable.File.csproj",
+      "Infrastructure\\OneI.Logable.Test.Console\\OneI.Logable.Test.Console.csproj",
       "Infrastructure\\OneI.Logable.Test\\OneI.Logable.Test.csproj",
       "Infrastructure\\OneI.Logable\\OneI.Logable.csproj"
     ]

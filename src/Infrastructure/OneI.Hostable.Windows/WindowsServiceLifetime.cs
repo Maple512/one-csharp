@@ -1,9 +1,6 @@
 namespace OneI.Hostable;
 
-using System.Runtime.Versioning;
 using System.ServiceProcess;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -41,7 +38,7 @@ public class WindowsServiceLifetime : ServiceBase, IHostLifetime
 
         _hostApplicationLifetime.Started.Register(() =>
         {
-            _logger.LogInformation($"The host started.");
+            _logger.LogInformation("The host started.");
             _logger.LogInformation($"Environment: {_environment.EnvironmentName}");
             _logger.LogInformation($"Root: {_environment.RootPath}");
         });

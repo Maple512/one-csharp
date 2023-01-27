@@ -1,8 +1,8 @@
 namespace OneI.Logable.Templatizations;
 
-using OneI.Logable.Templatizations.Tokenizations;
+using Tokenizations;
 
-public class EnumerableValue : PropertyValue
+public readonly struct EnumerableValue : ITemplatePropertyValue
 {
     private readonly List<ITemplatePropertyValue> _values;
 
@@ -13,7 +13,7 @@ public class EnumerableValue : PropertyValue
 
     public IReadOnlyList<ITemplatePropertyValue> Values => _values;
 
-    public override void Render(TextWriter writer, in PropertyTokenType type, in string? format, IFormatProvider? formatProvider)
+    public void Render(TextWriter writer, PropertyTokenType type, string? format, IFormatProvider? formatProvider)
     {
         writer.Write('[');
 
@@ -32,8 +32,17 @@ public class EnumerableValue : PropertyValue
         writer.Write(']');
     }
 
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        var writer = new StringWriter(formatProvider);
+
+        Render(writer, PropertyTokenType.None, format, formatProvider);
+
+        return writer.ToString();
+    }
+
     public void Add<T>(T value, IPropertyValueFormatter<T>? formatter = null)
     {
-        _values.Add(CreateLiteral(value, formatter));
+        _values.Add(PropertyValue.CreateLiteral(value, formatter));
     }
 }

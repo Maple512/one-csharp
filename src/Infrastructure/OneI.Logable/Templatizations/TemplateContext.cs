@@ -1,47 +1,41 @@
 namespace OneI.Logable.Templatizations;
 
-using System;
-using System.ComponentModel;
+using OneI.Logable.Formatters;
 using Tokenizations;
+using static LoggerConstants.PropertyNames;
 
-public class TemplateContext
+public static class TemplateContext
 {
-    public TemplateContext(
+    public static void Render(
+        TextWriter writer,
         IReadOnlyList<ITemplateToken> tokens,
-        IReadOnlyList<ITemplateProperty> properties)
+        LoggerMessageContext messageContext,
+        IFormatProvider? formatProvider = null)
     {
-        Tokens = tokens;
-        Properties = properties;
-    }
-
-    public IReadOnlyList<ITemplateToken> Tokens { get; }
-
-    public IReadOnlyList<ITemplateProperty> Properties { get; }
-
-    public void Render(TextWriter writer, IFormatProvider? formatProvider = null)
-    {
-        foreach(var token in Tokens)
+        foreach(var token in tokens)
         {
-            switch(token)
+            if(token is TextToken tt)
             {
-                case TextToken tt:
-                    TextRender(writer, tt);
-                    break;
-                case IndexerPropertyToken indexer:
-                    ITemplateProperty? p1 = null;
-                    if(Properties.Count > indexer.ParameterIndex)
-                    {
-                        p1 = Properties[indexer.ParameterIndex];
-                    }
+                TextRender(writer, tt);
+                continue;
+            }
 
-                    PropertyValueRender(writer, indexer, p1?.Value, formatProvider);
-                    break;
-                case NamedPropertyToken named:
-                    var p2 = Properties.OfType<NamedProperty>()
-                            .FirstOrDefault(x => x.Name.Equals(named.Name, StringComparison.OrdinalIgnoreCase));
+            ITemplatePropertyValue? value = null;
+            if(token is IndexerPropertyToken indexer)
+            {
+                if(messageContext.Properties.Length > indexer.ParameterIndex)
+                {
+                    value = messageContext.Properties[indexer.ParameterIndex].Value;
+                }
 
-                    PropertyValueRender(writer, named, p2?.Value, formatProvider);
-                    break;
+                PropertyRender(writer, (ITemplatePropertyToken)token, value, formatProvider);
+
+                continue;
+            }
+
+            if(token is NamedPropertyToken named)
+            {
+                RenderNamedProperty(writer, named, messageContext, formatProvider);
             }
         }
     }
@@ -49,7 +43,59 @@ public class TemplateContext
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void TextRender(TextWriter writer, TextToken token) => writer.Write(token.Text);
 
-    public static void PropertyValueRender(
+    private static void RenderNamedProperty(
+        TextWriter writer,
+        NamedPropertyToken token,
+        LoggerMessageContext context,
+        IFormatProvider? formatProvider)
+    {
+        if(token.Indent is not null)
+        {
+            WriteWhiteSpace(writer, token.Indent.Value);
+        }
+
+        if(token.Name == Level)
+        {
+            var level = LevelFormatHelper.Format(context.Level, token.Format);
+
+            Padding(writer, level, token.Alignment);
+        }
+        else if(token.Name == NewLine)
+        {
+            Padding(writer, Environment.NewLine, token.Alignment);
+        }
+        else if(token.Name == Exception)
+        {
+            Padding(writer, context.Exception?.ToString() ?? string.Empty, token.Alignment);
+        }
+        else
+        {
+            var w = token.Alignment.HasValue ? new StringWriter() : writer;
+
+            if(token.Name == Timestamp)
+            {
+                TemplateRenderHelper.Render(context.Timestamp, w, token.Type, token.Format, null, formatProvider);
+            }
+            else
+            {
+                if(!context.Properties.TryGetValue(token.Name, out var templatePropertyValue))
+                {
+                    writer.Write("[Null]");
+                    return;
+                }
+
+                templatePropertyValue.Render(w, token.Type, token.Format, formatProvider);
+            }
+
+            if(token.Alignment.HasValue)
+            {
+                Padding(writer, ((StringWriter)w).ToString(), token.Alignment);
+            }
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static void PropertyRender(
         TextWriter writer,
         ITemplatePropertyToken token,
         ITemplatePropertyValue? value,
@@ -66,7 +112,7 @@ public class TemplateContext
                 WriteWhiteSpace(writer, token.Indent.Value);
             }
 
-            var w2 = token.Alignment.HasValue ? new StringWriter() : writer;
+            var w = token.Alignment.HasValue ? new StringWriter() : writer;
 
             value.Render(writer, token.Type, token.Format, formatProvider);
 
@@ -74,7 +120,7 @@ public class TemplateContext
             {
                 var align = token.Alignment.Value;
 
-                var valueStr = ((StringWriter)w2).ToString();
+                var valueStr = ((StringWriter)w).ToString();
 
                 if(valueStr.Length >= align.Width)
                 {
@@ -99,28 +145,34 @@ public class TemplateContext
         }
     }
 
+    private static void Padding(TextWriter writer, string value, TextAlignment? align)
+    {
+        if(align is null || value.Length >= align.Value.Width)
+        {
+            writer.Write(value);
+            return;
+        }
+
+        var pad = align.Value.Width - value.Length;
+
+        if(align.Value.Direction == TextDirection.Left)
+        {
+            writer.Write(value);
+        }
+
+        WriteWhiteSpace(writer, pad);
+
+        if(align.Value.Direction == TextDirection.Right)
+        {
+            writer.Write(value);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     private static void WriteWhiteSpace(TextWriter writer, int length)
     {
-        Span<char> span = stackalloc char[length];
+        scoped Span<char> span = stackalloc char[length];
         span.Fill(' ');
         writer.Write(span);
-        span.Clear();
     }
-
-    public string ToString(IFormatProvider? formatProvider)
-    {
-        var writer = new StringWriter();
-
-        Render(writer, formatProvider);
-
-        return writer.ToString();
-    }
-
-    [Obsolete("Please do not use this method, it will always return 0.")]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-#pragma warning disable CS0809 // 过时成员重写未过时成员
-    public override int GetHashCode() => 0;
-#pragma warning restore CS0809 // 过时成员重写未过时成员
-
-    public override string ToString() => ToString(null);
 }

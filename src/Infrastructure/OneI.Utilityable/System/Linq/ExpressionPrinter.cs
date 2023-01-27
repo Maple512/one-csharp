@@ -1,8 +1,7 @@
 namespace System.Linq;
 
-using System.Collections;
-using System.Linq.Expressions;
-using System.Reflection;
+using Expressions;
+using Reflection;
 
 /// <summary>
 /// source: https://github.com/dotnet/efcore/blob/3a62379ec775eb8e6a6ef7334212005b80faadb7/src/EFCore/Query/ExpressionPrinter.cs

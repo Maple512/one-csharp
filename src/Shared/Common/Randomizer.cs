@@ -1,10 +1,5 @@
 namespace OneI;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
-
 #if NET
 using System.Security.Cryptography;
 using System.Text;
@@ -81,7 +76,7 @@ internal static partial class Randomizer
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-        Encoding gb2312 = Encoding.GetEncoding("gb2312");
+        var gb2312 = Encoding.GetEncoding("gb2312");
 
         var bytes = "0123456789abcdef"u8.ToArray();
 
@@ -92,7 +87,7 @@ internal static partial class Randomizer
             var r1 = Integer(11, 14);
             var b1 = bytes[r1];
 
-            //区位码第2位 
+            //区位码第2位
             int r2;
             if(r1 == 13)
             {
@@ -105,31 +100,21 @@ internal static partial class Randomizer
 
             var b2 = bytes[r2];
 
-            //区位码第3位 
+            //区位码第3位
             var r3 = Integer(10, 16);
             var b3 = bytes[r3];
-
-            //区位码第4位 
-            int r4;
-            if(r3 == 10)
+            var r4 = r3 switch
             {
-                r4 = Integer(1, 16);
-            }
-            else if(r3 == 15)
-            {
-                r4 = Integer(0, 15);
-            }
-            else
-            {
-                r4 = Integer(0, 16);
-            }
-
+                10 => Integer(1, 16),
+                15 => Integer(0, 15),
+                _ => Integer(0, 16),
+            };
             var b4 = bytes[r4];
 
-            var byte1 = Convert.ToByte(Encoding.UTF8.GetString(new byte[] { b1, b2 }), 16);
-            var byte2 = Convert.ToByte(Encoding.UTF8.GetString(new byte[] { b3, b4 }), 16);
+            var byte1 = Convert.ToByte(Encoding.UTF8.GetString(new[] { b1, b2 }), 16);
+            var byte2 = Convert.ToByte(Encoding.UTF8.GetString(new[] { b3, b4 }), 16);
 
-            var result = gb2312.GetString(new byte[] { byte1, byte2 });
+            var result = gb2312.GetString(new[] { byte1, byte2 });
 
             builder.Append(result);
         }

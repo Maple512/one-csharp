@@ -1,7 +1,6 @@
 namespace System.Text;
 
-using System.Buffers;
-using System.Runtime.InteropServices;
+using Buffers;
 
 // https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/ValueStringBuilder.cs
 public ref struct RefValueStringBuilder
@@ -129,12 +128,9 @@ public ref struct RefValueStringBuilder
             Dispose();
             return true;
         }
-        else
-        {
-            charsWritten = 0;
-            Dispose();
-            return false;
-        }
+        charsWritten = 0;
+        Dispose();
+        return false;
     }
 
     public void Insert(int index, char value, int count)

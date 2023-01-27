@@ -1,8 +1,5 @@
 namespace OneI.Logable.Fakes;
 
-using System.IO;
-using OneI.Logable;
-
 using static LoggerConstants.PropertyNames;
 
 public static class Fake

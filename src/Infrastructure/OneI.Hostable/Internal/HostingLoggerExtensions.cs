@@ -2,7 +2,7 @@ namespace OneI.Hostable.Internal;
 
 using System.Reflection;
 using Microsoft.Extensions.Logging;
-using static OneI.Hostable.HostableConstants;
+using static HostableConstants;
 
 internal static class HostingLoggerExtensions
 {

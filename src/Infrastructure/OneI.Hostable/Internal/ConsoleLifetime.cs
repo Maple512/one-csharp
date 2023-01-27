@@ -1,7 +1,5 @@
 namespace OneI.Hostable.Internal;
 
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -67,7 +65,7 @@ internal class ConsoleLifetime : IHostLifetime, IDisposable
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+
 
         UnregisterShutdownHandlers();
 

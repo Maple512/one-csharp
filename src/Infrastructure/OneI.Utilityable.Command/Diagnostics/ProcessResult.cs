@@ -1,7 +1,5 @@
 namespace System.Diagnostics;
 
-using System;
-
 public readonly struct ProcessResult
 {
     /// <summary>

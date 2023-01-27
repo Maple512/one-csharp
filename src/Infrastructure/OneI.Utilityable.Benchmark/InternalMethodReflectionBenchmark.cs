@@ -2,7 +2,7 @@ namespace OneI.Utilityable;
 
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Reflection.Metadata;
+using DotNext.Reflection;
 using Microsoft.Win32.SafeHandles;
 
 public class InternalMethodReflectionBenchmark : IValidator
@@ -23,7 +23,7 @@ public class InternalMethodReflectionBenchmark : IValidator
     [BenchmarkCategory("Call Method")]
     public MethodInfo UseDotNext_Method()
     {
-        return DotNext.Reflection.Type<string>.Method<int>.RequireStatic<string>(MethodName, true);
+        return Type<string>.Method<int>.RequireStatic<string>(MethodName, true);
     }
 
     [Benchmark]
@@ -39,7 +39,7 @@ public class InternalMethodReflectionBenchmark : IValidator
     [BenchmarkCategory("Call Field")]
     public FieldInfo UseDotNext_Field()
     {
-        var field = DotNext.Reflection.Type<SafeFileHandle>.Field<string>.Get(FieldName, true);
+        var field = Type<SafeFileHandle>.Field<string>.Get(FieldName, true);
 
         return field ?? throw new ArgumentNullException();
     }
@@ -54,7 +54,7 @@ public class InternalMethodReflectionBenchmark : IValidator
 
         var field = Expression.Field(parameter, type, FieldName);
 
-        var a = Expression.Lambda<Func<SafeFileHandle, string>>(field, new[] { parameter });
+        var a = Expression.Lambda<Func<SafeFileHandle, string>>(field, parameter);
 
         var b = ExpressionPrinter.Print(a);
 

@@ -86,10 +86,8 @@ internal readonly struct Index : IEquatable<Index>
             {
                 return ~_value;
             }
-            else
-            {
-                return _value;
-            }
+
+            return _value;
         }
     }
 
@@ -153,7 +151,7 @@ internal readonly struct Index : IEquatable<Index>
         return '^' + Value.ToString();
     }
 
-    static void ThrowValueArgumentOutOfRange_NeedNonNegNumException()
+    private static void ThrowValueArgumentOutOfRange_NeedNonNegNumException()
     {
         throw new ArgumentOutOfRangeException("value", "Non-negative number required.");
     }

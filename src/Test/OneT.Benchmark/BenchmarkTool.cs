@@ -19,16 +19,16 @@ public static class BenchmarkTool
         .AddAnalyser(DefaultConfig.Instance.GetAnalysers().ToArray())
         .AddValidator(DefaultConfig.Instance.GetValidators().ToArray())
         .AddLogger(ConsoleLogger.Unicode)
-        .AddDiagnoser(new DisassemblyDiagnoser(new DisassemblyDiagnoserConfig(1, exportGithubMarkdown: false)))
-        .AddDiagnoser(new MemoryDiagnoser(new MemoryDiagnoserConfig(true)))
+        .AddDiagnoser(new DisassemblyDiagnoser(new DisassemblyDiagnoserConfig(exportGithubMarkdown: false)))
+        .AddDiagnoser(new MemoryDiagnoser(new MemoryDiagnoserConfig()))
         .AddDiagnoser(ThreadingDiagnoser.Default)
         .AddDiagnoser(new NativeMemoryProfiler())
-        .WithOrderer(new DefaultOrderer(SummaryOrderPolicy.FastestToSlowest, MethodOrderPolicy.Declared))
-        .AddColumn(new RankColumn(NumeralSystem.Arabic))
+        .WithOrderer(new DefaultOrderer(SummaryOrderPolicy.FastestToSlowest))
+        .AddColumn(new RankColumn(NumeralSystem.Arabic), CategoriesColumn.Default)
         .AddColumnProvider(DefaultColumnProviders.Instance)
         .AddJob(Job.Default.AsBaseline().AsDefault().WithArguments(new[] { new MsBuildArgument("/p:Optimize=true /p:AllowUnsafeBlocks=true") }))
         .AddExporter(MarkdownExporter.GitHub, HtmlExporter.Default)
-        .WithOptions(ConfigOptions.JoinSummary | ConfigOptions.DontOverwriteResults);
+        .WithOptions(ConfigOptions.JoinSummary | ConfigOptions.DontOverwriteResults | ConfigOptions.KeepBenchmarkFiles);
 
     public static void RunAssymbly<T>(string[]? args = null, Action<IConfig>? configure = null)
     {

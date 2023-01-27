@@ -1,8 +1,5 @@
 namespace OneI.Hostable;
 
-using System.Threading;
-using System.Threading.Tasks;
-
 /// <summary>
 /// 表示可以长时间运行的<see cref="IHostStrartingService"/>
 /// </summary>
@@ -62,7 +59,7 @@ public abstract class BackgroundService : IHostStrartingService, IDisposable
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
+
 
         _stoppingToken?.Cancel();
     }

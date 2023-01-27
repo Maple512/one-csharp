@@ -1,8 +1,10 @@
 namespace OneI.Logable;
 
 using System.Collections.Immutable;
+using System.Linq;
+using Definitions;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
-using OneI.Logable.Definitions;
 
 /// <inheritdoc/>
 [Generator]
@@ -64,6 +66,8 @@ public class LoggerCodeGenerator : IIncrementalGenerator
         return false;
     }
 
+    private static readonly string[] _methodNames = "Write,Verbose,Debug,Information,Warning,Error,Fatal,".Split(',');
+
     /// <summary>
     /// 将符合条件的语法节点转换为目标节点
     /// </summary>
@@ -76,38 +80,50 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
         var invocation = (InvocationExpressionSyntax)cts.Node;
 
-        var flag = false;
-        var method = cts.SemanticModel.GetSymbolInfo((invocation.Expression as MemberAccessExpressionSyntax)!).Symbol as IMethodSymbol;
+        var memberAccessSyntax = (invocation.Expression as MemberAccessExpressionSyntax)!;
 
-        if(method is { ContainingType: not null })
+        var symbolInfo = cts.SemanticModel.GetSymbolInfo(memberAccessSyntax);
+
+        var method = symbolInfo.Symbol as IMethodSymbol;
+
+        if(method is not null)
         {
             var isParams = method.Parameters.Any(x => x.IsParams);
-
-            var typename = method.ContainingType.ToDisplayString();
-
-            if(isParams
-                && (typename == CodeAssets.LogClassFullName || typename == CodeAssets.LoggerExtensionFullName))
+            var name = method.Name;
+            if(isParams == false || !_methodNames.Contains(name))
             {
-                flag = true;
+                return null;
             }
-        }
 
-        if(!flag)
-        {
-            var errors = cts.SemanticModel.Compilation.GetDiagnostics()
-                .Where(x => x.Severity == DiagnosticSeverity.Error);
+            var typename = method.ContainingType?.ToDisplayString();
 
-            foreach(var item in errors)
+            if(typename is CodeAssets.LogClassFullName)
             {
-                Debug.WriteLine($"{item.GetMessage()} {item.Location}", nameof(LoggerCodeGenerator));
+                return new(invocation, false, method.Name, method.Parameters);
+            }
+
+            if(typename is CodeAssets.LoggerExtensionFullName)
+            {
+                return new(invocation, true, method.Name, method.Parameters);
             }
 
             return null;
         }
 
-        Debug.WriteLine(invocation.ToFullString(), nameof(LoggerCodeGenerator));
+        method = symbolInfo.CandidateSymbols.FirstOrDefault() as IMethodSymbol;
+        if(method is not null)
+        {
+            var typename = method.ContainingType?.ToDisplayString();
 
-        return new(invocation, method!);
+            if(typename is CodeAssets.LoggerFullName)
+            {
+                return new(invocation, true, method.Name, method.Parameters.Take(method.Parameters.Length - 3).ToImmutableArray());
+            }
+
+            return null;
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -126,11 +142,10 @@ public class LoggerCodeGenerator : IIncrementalGenerator
             return;
         }
 
-        var targetNodes = nodes.Where(x => x is not null)!;
         var methods = new List<MethodDef>();
-        foreach(var item in targetNodes)
+        foreach(var item in nodes.Where(x => x is not null).Select(x => x!.Value))
         {
-            if(InvocationExpressionParser.TryParse(item!.Value.SyntaxNode, item!.Value.MethodSymbol!, compilation, out var result))
+            if(InvocationExpressionParser.TryParse(item!, compilation, out var result))
             {
                 methods.Add(result!);
             }
@@ -146,9 +161,5 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
             context.AddSource(CodeAssets.LoggerExtensionExtensionClassFileName, loggerExtensions);
         }
-    }
-
-    record struct TargetContext(InvocationExpressionSyntax SyntaxNode, IMethodSymbol MethodSymbol)
-    {
     }
 }

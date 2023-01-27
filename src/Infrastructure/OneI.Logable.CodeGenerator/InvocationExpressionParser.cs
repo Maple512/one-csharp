@@ -1,71 +1,47 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Definitions;
-/// <summary>
-/// The invocation expression parser.
-/// </summary>
+using Definitions;
 
-public static class InvocationExpressionParser
+internal static class InvocationExpressionParser
 {
-    /// <summary>
-    /// Tries the parse.
-    /// </summary>
-    /// <param name="invocation">The invocation.</param>
-    /// <param name="method">The method.</param>
-    /// <param name="cts">The cts.</param>
-    /// <param name="result">The result.</param>
-    /// <returns>A bool.</returns>
-    public static bool TryParse(InvocationExpressionSyntax invocation, IMethodSymbol method, Compilation cts, out MethodDef? result)
+    public static bool TryParse(TargetContext context, Compilation cts, out MethodDef? result)
     {
         result = null;
 
-        try
-        {
-            result = Parse(invocation, method, cts);
-        }
-        catch(Exception)
-        {
-            throw;
-        }
+        result = Parse(context, cts);
 
         return result != null;
     }
 
-    /// <summary>
-    /// Parses the.
-    /// </summary>
-    /// <param name="invocation">The invocation.</param>
-    /// <param name="methodSymbol">The method symbol.</param>
-    /// <param name="cts">The cts.</param>
-    /// <returns>A MethodDef.</returns>
-    private static MethodDef Parse(InvocationExpressionSyntax invocation, IMethodSymbol methodSymbol, Compilation cts)
+    private static MethodDef Parse(TargetContext context, Compilation cts)
     {
-        var method = new MethodDef(methodSymbol.Name)
+        var method = new MethodDef(context.Name)
         {
-            IsLogger = methodSymbol.ContainingType.ToDisplayString() == CodeAssets.LoggerExtensionFullName
+            IsLogger = context.IsLogger
         };
 
         int index;
-        for(index = 0; index < methodSymbol.Parameters.Length; index++)
+        for(index = 0; index < context.Parameters.Length; index++)
         {
-            var parameter = methodSymbol.Parameters[index];
+            var parameter = context.Parameters[index];
 
             if(parameter.IsParams)
             {
                 break;
             }
 
-            if(parameter.Name == CodeAssets.ExceptionParameterName)
+            switch(parameter.Name)
             {
-                method.HasException = true;
-            }
-            else if(parameter.Name == CodeAssets.LogLevelParameterName)
-            {
-                method.HasLevel = true;
+                case CodeAssets.ExceptionParameterName:
+                    method.HasException = true;
+                    break;
+                case CodeAssets.LogLevelParameterName:
+                    method.HasLevel = true;
+                    break;
             }
         }
 
-        foreach(var argument in invocation.ArgumentList.Arguments.Skip(index))
+        foreach(var argument in context.SyntaxNode.ArgumentList.Arguments.Skip(index))
         {
             var symbol = TryParseExpression(argument.Expression, cts);
 
@@ -85,12 +61,6 @@ public static class InvocationExpressionParser
         return method;
     }
 
-    /// <summary>
-    /// Tries the parse expression.
-    /// </summary>
-    /// <param name="syntax">The syntax.</param>
-    /// <param name="compilation">The compilation.</param>
-    /// <returns>An ISymbol? .</returns>
     private static ISymbol? TryParseExpression(ExpressionSyntax syntax, Compilation compilation)
     {
         var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
@@ -153,12 +123,6 @@ public static class InvocationExpressionParser
         return symbol;
     }
 
-    /// <summary>
-    /// Tries the parse default.
-    /// </summary>
-    /// <param name="expression">The expression.</param>
-    /// <param name="semanticModel">The semantic model.</param>
-    /// <returns>An ISymbol? .</returns>
     private static ISymbol? TryParseDefault(ExpressionSyntax expression, SemanticModel semanticModel)
     {
         var type = semanticModel.GetTypeInfo(expression).Type;
@@ -169,12 +133,6 @@ public static class InvocationExpressionParser
         return type ?? symbol;
     }
 
-    /// <summary>
-    /// Tries the parse element access expression syntax.
-    /// </summary>
-    /// <param name="elementAccess">The element access.</param>
-    /// <param name="semanticModel">The semantic model.</param>
-    /// <returns>An ISymbol? .</returns>
     private static ISymbol? TryParseElementAccessExpressionSyntax(
         ElementAccessExpressionSyntax elementAccess,
         SemanticModel semanticModel)

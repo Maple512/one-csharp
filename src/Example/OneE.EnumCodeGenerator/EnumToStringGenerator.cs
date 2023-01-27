@@ -1,10 +1,6 @@
 namespace OneE.EnumCodeGenerator;
 
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
@@ -44,7 +40,7 @@ public class EnumToStringGenerator : IIncrementalGenerator
     /// <returns>A bool.</returns>
     private static bool IsSyntaxTargetForGeneration(SyntaxNode node)
     {
-        return node is EnumDeclarationSyntax m && m.AttributeLists.Count > 0;
+        return node is EnumDeclarationSyntax { AttributeLists.Count: > 0 };
     }
 
     /// <summary>
@@ -138,7 +134,7 @@ public class EnumToStringGenerator : IIncrementalGenerator
 
             // Get the semantic representation of the enum syntax
             var semanticModel = compilation.GetSemanticModel(enumDeclarationSyntax!.SyntaxTree);
-            if(semanticModel.GetDeclaredSymbol(enumDeclarationSyntax) is not INamedTypeSymbol enumSymbol)
+            if(semanticModel.GetDeclaredSymbol(enumDeclarationSyntax, cancellationToken: ct) is not INamedTypeSymbol enumSymbol)
             {
                 // something went wrong, bail out
                 continue;
@@ -155,7 +151,7 @@ public class EnumToStringGenerator : IIncrementalGenerator
             // Get all the fields from the enum, and add their name to the list
             foreach(var member in enumMembers)
             {
-                if(member is IFieldSymbol field && field.ConstantValue is not null)
+                if(member is IFieldSymbol { ConstantValue: { } })
                 {
                     members.Add(member.Name);
                 }

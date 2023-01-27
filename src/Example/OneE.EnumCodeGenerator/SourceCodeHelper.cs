@@ -1,7 +1,5 @@
 namespace OneE.EnumCodeGenerator;
 
-using System.Collections.Generic;
-using System.Text;
 /// <summary>
 /// The source code helper.
 /// </summary>

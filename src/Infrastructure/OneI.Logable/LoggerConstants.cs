@@ -2,6 +2,8 @@ namespace OneI.Logable;
 
 public static class LoggerConstants
 {
+    internal const string MessagePlaceHolder = $"{{{PropertyNames.Message}}}";
+
     public static class PropertyNames
     {
         public const string Level = nameof(Level);

@@ -2,9 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 namespace System;
 
-
-using System.Runtime.CompilerServices;
-
 /// <summary>Represent a range has start and end indexes.</summary>
 /// <remarks>
 /// Range is used by the C# compiler to support the range syntax.
@@ -80,7 +77,7 @@ internal readonly struct Range : IEquatable<Range>
 
         return new string(span[..pos]);
 #else
-        return Start.ToString() + ".." + End.ToString();
+        return Start + ".." + End;
 #endif
     }
 

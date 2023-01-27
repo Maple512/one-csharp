@@ -2,11 +2,11 @@ namespace OneI.Hostable;
 
 using System.Reflection;
 using System.Runtime.Versioning;
+using Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.EventLog;
-using OneI.Hostable.Internal;
 
 public static class HostingHostBuilderExtensions
 {

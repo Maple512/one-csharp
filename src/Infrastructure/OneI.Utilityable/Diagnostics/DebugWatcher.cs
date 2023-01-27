@@ -45,7 +45,7 @@ public static class DebugWatcher
         [CallerLineNumber] int line = 0)
     {
         if(clock == null
-            || _stop.HasValue == true)
+            || _stop.HasValue)
         {
             return;
         }
@@ -104,7 +104,7 @@ public static class DebugWatcher
                 var nextFile = Path.GetFileNameWithoutExtension(item.filepath);
 
                 container.Append($"{itemFile}#L{item.line}");
-                container.Append($" - ");
+                container.Append(" - ");
                 container.Append($"{nextFile}#L{next.line}");
 
                 container.AppendLine(")");

@@ -1,8 +1,5 @@
 namespace OneI.Logable.Diagnostics;
 
-using System.Runtime.InteropServices;
-using OneI.Logable;
-
 public class EnvironmentMiddleware : ILoggerMiddleware
 {
     private readonly EnvironmentOptions _options;
@@ -12,7 +9,7 @@ public class EnvironmentMiddleware : ILoggerMiddleware
         _options = options;
     }
 
-    public void Invoke(in LoggerMessageContext context)
+    public void Invoke(LoggerMessageContext context)
     {
         if(_options.HasCommandLine)
         {

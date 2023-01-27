@@ -1,7 +1,5 @@
 namespace OneI.Logable.Configurations;
 
-using OneI.Logable;
-
 public interface ILoggerLevelConfiguration
 {
     /// <summary>
@@ -15,43 +13,43 @@ public interface ILoggerLevelConfiguration
     /// </summary>
     /// <param name="minimum"></param>
     /// <returns></returns>
-    ILoggerConfiguration Minimum(LogLevel minimum) => Use(minimum, null);
+    ILoggerConfiguration Minimum(LogLevel minimum) => Use(minimum);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Verbose"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Verbose() => Use(LogLevel.Verbose, null);
+    ILoggerConfiguration Verbose() => Use(LogLevel.Verbose);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Debug"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Debug() => Use(LogLevel.Debug, null);
+    ILoggerConfiguration Debug() => Use(LogLevel.Debug);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Information"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Information() => Use(LogLevel.Information, null);
+    ILoggerConfiguration Information() => Use(LogLevel.Information);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Warning"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Warning() => Use(LogLevel.Warning, null);
+    ILoggerConfiguration Warning() => Use(LogLevel.Warning);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Error"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Error() => Use(LogLevel.Error, null);
+    ILoggerConfiguration Error() => Use(LogLevel.Error);
 
     /// <summary>
     /// 设置日志的最小等级为<see cref="LogLevel.Fatal"/>
     /// </summary>
     /// <returns></returns>
-    ILoggerConfiguration Fatal() => Use(LogLevel.Fatal, null);
+    ILoggerConfiguration Fatal() => Use(LogLevel.Fatal);
 
     /// <summary>
     /// 重写来自指定命名空间或类型的日志等级

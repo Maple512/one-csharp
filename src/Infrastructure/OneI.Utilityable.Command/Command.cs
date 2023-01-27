@@ -1,8 +1,7 @@
 namespace OneI;
 
 using System.ComponentModel;
-using System.Diagnostics;
-using OneI.Diagnostics;
+using Diagnostics;
 
 /// <summary>
 /// source: https://github.com/dotnet/runtime/blob/main/src/installer/tests/TestUtils/Command.cs
@@ -13,7 +12,7 @@ public class Command
     private StringWriter? _stdErrCapture;
     private StopwatchValue _stopwatch;
 
-    private bool _running = false;
+    private bool _running;
 
     /// <summary>
     /// Gets the process.
@@ -22,8 +21,8 @@ public class Command
 
     // Priority order of runnable suffixes to look for and run
     private static readonly string[] RunnableSuffixes = OperatingSystem.IsWindows()
-                                                     ? new string[] { ".exe", ".cmd", ".bat" }
-                                                     : new string[] { string.Empty };
+                                                     ? new[] { ".exe", ".cmd", ".bat" }
+                                                     : new[] { string.Empty };
 
     /// <summary>
     /// Prevents a default instance of the <see cref="Command"/> class from being created.
@@ -33,7 +32,7 @@ public class Command
     private Command(string executable, string args)
     {
         // Set the things we need
-        var psi = new ProcessStartInfo()
+        var psi = new ProcessStartInfo
         {
             FileName = executable,
             Arguments = args,
@@ -42,7 +41,7 @@ public class Command
             WindowStyle = ProcessWindowStyle.Hidden
         };
 
-        Process = new Process()
+        Process = new Process
         {
             StartInfo = psi
         };
@@ -138,7 +137,7 @@ public class Command
             {
                 return !string.Equals(extension, ".exe", StringComparison.Ordinal);
             }
-            else if(executable.Contains(Path.DirectorySeparatorChar))
+            if(executable.Contains(Path.DirectorySeparatorChar))
             {
                 // It's a relative path without an extension
                 if(File.Exists(executable + ".exe"))

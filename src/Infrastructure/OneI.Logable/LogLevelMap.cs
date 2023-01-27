@@ -2,7 +2,7 @@ namespace OneI.Logable;
 
 internal class LogLevelMap
 {
-    public const LogLevel MinimumLevelDefault = LogLevel.Verbose;
+    private const LogLevel MinimumLevelDefault = LogLevel.Verbose;
 
     public const LogLevel MaximumLevelDefault = LogLevel.Fatal;
 
@@ -16,27 +16,30 @@ internal class LogLevelMap
         _range = new(MinimumLevelDefault, MaximumLevelDefault);
     }
 
-    public LogLevel MinimumLevel => _range.Minimum;
-
-    public LogLevel? MaximumLevel => _range.Maximum;
+    public LogLevel Minimum => _range.Minimum;
+    public LogLevel Maximum => _range.Maximum;
 
     public void Override(LogLevel minimum, LogLevel maximum)
     {
         _range = new(minimum, maximum);
     }
 
-    public LogLevelMap Override(string sourceContext, LogLevel minimum, LogLevel maximum)
+    public void Override(string sourceContext, LogLevel minimum, LogLevel maximum)
     {
         Check.NotNullOrWhiteSpace(sourceContext);
 
         _overrides[sourceContext] = new LogLevelRange(minimum, maximum);
-
-        return this;
     }
 
     public bool IsEnabled(LogLevel level)
     {
-        return _range.IsEnabled(level);
+        var sl = (sbyte)level;
+        if((sbyte)Minimum > (sbyte)level)
+        {
+            return false;
+        }
+
+        return (sbyte)Maximum >= sl;
     }
 
     public LogLevelRange GetEffectiveLevel(string? context = null)

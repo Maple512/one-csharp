@@ -1,6 +1,6 @@
 namespace System.Linq;
 
-using System.Linq.Expressions;
+using Expressions;
 using OneI;
 
 /// <summary>

@@ -1,7 +1,5 @@
 namespace System.Text;
 
-using System.Runtime.InteropServices;
-
 [StructLayout(LayoutKind.Auto)]
 public struct IndentedStringBuilder
 {

@@ -1,14 +1,13 @@
 namespace OneI.Hostable;
 
-using System;
 using System.Reflection;
+using Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using OneI.Hostable.Internal;
-using static OneI.Hostable.HostableAbstractionsConstants;
+using static HostableAbstractionsConstants;
 
 public class HostBuilder : IHostBuilder
 {
@@ -200,13 +199,13 @@ public class HostBuilder : IHostBuilder
 
     internal static (HostEnvironment, PhysicalFileProvider) CreateHostingEnvironment(IConfiguration hostConfiguration)
     {
-        var hostingEnvironment = new HostEnvironment()
+        var hostingEnvironment = new HostEnvironment
         {
-            EnvironmentName = hostConfiguration[HostableAbstractionsConstants.Configuration.Environment] ?? Environments.Production,
-            RootPath = ResolveContentRootPath(hostConfiguration[HostableAbstractionsConstants.Configuration.RootPath], AppContext.BaseDirectory),
+            EnvironmentName = hostConfiguration[Configuration.Environment] ?? Environments.Production,
+            RootPath = ResolveContentRootPath(hostConfiguration[Configuration.RootPath], AppContext.BaseDirectory),
         };
 
-        var applicationName = hostConfiguration[HostableAbstractionsConstants.Configuration.Application];
+        var applicationName = hostConfiguration[Configuration.Application];
         if(string.IsNullOrEmpty(applicationName))
         {
             // Note GetEntryAssembly returns null for the net4x console test runner.
@@ -286,7 +285,7 @@ public class HostBuilder : IHostBuilder
             var appServices = serviceProviderGetter();
 
             return new Host(
-                appServices.GetRequiredService<ILogger<Internal.Host>>(),
+                appServices.GetRequiredService<ILogger<Host>>(),
                 appServices.GetRequiredService<IHostLifetime>(),
                 appServices.GetRequiredService<IHostApplicationLifetime>(),
                 appServices.GetRequiredService<IOptions<HostOptions>>(),

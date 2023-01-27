@@ -1,8 +1,8 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Fakes;
-using OneI.Logable.Middlewares;
-using OneI.Logable.Templatizations;
+using Fakes;
+using Middlewares;
+using Templatizations;
 
 public class Logger_Test
 {
@@ -18,7 +18,7 @@ public class Logger_Test
         // override type
         logger = new LoggerConfiguration()
            .Level.Override<Logger_Test>(LogLevel.Information)
-           .CreateLogger() ;
+           .CreateLogger();
         logger.ForContext<Logger_Test>().IsEnable(LogLevel.Verbose).ShouldBeFalse();
         logger.ForContext<Logger_Test>().IsEnable(LogLevel.Information).ShouldBeTrue();
         logger.ForContext<Logger_Test>().IsEnable(LogLevel.Fatal).ShouldBeTrue();
@@ -36,15 +36,15 @@ public class Logger_Test
 
         var id = Guid.NewGuid();
         var name = "Id";
-        var propertyId = (PropertyValue?)null;
+        var propertyId = (ITemplatePropertyValue?)null;
 
         var logger = Fake.CreateLogger(
             logger: logger => logger
             .Use(new ActionMiddleware(_ => order.Add(1)))
             .Use(new ActionMiddleware(_ => order.Add(2)))
-            .Audit.Attact(c =>
+            .Audit.Attach(c =>
             {
-                c.TryGetValue(name, out propertyId);
+                c.Properties.TryGetValue(name, out propertyId);
             }));
 
         var scope = new ILoggerMiddleware[]
@@ -54,7 +54,7 @@ public class Logger_Test
             new ActionMiddleware(_ => order.Add(4)),
         };
 
-        using(logger.BeginScope(scope))
+        using(logger.BeginScope("1", 1))
         {
             logger.Error($"{{{name}}}");
 
@@ -78,9 +78,7 @@ public class Logger_Test
     [Fact]
     public void logger_test()
     {
-        var logger = Fake.CreateLogger(
-            null,
-            logger: configure =>
+        var logger = Fake.CreateLogger(logger: configure =>
             {
                 configure.Template.UseWhen(c => c.Exception is not null, Fake.ErrorTemplate);
             });

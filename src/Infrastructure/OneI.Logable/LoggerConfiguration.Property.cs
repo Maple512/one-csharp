@@ -1,8 +1,8 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Configurations;
-using OneI.Logable.Middlewares;
-using OneI.Logable.Templatizations;
+using Configurations;
+using Middlewares;
+using Templatizations;
 
 public partial class LoggerConfiguration
 {
@@ -27,26 +27,6 @@ public partial class LoggerConfiguration
             Check.NotNullOrEmpty(name);
 
             return _parent.Use(new PropertyMiddleware<T>(name, value, formatter, true));
-        }
-
-        public ILoggerConfiguration Add<T>(int index, T value, IPropertyValueFormatter<T?>? formatter = null)
-        {
-            if(index < 0)
-            {
-                ThrowHelper.ArgumentOutOfRangeException_Enum_Value();
-            }
-
-            return _parent.Use(new PropertyMiddleware<T>(index, value, formatter));
-        }
-
-        public ILoggerConfiguration AddOrUpdate<T>(int index, T value, IPropertyValueFormatter<T?>? formatter = null)
-        {
-            if(index < 0)
-            {
-                ThrowHelper.ArgumentOutOfRangeException_Enum_Value();
-            }
-
-            return _parent.Use(new PropertyMiddleware<T>(index, value, formatter, true));
         }
     }
 }

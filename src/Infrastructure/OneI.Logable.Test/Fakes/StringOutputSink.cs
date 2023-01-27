@@ -1,7 +1,6 @@
 namespace OneI.Logable.Fakes;
 
-using OneI.Logable.Rendering;
-using OneI.Logable;
+using Rendering;
 
 public sealed class StringOutputSink : ILoggerSink
 {
@@ -12,7 +11,7 @@ public sealed class StringOutputSink : ILoggerSink
         _renderer = new LoggerRenderer(null);
     }
 
-    public void Invoke(in LoggerContext context)
+    public void Invoke(LoggerContext context)
     {
         var _writer = new StringWriter();
 

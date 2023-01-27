@@ -12,7 +12,12 @@ internal static class DictionaryExtensions
         TKey key,
         TValue value)
     {
-        return GetOrAdd(directory, key, () => value);
+        if(directory.TryGetValue(key, out var result))
+        {
+            return result;
+        }
+
+        return directory[key] = value;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -21,7 +26,7 @@ internal static class DictionaryExtensions
         TKey key,
         Func<TValue> factory)
     {
-        return GetOrAdd(directory, key, k => factory());
+        return GetOrAdd(directory, key, _ => factory());
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

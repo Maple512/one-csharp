@@ -1,7 +1,5 @@
 namespace OneI.Logable.Templatizations.Tokenizations;
 
-using OneI.Logable.Rendering;
-
 public class NamedPropertyToken : ITemplatePropertyToken
 {
     internal NamedPropertyToken(
@@ -23,11 +21,16 @@ public class NamedPropertyToken : ITemplatePropertyToken
     public string Name { get; }
     public PropertyTokenType Type { get; }
     public string? Format { get; }
-    public int Index { get; }
+    public int Index { get; private set; }
     public TextAlignment? Alignment { get; }
     public int? Indent { get; }
 
     public override int GetHashCode() => HashCode.Combine(Name, Type, Format, Index, Alignment, Indent, Index);
+
+    public void ResetIndex(int index)
+    {
+        Index = index;
+    }
 
     public override string ToString() => $"[{nameof(Index)}: {Index}, {nameof(Name)}: {Name}]";
 }

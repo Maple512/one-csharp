@@ -1,9 +1,6 @@
 namespace OneI.Logable;
 
-using System.Threading.Tasks;
 using OneT.CodeGenerator;
-using VerifyXunit;
-using Xunit;
 
 [UsesVerify]
 public class LogGenerator_Test : CodeGeneratorSnapshotTest
@@ -23,14 +20,48 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
 
             public class UserService
             {
+                private ILogger logger;
+
                 public async Task Register()
                 {
                     Log.Error("", "", new object(), new Dictionary<int, int>(), new List<int>());
 
-                    var logger = new LoggerConfiguration()
-                    .CreateLogger();
+                    //var logger = new LoggerConfiguration()
+                    //.CreateLogger();
 
                     logger.Error("", "", new object(), new Dictionary<int, int>(), new List<int>());
+
+                        logger.IsEnable(LogLevel.Verbose);
+                    logger.IsEnable(LogLevel.Fatal);
+
+                    // override type
+                    logger = new LoggerConfiguration()
+                       .Level.Override<UserService>(LogLevel.Information)
+                       .CreateLogger() ;
+
+                    logger.ForContext<UserService>().IsEnable(LogLevel.Verbose);
+
+                    logger.Information("", 1, 2, 3, 4, 5);
+
+                        using(logger.BeginScope())
+                        {
+                            logger.Error("name");
+                        }
+
+                            logger.ForContext<UserService>().Error(new ArgumentException(), "Include Source Context");
+
+            logger.Error("Exclude Source Context");
+
+            logger.ForContext<UserService>().Error(new ArgumentException(), "Include Source Context");
+
+            logger.Error("Exclude Source Context");
+
+            logger.Error(
+                "{0} {1} {2} {3}{NewLine}{FileName'4}#L{LineNumber}@{MemberName}",
+                "0",
+                1,
+                new Dictionary<int, int> { { 2, 3 } },
+                new List<int> { 4, 5, 6 });
                 }
 
             [Serializable]

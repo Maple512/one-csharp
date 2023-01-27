@@ -11,7 +11,7 @@ public class ConditionalMiddleware : ILoggerMiddleware
         _middleware = middleware;
     }
 
-    public void Invoke(in LoggerMessageContext context)
+    public void Invoke(LoggerMessageContext context)
     {
         if(_condition(context))
         {

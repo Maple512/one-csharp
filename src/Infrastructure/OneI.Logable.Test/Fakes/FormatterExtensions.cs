@@ -1,13 +1,13 @@
 namespace OneI.Logable.Fakes;
 
-using OneI.Logable.Templatizations;
+using Templatizations;
 
 public static class FormatterExtensions
 {
     public static string ToDisplayString<T>(
         this IPropertyValueFormatter<T> formatter,
-        in T value,
-        in string? format = null,
+        T value,
+        string? format = null,
         IFormatProvider? formatProvider = null)
     {
         var writer = new StringWriter();

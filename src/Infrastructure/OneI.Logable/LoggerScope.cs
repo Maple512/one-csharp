@@ -1,15 +1,17 @@
 namespace OneI.Logable;
 
-internal class LoggerScope
+internal readonly struct LoggerScope
 {
-    public LoggerScope(ILoggerMiddleware[] middlewares)
+    private readonly ILoggerMiddleware[] _middlewares;
+
+    public LoggerScope(in ILoggerMiddleware[] middlewares)
     {
-        Middlewares = middlewares;
+        _middlewares = middlewares;
     }
 
     public ILoggerMiddleware[] Middlewares
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get;
+        get => _middlewares;
     }
 }

@@ -1,38 +1,38 @@
 namespace OneI.Logable.Configurations;
 
-using OneI.Logable.Sinks;
+using Sinks;
 
 public interface ILoggerAuditConfiguration
 {
-    ILoggerConfiguration Attact(ILoggerSink auditor);
+    ILoggerConfiguration Attach(ILoggerSink auditor);
 
-    ILoggerConfiguration AttactWhen(Func<LoggerContext, bool> condition, ILoggerSink auditor)
-        => Attact(new ConditionalSink(condition, auditor));
+    ILoggerConfiguration AttachWhen(Func<LoggerContext, bool> condition, ILoggerSink auditor)
+        => Attach(new ConditionalSink(condition, auditor));
 
-    ILoggerConfiguration Attact(Action<LoggerContext> auditor)
-        => Attact(new ActionSink(auditor));
+    ILoggerConfiguration Attach(Action<LoggerContext> auditor)
+        => Attach(new ActionSink(auditor));
 
-    ILoggerConfiguration AttactWhen(Func<LoggerContext, bool> condition, Action<LoggerContext> auditor)
-        => Attact(new ConditionalSink(condition, new ActionSink(auditor)));
+    ILoggerConfiguration AttachWhen(Func<LoggerContext, bool> condition, Action<LoggerContext> auditor)
+        => Attach(new ConditionalSink(condition, new ActionSink(auditor)));
 
-    ILoggerConfiguration Attact<TSink>() where TSink : ILoggerSink, new()
-        => Attact(new TSink());
+    ILoggerConfiguration Attach<TSink>() where TSink : ILoggerSink, new()
+        => Attach(new TSink());
 
-    ILoggerConfiguration AttactWhen<TSink>(Func<LoggerContext, bool> condition)
+    ILoggerConfiguration AttachWhen<TSink>(Func<LoggerContext, bool> condition)
          where TSink : ILoggerSink, new()
-        => Attact(new ConditionalSink(condition, new TSink()));
+        => Attach(new ConditionalSink(condition, new TSink()));
 
-    ILoggerConfiguration Attact(ILogger logger, bool autoDispose = false)
-        => Attact(new SecondaryLoggerSink(logger, autoDispose));
+    ILoggerConfiguration Attach(ILogger logger, bool autoDispose = false)
+        => Attach(new SecondaryLoggerSink(logger, autoDispose));
 
-    ILoggerConfiguration AttactWhen(Func<LoggerContext, bool> condition, ILogger logger, bool autoDispose = false)
-        => Attact(new ConditionalSink(condition, new SecondaryLoggerSink(logger, autoDispose)));
+    ILoggerConfiguration AttachWhen(Func<LoggerContext, bool> condition, ILogger logger, bool autoDispose = false)
+        => Attach(new ConditionalSink(condition, new SecondaryLoggerSink(logger, autoDispose)));
 
-    ILoggerConfiguration Attact<TLogger>(bool autoDispose = false)
+    ILoggerConfiguration Attach<TLogger>(bool autoDispose = false)
         where TLogger : ILogger, new()
-        => Attact(new TLogger(), autoDispose);
+        => Attach(new TLogger(), autoDispose);
 
-    ILoggerConfiguration AttactWhen<TLogger>(Func<LoggerContext, bool> condition, bool autoDispose = false)
+    ILoggerConfiguration AttachWhen<TLogger>(Func<LoggerContext, bool> condition, bool autoDispose = false)
         where TLogger : ILogger, new()
-        => AttactWhen(condition, new TLogger(), autoDispose);
+        => AttachWhen(condition, new TLogger(), autoDispose);
 }

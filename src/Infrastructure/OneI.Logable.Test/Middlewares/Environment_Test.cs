@@ -1,18 +1,13 @@
 namespace OneI.Logable.Middlewares;
 
-using System.Runtime.InteropServices;
-using OneI.Logable.Diagnostics;
-using OneI.Logable.Fakes;
+using Diagnostics;
+using Fakes;
 
 public class Environment_Test
 {
     [Fact]
     public void environment_values()
     {
-        var processId = (string?)null;
-        var commandLine = (string?)null;
-        var frameworkDescription = (string?)null;
-
         var logger = Fake.CreateLogger(
             "{ProcessId}, {FrameworkDescription}, {CommandLine}{NewLine}",
             logger: config =>

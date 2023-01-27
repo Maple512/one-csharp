@@ -1,7 +1,5 @@
 namespace OneI;
 
-using System;
-
 internal static class RangeExtensions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

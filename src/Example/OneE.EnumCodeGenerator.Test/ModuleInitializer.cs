@@ -1,7 +1,5 @@
 namespace OneT.CodeGenerator;
 
-using System.Runtime.CompilerServices;
-using VerifyTests;
 /// <summary>
 /// The test module initializer.
 /// </summary>

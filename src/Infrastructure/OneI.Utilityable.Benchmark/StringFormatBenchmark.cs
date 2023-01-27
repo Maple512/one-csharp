@@ -1,6 +1,6 @@
 namespace OneI.Utilityable;
 
-using OneI.Text;
+using Text;
 
 public class StringFormatBenchmark: IValidator
 {

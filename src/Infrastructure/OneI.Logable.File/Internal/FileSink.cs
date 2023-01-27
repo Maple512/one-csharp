@@ -1,41 +1,40 @@
 namespace OneI.Logable;
 
 using System;
-using Microsoft.Win32.SafeHandles;
-using OneI.Logable.Internal;
-using OneI.Logable.Rendering;
-using OneI.Logable.Templatizations;
-using OneI.Logable.Templatizations.Tokenizations;
+using Internal;
+using Rendering;
+using Templatizations;
+using Templatizations.Tokenizations;
 
 internal class FileSink : ILoggerSink, IDisposable
 {
-    private FileWriter? _writer;
-    private readonly FileQueue _queue;
+    private TextWriter? _writer;
+    private StreamCounter? _counter;
     private readonly ILoggerRenderer _renderer;
     private DateTime? _nextPeroid;
     private readonly LogFileOptions _options;
+    private readonly List<FileItem> _files;
 
     private static readonly object _lock = new();
 
     public FileSink(LogFileOptions options)
     {
         _options = options;
-        _queue = new FileQueue(options.CountLimit);
+        _files = new((int)options.CountLimit);
         _renderer = options.Renderer;
     }
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
         lock(_lock)
         {
-            _queue.Dispose();
+            _writer?.Dispose();
 
             _nextPeroid = null;
         }
     }
 
-    public void Invoke(in LoggerContext context)
+    public void Invoke(LoggerContext context)
     {
         lock(_lock)
         {
@@ -45,39 +44,63 @@ internal class FileSink : ILoggerSink, IDisposable
         }
     }
 
-    private void AlignFile(in LoggerContext context, DateTime datetime)
+    private void AlignFile(LoggerContext context, DateTime datetime)
     {
         _nextPeroid ??= _options.Frequency.GetNextPeriod(datetime);
 
         // 初始化
-        if(_writer is null)
-        {
-            var file = GetCurrentFile(context, datetime, true);
+        _writer ??= InlitializeFileStream(context, datetime, true);
 
-            _writer = new FileWriter(file, _options.Encoding);
+        // 长度限制
+        if(_options.SizeLimit > 0 && _options.SizeLimit <= (ulong)_counter!.Position)
+        {
+            OpenFile(context, datetime);
         }
 
-        // 长度限制 or 下个周期
-        if(_options.SizeLimit.HasValue && _options.SizeLimit.Value <= _writer.Position
-            || _nextPeroid.HasValue && datetime > _nextPeroid.Value)
+        // 下个周期
+        if(datetime > _nextPeroid)
         {
-            _writer.Dispose();
-
-            var file = GetCurrentFile(context, datetime);
-
-            _writer.ResetNewFile(file);
+            OpenFile(context, datetime);
 
             _nextPeroid = _options.Frequency.GetNextPeriod(datetime);
         }
 
-        // 时间过期
-        if(_options.ExpiredTime is not null)
+        // 时间限制
+        if(_options.ExpiredTime != TimeSpan.Zero)
         {
-            _queue.DeleteExpiredFiles(DateTime.Now.Subtract(_options.ExpiredTime.Value));
+            var expired = datetime.Subtract(_options.ExpiredTime);
+
+            DeleteFiles(_files.Where(x => x.CreatedAt < expired));
+        }
+
+        // 数量限制
+        if(_options.CountLimit > 1
+            && _files.Count > _options.CountLimit)
+        {
+            DeleteFiles(_files.Take(_files.Count - (int)_options.CountLimit));
         }
     }
 
-    private SafeFileHandle GetCurrentFile(in LoggerContext context, DateTime datetime, bool init = false)
+    private void OpenFile(LoggerContext context, DateTime datetime)
+    {
+        _writer!.Dispose();
+
+        _writer = InlitializeFileStream(context, datetime, false);
+    }
+
+    private static void DeleteFiles(IEnumerable<FileItem> files)
+    {
+        foreach(var item in files)
+        {
+            try
+            {
+                File.Delete(item.FullPath);
+            }
+            catch { }
+        }
+    }
+
+    private StreamWriter InlitializeFileStream(LoggerContext context, DateTime datetime, bool init)
     {
         var path = ParseFilePath(context);
 
@@ -85,44 +108,50 @@ internal class FileSink : ILoggerSink, IDisposable
         var name = Path.GetFileNameWithoutExtension(path);
         var extension = Path.GetExtension(path);
 
-        var index = 0;
-        string fullPath;
+        var fullPath = Path.Combine(directory, $"{name}{datetime.ToString(_options.Frequency.GetFormat())}{extension}");
 
-        do
+        if(init)
         {
-            var count = index > 0 ? 1 : 0;
-            var defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(count, 3 + count);
-            defaultInterpolatedStringHandler.AppendFormatted(name);
-            defaultInterpolatedStringHandler.AppendFormatted(datetime.ToString(RollFrequencyExtensions.GetFormat(_options.Frequency)));
-            if(index > 0)
-            {
-                defaultInterpolatedStringHandler.AppendLiteral("_");
-                defaultInterpolatedStringHandler.AppendFormatted<int>(index, "000");
-            }
+            IOTools.EnsureExistedDirectory(fullPath);
+        }
 
-            defaultInterpolatedStringHandler.AppendFormatted(extension);
-            fullPath = Path.Combine(directory, defaultInterpolatedStringHandler.ToStringAndClear());
-            index++;
-        } while(File.Exists(fullPath));
+        var options = new FileStreamOptions
+        {
+            Access = FileAccess.Write,
+            Mode = FileMode.OpenOrCreate,
+            Options = FileOptions.RandomAccess | FileOptions.Asynchronous,
+            Share = FileShare.Read,
+            PreallocationSize = (long)_options.SizeLimit,
+            BufferSize = (int)_options.BufferSize,
+        };
 
-        var file = _queue.GetNewFile(fullPath, _options.SizeLimit);
+        Stream stream = new FileStream(fullPath, options);
+        if(init)
+        {
+            stream.Seek(0, SeekOrigin.End);
+        }
 
-        return file;
+        if(_options.SizeLimit > 0)
+        {
+            stream = _counter = new StreamCounter(stream);
+        }
+
+        _files.Add(new FileItem(fullPath));
+
+        return new StreamWriter(stream);
     }
 
-    private string ParseFilePath(in LoggerContext context)
+    private string ParseFilePath(LoggerContext context)
     {
-        if(_options.Tokens.Count == 1 && _options.Tokens[0] is TextToken tt)
+        if(_options.Tokens is [TextToken tt])
         {
             return tt.Text;
         }
 
-        var container = new StringWriter(new StringBuilder(256));
+        using var writer = new StringWriter(new StringBuilder(10));
 
-        var template = new TemplateContext(_options.Tokens, context.Properties);
+        TemplateContext.Render(writer, _options.Tokens, context.MessageContext);
 
-        template.Render(container);
-
-        return container.ToString();
+        return writer.ToString();
     }
 }

@@ -57,7 +57,7 @@
     <!--Root Namespace-->
     <PropertyGroup>
         <RootNamespaceLength>$(MSBuildProjectName.Split(".").Length)</RootNamespaceLength>
-        <RootNamespace Condition="$(RootNamespaceLength) > 1">$(MSBuildProjectName.Split(".")[0]).$(MSBuildProjectName.Split(".")[1])</RootNamespace>
+        <RootNamespace Condition="$(RootNamespaceLength) > 2">$(MSBuildProjectName.Split(".")[0]).$(MSBuildProjectName.Split(".")[1])</RootNamespace>
     </PropertyGroup>
 
     <!--Assembly Config-->

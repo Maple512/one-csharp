@@ -1,25 +1,23 @@
 namespace OneI.Logable.Formatters;
 
-using System;
-using System.Collections.Generic;
-using OneI.Logable.Templatizations;
-using OneI.Logable.Templatizations.Tokenizations;
+//public class MessageFormatter : IPropertyValueFormatter<ReadOnlyMemory<char>>
+//{
+//    private readonly PropertyCollection _properties;
 
-public class MessageFormatter : IPropertyValueFormatter<string>
-{
-    private readonly IReadOnlyList<ITemplateToken> _tokens;
-    private readonly PropertyCollection _properties;
+//    public MessageFormatter(PropertyCollection properties)
+//    {
+//        _properties = properties;
+//    }
 
-    public MessageFormatter(IReadOnlyList<ITemplateToken> tokens, PropertyCollection properties)
-    {
-        _tokens = tokens;
-        _properties = properties;
-    }
+//    public void Format(string? value, TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
+//    {
+//        var template = new TemplateContext(_tokens, _properties.NamedProperties,_properties.IndexerProperties);
 
-    public void Format(in string? value, TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
-    {
-        var template = new TemplateContext(_tokens, _properties.ToList());
+//        template.Render(writer, formatProvider);
+//    }
 
-        template.Render(writer, formatProvider);
-    }
-}
+//    public void Format(ReadOnlyMemory<char> value, TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
+//    {
+//        throw new NotImplementedException();
+//    }
+//}

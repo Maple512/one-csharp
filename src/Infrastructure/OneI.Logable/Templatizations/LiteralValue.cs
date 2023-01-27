@@ -1,10 +1,10 @@
 namespace OneI.Logable.Templatizations;
 
-using OneI.Logable.Templatizations.Tokenizations;
+using Tokenizations;
 
-public class LiteralValue<T> : PropertyValue
+public readonly struct LiteralValue<T> : ITemplatePropertyValue
 {
-    public LiteralValue(T? value, IPropertyValueFormatter<T>? formatter = null)
+    public LiteralValue(T value, IPropertyValueFormatter<T>? formatter = null)
     {
         Value = value;
         Formatter = formatter;
@@ -14,9 +14,18 @@ public class LiteralValue<T> : PropertyValue
 
     public IPropertyValueFormatter<T>? Formatter { get; }
 
-    public override void Render(TextWriter writer, in PropertyTokenType type, in string? format, IFormatProvider? formatProvider)
+    public void Render(TextWriter writer, PropertyTokenType type, string? format, IFormatProvider? formatProvider)
     {
         TemplateRenderHelper.Render(Value, writer, type, format, Formatter, formatProvider);
+    }
+
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        var writer = new StringWriter(formatProvider);
+
+        Render(writer, PropertyTokenType.None, format, formatProvider);
+
+        return writer.ToString();
     }
 
     public override bool Equals(object? obj)

@@ -1,6 +1,6 @@
 namespace OneI.Hostable;
 
-using static OneI.Hostable.HostableAbstractionsConstants;
+using static HostableAbstractionsConstants;
 
 public static class HostEnvironmentAbstractionsExtensions
 {

@@ -5,10 +5,6 @@ using Microsoft.Extensions.Logging;
 
 public class HostApplicationBuilderSettings
 {
-    public HostApplicationBuilderSettings()
-    {
-    }
-
     /// <summary>
     /// If <see langword="false"/>, configures the <see cref="HostApplicationBuilder"/> instance with pre-configured defaults.
     /// This has a similar effect to calling <see cref="HostingHostBuilderExtensions.ConfigureDefaults(IHostBuilder, string[])"/>.

@@ -1,6 +1,5 @@
 namespace OneT.Common;
 
-using System.IO;
 using ObjectLayoutInspector;
 
 public static class TestTools

@@ -5,7 +5,7 @@ using System.Buffers;
 /// <summary>
 /// source: <see href="https://github.com/dotnet/runtime/blob/6009a1064ccfc2bd9aeb96c9247b60cf6352198d/src/libraries/Common/src/System/Text/ValueStringBuilder.cs"/>
 /// </summary>
-public ref partial struct RefValueStringBuilder
+public ref struct RefValueStringBuilder
 {
     private char[]? _arrayToReturnToPool;
     private Span<char> _chars;
@@ -122,12 +122,9 @@ public ref partial struct RefValueStringBuilder
             Dispose();
             return true;
         }
-        else
-        {
-            charsWritten = 0;
-            Dispose();
-            return false;
-        }
+        charsWritten = 0;
+        Dispose();
+        return false;
     }
 
     public void Insert(int index, char value, int count)

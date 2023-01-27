@@ -1,7 +1,7 @@
 namespace OneI.Logable;
 
+using Definitions;
 using Microsoft.CodeAnalysis.Text;
-using OneI.Logable.Definitions;
 
 internal static partial class CodePrinter
 {
@@ -18,7 +18,7 @@ internal static partial class CodePrinter
 
         logExtensions = PrintLogExtensions(methods.Where(x => x.IsLogger == false).ToList());
 
-        loggerExtensions = PrintLoggerExtensions(methods.Where(x => x.IsLogger == true).ToList());
+        loggerExtensions = PrintLoggerExtensions(methods.Where(x => x.IsLogger).ToList());
     }
 
     private static SourceText PrintTypes()

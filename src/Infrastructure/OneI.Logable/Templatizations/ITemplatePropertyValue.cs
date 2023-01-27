@@ -4,5 +4,10 @@ using Tokenizations;
 
 public interface ITemplatePropertyValue : IFormattable
 {
-    void Render(TextWriter writer, in PropertyTokenType type, in string? format, IFormatProvider? formatProvider);
+    void Render(TextWriter writer, PropertyTokenType type, string? format, IFormatProvider? formatProvider);
+
+    public string? ToString()
+    {
+        return ToString(null, null);
+    }
 }
