@@ -1,19 +1,9 @@
 namespace OneI.Logable.Definitions;
-/// <summary>
-/// The method def.
-/// </summary>
 
-public class MethodDef
+public class MethodDef : IEquatable<MethodDef>
 {
-    /// <summary>
-    /// Gets the name.
-    /// </summary>
     public string Name { get; }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MethodDef"/> class.
-    /// </summary>
-    /// <param name="name">The name.</param>
     public MethodDef(string name) => Name = name;
 
     /// <summary>
@@ -21,32 +11,68 @@ public class MethodDef
     /// </summary>
     public Dictionary<string, string?> TypeArguments { get; } = new();
 
-    /// <summary>
-    /// Gets or sets a value indicating whether has level.
-    /// </summary>
     public bool HasLevel { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether has exception.
-    /// </summary>
     public bool HasException { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether is logger.
-    /// </summary>
     public bool IsLogger { get; set; }
 
-    /// <summary>
-    /// Gets the parameters.
-    /// </summary>
     public List<ParameterDef> Parameters { get; } = new();
 
-    /// <summary>
-    /// Adds the parameter.
-    /// </summary>
-    /// <param name="type">The type.</param>
     public void AddParameter(TypeDef type)
     {
         Parameters.Add(new ParameterDef(Parameters.Count, type));
+    }
+
+    public bool Equals(MethodDef other)
+    {
+        if(other == null)
+        {
+            return false;
+        }
+
+        return Name.Equals(other.Name, StringComparison.InvariantCulture)
+            && HasLevel == other.HasLevel
+            && HasException == other.HasException
+            && IsLogger == other.IsLogger
+            && TypeArguments.SequenceEqual(other.TypeArguments)
+            && Parameters.SequenceEqual(other.Parameters);
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is MethodDef md && Equals(md);
+    }
+
+    public bool Equals(MethodDef x, MethodDef y)
+    {
+        return x.Equals(y);
+    }
+
+    public int GetHashCode(MethodDef obj)
+    {
+        return obj.GetHashCode();
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = 1825788138;
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+
+        foreach(var item in TypeArguments)
+        {
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(item.Key);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string?>.Default.GetHashCode(item.Value);
+        }
+
+        hashCode = hashCode * -1521134295 + HasLevel.GetHashCode();
+        hashCode = hashCode * -1521134295 + HasException.GetHashCode();
+        hashCode = hashCode * -1521134295 + IsLogger.GetHashCode();
+        foreach(var item in Parameters)
+        {
+            hashCode = hashCode * -1521134295 + item.GetHashCode();
+        }
+
+        return hashCode;
     }
 }

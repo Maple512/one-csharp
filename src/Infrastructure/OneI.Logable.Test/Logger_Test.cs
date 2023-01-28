@@ -44,7 +44,7 @@ public class Logger_Test
             .Use(new ActionMiddleware(_ => order.Add(2)))
             .Audit.Attach(c =>
             {
-                c.Properties.TryGetValue(name, out propertyId);
+                c.MessageContext.Properties.TryGetValue(name, out propertyId);
             }));
 
         var scope = new ILoggerMiddleware[]

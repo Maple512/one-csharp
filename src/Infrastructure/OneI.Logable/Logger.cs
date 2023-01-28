@@ -8,18 +8,18 @@ internal class Logger : ILogger
     internal readonly LogLevelMap _levelMap;
     internal ILoggerMiddleware[] _middlewares;
     internal readonly ILoggerSink[] _sinks;
-    internal readonly ITemplateSelector _templateSelector;
+    internal readonly TemplateProvider _templateProvider;
 
     internal Logger(
         ILoggerMiddleware[] middleware,
         ILoggerSink[] sinks,
         LogLevelMap levelMap,
-        ITemplateSelector templateSelector)
+        TemplateProvider templateProvider)
     {
         _middlewares = middleware;
         _sinks = sinks;
         _levelMap = levelMap;
-        _templateSelector = templateSelector;
+        _templateProvider = templateProvider;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -81,22 +81,22 @@ internal class Logger : ILogger
 
     public void Write(LogLevel level, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, level, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, level, null, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Write(LogLevel level, Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, level, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, level, exception, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Write(LogLevel level, string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, level, null, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, level, null, message.AsMemory(), default);
     }
 
     public void Write(LogLevel level, Exception exception, string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, level, exception, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, level, exception, message.AsMemory(), default);
     }
 
     #endregion Write
@@ -105,22 +105,22 @@ internal class Logger : ILogger
 
     public void Verbose(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Verbose, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Verbose, null, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Verbose(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Verbose, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Verbose, exception, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Verbose(string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Verbose, null, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Verbose, null, message.AsMemory(), default);
     }
 
     public void Verbose(Exception exception, string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Verbose, exception, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Verbose, exception, message.AsMemory(), default);
     }
 
     #endregion Verbose
@@ -129,22 +129,22 @@ internal class Logger : ILogger
 
     public void Debug(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Debug, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Debug, null, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Debug(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Debug, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Debug, exception, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Debug(string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Debug, null, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Debug, null, message.AsMemory(), default);
     }
 
     public void Debug(Exception exception, string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Debug, exception, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Debug, exception, message.AsMemory(), default);
     }
 
     #endregion Debug
@@ -154,22 +154,22 @@ internal class Logger : ILogger
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Information(in string message, [CallerFilePath] in string? file = null, [CallerMemberName] in string? member = null, [CallerLineNumber] in int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Information, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Information, null, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Information(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Information, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Information, exception, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Information(string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Information, null, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Information, null, message.AsMemory(), default);
     }
 
     public void Information(Exception exception, string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Information, exception, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Information, exception, message.AsMemory(), default);
     }
 
     #endregion Information
@@ -178,22 +178,22 @@ internal class Logger : ILogger
 
     public void Warning(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Warning, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Warning, null, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Warning(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Warning, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Warning, exception, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Warning(string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Warning, null, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Warning, null, message.AsMemory(), default);
     }
 
     public void Warning(Exception exception, string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Warning, exception, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Warning, exception, message.AsMemory(), default);
     }
 
     #endregion Warning
@@ -202,22 +202,22 @@ internal class Logger : ILogger
 
     public void Error(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Error, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Error, null, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Error(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Error, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Error, exception, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Error(string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Error, null, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Error, null, message.AsMemory(), default);
     }
 
     public void Error(Exception exception, string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Error, exception, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Error, exception, message.AsMemory(), default);
     }
 
     #endregion Error
@@ -226,22 +226,22 @@ internal class Logger : ILogger
 
     public void Fatal(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Fatal, null, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Fatal, null, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Fatal(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Fatal, exception, message.AsMemory(), null, file.AsMemory(), member.AsMemory(), line);
+        LoggerExtensions.WriteCore(this, LogLevel.Fatal, exception, message.AsMemory(), default, file.AsMemory(), member.AsMemory(), line);
     }
 
     public void Fatal(string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Fatal, null, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Fatal, null, message.AsMemory(), default);
     }
 
     public void Fatal(Exception exception, string? message, params object?[] args)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Fatal, exception, message.AsMemory(), null);
+        LoggerExtensions.WriteCore(this, LogLevel.Fatal, exception, message.AsMemory(), default);
     }
 
     #endregion Fatal
@@ -281,9 +281,11 @@ internal class Logger : ILogger
             item.Invoke(context);
         }
 
-        var tokens = _templateSelector.Select(context);
+        var tokens = _templateProvider.GetTemplate(context);
 
         var loggerContext = new LoggerContext(context, tokens);
+
+        List<Exception>? exceptions = null;
 
         for(var i = 0; i < _sinks.Length; i++)
         {
@@ -291,9 +293,16 @@ internal class Logger : ILogger
             {
                 _sinks[i].Invoke(loggerContext);
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                exceptions ??= new List<Exception>(_sinks.Length);
+                exceptions.Add(ex);
             }
+        }
+
+        if(exceptions is { Count: > 0 })
+        {
+            throw new AggregateException(exceptions);
         }
     }
 

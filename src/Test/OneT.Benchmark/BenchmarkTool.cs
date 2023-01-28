@@ -27,8 +27,8 @@ public static class BenchmarkTool
         .AddColumn(new RankColumn(NumeralSystem.Arabic), CategoriesColumn.Default)
         .AddColumnProvider(DefaultColumnProviders.Instance)
         .AddJob(Job.Default.AsBaseline().AsDefault().WithArguments(new[] { new MsBuildArgument("/p:Optimize=true /p:AllowUnsafeBlocks=true") }))
-        .AddExporter(MarkdownExporter.GitHub, HtmlExporter.Default)
-        .WithOptions(ConfigOptions.JoinSummary | ConfigOptions.DontOverwriteResults | ConfigOptions.KeepBenchmarkFiles);
+        .AddExporter(MarkdownExporter.GitHub, HtmlExporter.Default, RPlotExporter.Default)
+        .WithOptions(ConfigOptions.JoinSummary | ConfigOptions.DontOverwriteResults );
 
     public static void RunAssymbly<T>(string[]? args = null, Action<IConfig>? configure = null)
     {
@@ -40,7 +40,7 @@ public static class BenchmarkTool
     public static void Run<T>(string[]? args = null, Action<IConfig>? configure = null)
     {
         var startType = typeof(T);
-#if DEBUG
+
         var validators = startType.Assembly.GetTypes()
             .Where(x => x.IsAssignableTo(typeof(IValidator)) && x.IsClass)
             .Select(x =>
@@ -55,7 +55,7 @@ public static class BenchmarkTool
 
             item.Validate();
         }
-#endif
+
         configure?.Invoke(config);
 
         BenchmarkRunner.Run(startType, config, args);

@@ -16,9 +16,9 @@ internal static partial class CodePrinter
     {
         tyeps = PrintTypes();
 
-        logExtensions = PrintLogExtensions(methods.Where(x => x.IsLogger == false).ToList());
-
         loggerExtensions = PrintLoggerExtensions(methods.Where(x => x.IsLogger).ToList());
+
+        logExtensions = PrintLogExtensions(methods.Where(x => x.IsLogger == false).ToList());
     }
 
     private static SourceText PrintTypes()

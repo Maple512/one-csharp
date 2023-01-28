@@ -4,11 +4,11 @@ using OneI.Logable.Formatters;
 using Tokenizations;
 using static LoggerConstants.PropertyNames;
 
-public static class TemplateContext
+public static class TemplateRenderer
 {
     public static void Render(
         TextWriter writer,
-        IReadOnlyList<ITemplateToken> tokens,
+        IEnumerable<ITemplateToken> tokens,
         LoggerMessageContext messageContext,
         IFormatProvider? formatProvider = null)
     {

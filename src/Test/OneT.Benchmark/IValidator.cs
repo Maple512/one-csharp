@@ -1,8 +1,10 @@
 namespace OneT.Benchmark;
 
+using BenchmarkDotNet.Attributes;
+
 public interface IValidator
 {
-    public void Initialize(){}
+    void Initialize() { }
 
     void Validate();
 

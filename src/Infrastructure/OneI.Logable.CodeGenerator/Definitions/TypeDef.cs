@@ -1,23 +1,12 @@
 namespace OneI.Logable.Definitions;
 
-/// <summary>
-/// 描述对象的类型
-/// </summary>
-public class TypeDef
+public class TypeDef : IEquatable<TypeDef>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TypeDef"/> class.
-    /// </summary>
-    /// <param name="names">The names.</param>
     public TypeDef(params string[] names)
         : this(names.ToList())
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="TypeDef"/> class.
-    /// </summary>
-    /// <param name="names">The names.</param>
     public TypeDef(List<string> names)
     {
         Names = names;
@@ -27,9 +16,6 @@ public class TypeDef
         Properties = new();
     }
 
-    /// <summary>
-    /// 类型名称
-    /// </summary>
     public List<string> Names { get; } = new();
 
     /// <summary>
@@ -62,38 +48,16 @@ public class TypeDef
     /// </summary>
     public List<PropertyDef> Properties { get; }
 
-    /// <summary>
-    /// Equals the.
-    /// </summary>
-    /// <param name="obj">The obj.</param>
-    /// <returns>A bool.</returns>
     public override bool Equals(object obj)
     {
-        return obj is TypeDef td && td.ToDisplayString() == ToDisplayString();
+        return obj is TypeDef td && Equals(td);
     }
 
-    /// <summary>
-    /// Gets the hash code.
-    /// </summary>
-    /// <returns>An int.</returns>
-    public override int GetHashCode()
-    {
-        return ToDisplayString().GetHashCode();
-    }
-
-    /// <summary>
-    /// Tos the string.
-    /// </summary>
-    /// <returns>A string.</returns>
     public override string ToString()
     {
         return Names.Join('.');
     }
 
-    /// <summary>
-    /// Tos the display string.
-    /// </summary>
-    /// <returns>A string.</returns>
     public string ToDisplayString()
     {
         var content = new StringBuilder();
@@ -134,6 +98,46 @@ public class TypeDef
         }
 
         return content.ToString();
+    }
+
+    public bool Equals(TypeDef other)
+    {
+        if(other == null)
+        {
+            return false;
+        }
+
+        return Names.SequenceEqual(other.Names, StringComparer.InvariantCulture)
+            && TypeArguments.SequenceEqual(other.TypeArguments)
+            && IsTypeParameters == other.IsTypeParameters
+            && IsGenericType == other.IsGenericType
+            && Kind == other.Kind
+            && Properties.SequenceEqual(other.Properties);
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = -1107522701;
+        foreach(var item in Names)
+        {
+            hashCode = hashCode * -1521134295 + item.GetHashCode();
+        }
+        foreach(var item in TypeArguments)
+        {
+            hashCode = hashCode * -1521134295 + item.GetHashCode();
+        }
+        foreach(var item in Constraints)
+        {
+            hashCode = hashCode * -1521134295 + item?.GetHashCode() ?? 0;
+        }
+        hashCode = hashCode * -1521134295 + IsTypeParameters.GetHashCode();
+        hashCode = hashCode * -1521134295 + IsGenericType.GetHashCode();
+        hashCode = hashCode * -1521134295 + Kind.GetHashCode();
+        foreach(var item in Properties)
+        {
+            hashCode = hashCode * -1521134295 + item.GetHashCode();
+        }
+        return hashCode;
     }
 }
 

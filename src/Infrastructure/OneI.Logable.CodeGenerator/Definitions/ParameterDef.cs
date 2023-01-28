@@ -1,24 +1,12 @@
 namespace OneI.Logable.Definitions;
-/// <summary>
-/// The parameter def.
-/// </summary>
 
-public class ParameterDef
+using System.Collections.Generic;
+
+public class ParameterDef : IEquatable<ParameterDef>
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ParameterDef"/> class.
-    /// </summary>
-    /// <param name="index">The index.</param>
-    /// <param name="type">The type.</param>
     public ParameterDef(int index, TypeDef type)
         : this(index, $"arg{index}", type) { }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ParameterDef"/> class.
-    /// </summary>
-    /// <param name="index">The index.</param>
-    /// <param name="name">The name.</param>
-    /// <param name="type">The type.</param>
     public ParameterDef(int index, string name, TypeDef type)
     {
         Name = name;
@@ -26,25 +14,33 @@ public class ParameterDef
         Type = type;
     }
 
-    /// <summary>
-    /// Gets the name.
-    /// </summary>
     public string Name { get; }
 
-    /// <summary>
-    /// Gets the index.
-    /// </summary>
     public int Index { get; }
 
-    /// <summary>
-    /// Gets the type.
-    /// </summary>
     public TypeDef Type { get; }
 
-    /// <summary>
-    /// Tos the string.
-    /// </summary>
-    /// <returns>A string.</returns>
+    public bool Equals(ParameterDef other)
+    {
+        return Name.Equals(other.Name, StringComparison.InvariantCulture)
+            && Index == other.Index
+            && Type.Equals(other.Type);
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is ParameterDef pd && Equals(pd);
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = 1280133078;
+        hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+        hashCode = hashCode * -1521134295 + Index.GetHashCode();
+        hashCode = hashCode * -1521134295 + EqualityComparer<TypeDef>.Default.GetHashCode(Type);
+        return hashCode;
+    }
+
     public override string ToString()
     {
         return $"{Type} {Name}";

@@ -15,4 +15,17 @@ public static class LoggerSinkFileConfigurationExtensions
 
         return logger.Use(new FileSink(options));
     }
+
+    public static ILoggerConfiguration FileWhen(
+        this ILoggerSinkConfiguration logger,
+        Func<LoggerContext, bool> condition,
+        string path,
+        Action<LogFileOptions>? configuration = null)
+    {
+        var options = new LogFileOptions(path);
+
+        configuration?.Invoke(options);
+
+        return logger.UseWhen(condition, new FileSink(options));
+    }
 }

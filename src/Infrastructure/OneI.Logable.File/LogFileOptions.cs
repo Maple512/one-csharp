@@ -12,10 +12,10 @@ public class LogFileOptions
     {
         Check.NotNullOrWhiteSpace(path);
 
-        Tokens = TemplateParser.Parse(path);
+        Tokens = TemplateParser.Parse(path.AsMemory());
     }
 
-    public IReadOnlyList<ITemplateToken> Tokens { get; }
+    public IEnumerable<ITemplateToken> Tokens { get; }
 
     public IFormatProvider? FormatProvider { get; set; }
 

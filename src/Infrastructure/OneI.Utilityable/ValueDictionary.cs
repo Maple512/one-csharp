@@ -1,7 +1,9 @@
 namespace OneI;
 
+using System.Collections;
+
 [StructLayout(LayoutKind.Auto)]
-public struct ValueDictionary<TKey, TValue>
+public struct ValueDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
     where TKey : notnull, IEquatable<TKey>?
 {
     private int _position;
@@ -45,7 +47,7 @@ public struct ValueDictionary<TKey, TValue>
         other._values.CopyTo(_values.AsSpan());
     }
 
-    public KeyValuePair<TKey, TValue> this[int index]
+    public readonly KeyValuePair<TKey, TValue> this[int index]
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
@@ -104,16 +106,19 @@ public struct ValueDictionary<TKey, TValue>
         return dic;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Add(TKey key, TValue value)
     {
         TryInsertCore(key, value, InsertionBehavior.ThrowOnExisting);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool AddOrUpdate(TKey key, TValue value)
     {
         return TryInsertCore(key, value, InsertionBehavior.OverwriteExisting);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryAdd(TKey key, TValue value)
     {
         return TryInsertCore(key, value, InsertionBehavior.None);
@@ -121,12 +126,12 @@ public struct ValueDictionary<TKey, TValue>
 
     public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
-        value = default;
-
         var index = _keys.AsSpan().IndexOf(key);
 
         if(index == -1)
         {
+            value = default;
+
             return false;
         }
 
@@ -236,21 +241,41 @@ public struct ValueDictionary<TKey, TValue>
         _values = values;
     }
 
-    public Enumerator GetEnumerator() => new(this);
+    IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
+    {
+        return new Enumerator(this);
+    }
 
-    public ref struct Enumerator
+    public IEnumerator GetEnumerator()
+    {
+        return new Enumerator(this);
+    }
+
+    public struct Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
     {
         private readonly ValueDictionary<TKey, TValue> _dictionary;
         private int _index;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal Enumerator(ValueDictionary<TKey, TValue> dictionary)
+        public Enumerator(ValueDictionary<TKey, TValue> dictionary) : this()
         {
             _dictionary = dictionary;
             _index = -1;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public KeyValuePair<TKey, TValue> Current
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _dictionary[_index];
+        }
+
+        object IEnumerator.Current
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => _dictionary[_index];
+        }
+
+        public void Dispose() { }
+
         public bool MoveNext()
         {
             var index = _index + 1;
@@ -263,10 +288,9 @@ public struct ValueDictionary<TKey, TValue>
             return false;
         }
 
-        public readonly KeyValuePair<TKey, TValue> Current
+        public void Reset()
         {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => _dictionary[_index];
+            _index = -1;
         }
     }
 

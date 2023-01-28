@@ -2,7 +2,7 @@ namespace OneI.Utilityable;
 
 using Text;
 
-public class StringFormatBenchmark: IValidator
+public class StringFormatBenchmark : IValidator
 {
     private const string format = "{0},{1}";
     private static User user = new User(512, "Maple512");

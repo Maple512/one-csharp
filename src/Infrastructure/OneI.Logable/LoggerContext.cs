@@ -2,11 +2,11 @@ namespace OneI.Logable;
 
 using OneI.Logable.Templatizations.Tokenizations;
 
-public class LoggerContext
+public readonly struct LoggerContext
 {
     internal LoggerContext(
         LoggerMessageContext messageContext,
-        IReadOnlyList<ITemplateToken> tokens)
+        IEnumerable<ITemplateToken> tokens)
     {
         MessageContext = messageContext;
         Tokens = tokens;
@@ -18,7 +18,7 @@ public class LoggerContext
         get;
     }
 
-    public IReadOnlyList<ITemplateToken> Tokens
+    public IEnumerable<ITemplateToken> Tokens
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get;

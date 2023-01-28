@@ -143,14 +143,9 @@ internal class FileSink : ILoggerSink, IDisposable
 
     private string ParseFilePath(LoggerContext context)
     {
-        if(_options.Tokens is [TextToken tt])
-        {
-            return tt.Text;
-        }
-
         using var writer = new StringWriter(new StringBuilder(10));
 
-        TemplateContext.Render(writer, _options.Tokens, context.MessageContext);
+        TemplateRenderer.Render(writer, _options.Tokens, context.MessageContext);
 
         return writer.ToString();
     }

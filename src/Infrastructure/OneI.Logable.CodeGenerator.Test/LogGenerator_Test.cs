@@ -42,6 +42,9 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
                     logger.ForContext<UserService>().IsEnable(LogLevel.Verbose);
 
                     logger.Information("", 1, 2, 3, 4, 5);
+                    logger.Information("", 1, 2, 3, 4, 5);
+                    logger.Information("", 1, 2, 3, 4, 5);
+            
 
                         using(logger.BeginScope())
                         {

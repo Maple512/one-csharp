@@ -7,9 +7,79 @@ using static TemplateConstants.Property;
 
 public static class TemplateParser
 {
-    public static List<ITemplateToken> Parse(scoped ReadOnlySpan<char> text)
+    public static IEnumerable<ITemplateToken> Parse(ReadOnlyMemory<char> text)
     {
+        if(text.IsEmpty)
+        {
+            yield break;
+        }
 
+        var textStart = 0;
+        var textEnd = 0;
+        var index = 0;
+
+        while(true)
+        {
+            if(index >= text.Length)
+            {
+                break;
+            }
+
+            var remainder = text.Span[index..];
+            var open = remainder.IndexOf(Open_Separator);
+            if(open == -1)
+            {
+                textEnd = index + remainder.Length;
+                break;
+            }
+
+            var close = remainder.IndexOf(Close_Separator);
+            if(close is -1)
+            {
+                index++;
+                continue;
+            }
+
+            if(close - open <= 1)
+            {
+                index += close + 1;
+                continue;
+            }
+
+            var start = open + 1;
+
+            var property = remainder[start..close];
+
+            if(TryParseProperty(property, out var token))
+            {
+                textEnd = index + open;
+                index += close + 1;
+
+                if(textStart != textEnd)
+                {
+                    var textToken = text.Span[textStart..textEnd];
+
+                    yield return new TextToken(textToken.ToString());
+                }
+
+                textStart = index;
+
+                yield return token;
+            }
+        }
+
+        if(textStart < textEnd)
+        {
+            var textToken = text.Span[textStart..textEnd];
+
+            yield return new TextToken(textToken.ToString());
+        }
+
+        yield break;
+    }
+
+    public static List<ITemplateToken> Parse2(scoped ReadOnlySpan<char> text)
+    {
         if(text.IsEmpty)
         {
             return new(0);
@@ -17,7 +87,7 @@ public static class TemplateParser
 
         if(text.IsWhiteSpace())
         {
-            return new() { new TextToken(0, new string(' ', text.Length)) };
+            return new() { new TextToken(new string(' ', text.Length)) };
         }
 
         var result = new List<ITemplateToken>(10);
@@ -25,7 +95,6 @@ public static class TemplateParser
         var textStart = 0;
         var textEnd = 0;
         var index = 0;
-        var propertyCount = 0;
 
         while(true)
         {
@@ -59,21 +128,20 @@ public static class TemplateParser
 
             var property = remainder[start..close];
 
-            if(TryParseProperty(property, propertyCount, out var token))
+            if(TryParseProperty(property, out var token))
             {
                 textEnd = index + open;
                 index += close + 1;
-                propertyCount++;
 
                 if(textStart != textEnd)
                 {
                     var textToken = text[textStart..textEnd];
 
-                    result.Add(new TextToken(result.Count, textToken.ToString()));
+                    result.Add(new TextToken(textToken.ToString()));
                 }
 
                 textStart = index;
-                token.ResetIndex(result.Count);
+
                 result.Add(token);
             }
         }
@@ -82,7 +150,7 @@ public static class TemplateParser
         {
             var textToken = text[textStart..textEnd];
 
-            result.Add(new TextToken(result.Count, textToken.ToString()));
+            result.Add(new TextToken(textToken.ToString()));
         }
 
         return result;
@@ -90,7 +158,6 @@ public static class TemplateParser
 
     private static bool TryParseProperty(
         ReadOnlySpan<char> text,
-        int index,
         [NotNullWhen(true)] out ITemplatePropertyToken? token)
     {
         token = null;
@@ -238,11 +305,11 @@ public static class TemplateParser
 
         if(parameterIndex != null)
         {
-            token = new IndexerPropertyToken(parameterIndex.Value, type, format.ToString(), 0, align, indent);
+            token = new IndexerPropertyToken(parameterIndex.Value, type, format.ToString(), align, indent);
         }
         else
         {
-            token = new NamedPropertyToken(name.ToString(), type, format.ToString(), 0, align, indent);
+            token = new NamedPropertyToken(name.ToString(), type, format.ToString(), align, indent);
         }
 
         return true;

@@ -2,16 +2,8 @@ namespace OneI.Logable;
 
 using Definitions;
 
-/// <summary>
-/// The code printer.
-/// </summary>
 internal static partial class CodePrinter
 {
-    /// <summary>
-    /// Prints the method.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="method">The method.</param>
     internal static void PrintMethod(IndentedStringBuilder builder, MethodDef method)
     {
         builder.Append($"public static void {method.Name}");
@@ -39,11 +31,6 @@ internal static partial class CodePrinter
         builder.AppendLine("}");
     }
 
-    /// <summary>
-    /// Prints the method parameters.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="method">The method.</param>
     private static void PrintMethodParameters(IndentedStringBuilder builder, MethodDef method)
     {
         if(method.IsLogger)
@@ -82,30 +69,31 @@ internal static partial class CodePrinter
         }
     }
 
-    /// <summary>
-    /// Prints the method body.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="method">The method.</param>
     private static void PrintMethodBody(IndentedStringBuilder builder, MethodDef method)
     {
-        builder.AppendLine($"var propertyValues = new global::OneI.Logable.Templatizations.ITemplatePropertyValue[{method.Parameters.Count}]");
+        builder.AppendLine($"var properties = new global::OneI.ValueDictionary<global::System.String, global::OneI.Logable.Templatizations.ITemplatePropertyValue>({method.Parameters.Count})");
 
         builder.AppendLine("{");
 
         using(builder.Indent())
         {
-            foreach(var parameter in method.Parameters)
+            for(int i = 0; i < method.Parameters.Count; i++)
             {
+                var parameter = method.Parameters[i];
+
+                builder.Append($"{{ \"__{i}\", ");
+
                 var type = _types.FirstOrDefault(x => x.Equals(parameter.Type));
                 if(type is not null)
                 {
-                    builder.AppendLine($"{CodeAssets.LoggerPropertyCreateCalledName}({parameter.Name}),");
+                    builder.Append($"{CodeAssets.LoggerPropertyCreateCalledName}({parameter.Name})");
                 }
                 else
                 {
-                    builder.AppendLine($"new global::OneI.Logable.Templatizations.LiteralValue<{parameter.Type}>({parameter.Name}),");
+                    builder.Append($"new global::OneI.Logable.Templatizations.LiteralValue<{parameter.Type}>({parameter.Name})");
                 }
+
+                builder.AppendLine("},");
             }
         }
 
@@ -142,6 +130,6 @@ internal static partial class CodePrinter
 
         builder.Append($"{CodeAssets.MessageParameterName}.AsMemory(), ");
 
-        builder.AppendLine("propertyValues, file.AsMemory(), member.AsMemory(), line);");
+        builder.AppendLine("properties, file.AsMemory(), member.AsMemory(), line);");
     }
 }

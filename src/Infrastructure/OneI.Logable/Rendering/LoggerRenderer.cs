@@ -13,6 +13,6 @@ public class LoggerRenderer : ILoggerRenderer
 
     public void Render(LoggerContext context, TextWriter writer)
     {
-        TemplateContext.Render(writer, context.Tokens, context.MessageContext, _formatProvider);
+        TemplateRenderer.Render(writer, context.Tokens, context.MessageContext, _formatProvider);
     }
 }

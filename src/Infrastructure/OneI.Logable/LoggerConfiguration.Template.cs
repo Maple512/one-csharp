@@ -21,9 +21,11 @@ public partial class LoggerConfiguration
             return _parent;
         }
 
-        public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, scoped ReadOnlySpan<char> template)
+        public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, string template)
         {
-            _parent._templateTokens.Add(new TemplateProvider(condition, template));
+            Check.NotNull(condition);
+
+            _parent._templateProviders.Add(new TemplateItem(condition, template.AsMemory()));
 
             return _parent;
         }

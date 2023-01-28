@@ -19,7 +19,7 @@ public class ValueStringWriter : TextWriter
     {
     }
 
-    public ValueStringWriter( IFormatProvider? formatProvider)
+    public ValueStringWriter(IFormatProvider? formatProvider)
         : this(new ValueStringBuilder(), formatProvider)
     {
     }

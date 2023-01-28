@@ -33,18 +33,18 @@ internal class LogLevelMap
 
     public bool IsEnabled(LogLevel level)
     {
-        var sl = (sbyte)level;
-        if((sbyte)Minimum > (sbyte)level)
+        if(Minimum > level)
         {
             return false;
         }
 
-        return (sbyte)Maximum >= sl;
+        return Maximum >= level;
     }
 
     public LogLevelRange GetEffectiveLevel(string? context = null)
     {
-        if(context is { Length: > 0 })
+        if(context is { Length: > 0 }
+            && _overrides is { Count: > 0 })
         {
             foreach(var item in _overrides)
             {

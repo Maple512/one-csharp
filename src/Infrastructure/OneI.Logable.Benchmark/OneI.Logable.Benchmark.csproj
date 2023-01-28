@@ -25,4 +25,9 @@
 
     <Import Project="../../common.test.benchmark.props" />
 
+    <ItemGroup>
+        <None Update="nlog.config" CopyToOutputDirectory="Always" />
+        <None Update="nlog.empty.config" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+
 </Project>

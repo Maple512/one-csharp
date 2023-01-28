@@ -8,9 +8,9 @@ public class TemplateParser_Test
     [Fact]
     public void parse_text()
     {
-        var text = "{Date:yyyy-MM-dd HH:mm:ss,-12'10}";
+        var text = "{Date:yyyy-MM-dd HH:mm:ss,-12'10}".AsMemory();
 
-        var tokens = TemplateParser.Parse(text);
+        var tokens = TemplateParser.Parse(text).ToList();
 
         tokens.Count.ShouldBe(1);
 

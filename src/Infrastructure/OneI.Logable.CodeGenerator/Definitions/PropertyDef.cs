@@ -1,26 +1,14 @@
 namespace OneI.Logable.Definitions;
 
-/// <summary>
-/// 描述对象的属性
-/// </summary>
+using System.Collections.Generic;
+
 public class PropertyDef
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PropertyDef"/> class.
-    /// </summary>
-    /// <param name="name">The name.</param>
-    /// <param name="type">The type.</param>
     public PropertyDef(string name, TypeDef type)
         : this(name, -1, type)
     {
     }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PropertyDef"/> class.
-    /// </summary>
-    /// <param name="name">The name.</param>
-    /// <param name="index">The index.</param>
-    /// <param name="type">The type.</param>
     public PropertyDef(string name, int index, TypeDef type)
     {
         Name = name;
@@ -28,25 +16,34 @@ public class PropertyDef
         Type = type;
     }
 
-    /// <summary>
-    /// 属性名称
-    /// </summary>
     public string Name { get; }
 
-    /// <summary>
-    /// 索引
-    /// </summary>
     public int Index { get; }
 
-    /// <summary>
-    /// 类型
-    /// </summary>
     public TypeDef Type { get; }
 
-    /// <summary>
-    /// Tos the string.
-    /// </summary>
-    /// <returns>A string.</returns>
+    public bool Equals(PropertyDef other)
+    {
+        return other is not null
+             && Name.Equals(other.Name, StringComparison.InvariantCulture)
+             && Index == other.Index
+             && Type.Equals(other.Type);
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is PropertyDef pd && Equals(pd);
+    }
+
+    public override int GetHashCode()
+    {
+        var hashCode = 1280133078;
+        hashCode = hashCode * -1521134295 + Name.GetHashCode();
+        hashCode = hashCode * -1521134295 + Index.GetHashCode();
+        hashCode = hashCode * -1521134295 + Type.GetHashCode();
+        return hashCode;
+    }
+
     public override string ToString()
     {
         return Name;

@@ -9,6 +9,4 @@ public interface ITemplatePropertyToken : ITemplateToken
     TextAlignment? Alignment { get; }
 
     int? Indent { get; }
-
-    void ResetIndex(int index);
 }

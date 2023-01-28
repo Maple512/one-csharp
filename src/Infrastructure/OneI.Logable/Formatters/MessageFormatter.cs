@@ -11,7 +11,7 @@ namespace OneI.Logable.Formatters;
 
 //    public void Format(string? value, TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
 //    {
-//        var template = new TemplateContext(_tokens, _properties.NamedProperties,_properties.IndexerProperties);
+//        var template = new TemplateRenderer(_tokens, _properties.NamedProperties,_properties.IndexerProperties);
 
 //        template.Render(writer, formatProvider);
 //    }

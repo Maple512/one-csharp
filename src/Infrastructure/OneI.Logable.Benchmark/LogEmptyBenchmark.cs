@@ -1,29 +1,23 @@
 namespace OneI.Logable;
 
-using Serilog;
-
-public class LogFileBenchmark : IValidator
+public class LogEmptyBenchmark : IValidator
 {
-    private const int count = 1000;
+    private const int count = 1;
+
     private static Serilog.Core.Logger? serilog;
-    private static ILogger? logger;
+    private static ILogger? logable;
     private static NLog.Logger? nlog;
 
     [GlobalSetup]
     public void Initialize()
     {
         serilog = new Serilog.LoggerConfiguration()
-                .WriteTo.File("./Logs/serilog.log", rollingInterval: RollingInterval.Minute)
                 .CreateLogger();
 
-        logger = new LoggerConfiguration()
-            .Sink.File("./Logs/logable.log", options =>
-            {
-                options.Frequency = RollFrequency.Minute;
-            })
+        logable = new LoggerConfiguration()
             .CreateLogger();
 
-        nlog = NLog.LogManager.GetCurrentClassLogger();
+        nlog = NLog.LogManager.LoadConfiguration("nlog.empty.config").GetCurrentClassLogger();
     }
 
     [Benchmark(Baseline = true)]
@@ -40,7 +34,7 @@ public class LogFileBenchmark : IValidator
     {
         for(var i = 0; i < count; i++)
         {
-            logger.Information(" {0} {1} {2} {3} ", 1, 2, 3, new object());
+            logable.Information(" {0} {1} {2} {3} ", 1, 2, 3, new object());
         }
     }
 
@@ -55,6 +49,8 @@ public class LogFileBenchmark : IValidator
 
     public void Validate()
     {
+        Initialize();
+
         UseSeriLog();
 
         UseLogable();

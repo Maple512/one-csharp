@@ -142,7 +142,7 @@ public class LoggerCodeGenerator : IIncrementalGenerator
             return;
         }
 
-        var methods = new List<MethodDef>();
+        var methods = new HashSet<MethodDef>(MethodDefComparer.Instance);
         foreach(var item in nodes.Where(x => x is not null).Select(x => x!.Value))
         {
             if(InvocationExpressionParser.TryParse(item!, compilation, out var result))
@@ -161,5 +161,22 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
             context.AddSource(CodeAssets.LoggerExtensionExtensionClassFileName, loggerExtensions);
         }
+    }
+}
+
+public class MethodDefComparer : IEqualityComparer<MethodDef>
+{
+    public static readonly IEqualityComparer<MethodDef> Instance = new MethodDefComparer();
+
+    public bool Equals(MethodDef x, MethodDef y)
+    {
+        return x.Equals(y);
+    }
+
+    public int GetHashCode(MethodDef obj)
+    {
+        var a = obj.GetHashCode();
+
+        return a;
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace OneI.Openable;
+namespace OneI.Openable;
 public class Class1
 {
 
