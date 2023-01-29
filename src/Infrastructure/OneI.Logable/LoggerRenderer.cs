@@ -1,6 +1,7 @@
-namespace OneI.Logable.Rendering;
+namespace OneI.Logable;
 
-using OneI.Logable.Templatizations;
+using System;
+using OneI.Logable.Templates;
 
 public class LoggerRenderer : ILoggerRenderer
 {
@@ -11,8 +12,9 @@ public class LoggerRenderer : ILoggerRenderer
         _formatProvider = formatProvider;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Render(LoggerContext context, TextWriter writer)
     {
-        TemplateRenderer.Render(writer, context.Tokens, context.MessageContext, _formatProvider);
+        TemplateRenderHelper.Render(writer, context.Template, context.Message, context.Context, _formatProvider);
     }
 }

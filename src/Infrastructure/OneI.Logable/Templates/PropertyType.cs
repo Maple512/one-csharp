@@ -1,6 +1,6 @@
-namespace OneI.Logable.Templatizations.Tokenizations;
+namespace OneI.Logable.Templates;
 
-public enum PropertyTokenType : sbyte
+public enum PropertyType : sbyte
 {
     /// <summary>
     /// 调用对象的<see cref="object.ToString"/>方法

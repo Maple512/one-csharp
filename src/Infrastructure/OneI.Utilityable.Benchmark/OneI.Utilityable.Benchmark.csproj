@@ -1,7 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../common.test.benchmark.props" />
-
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
         <OutputType>Exe</OutputType>
@@ -12,6 +10,8 @@
     <ItemGroup>
       <PackageReference Include="DotNext.IO" Version="4.8.2" />
     </ItemGroup>
+
+    <Import Project="../../common.test.benchmark.props" />
 
     <ItemGroup>
       <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />

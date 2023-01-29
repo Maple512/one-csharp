@@ -1,7 +1,4 @@
 namespace OneI.Logable.Definitions;
-
-using System.Collections.Generic;
-
 public class PropertyDef
 {
     public PropertyDef(string name, TypeDef type)

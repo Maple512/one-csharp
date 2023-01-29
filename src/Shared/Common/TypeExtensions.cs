@@ -21,7 +21,7 @@ internal static partial class TypeExtensions
     /// <param name="member">The member.</param>
     /// <param name="inherit">If true, inherit.</param>
     /// <returns>A bool.</returns>
-    [Obsolete]
+    
     public static bool IsDefined<T>(this MemberInfo member, bool inherit = false)
     {
         return member.IsDefined(typeof(T), inherit);
@@ -32,7 +32,7 @@ internal static partial class TypeExtensions
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>A T.</returns>
-    [Obsolete]
+    
     public static T GetRequiredAttribute<T>(this Type type)
         where T : Attribute
     {
@@ -46,7 +46,7 @@ internal static partial class TypeExtensions
     /// <param name="fullName"></param>
     /// <param name="isCompilable"></param>
     /// <returns></returns>
-    [Obsolete]
+    
     public static string DisplayName(this Type type, bool fullName = true, bool isCompilable = false)
     {
         return string.Empty;
@@ -57,7 +57,7 @@ internal static partial class TypeExtensions
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    [Obsolete]
+    
     public static string ShortDisplayName(this Type type)
     {
         return type.DisplayName(false);
@@ -87,7 +87,7 @@ internal static partial class TypeExtensions
     /// <param name="type"></param>
     /// <param name="constructor"></param>
     /// <returns></returns>
-    [Obsolete]
+    
     public static bool TryGetParameterlessConstructor(
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] this Type type,
         [NotNullWhen(true)] out ConstructorInfo? constructor)
@@ -105,7 +105,7 @@ internal static partial class TypeExtensions
     /// <param name="type"></param>
     /// <param name="constructor"></param>
     /// <returns></returns>
-    [Obsolete]
+    
     public static bool TryGetParameterlessConstructor(
         this Type type,
          out ConstructorInfo? constructor)

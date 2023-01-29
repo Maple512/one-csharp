@@ -1,6 +1,6 @@
 namespace OneI.Logable.Fakes;
 
-using Rendering;
+using OneI.Logable;
 
 public sealed class StringOutputSink : ILoggerSink
 {

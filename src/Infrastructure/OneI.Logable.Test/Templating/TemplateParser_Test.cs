@@ -1,20 +1,56 @@
 namespace OneI.Logable.Templating;
 
-using Templatizations;
-using Templatizations.Tokenizations;
+using Shouldly;
+using Templates;
 
 public class TemplateParser_Test
 {
     [Fact]
-    public void parse_text()
+    public void parse_property()
     {
-        var text = "{Date:yyyy-MM-dd HH:mm:ss,-12'10}".AsMemory();
+        var enumerator = new TemplateEnumerator("{Date:yyyy-MM-dd HH:mm:ss,-12'10}");
 
-        var tokens = TemplateParser.Parse(text).ToList();
+        while(enumerator.MoveNext())
+        {
+            Debug.WriteLine(enumerator.Current.ToString());
+        }
+    }
 
-        tokens.Count.ShouldBe(1);
+    [Theory]
+    [InlineData("asdasdfasdf")]
+    [InlineData("asdasdfasdf}")]
+    [InlineData("asdasdfasdf{")]
+    [InlineData("asdasdfasdf}asdfasdf")]
+    [InlineData("asdasdfasdf{asdfasdf")]
+    [InlineData("asdasdfasdf{{{{{{asdfasdf")]
+    [InlineData("asdasdfasdf}}asdfasdf")]
+    [InlineData("asdasdfasdf{}}}asdfasdf")]
+    public void parse_text(string text)
+    {
+        var enumerator = new TemplateEnumerator(text);
 
-        tokens.First().ShouldBeAssignableTo<NamedPropertyToken>();
+        while(enumerator.MoveNext())
+        {
+            Debug.WriteLine(enumerator.Current.ToString());
+        }
+    }
+
+    [Theory]
+    [InlineData("as{{{f{0}", new[] { true, false })]
+    [InlineData("as{{{f{0}}{a}{b} {{{c}}}", new[] { true, false, true, false, false, true, false, true })]
+    [InlineData("{1}{2}{3}", new[] { false, false, false })]
+    [InlineData("{1}{2-+-asdf:::,,,}{3}", new[] { false, true, false })]
+    public void parse_admix(string text, bool[] expected)
+    {
+        var enumerator = new TemplateEnumerator(text);
+
+        var index = 0;
+        while(enumerator.MoveNext())
+        {
+            Debug.WriteLine(enumerator.Current);
+            enumerator.Current.IsText().ShouldBe(expected[index], $"Index: {index}");
+            ++index;
+        }
     }
 }
 /*

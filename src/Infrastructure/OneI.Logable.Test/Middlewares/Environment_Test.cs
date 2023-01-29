@@ -6,6 +6,7 @@ using Fakes;
 public class Environment_Test
 {
     [Fact]
+    
     public void environment_values()
     {
         var logger = Fake.CreateLogger(

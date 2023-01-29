@@ -1,7 +1,7 @@
 namespace OneI.Logable;
 
 using Configurations;
-using OneI.Logable.Templatizations;
+using OneI.Logable.Templates;
 
 public partial class LoggerConfiguration
 {

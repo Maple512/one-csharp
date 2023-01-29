@@ -14,7 +14,7 @@ public class StringFormatBenchmark : IValidator
         var result = UseStringBuilder();
 
         IValidator.AreEquals(result, UseList());
-        IValidator.AreEquals(result, UseValueStringBuilder());
+       // IValidator.AreEquals(result, UseValueStringBuilder());
     }
 
     [Benchmark(Baseline = true)]

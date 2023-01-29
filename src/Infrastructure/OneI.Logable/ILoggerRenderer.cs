@@ -1,4 +1,4 @@
-namespace OneI.Logable.Rendering;
+namespace OneI.Logable;
 
 public interface ILoggerRenderer
 {

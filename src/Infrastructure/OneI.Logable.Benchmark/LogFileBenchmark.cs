@@ -10,20 +10,22 @@ public class LogFileBenchmark : IValidator
     private static NLog.Logger? nlog;
 
     [GlobalSetup]
+    
     public void Initialize()
     {
         serilog = new Serilog.LoggerConfiguration()
-                .WriteTo.File("./Logs/serilog.log", rollingInterval: RollingInterval.Minute)
+                .WriteTo.File("./Logs/serilog.log", outputTemplate: "{NewLine}", rollingInterval: RollingInterval.Minute)
                 .CreateLogger();
 
         logger = new LoggerConfiguration()
+            .Template.Default("{NewLine}")
             .Sink.File("./Logs/logable.log", options =>
             {
                 options.Frequency = RollFrequency.Minute;
             })
             .CreateLogger();
 
-        nlog = NLog.LogManager.GetCurrentClassLogger();
+        nlog = NLog.LogManager.LoadConfiguration("nlog.config").GetCurrentClassLogger();
     }
 
     [Benchmark(Baseline = true)]

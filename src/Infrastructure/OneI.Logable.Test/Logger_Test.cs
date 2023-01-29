@@ -2,10 +2,24 @@ namespace OneI.Logable;
 
 using Fakes;
 using Middlewares;
-using Templatizations;
+using OneI.Logable.Templates;
 
 public class Logger_Test
 {
+    [Fact]
+    public void size_of()
+    {
+        Unsafe.SizeOf<TextAlignment>().ShouldBe(8);
+
+        // Unsafe.SizeOf<TemplateHolder>().ShouldBe(8);
+
+        TestTools.PrintLayoutToFile<TemplateHolder>();
+
+        TestTools.PrintLayoutToFile<TemplateEnumerator>();
+
+        TestTools.PrintLayoutToFile<ReadOnlyMemory<char>>();
+    }
+
     [Fact]
     public void level_enalble_state()
     {
@@ -44,7 +58,7 @@ public class Logger_Test
             .Use(new ActionMiddleware(_ => order.Add(2)))
             .Audit.Attach(c =>
             {
-                c.MessageContext.Properties.TryGetValue(name, out propertyId);
+                c.Context.Properties.TryGetValue(name, out propertyId);
             }));
 
         var scope = new ILoggerMiddleware[]
@@ -76,6 +90,7 @@ public class Logger_Test
     }
 
     [Fact]
+    
     public void logger_test()
     {
         var logger = Fake.CreateLogger(logger: configure =>

@@ -7,6 +7,7 @@ public static class Fake
     private const string Template = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}";
     public const string ErrorTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} {SourceContext} [{Level}] {Message}{NewLine}{Exception'4}{NewLine}{FilePath'4}#L{LineNumber}@{MemberName}{NewLine}";
 
+    
     public static ILogger CreateLogger(
         string? template = null,
         Action<ILoggerConfiguration>? logger = null,

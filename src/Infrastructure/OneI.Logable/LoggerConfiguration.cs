@@ -2,7 +2,7 @@ namespace OneI.Logable;
 
 using Configurations;
 using Middlewares;
-using Templatizations;
+using Templates;
 
 public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipelineConfiguration
 {

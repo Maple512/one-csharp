@@ -71,13 +71,13 @@ internal static partial class CodePrinter
 
     private static void PrintMethodBody(IndentedStringBuilder builder, MethodDef method)
     {
-        builder.AppendLine($"var properties = new global::OneI.ValueDictionary<global::System.String, global::OneI.Logable.Templatizations.ITemplatePropertyValue>({method.Parameters.Count})");
+        builder.AppendLine($"var properties = new global::OneI.ValueDictionary<global::System.String, global::OneI.Logable.Templates.ITemplatePropertyValue>({method.Parameters.Count})");
 
         builder.AppendLine("{");
 
         using(builder.Indent())
         {
-            for(int i = 0; i < method.Parameters.Count; i++)
+            for(var i = 0; i < method.Parameters.Count; i++)
             {
                 var parameter = method.Parameters[i];
 
@@ -90,7 +90,7 @@ internal static partial class CodePrinter
                 }
                 else
                 {
-                    builder.Append($"new global::OneI.Logable.Templatizations.LiteralValue<{parameter.Type}>({parameter.Name})");
+                    builder.Append($"new global::OneI.Logable.Templates.LiteralValue<{parameter.Type}>({parameter.Name})");
                 }
 
                 builder.AppendLine("},");
@@ -128,8 +128,8 @@ internal static partial class CodePrinter
             builder.Append("null, ");
         }
 
-        builder.Append($"{CodeAssets.MessageParameterName}.AsMemory(), ");
+        builder.Append($"{CodeAssets.MessageParameterName}, ");
 
-        builder.AppendLine("properties, file.AsMemory(), member.AsMemory(), line);");
+        builder.AppendLine("properties, file, member, line);");
     }
 }

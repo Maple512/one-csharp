@@ -122,14 +122,17 @@ public class TypeDef : IEquatable<TypeDef>
         {
             hashCode = hashCode * -1521134295 + item.GetHashCode();
         }
+
         foreach(var item in TypeArguments)
         {
             hashCode = hashCode * -1521134295 + item.GetHashCode();
         }
+
         foreach(var item in Constraints)
         {
             hashCode = hashCode * -1521134295 + item?.GetHashCode() ?? 0;
         }
+
         hashCode = hashCode * -1521134295 + IsTypeParameters.GetHashCode();
         hashCode = hashCode * -1521134295 + IsGenericType.GetHashCode();
         hashCode = hashCode * -1521134295 + Kind.GetHashCode();
@@ -137,6 +140,7 @@ public class TypeDef : IEquatable<TypeDef>
         {
             hashCode = hashCode * -1521134295 + item.GetHashCode();
         }
+
         return hashCode;
     }
 }

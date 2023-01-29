@@ -3,7 +3,7 @@ namespace OneI.Logable;
 using System;
 using System.ComponentModel;
 using Middlewares;
-using Templatizations;
+using Templates;
 
 public static class LoggerExtensions
 {
@@ -59,10 +59,9 @@ public static class LoggerExtensions
     /// <param name="logger"></param>
     /// <param name="name"></param>
     /// <param name="value"></param>
-    /// <param name="formatter"></param>
     /// <returns></returns>
-    public static IDisposable BeginScope<T>(this ILogger logger, string name, T value, IPropertyValueFormatter<T?>? formatter = null)
-        => logger.BeginScope(new PropertyMiddleware<T>(name, value, formatter));
+    public static IDisposable BeginScope<T>(this ILogger logger, string name, T value)
+        => logger.BeginScope(new PropertyMiddleware<T>(name, value));
 
     /// <summary>
     /// 在现有<see cref="ILogger"/>的基础上，添加指定的属性
@@ -72,11 +71,10 @@ public static class LoggerExtensions
     /// <param name="logger"></param>
     /// <param name="name"></param>
     /// <param name="value"></param>
-    /// <param name="formatter"></param>
     /// <returns></returns>
-    public static IAsyncDisposable BeginScopeAsync<T>(this ILogger logger, string name, T value, IPropertyValueFormatter<T?>? formatter = null)
+    public static IAsyncDisposable BeginScopeAsync<T>(this ILogger logger, string name, T value)
     {
-        return logger.BeginScopeAsync(new PropertyMiddleware<T>(name, value, formatter));
+        return logger.BeginScopeAsync(new PropertyMiddleware<T>(name, value));
     }
 
     #endregion
@@ -85,16 +83,16 @@ public static class LoggerExtensions
 
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Write(this ILogger logger, LogLevel level, string? message, params object?[] args)
+    public static void Write(this ILogger logger, LogLevel level, string message, params object?[] args)
     {
-        WriteCore(logger, level, null, message.AsMemory(), default);
+        WriteCore(logger, level, null, message, default);
     }
 
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Write(this ILogger logger, LogLevel level, Exception exception, string? message, params object?[] args)
+    public static void Write(this ILogger logger, LogLevel level, Exception exception, string message, params object?[] args)
     {
-        WriteCore(logger, level, exception, message.AsMemory(), default);
+        WriteCore(logger, level, exception, message, default);
     }
 
     #endregion Write
@@ -102,15 +100,15 @@ public static class LoggerExtensions
     #region Verbose
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Verbose(this ILogger logger, string? message, params object?[] args)
+    public static void Verbose(this ILogger logger, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Verbose, null, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Verbose, null, message, default);
     }
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Verbose(this ILogger logger, Exception exception, string? message, params object?[] args)
+    public static void Verbose(this ILogger logger, Exception exception, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Verbose, exception, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Verbose, exception, message, default);
     }
 
     #endregion Verbose
@@ -118,15 +116,15 @@ public static class LoggerExtensions
     #region Debug
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Debug(this ILogger logger, string? message, params object?[] args)
+    public static void Debug(this ILogger logger, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Debug, null, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Debug, null, message, default);
     }
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Debug(this ILogger logger, Exception exception, string? message, params object?[] args)
+    public static void Debug(this ILogger logger, Exception exception, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Debug, exception, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Debug, exception, message, default);
     }
 
     #endregion Debug
@@ -134,15 +132,15 @@ public static class LoggerExtensions
     #region Information
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Information(this ILogger logger, string? message, params object?[] args)
+    public static void Information(this ILogger logger, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Information, null, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Information, null, message, default);
     }
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Information(this ILogger logger, Exception exception, string? message, params object?[] args)
+    public static void Information(this ILogger logger, Exception exception, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Information, exception, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Information, exception, message, default);
     }
 
     #endregion Information
@@ -150,15 +148,15 @@ public static class LoggerExtensions
     #region Warning
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Warning(this ILogger logger, string? message, params object?[] args)
+    public static void Warning(this ILogger logger, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Warning, null, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Warning, null, message, default);
     }
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Warning(this ILogger logger, Exception exception, string? message, params object?[] args)
+    public static void Warning(this ILogger logger, Exception exception, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Warning, exception, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Warning, exception, message, default);
     }
 
     #endregion Warning
@@ -166,15 +164,15 @@ public static class LoggerExtensions
     #region Error
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Error(this ILogger logger, string? message, params object?[] args)
+    public static void Error(this ILogger logger, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Error, null, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Error, null, message, default);
     }
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Error(this ILogger logger, Exception exception, string? message, params object?[] args)
+    public static void Error(this ILogger logger, Exception exception, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Error, exception, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Error, exception, message, default);
     }
 
     #endregion Error
@@ -182,15 +180,15 @@ public static class LoggerExtensions
     #region Fatal
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Fatal(this ILogger logger, string? message, params object?[] args)
+    public static void Fatal(this ILogger logger, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Fatal, null, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Fatal, null, message, default);
     }
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Fatal(this ILogger logger, Exception exception, string? message, params object?[] args)
+    public static void Fatal(this ILogger logger, Exception exception, string message, params object?[] args)
     {
-        WriteCore(logger, LogLevel.Fatal, exception, message.AsMemory(), default);
+        WriteCore(logger, LogLevel.Fatal, exception, message, default);
     }
 
     #endregion Fatal
@@ -199,10 +197,10 @@ public static class LoggerExtensions
         ILogger logger,
         LogLevel level,
         Exception? exception,
-        ReadOnlyMemory<char> message,
+        string message,
         ValueDictionary<string, ITemplatePropertyValue> properties,
-        ReadOnlyMemory<char> file = default,
-        ReadOnlyMemory<char> member = default,
+        string? file = null,
+        string? member = null,
         int line = 0)
     {
         var context = new LoggerMessageContext(
@@ -210,8 +208,8 @@ public static class LoggerExtensions
             message,
             exception,
             properties,
-            file,
-            member,
+            file!,
+            member!,
             line);
 
         logger.Write(context);

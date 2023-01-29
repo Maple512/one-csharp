@@ -1,24 +1,29 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Templatizations.Tokenizations;
+using OneI.Logable.Templates;
 
 public readonly struct LoggerContext
 {
-    internal LoggerContext(
-        LoggerMessageContext messageContext,
-        IEnumerable<ITemplateToken> tokens)
+    public LoggerContext(LoggerMessageContext context, TemplateEnumerator template, TemplateEnumerator message)
     {
-        MessageContext = messageContext;
-        Tokens = tokens;
+        Context = context;
+        Template = template;
+        Message = message;
     }
 
-    public LoggerMessageContext MessageContext
+    public LoggerMessageContext Context
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get;
     }
 
-    public IEnumerable<ITemplateToken> Tokens
+    public TemplateEnumerator Template
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get;
+    }
+
+    public TemplateEnumerator Message
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get;

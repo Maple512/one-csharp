@@ -2,7 +2,6 @@ namespace OneI.Logable;
 
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Templatizations;
 
 public interface ILogger : IDisposable, IAsyncDisposable
 {
@@ -19,7 +18,7 @@ public interface ILogger : IDisposable, IAsyncDisposable
     /// 在现有<see cref="ILogger"/>的基础上，创建一个新的<see cref="ILogger"/>
     /// </summary>
     /// <returns></returns>
-    ILogger ForContext<TValue>(string name, TValue value, IPropertyValueFormatter<TValue?>? formatter = null);
+    ILogger ForContext<TValue>(string name, TValue value);
 
     /// <summary>
     /// 在现有<see cref="ILogger"/>的基础上，添加指定的<see cref="ILoggerMiddleware"/>
@@ -185,7 +184,7 @@ public readonly struct NoneLogger : ILogger
         throw new NotImplementedException();
     }
 
-    public ILogger ForContext<TValue>(string name, TValue value, IPropertyValueFormatter<TValue?>? formatter = null)
+    public ILogger ForContext<TValue>(string name, TValue value)
     {
         throw new NotImplementedException();
     }

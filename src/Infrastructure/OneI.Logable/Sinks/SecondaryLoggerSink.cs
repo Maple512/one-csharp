@@ -13,7 +13,7 @@ public class SecondaryLoggerSink : ILoggerSink, IDisposable, IAsyncDisposable
 
     public void Invoke(LoggerContext context)
     {
-        _secondaryLogger.Write(context.MessageContext);
+        _secondaryLogger.Write(context.Context);
     }
 
     public void Dispose()

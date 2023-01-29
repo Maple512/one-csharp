@@ -1,4 +1,4 @@
-namespace OneI.Logable.Templatizations;
+namespace OneI.Logable.Templates;
 
 /// <summary>
 /// 描述文本的对齐方向和宽度

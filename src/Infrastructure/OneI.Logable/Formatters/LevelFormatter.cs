@@ -1,18 +1,6 @@
 namespace OneI.Logable.Formatters;
 
-using Templatizations;
 using static LoggerConstants;
-
-[Obsolete]
-public class LevelFormatter : IPropertyValueFormatter<LogLevel>
-{
-    public static readonly IPropertyValueFormatter<LogLevel> Instance = new LevelFormatter();
-
-    public virtual void Format(LogLevel value, TextWriter writer, string? format = null, IFormatProvider? formatProvider = null)
-    {
-        writer.Write(LevelFormatHelper.Format(value, format));
-    }
-}
 
 internal static class LevelFormatHelper
 {

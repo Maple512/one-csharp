@@ -2,7 +2,7 @@ namespace OneI.Logable;
 
 public class LogEmptyBenchmark : IValidator
 {
-    private const int count = 1;
+    private const int count = 1000;
 
     private static Serilog.Core.Logger? serilog;
     private static ILogger? logable;

@@ -2,9 +2,7 @@ namespace OneI.Logable;
 
 using System;
 using Internal;
-using Rendering;
-using Templatizations;
-using Templatizations.Tokenizations;
+using Templates;
 
 internal class FileSink : ILoggerSink, IDisposable
 {
@@ -20,7 +18,7 @@ internal class FileSink : ILoggerSink, IDisposable
     public FileSink(LogFileOptions options)
     {
         _options = options;
-        _files = new((int)options.CountLimit);
+        _files = new(options.CountLimit);
         _renderer = options.Renderer;
     }
 
@@ -48,11 +46,10 @@ internal class FileSink : ILoggerSink, IDisposable
     {
         _nextPeroid ??= _options.Frequency.GetNextPeriod(datetime);
 
-        // 初始化
-        _writer ??= InlitializeFileStream(context, datetime, true);
+        _writer ??= InlitializeTextWriter(context, datetime, true);
 
         // 长度限制
-        if(_options.SizeLimit > 0 && _options.SizeLimit <= (ulong)_counter!.Position)
+        if(_options.SizeLimit > 0 && _options.SizeLimit <= _counter!.Position)
         {
             OpenFile(context, datetime);
         }
@@ -77,15 +74,16 @@ internal class FileSink : ILoggerSink, IDisposable
         if(_options.CountLimit > 1
             && _files.Count > _options.CountLimit)
         {
-            DeleteFiles(_files.Take(_files.Count - (int)_options.CountLimit));
+            DeleteFiles(_files.Take(_files.Count - _options.CountLimit));
         }
     }
 
+    
     private void OpenFile(LoggerContext context, DateTime datetime)
     {
         _writer!.Dispose();
 
-        _writer = InlitializeFileStream(context, datetime, false);
+        _writer = InlitializeTextWriter(context, datetime, false);
     }
 
     private static void DeleteFiles(IEnumerable<FileItem> files)
@@ -100,9 +98,9 @@ internal class FileSink : ILoggerSink, IDisposable
         }
     }
 
-    private StreamWriter InlitializeFileStream(LoggerContext context, DateTime datetime, bool init)
+    private StreamWriter InlitializeTextWriter(LoggerContext context, DateTime datetime, bool init)
     {
-        var path = ParseFilePath(context);
+        var path = _options.Path;
 
         var directory = Path.GetDirectoryName(path)!;
         var name = Path.GetFileNameWithoutExtension(path);
@@ -119,10 +117,10 @@ internal class FileSink : ILoggerSink, IDisposable
         {
             Access = FileAccess.Write,
             Mode = FileMode.OpenOrCreate,
-            Options = FileOptions.RandomAccess | FileOptions.Asynchronous,
+            //Options = FileOptions.RandomAccess | FileOptions.Asynchronous,
             Share = FileShare.Read,
-            PreallocationSize = (long)_options.SizeLimit,
-            BufferSize = (int)_options.BufferSize,
+            PreallocationSize = _options.SizeLimit,
+            BufferSize = _options.BufferSize,
         };
 
         Stream stream = new FileStream(fullPath, options);
@@ -139,14 +137,5 @@ internal class FileSink : ILoggerSink, IDisposable
         _files.Add(new FileItem(fullPath));
 
         return new StreamWriter(stream);
-    }
-
-    private string ParseFilePath(LoggerContext context)
-    {
-        using var writer = new StringWriter(new StringBuilder(10));
-
-        TemplateRenderer.Render(writer, _options.Tokens, context.MessageContext);
-
-        return writer.ToString();
     }
 }

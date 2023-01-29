@@ -1,4 +1,4 @@
-namespace OneI.Logable.Templatizations;
+namespace OneI.Logable.Templates;
 
 public interface ITemplateProperty
 {

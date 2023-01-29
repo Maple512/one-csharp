@@ -1,4 +1,4 @@
-namespace OneI.Logable.Templatizations;
+namespace OneI.Logable.Templates;
 
 /// <summary>
 /// 对齐方向

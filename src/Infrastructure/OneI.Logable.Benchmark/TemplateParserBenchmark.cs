@@ -1,15 +1,14 @@
 namespace OneI.Logable;
 
-using System.Globalization;
-using NLog;
+using OneI.Logable.NLogInternal;
 using Serilog.Parsing;
-using Templatizations;
+using Templates;
 
 public class TemplateParserBenchmark
 {
     private const string text = "a6sd5f4asdf45as6f{0:yyyy-MM-dd HH:mm:ss}asd6fa4sdf65asdf";
 
-    [Params(100)]
+    [Params(1000)]
     public int count;
 
     [Benchmark(Baseline = true)]
@@ -22,20 +21,12 @@ public class TemplateParserBenchmark
     }
 
     [Benchmark]
+
     public void UseLogable()
     {
         for(var i = 0; i < count; i++)
         {
-            var _ = TemplateParser.Parse2(text);
-        }
-    }
-
-    [Benchmark]
-    public void UseLogable1()
-    {
-        for(var i = 0; i < count; i++)
-        {
-            var _ = TemplateParser.Parse(text.AsMemory());
+            var _ = new TemplateEnumerator(text);
         }
     }
 
@@ -44,8 +35,11 @@ public class TemplateParserBenchmark
     {
         for(var i = 0; i < count; i++)
         {
-            var _ = new LogEventInfo(NLog.LogLevel.Debug, "TemplateParserBenchmark", CultureInfo.InvariantCulture,
-           text, new object[] { DateTime.Now }).MessageTemplateParameters;
+            var enumerator = new NLogTemplateEnumerator(text);
+            while(enumerator.MoveNext())
+            {
+                _ = enumerator.Current;
+            }
         }
     }
 }

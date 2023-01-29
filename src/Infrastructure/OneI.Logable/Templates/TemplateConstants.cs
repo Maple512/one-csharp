@@ -1,4 +1,4 @@
-namespace OneI.Logable.Templatizations;
+namespace OneI.Logable.Templates;
 
 internal static class TemplateConstants
 {
@@ -11,9 +11,10 @@ internal static class TemplateConstants
         public const int AlignLengthLimit = 3;
         public const int AlignNumericLimit = 99;
 
-        public const string PropertyNameValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
-        public const string IndentStringValidChars = "0123456789";
-        public const string AlignStringValidChars = "0123456789-";
+        public static string PropertyNameValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+        public static string IndentStringValidChars = "0123456789";
+        public static string AlignStringValidChars = "0123456789-";
+        public static string Null = "[Null]";
     }
 
     public static class Formatters

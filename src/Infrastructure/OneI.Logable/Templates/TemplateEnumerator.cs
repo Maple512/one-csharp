@@ -1,175 +1,148 @@
-namespace OneI.Logable.Templatizations;
+namespace OneI.Logable.Templates;
 
 using System.Globalization;
-using Tokenizations;
-using static TemplateConstants.Formatters;
 using static TemplateConstants.Property;
 
-public static class TemplateParser
+public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
 {
-    public static IEnumerable<ITemplateToken> Parse(ReadOnlyMemory<char> text)
+    private static readonly char[] HoleDelimiters = { _close, _format, _indent, _align };
+    private static readonly char[] TextDelimiters = { '{', '}' };
+    private const char _open = '{';
+    private const char _close = '}';
+    private const char _format = ':';
+    private const char _indent = '\'';
+    private const char _align = ',';
+
+    public readonly string Template;
+    private TemplateHolder _current;
+    private TemplateHolder _next;
+    private readonly ushort _length;
+    private ushort _position;
+
+    public TemplateEnumerator(string template)
     {
-        if(text.IsEmpty)
+        if(template is null or { Length: > ushort.MaxValue })
         {
-            yield break;
+            throw new ArgumentOutOfRangeException(nameof(template));
         }
 
-        var textStart = 0;
-        var textEnd = 0;
-        var index = 0;
+        Template = template;
+        _current = default;
+        _length = (ushort)template.Length;
+        _position = 0;
+    }
+
+    public bool MoveNext()
+    {
+        if(_position >= _length)
+        {
+            return false;
+        }
+
+        if(_next.Equals(TemplateHolder.Default) == false)
+        {
+            _current = _next;
+            _next = TemplateHolder.Default;
+            return true;
+        }
+
+        // 剩余
+        var position = _position;
 
         while(true)
         {
-            if(index >= text.Length)
+            if(position >= _length)
             {
                 break;
             }
 
-            var remainder = text.Span[index..];
-            var open = remainder.IndexOf(Open_Separator);
-            if(open == -1)
+            var length = (ushort)(_length - position);
+
+            scoped var remainder = Template.AsSpan().Slice(position, length);
+
+            // '}'
+            var closeIndex = remainder.IndexOf(_close);
+            if(closeIndex == -1)
             {
-                textEnd = index + remainder.Length;
                 break;
             }
 
-            var close = remainder.IndexOf(Close_Separator);
-            if(close is -1)
+            if(closeIndex < 2)
             {
-                index++;
+                position += (ushort)(closeIndex + 1);
                 continue;
             }
 
-            if(close - open <= 1)
+            // '{'
+            var openIndex = remainder[..closeIndex].LastIndexOf(_open);
+
+            // '****}'
+            if(openIndex == -1)
             {
-                index += close + 1;
+                position += (ushort)(closeIndex + 1);
                 continue;
             }
 
-            var start = open + 1;
-
-            var property = remainder[start..close];
-
-            if(TryParseProperty(property, out var token))
+            // !'{x}'
+            if(openIndex > closeIndex
+                || closeIndex == openIndex + 1)
             {
-                textEnd = index + open;
-                index += close + 1;
+                position += (ushort)(Math.Max(openIndex, closeIndex) + 1);
+                continue;
+            }
 
-                if(textStart != textEnd)
+            position += (ushort)openIndex;
+            var property = remainder[(openIndex + 1)..closeIndex];
+
+            if(TryParseProperty(property, position, out _next))
+            {
+                if(_position != position)
                 {
-                    var textToken = text.Span[textStart..textEnd];
-
-                    yield return new TextToken(textToken.ToString());
+                    length = (ushort)(position - _position);
+                    _current = TemplateHolder.CreateText(_position, length);
+                    _position = (ushort)(position + property.Length + 2);
+                    return true;
                 }
 
-                textStart = index;
-
-                yield return token;
+                _current = _next;
+                _next = default;
+                _position += (ushort)(closeIndex + 1);
+                return true;
             }
+
+            position += (ushort)(closeIndex + 1);
         }
 
-        if(textStart < textEnd)
-        {
-            var textToken = text.Span[textStart..textEnd];
+        var len = _length - _position;
+        _current = TemplateHolder.CreateText(_position, (ushort)len);
+        _position = _length;
 
-            yield return new TextToken(textToken.ToString());
-        }
-
-        yield break;
+        return true;
     }
 
-    public static List<ITemplateToken> Parse2(scoped ReadOnlySpan<char> text)
+    public TemplateHolder Current
     {
-        if(text.IsEmpty)
-        {
-            return new(0);
-        }
-
-        if(text.IsWhiteSpace())
-        {
-            return new() { new TextToken(new string(' ', text.Length)) };
-        }
-
-        var result = new List<ITemplateToken>(10);
-
-        var textStart = 0;
-        var textEnd = 0;
-        var index = 0;
-
-        while(true)
-        {
-            if(index >= text.Length)
-            {
-                break;
-            }
-
-            var remainder = text[index..];
-            var open = remainder.IndexOf(Open_Separator);
-            if(open == -1)
-            {
-                textEnd = index + remainder.Length;
-                break;
-            }
-
-            var close = remainder.IndexOf(Close_Separator);
-            if(close is -1)
-            {
-                index++;
-                continue;
-            }
-
-            if(close - open <= 1)
-            {
-                index += close + 1;
-                continue;
-            }
-
-            var start = open + 1;
-
-            var property = remainder[start..close];
-
-            if(TryParseProperty(property, out var token))
-            {
-                textEnd = index + open;
-                index += close + 1;
-
-                if(textStart != textEnd)
-                {
-                    var textToken = text[textStart..textEnd];
-
-                    result.Add(new TextToken(textToken.ToString()));
-                }
-
-                textStart = index;
-
-                result.Add(token);
-            }
-        }
-
-        if(textStart < textEnd)
-        {
-            var textToken = text[textStart..textEnd];
-
-            result.Add(new TextToken(textToken.ToString()));
-        }
-
-        return result;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _current;
     }
 
-    private static bool TryParseProperty(
-        ReadOnlySpan<char> text,
-        [NotNullWhen(true)] out ITemplatePropertyToken? token)
+    public override string ToString()
     {
-        token = null;
+        return Template.ToString();
+    }
+
+    private static bool TryParseProperty(in ReadOnlySpan<char> text, ushort position, [NotNullWhen(true)] out TemplateHolder token)
+    {
+        token = default;
 
         if(text.IsEmpty)
         {
             return false;
         }
 
-        var fi = text.IndexOf(Format_Separator);
-        var ai = text.IndexOf(Align_Separator);
-        var ii = text.IndexOf(Indent_Separator);
+        var fi = text.IndexOf(_format);
+        var ai = text.IndexOf(_align);
+        var ii = text.IndexOf(_indent);
 
         if(fi == 0 || ai == 0 || ii == 0)
         {
@@ -196,12 +169,12 @@ public static class TemplateParser
         ref readonly var typeChar = ref text[0];
         var type = typeChar switch
         {
-            '@' => PropertyTokenType.Serialize,
-            '$' => PropertyTokenType.Stringify,
-            _ => PropertyTokenType.None,
+            '@' => PropertyType.Serialize,
+            '$' => PropertyType.Stringify,
+            _ => PropertyType.None,
         };
 
-        var start = type > PropertyTokenType.None ? 1 : 0;
+        var start = type > PropertyType.None ? 1 : 0;
 
         var nameRange = default(Range);
         var formatRange = default(Range);
@@ -273,7 +246,7 @@ public static class TemplateParser
             }
         }
 
-        int? align = null;
+        sbyte align = 0;
         if(alignRange.IsValid())
         {
             var alignText = text[alignRange.Start..alignRange.End];
@@ -284,7 +257,7 @@ public static class TemplateParser
             }
         }
 
-        int? indent = default;
+        byte indent = 0;
         if(indentRange.IsValid())
         {
             var indentText = text[indentRange.Start..indentRange.End];
@@ -295,21 +268,14 @@ public static class TemplateParser
             }
         }
 
-        var parameterIndex = default(int?);
-
-        if(int.TryParse(name, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number)
+        if(sbyte.TryParse(name, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number)
             && number >= 0)
         {
-            parameterIndex = number;
-        }
-
-        if(parameterIndex != null)
-        {
-            token = new IndexerPropertyToken(parameterIndex.Value, type, format.ToString(), align, indent);
+            token = TemplateHolder.CreateIndexer(indent, align, number, type, position, format.ToString());
         }
         else
         {
-            token = new NamedPropertyToken(name.ToString(), type, format.ToString(), align, indent);
+            token = TemplateHolder.CreateNamed(indent, align, type, position, name.ToString(), format.ToString());
         }
 
         return true;
@@ -356,7 +322,7 @@ public static class TemplateParser
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryPraseIndent(ref ReadOnlySpan<char> text, ref int? indent)
+    private static bool TryPraseIndent(ref ReadOnlySpan<char> text, ref byte indent)
     {
         if(text.Length > 2)
         {
@@ -365,7 +331,7 @@ public static class TemplateParser
 
         if(text.IndexOfAnyExcept(IndentStringValidChars) == -1)
         {
-            var number = int.Parse(text);
+            var number = byte.Parse(text);
 
             if(number > IndexNumericLimit)
             {
@@ -380,7 +346,7 @@ public static class TemplateParser
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryParseAlign(ref ReadOnlySpan<char> text, ref int? align)
+    private static bool TryParseAlign(ref ReadOnlySpan<char> text, ref sbyte align)
     {
         if(text.Length > 3)
         {
@@ -389,9 +355,9 @@ public static class TemplateParser
 
         if(text.IndexOfAnyExcept(AlignStringValidChars) == -1)
         {
-            var number = int.Parse(text);
+            var number = sbyte.Parse(text);
 
-            if(number > IndexNumericLimit)
+            if(number > AlignNumericLimit)
             {
                 return false;
             }
@@ -402,5 +368,20 @@ public static class TemplateParser
         }
 
         return false;
+    }
+
+    public bool Equals(TemplateEnumerator other)
+    {
+        return Template.Equals(other.Template, StringComparison.InvariantCulture);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is TemplateEnumerator other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return Template.GetHashCode();
     }
 }

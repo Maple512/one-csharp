@@ -1,6 +1,4 @@
-namespace OneI.Logable.Templatizations;
-
-using Tokenizations;
+namespace OneI.Logable.Templates;
 
 public readonly struct DictionaryValue : ITemplatePropertyValue
 {
@@ -13,7 +11,7 @@ public readonly struct DictionaryValue : ITemplatePropertyValue
 
     public IReadOnlyDictionary<ITemplatePropertyValue, ITemplatePropertyValue> Values => _properties;
 
-    public void Render(TextWriter writer, PropertyTokenType type, string? format, IFormatProvider? formatProvider)
+    public void Render(TextWriter writer, PropertyType type, string? format, IFormatProvider? formatProvider)
     {
         writer.Write('[');
 
@@ -42,21 +40,21 @@ public readonly struct DictionaryValue : ITemplatePropertyValue
     {
         var writer = new StringWriter(formatProvider);
 
-        Render(writer, PropertyTokenType.None, format, formatProvider);
+        Render(writer, PropertyType.None, format, formatProvider);
 
         return writer.ToString();
     }
 
-    public void Add<T>(string name, T value, IPropertyValueFormatter<T>? formatter = null)
+    public void Add<T>(string name, T value)
     {
-        var key = PropertyValue.CreateLiteral(name);
+        var key = new LiteralValue<string>(name);
 
         if(_properties.ContainsKey(key))
         {
             return;
         }
 
-        _properties.Add(key, PropertyValue.CreateLiteral(value, formatter));
+        _properties.Add(key, new LiteralValue<T>(value));
     }
 
     public void Add(ITemplatePropertyValue key, ITemplatePropertyValue value)

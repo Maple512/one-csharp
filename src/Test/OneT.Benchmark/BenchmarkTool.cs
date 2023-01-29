@@ -28,7 +28,7 @@ public static class BenchmarkTool
         .AddColumnProvider(DefaultColumnProviders.Instance)
         .AddJob(Job.Default.AsBaseline().AsDefault().WithArguments(new[] { new MsBuildArgument("/p:Optimize=true /p:AllowUnsafeBlocks=true") }))
         .AddExporter(MarkdownExporter.GitHub, HtmlExporter.Default, RPlotExporter.Default)
-        .WithOptions(ConfigOptions.JoinSummary | ConfigOptions.DontOverwriteResults );
+        .WithOptions(ConfigOptions.JoinSummary | ConfigOptions.DontOverwriteResults | ConfigOptions.KeepBenchmarkFiles);
 
     public static void RunAssymbly<T>(string[]? args = null, Action<IConfig>? configure = null)
     {

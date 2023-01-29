@@ -670,7 +670,7 @@ internal static class ThrowHelper
         }
     }
 
-    // Throws if 'T' is disallowed in Vector64<T> in the Intrinsics namespace.
+    // Throws if 'T' is disallowed in Vector64<T> in the Intrinsics_Test namespace.
     // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
     // is supported and we're on an optimized release build.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -683,7 +683,7 @@ internal static class ThrowHelper
         }
     }
 
-    // Throws if 'T' is disallowed in Vector128<T> in the Intrinsics namespace.
+    // Throws if 'T' is disallowed in Vector128<T> in the Intrinsics_Test namespace.
     // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
     // is supported and we're on an optimized release build.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -696,7 +696,7 @@ internal static class ThrowHelper
         }
     }
 
-    // Throws if 'T' is disallowed in Vector256<T> in the Intrinsics namespace.
+    // Throws if 'T' is disallowed in Vector256<T> in the Intrinsics_Test namespace.
     // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
     // is supported and we're on an optimized release build.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

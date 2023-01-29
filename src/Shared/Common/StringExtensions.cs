@@ -170,13 +170,13 @@ internal static partial class StringExtensions
 {
 #region Check
 
-    [Obsolete]
+    
     public static bool IsNullOrEmpty(this string? str)
     {
         return string.IsNullOrEmpty(str);
     }
 
-    [Obsolete]
+    
     public static bool NotNullOrEmpty(this string? str)
     {
         return string.IsNullOrEmpty(str) == false;

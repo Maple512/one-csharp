@@ -2,7 +2,6 @@ namespace OneI.Logable;
 
 using Configurations;
 using Middlewares;
-using Templatizations;
 
 public partial class LoggerConfiguration
 {
@@ -15,18 +14,18 @@ public partial class LoggerConfiguration
             _parent = parent;
         }
 
-        public ILoggerConfiguration Add<T>(string name, T value, IPropertyValueFormatter<T?>? formatter = null)
+        public ILoggerConfiguration Add<T>(string name, T value)
         {
             Check.NotNullOrEmpty(name);
 
-            return _parent.Use(new PropertyMiddleware<T>(name, value, formatter));
+            return _parent.Use(new PropertyMiddleware<T>(name, value));
         }
 
-        public ILoggerConfiguration AddOrUpdate<T>(string name, T value, IPropertyValueFormatter<T?>? formatter = null)
+        public ILoggerConfiguration AddOrUpdate<T>(string name, T value)
         {
             Check.NotNullOrEmpty(name);
 
-            return _parent.Use(new PropertyMiddleware<T>(name, value, formatter, true));
+            return _parent.Use(new PropertyMiddleware<T>(name, value, true));
         }
     }
 }

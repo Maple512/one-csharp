@@ -13,7 +13,7 @@ internal static partial class CodePrinter
             builder.AppendLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         }
 
-        builder.AppendLine($"public static global::OneI.Logable.Templatizations.ITemplatePropertyValue {CodeAssets.LoggerPropertyCreateMethodName}({type.ToDisplayString()} arg)");
+        builder.AppendLine($"public static global::OneI.Logable.Templates.ITemplatePropertyValue {CodeAssets.LoggerPropertyCreateMethodName}({type.ToDisplayString()} arg)");
 
         builder.AppendLine("{");
 
@@ -53,12 +53,12 @@ internal static partial class CodePrinter
 
     private static void Default(IndentedStringBuilder builder, TypeDef type)
     {
-        builder.AppendLine($"return new global::OneI.Logable.Templatizations.LiteralValue<{type.ToDisplayString()}>(arg);");
+        builder.AppendLine($"return new global::OneI.Logable.Templates.LiteralValue<{type.ToDisplayString()}>(arg);");
     }
 
     private static void BuildEnumerable(IndentedStringBuilder builder)
     {
-        builder.AppendLine("var array = new global::OneI.Logable.Templatizations.EnumerableValue();");
+        builder.AppendLine("var array = new global::OneI.Logable.Templates.EnumerableValue();");
         builder.AppendLine();
         builder.AppendLine("foreach(var item in arg)");
         builder.AppendLine("{");
@@ -79,7 +79,7 @@ internal static partial class CodePrinter
             return;
         }
 
-        builder.AppendLine("var value = new global::OneI.Logable.Templatizations.ObjectValue();");
+        builder.AppendLine("var value = new global::OneI.Logable.Templates.ObjectValue();");
         builder.AppendLine();
 
         for(var i = 0; i < type.Properties.Count; i++)
@@ -100,7 +100,7 @@ internal static partial class CodePrinter
             return;
         }
 
-        builder.AppendLine("var value = new global::OneI.Logable.Templatizations.ObjectValue();");
+        builder.AppendLine("var value = new global::OneI.Logable.Templates.ObjectValue();");
         builder.AppendLine();
 
         for(var i = 0; i < type.Properties.Count; i++)
@@ -125,12 +125,12 @@ internal static partial class CodePrinter
 
         builder.AppendLine("}");
         builder.AppendLine();
-        builder.AppendLine("return Create(new global::OneI.Logable.Templatizations.LiteralValue<object>(null));");
+        builder.AppendLine("return Create(new global::OneI.Logable.Templates.LiteralValue<object>(null));");
     }
 
     public static void BuildDictionary(IndentedStringBuilder builder, TypeDef type)
     {
-        builder.AppendLine("var dictionary = new global::OneI.Logable.Templatizations.DictionaryValue();");
+        builder.AppendLine("var dictionary = new global::OneI.Logable.Templates.DictionaryValue();");
         builder.AppendLine();
         builder.AppendLine("foreach(var item in arg)");
         builder.AppendLine("{");

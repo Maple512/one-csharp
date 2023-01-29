@@ -1,19 +1,14 @@
 namespace OneI.Logable.Middlewares;
-
-using Templatizations;
-
 public class PropertyMiddleware<T> : ILoggerMiddleware
 {
     private readonly string? _name;
     private readonly T? _value;
-    private readonly IPropertyValueFormatter<T?>? _formatter;
     private readonly bool _addOrUpdate;
 
-    public PropertyMiddleware(string? name, T? value, IPropertyValueFormatter<T?>? formatter = null, bool addOrUpdate = false)
+    public PropertyMiddleware(string? name, T? value, bool addOrUpdate = false)
     {
         _name = name;
         _value = value;
-        _formatter = formatter;
         _addOrUpdate = addOrUpdate;
     }
 
@@ -26,11 +21,11 @@ public class PropertyMiddleware<T> : ILoggerMiddleware
 
         if(_addOrUpdate)
         {
-            context.AddOrUpdateProperty(_name, _value, _formatter);
+            context.AddOrUpdateProperty(_name, _value);
         }
         else
         {
-            context.AddProperty(_name, _value, _formatter);
+            context.AddProperty(_name, _value);
         }
     }
 }
