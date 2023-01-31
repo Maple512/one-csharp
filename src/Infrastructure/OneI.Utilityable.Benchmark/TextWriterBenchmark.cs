@@ -1,5 +1,6 @@
 namespace OneI.Utilityable;
 
+using Cysharp.Text;
 using OneI.Text;
 
 public class TextWriterBenchmark
@@ -36,14 +37,11 @@ public class TextWriterBenchmark
     {
         var StringValue = Randomizer.String(stringCount);
 
-        var builder = new ValueStringBuilder(capacity);
-
-        using var writer = new ValueStringWriter(builder);
+        using var writer = new ZStringWriter(null);
 
         for(var i = 0; i < count; i++)
         {
             writer.Write(StringValue);
-
             writer.WriteLine();
         }
 

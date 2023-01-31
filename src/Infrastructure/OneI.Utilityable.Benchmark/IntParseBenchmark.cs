@@ -3,16 +3,16 @@ namespace OneI.Utilityable;
 using System.Globalization;
 using DotNext;
 
-public class IntParseBenchmark : IValidator
+public class IntParseBenchmark : BenchmarkItem
 {
     private static readonly string number = "-87654321";
 
-    public void Validate()
+    public override void GlobalInlitialize()
     {
         var result = UseSystem();
 
-        IValidator.AreEquals(UseDotNext(), result);
-        IValidator.AreEquals(UseCustome(), result);
+        AreEquals(UseDotNext(), result);
+        AreEquals(UseCustome(), result);
     }
 
     [Benchmark(Baseline = true)]
@@ -37,14 +37,14 @@ public class IntParseBenchmark : IValidator
     {
         public static int Parse(scoped in ReadOnlySpan<char> text)
         {
-            int nagate = 0;
+            var nagate = 0;
             var result = 0;
 
             var index = text.Length;
 
             ref readonly var c = ref text[0];
 
-            switch(c)
+            switch (c)
             {
                 case '+':
                     index--;
@@ -62,9 +62,9 @@ public class IntParseBenchmark : IValidator
                 var num = c - '0';
 
                 result += Pow(index - 1) * num;
-            } while(index-- > 1);
+            } while (index-- > 1);
 
-            if(nagate == 1)
+            if (nagate == 1)
             {
                 return -result;
             }
@@ -74,7 +74,7 @@ public class IntParseBenchmark : IValidator
 
         public static int Pow(int length)
         {
-            if(length == 0)
+            if (length == 0)
             {
                 return 1;
             }
@@ -85,7 +85,7 @@ public class IntParseBenchmark : IValidator
             {
                 n *= 10;
 
-            } while(index-- > 1);
+            } while (index-- > 1);
 
             return n;
         }

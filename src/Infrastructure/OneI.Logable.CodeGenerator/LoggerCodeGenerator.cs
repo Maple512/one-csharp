@@ -55,12 +55,18 @@ public class LoggerCodeGenerator : IIncrementalGenerator
     private static bool IsTargetSyntax(SyntaxNode node, CancellationToken token)
     {
         // 调用
-        if(node is InvocationExpressionSyntax invocation)
+        if (node is InvocationExpressionSyntax invocation)
         {
             var ma = invocation.Expression as MemberAccessExpressionSyntax;
 
-            return ma?.RawKind == (int)SyntaxKind.SimpleMemberAccessExpression
-                && invocation.ArgumentList.Arguments.Count > 0;
+            if (ma?.RawKind != (int)SyntaxKind.SimpleMemberAccessExpression)
+            {
+                return false;
+            }
+
+            var count = invocation.ArgumentList.Arguments.Count;
+
+            return count is > 0 and < 30;
         }
 
         return false;
@@ -86,23 +92,23 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
         var method = symbolInfo.Symbol as IMethodSymbol;
 
-        if(method is not null)
+        if (method is not null)
         {
             var isParams = method.Parameters.Any(x => x.IsParams);
             var name = method.Name;
-            if(isParams == false || !_methodNames.Contains(name))
+            if (isParams == false || !_methodNames.Contains(name))
             {
                 return null;
             }
 
             var typename = method.ContainingType?.ToDisplayString();
 
-            if(typename is CodeAssets.LogClassFullName)
+            if (typename is CodeAssets.LogClassFullName)
             {
                 return new(invocation, false, method.Name, method.Parameters);
             }
 
-            if(typename is CodeAssets.LoggerExtensionFullName)
+            if (typename is CodeAssets.LoggerExtensionFullName)
             {
                 return new(invocation, true, method.Name, method.Parameters);
             }
@@ -111,11 +117,11 @@ public class LoggerCodeGenerator : IIncrementalGenerator
         }
 
         method = symbolInfo.CandidateSymbols.FirstOrDefault() as IMethodSymbol;
-        if(method is not null)
+        if (method is not null)
         {
             var typename = method.ContainingType?.ToDisplayString();
 
-            if(typename is CodeAssets.LoggerFullName)
+            if (typename is CodeAssets.LoggerFullName)
             {
                 return new(invocation, true, method.Name, method.Parameters.Take(method.Parameters.Length - 3).ToImmutableArray());
             }
@@ -137,21 +143,21 @@ public class LoggerCodeGenerator : IIncrementalGenerator
         ImmutableArray<TargetContext?> nodes,
         SourceProductionContext context)
     {
-        if(nodes.IsDefaultOrEmpty)
+        if (nodes.IsDefaultOrEmpty)
         {
             return;
         }
 
         var methods = new HashSet<MethodDef>(MethodDefComparer.Instance);
-        foreach(var item in nodes.Where(x => x is not null).Select(x => x!.Value))
+        foreach (var item in nodes.Where(x => x is not null).Select(x => x!.Value))
         {
-            if(InvocationExpressionParser.TryParse(item!, compilation, out var result))
+            if (InvocationExpressionParser.TryParse(item!, compilation, out var result))
             {
                 methods.Add(result!);
             }
         }
 
-        if(methods.Any())
+        if (methods.Any())
         {
             CodePrinter.Print(methods, out var types, out var logExtensions, out var loggerExtensions);
 

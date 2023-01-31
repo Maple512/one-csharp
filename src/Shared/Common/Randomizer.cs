@@ -8,54 +8,62 @@ using System.Text;
 /// <summary>
 /// 随机数
 /// </summary>
-//[DebuggerStepThrough]
+[DebuggerStepThrough]
 internal static partial class Randomizer
 {
-    /// <summary>
-    /// The character_set.
-    /// </summary>
     private const string character_set = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_-+=[{]};:>|./?";
 
-    /// <summary>
-    /// 获取一段随机字符串
-    /// </summary>
-    /// <returns></returns>
     public static string String()
     {
         return String(Integer(character_set.Length));
     }
 
-    /// <summary>
-    /// 从一个指定数组中随机获取一个子项
-    /// </summary>
     public static T Item<T>(params T[] objs)
     {
-        Check.NotNullOrEmpty(objs);
+        _ = Check.NotNull(objs);
 
         return objs[Integer(objs.Length)];
     }
 
-    /// <summary>
-    /// 从一个指定数组中随机获取一个子项
-    /// </summary>
     public static T Item<T>(IEnumerable<T> list)
     {
-        Check.NotNullOrEmpty(list);
+        _ = Check.NotNull(list);
 
         return list.ElementAt(Integer(list.Count()));
     }
 
-    /// <summary>
-    /// 将一个集合顺序随机打乱
-    /// </summary>
+    public static IEnumerable<T> Items<T>(int count, params T[] source)
+    {
+        _ = Check.NotNull(source);
+
+        for (var i = 0; i < count; i++)
+        {
+            yield return source[Integer(source.Length)];
+        }
+
+        yield break;
+    }
+
+    public static IEnumerable<T> Items<T>(IEnumerable<T> list, int count)
+    {
+        _ = Check.NotNull(list);
+
+        for (var i = 0; i < count; i++)
+        {
+            yield return list.ElementAt(Integer(list.Count()));
+        }
+
+        yield break;
+    }
+
     public static List<T> Disorder<T>(IEnumerable<T> items)
     {
-        Check.NotNull(items);
+        _ = Check.NotNull(items);
 
         var currentList = new List<T>(items);
         var randomList = new List<T>();
 
-        while(currentList.Any())
+        while (currentList.Any())
         {
             var randomIndex = Integer(0, currentList.Count);
 
@@ -67,11 +75,6 @@ internal static partial class Randomizer
         return randomList;
     }
 
-    /// <summary>
-    /// 获取随机中文字符
-    /// </summary>
-    /// <param name="length"></param>
-    /// <returns></returns>
     public static string StringChinese(int length)
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -82,14 +85,14 @@ internal static partial class Randomizer
 
         var builder = new StringBuilder(length);
 
-        for(var i = 0; i < length; i++)
+        for (var i = 0; i < length; i++)
         {
             var r1 = Integer(11, 14);
             var b1 = bytes[r1];
 
             //区位码第2位
             int r2;
-            if(r1 == 13)
+            if (r1 == 13)
             {
                 r2 = Integer(0, 7);
             }
@@ -115,8 +118,7 @@ internal static partial class Randomizer
             var byte2 = Convert.ToByte(Encoding.UTF8.GetString(new[] { b3, b4 }), 16);
 
             var result = gb2312.GetString(new[] { byte1, byte2 });
-
-            builder.Append(result);
+            _ = builder.Append(result);
         }
 
         return builder.ToString();
@@ -127,15 +129,11 @@ internal static partial class Randomizer
 [StackTraceHidden]
 internal static partial class Randomizer
 {
-    /// <summary>
-    /// 获取一段随机字符串
-    /// </summary>
-    /// <returns></returns>
     public static string String(int length)
     {
         scoped Span<char> span = stackalloc char[length];
 
-        for(var i = 0; i < length; i++)
+        for (var i = 0; i < length; i++)
         {
             span[i] = Item<char>(character_set);
         }
@@ -143,17 +141,11 @@ internal static partial class Randomizer
         return span.ToString();
     }
 
-    /// <summary>
-    /// 获取一个指定区间 <c>[min,max)</c> 之间的随机整数
-    /// </summary>
     public static int Integer(int minValue, int maxValue)
     {
         return RandomNumberGenerator.GetInt32(minValue, maxValue);
     }
 
-    /// <summary>
-    /// 获取一个指定区间 <c>[0,max)</c> 之间的随机整数
-    /// </summary>
     public static int Integer(int maxValue)
     {
         return RandomNumberGenerator.GetInt32(maxValue);
@@ -165,10 +157,6 @@ internal static partial class Randomizer
 {
     private static readonly Random _random = new();
 
-    /// <summary>
-    /// 获取一段随机字符串
-    /// </summary>
-    /// <returns></returns>
     public static string String(int length)
     {
         var span = new StringBuilder(length);
@@ -181,17 +169,11 @@ internal static partial class Randomizer
         return span.ToString();
     }
 
-    /// <summary>
-    /// 获取一个指定区间 <c>[min,max)</c> 之间的随机整数
-    /// </summary>
     public static int Integer(int minValue, int maxValue)
     {
         return _random.Next(minValue, maxValue);
     }
 
-    /// <summary>
-    /// 获取一个指定区间 <c>[0,max)</c> 之间的随机整数
-    /// </summary>
     public static int Integer(int maxValue)
     {
         return _random.Next(maxValue);

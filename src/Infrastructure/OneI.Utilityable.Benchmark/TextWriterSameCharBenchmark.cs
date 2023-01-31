@@ -1,6 +1,6 @@
 namespace OneI.Utilityable;
 
-public class TextWriterSameCharBenchmark : IValidator
+public class TextWriterSameCharBenchmark : BenchmarkItem
 {
     private const int count = 100;
 
@@ -9,10 +9,11 @@ public class TextWriterSameCharBenchmark : IValidator
     {
         var writer = new StringWriter();
 
-        for(int i = 0; i < 100; i++)
+        for (var i = 0; i < 100; i++)
         {
             writer.Write(new string(' ', count));
         }
+
         return writer.ToString();
     }
 
@@ -21,9 +22,11 @@ public class TextWriterSameCharBenchmark : IValidator
     {
         var writer = new StringWriter();
 
-        for(int i = 0; i < 100; i++)
+        for (var i = 0; i < 100; i++)
         {
+#pragma warning disable CA2014 // 不要循环使用 stackalloc
             Span<char> span = stackalloc char[count];
+#pragma warning restore CA2014 // 不要循环使用 stackalloc
 
             span.Fill(' ');
 
@@ -31,13 +34,14 @@ public class TextWriterSameCharBenchmark : IValidator
 
             span.Clear();
         }
+
         return writer.ToString();
     }
 
-    public void Validate()
+    public override void GlobalInlitialize()
     {
         var result = UseString();
 
-        IValidator.AreEquals(result, UseSpan());
+        BenchmarkItem.AreEquals(result, UseSpan());
     }
 }

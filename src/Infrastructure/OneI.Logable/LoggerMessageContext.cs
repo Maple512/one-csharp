@@ -1,5 +1,6 @@
 namespace OneI.Logable;
 
+using OneI.Logable.Templates;
 using Templates;
 
 public struct LoggerMessageContext
@@ -10,7 +11,7 @@ public struct LoggerMessageContext
         LogLevel level,
         string message,
         in Exception? exception,
-        ValueDictionary<string, ITemplatePropertyValue> properties,
+        PropertyDictionary<string, ITemplatePropertyValue> properties,
         string filePath,
         string memberName,
         int line)
@@ -33,7 +34,7 @@ public struct LoggerMessageContext
     public readonly string Member { get; }
     public readonly int Line { get; }
 
-    public ValueDictionary<string, ITemplatePropertyValue> Properties
+    public PropertyDictionary<string, ITemplatePropertyValue> Properties
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get;

@@ -7,10 +7,8 @@ public class Program
         Console.WriteLine("Hello, World!");
 
         using var logger = new LoggerConfiguration()
-            .Sink.FileWhen(c =>
-            {
-                return c.Context.Level == LogLevel.Verbose;
-            }, $"./Logs/{nameof(LogLevel.Verbose)}log.log")
+            .Sink.FileWhen(c => c.Context.Level == LogLevel.Verbose,
+            $"./Logs/{nameof(LogLevel.Verbose)}log.log")
             .Sink.FileWhen(c =>
             {
                 return c.Context.Level == LogLevel.Debug;

@@ -8,7 +8,7 @@ using OneI;
 /// The type extensions.
 /// </summary>
 [DebuggerStepThrough]
-internal static partial class TypeExtensions
+internal static partial class ReflectionExtensions
 {
     /// <summary>
     /// The static binding flags.
@@ -21,7 +21,7 @@ internal static partial class TypeExtensions
     /// <param name="member">The member.</param>
     /// <param name="inherit">If true, inherit.</param>
     /// <returns>A bool.</returns>
-    
+
     public static bool IsDefined<T>(this MemberInfo member, bool inherit = false)
     {
         return member.IsDefined(typeof(T), inherit);
@@ -32,7 +32,7 @@ internal static partial class TypeExtensions
     /// </summary>
     /// <param name="type">The type.</param>
     /// <returns>A T.</returns>
-    
+
     public static T GetRequiredAttribute<T>(this Type type)
         where T : Attribute
     {
@@ -46,7 +46,7 @@ internal static partial class TypeExtensions
     /// <param name="fullName"></param>
     /// <param name="isCompilable"></param>
     /// <returns></returns>
-    
+
     public static string DisplayName(this Type type, bool fullName = true, bool isCompilable = false)
     {
         return string.Empty;
@@ -57,29 +57,65 @@ internal static partial class TypeExtensions
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    
+
     public static string ShortDisplayName(this Type type)
     {
         return type.DisplayName(false);
     }
 
-    /// <summary>
-    /// Are the anonymous type.
-    /// </summary>
-    /// <param name="type">The type.</param>
-    /// <returns>A bool.</returns>
     public static bool IsAnonymousType(this Type type)
     {
         return type.Name.StartsWith("<>", StringComparison.Ordinal)
                 && type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), inherit: false).Length > 0
                 && type.Name.Contains("AnonymousType");
+    }
 
+    public static IEnumerable<MethodInfo> GetAllMethods(this Type type)
+    {
+        var typeInfo = type.GetTypeInfo();
+        while (typeInfo != null)
+        {
+            foreach (var methodInfo in typeInfo.DeclaredMethods)
+            {
+                yield return methodInfo;
+            }
+
+            typeInfo = typeInfo.BaseType?.GetTypeInfo();
+        }
+    }
+
+    public static IEnumerable<FieldInfo> GetAllFields(this Type type)
+    {
+        var typeInfo = type.GetTypeInfo();
+        while (typeInfo != null)
+        {
+            foreach (var fieldInfo in typeInfo.DeclaredFields)
+            {
+                yield return fieldInfo;
+            }
+
+            typeInfo = typeInfo.BaseType?.GetTypeInfo();
+        }
+    }
+
+    public static IEnumerable<PropertyInfo> GetAllProperties(this Type type)
+    {
+        var typeInfo = type.GetTypeInfo();
+        while (typeInfo != null)
+        {
+            foreach (var propertyInfo in typeInfo.DeclaredProperties)
+            {
+                yield return propertyInfo;
+            }
+
+            typeInfo = typeInfo.BaseType?.GetTypeInfo();
+        }
     }
 }
 
 #if NET
 [StackTraceHidden]
-internal static partial class TypeExtensions
+internal static partial class ReflectionExtensions
 {
     /// <summary>
     /// 尝试获取无参构造器
@@ -87,7 +123,7 @@ internal static partial class TypeExtensions
     /// <param name="type"></param>
     /// <param name="constructor"></param>
     /// <returns></returns>
-    
+
     public static bool TryGetParameterlessConstructor(
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] this Type type,
         [NotNullWhen(true)] out ConstructorInfo? constructor)
@@ -97,7 +133,7 @@ internal static partial class TypeExtensions
     }
 }
 #elif NETSTANDARD2_0_OR_GREATER
-internal static partial class TypeExtensions
+internal static partial class ReflectionExtensions
 {
     /// <summary>
     /// 尝试获取无参构造器

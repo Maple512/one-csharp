@@ -5,7 +5,7 @@ using System.Reflection;
 using DotNext.Reflection;
 using Microsoft.Win32.SafeHandles;
 
-public class InternalMethodReflectionBenchmark : IValidator
+public class InternalMethodReflectionBenchmark : BenchmarkItem
 {
     const string MethodName = "FastAllocateString";
     const string FieldName = "_path";
@@ -61,7 +61,7 @@ public class InternalMethodReflectionBenchmark : IValidator
         return null;
     }
 
-    void IValidator.Validate()
+    public override void GlobalInlitialize()
     {
         UseReflection_Method();
         UseDotNext_Method();

@@ -2,20 +2,21 @@ namespace OneI.Utilityable;
 
 using DotNext;
 
-public class ObjectEqualsBenchmark : IValidator
+public class ObjectEqualsBenchmark : BenchmarkItem
 {
-    private const int count = 1;
+    [Params(10)]
+    private int count;
 
-    public void Validate()
+    public override void GlobalInlitialize()
     {
         var result = UseInt();
 
-        IValidator.AreEquals(UseEqualityComparerDefault(), result);
-        IValidator.AreEquals(UseEqualityComparerDefault_Short(), result);
-        IValidator.AreEquals(UseString(), result);
-        IValidator.AreEquals(UseReadOnlySpan(), result);
-        IValidator.AreEquals(UseDotNext(), result);
-        IValidator.AreEquals(UseMemory(), result);
+        AreEquals(UseEqualityComparerDefault(), result);
+        AreEquals(UseEqualityComparerDefault_Short(), result);
+        AreEquals(UseString(), result);
+        AreEquals(UseReadOnlySpan(), result);
+        AreEquals(UseDotNext(), result);
+        AreEquals(UseMemory(), result);
     }
 
     [Benchmark(Baseline = true)]

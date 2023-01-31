@@ -1,20 +1,21 @@
 namespace OneI.Utilityable;
 
+using Cysharp.Text;
 using Text;
 
-public class StringFormatBenchmark : IValidator
+public class StringFormatBenchmark : BenchmarkItem
 {
     private const string format = "{0},{1}";
     private static User user = new User(512, "Maple512");
     private const int capacity = 256;
     private const int count = 100;
 
-    public void Validate()
+    public override void GlobalInlitialize()
     {
         var result = UseStringBuilder();
 
-        IValidator.AreEquals(result, UseList());
-       // IValidator.AreEquals(result, UseValueStringBuilder());
+        AreEquals(result, UseList());
+       // IBenchmark.AreEquals(result, UseZString());
     }
 
     [Benchmark(Baseline = true)]
@@ -52,9 +53,9 @@ public class StringFormatBenchmark : IValidator
     }
 
     [Benchmark]
-    public string UseValueStringBuilder()
+    public string UseZString()
     {
-        var writer = new ValueStringBuilder(capacity);
+        using var writer = new Utf16ValueStringBuilder(true);
 
         for(var i = 0; i < count; i++)
         {

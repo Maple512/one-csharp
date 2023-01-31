@@ -8,6 +8,6 @@ internal class Program
     {
         // BenchmarkTool.RunAssymbly<Program>(args);
 
-        BenchmarkTool.Run<IsDefualtBenchmark>(args);
+        BenchmarkTool.Switcher<StringTransferBenchmark>(args);
     }
 }

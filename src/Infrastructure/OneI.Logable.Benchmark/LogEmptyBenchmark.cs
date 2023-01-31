@@ -1,6 +1,6 @@
 namespace OneI.Logable;
 
-public class LogEmptyBenchmark : IValidator
+public class LogEmptyBenchmark : BenchmarkItem
 {
     private const int count = 1000;
 
@@ -8,16 +8,19 @@ public class LogEmptyBenchmark : IValidator
     private static ILogger? logable;
     private static NLog.Logger? nlog;
 
-    [GlobalSetup]
-    public void Initialize()
+    public override void GlobalInlitialize()
     {
         serilog = new Serilog.LoggerConfiguration()
                 .CreateLogger();
-
         logable = new LoggerConfiguration()
             .CreateLogger();
-
         nlog = NLog.LogManager.LoadConfiguration("nlog.empty.config").GetCurrentClassLogger();
+
+        UseSeriLog();
+
+        UseLogable();
+
+        UseNLog();
     }
 
     [Benchmark(Baseline = true)]
@@ -45,16 +48,5 @@ public class LogEmptyBenchmark : IValidator
         {
             nlog.Info(" {0} {1} {2} {3} ", 1, 2, 3, new object());
         }
-    }
-
-    public void Validate()
-    {
-        Initialize();
-
-        UseSeriLog();
-
-        UseLogable();
-
-        UseNLog();
     }
 }

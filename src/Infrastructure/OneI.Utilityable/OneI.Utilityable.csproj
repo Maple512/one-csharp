@@ -18,6 +18,7 @@
         </PackageReference>
         <PackageReference Include="InlineIL.Fody" Version="1.7.4" PrivateAssets="All" />
         <PackageReference Include="Perfolizer" Version="0.2.1" />
+        <PackageReference Include="ZString" Version="2.5.0" />
     </ItemGroup>
 
     <Import Project="../../common.props" />

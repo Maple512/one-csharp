@@ -3,6 +3,7 @@ namespace OneI.Logable;
 using System;
 using System.ComponentModel;
 using Middlewares;
+using OneI.Logable.Templates;
 using Templates;
 
 public static class LoggerExtensions
@@ -198,7 +199,7 @@ public static class LoggerExtensions
         LogLevel level,
         Exception? exception,
         string message,
-        ValueDictionary<string, ITemplatePropertyValue> properties,
+        PropertyDictionary<string, ITemplatePropertyValue> properties,
         string? file = null,
         string? member = null,
         int line = 0)

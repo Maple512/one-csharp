@@ -1,6 +1,7 @@
 namespace OneI.Utilityable;
 
 using System.Buffers;
+using Cysharp.Text;
 using DotNext.Buffers;
 using Text;
 
@@ -59,7 +60,7 @@ public class StringBuilderBenchmark
     public string UseValueStringBuilder()
     {
         var StringValue = Randomizer.String(stringCount);
-        var builder = new ValueStringBuilder(capacity);
+        using var builder = new Utf16ValueStringBuilder(true);
 
         for(var i = 0; i < count; i++)
         {

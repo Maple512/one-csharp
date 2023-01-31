@@ -1,6 +1,6 @@
 namespace OneI.Utilityable;
 
-public class StringHashCodeBenchmark : IValidator
+public class StringHashCodeBenchmark : BenchmarkItem
 {
     private const int count = 100;
 
@@ -105,7 +105,7 @@ public class StringHashCodeBenchmark : IValidator
         return result;
     }
 
-    public void Validate()
+    public override void GlobalInlitialize()
     {
         var result = UseStringEquals();
 
@@ -114,9 +114,9 @@ public class StringHashCodeBenchmark : IValidator
             throw new Exception();
         }
 
-        IValidator.AreEquals(UseStringHashCode(), result);
-        IValidator.AreEquals(UseSpan_SequenceEqual(), result);
-        IValidator.AreEquals(UseSpan_Equals(), result);
-        IValidator.AreEquals(UseEqualityComparerDefault(), result);
+        AreEquals(UseStringHashCode(), result);
+        AreEquals(UseSpan_SequenceEqual(), result);
+        AreEquals(UseSpan_Equals(), result);
+        AreEquals(UseEqualityComparerDefault(), result);
     }
 }

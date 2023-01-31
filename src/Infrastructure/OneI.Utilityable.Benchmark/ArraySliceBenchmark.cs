@@ -1,10 +1,13 @@
 namespace OneI.Utilityable;
 
-public class ArraySliceBenchmark
+public class ArraySliceBenchmark : BenchmarkItem
 {
-    private const int count = 100;
+    [Params(10)]
+    private readonly int count;
 
+    [Params(100)]
     private readonly int capacity;
+
     // 4
     [Benchmark(Baseline = true)]
     [BenchmarkCategory("Array Slice")]
@@ -13,7 +16,7 @@ public class ArraySliceBenchmark
         var half = capacity / 2;
         var array = Randomizer.String(capacity).ToCharArray();
 
-        for(var i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var b = array[..half];
         }
@@ -26,7 +29,7 @@ public class ArraySliceBenchmark
         var half = capacity / 2;
         var array = Randomizer.String(capacity).ToCharArray();
 
-        for(var i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var b = array.AsSpan()[..half];
         }
@@ -39,7 +42,7 @@ public class ArraySliceBenchmark
         var half = capacity / 2;
         var array = Randomizer.String(capacity).ToCharArray();
 
-        for(var i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var b = array[..half].AsSpan();
         }
@@ -52,7 +55,7 @@ public class ArraySliceBenchmark
         var half = capacity / 2;
         var array = Randomizer.String(capacity);
 
-        for(var i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var b = array[..half].AsSpan();
         }
@@ -65,7 +68,7 @@ public class ArraySliceBenchmark
         var half = capacity / 2;
         var array = Randomizer.String(capacity);
 
-        for(var i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var b = array.AsSpan()[..half];
         }
@@ -78,7 +81,7 @@ public class ArraySliceBenchmark
         var half = capacity / 2;
         var array = Randomizer.String(capacity).ToCharArray();
 
-        for(var i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var b = new string(array);
         }
@@ -91,7 +94,7 @@ public class ArraySliceBenchmark
         var half = capacity / 2;
         var array = Randomizer.String(capacity).ToCharArray();
 
-        for(var i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var b = new string(array.AsSpan());
         }
@@ -104,7 +107,7 @@ public class ArraySliceBenchmark
         var half = capacity / 2;
         var array = Randomizer.String(capacity).ToCharArray();
 
-        for(var i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             var b = array.AsSpan().ToString();
         }
