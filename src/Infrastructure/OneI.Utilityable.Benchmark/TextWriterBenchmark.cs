@@ -1,16 +1,15 @@
 namespace OneI.Utilityable;
 
 using Cysharp.Text;
-using OneI.Text;
 
 public class TextWriterBenchmark
 {
     public const int count = 50;
 
-    [Params(50, 10000)]
+    [Params(50, 1000)]
     public int stringCount;
 
-    [Params(50, 10000)]
+    [Params(50, 1000)]
     public int capacity;
 
     [Benchmark(Baseline = true)]
@@ -22,7 +21,7 @@ public class TextWriterBenchmark
 
         using var writer = new StringWriter(builder);
 
-        for(var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             writer.Write(StringValue);
 
@@ -37,9 +36,9 @@ public class TextWriterBenchmark
     {
         var StringValue = Randomizer.String(stringCount);
 
-        using var writer = new ZStringWriter(null);
+        using var writer = new ZStringWriter();
 
-        for(var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             writer.Write(StringValue);
             writer.WriteLine();

@@ -2,16 +2,13 @@ namespace OneI.Logable.Templates;
 
 public readonly struct LiteralValue<T> : ITemplatePropertyValue
 {
-    public LiteralValue(T value)
-    {
-        Value = value;
-    }
+    public LiteralValue(T value) => Value = value;
 
     public T? Value { get; }
 
     public void Render(TextWriter writer, PropertyType type, string? format, IFormatProvider? formatProvider)
     {
-        TemplateRenderHelper.LiteralRender(Value, writer, type, format, formatProvider);
+        TemplateRenderHelper.LiteralRender(writer, Value, type, format, formatProvider);
     }
 
     public string ToString(string? format, IFormatProvider? formatProvider)

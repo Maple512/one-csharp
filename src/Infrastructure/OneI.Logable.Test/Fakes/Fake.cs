@@ -1,6 +1,6 @@
 namespace OneI.Logable.Fakes;
 
-using static LoggerConstants.PropertyNames;
+using static LoggerConstants.Propertys;
 
 public static class Fake
 {

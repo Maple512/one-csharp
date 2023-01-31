@@ -1,187 +1,132 @@
 namespace OneI.Logable.Templates;
 
 using System.Globalization;
-using DotNext;
 using OneI.Logable.Formatters;
-using static LoggerConstants.PropertyNames;
+using OneI.Text;
+using static LoggerConstants.Propertys;
 
 public static class TemplateRenderHelper
 {
     internal static void Render(
         TextWriter writer,
         TemplateEnumerator template,
-        TemplateEnumerator message,
-        LoggerMessageContext context,
+        in LoggerMessageContext message,
+        in PropertyDictionary properties,
         IFormatProvider? formatProvider)
     {
-        var properties = context.Properties;
+        PropertyValue value = default;
+        var container = new ValueStringWriter();
 
         while(template.MoveNext())
         {
+            var length = container.Length;
+
             var holder = template.Current;
+
+            if(holder.Indent > 0)
+            {
+                writer.Write(new string(' ', holder.Indent));
+            }
 
             if(holder.IsText())
             {
-                scoped var text = template.Template.AsSpan().Slice(holder.Position, holder.Length);
-
-                writer.Write(text);
+                container.Write(template.GetCurrentText().Span);
             }
             else if(holder.IsIndexer())
             {
-                ITemplatePropertyValue? value = null;
                 if(properties.Length > holder.ParameterIndex)
                 {
                     value = properties[holder.ParameterIndex].Value;
                 }
 
-                PropertyValueRender(writer, holder, value, formatProvider);
+                LiteralRender(container, value.Value, holder.Type, holder.Format, formatProvider);
             }
             else if(holder.IsNamed())
             {
-                PropertyRender(writer, holder, context, message, formatProvider);
+                PropertyRender(container, holder, message, properties, formatProvider);
             }
-        }
-    }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void RenderMessage(
-        TextWriter writer,
-        TemplateEnumerator template,
-        LoggerMessageContext context,
-        IFormatProvider? formatProvider)
-    {
-        Render(writer, template, default, context, formatProvider);
+            var written = container.Length - length;
+
+            if(written >= holder.Align)
+            {
+                writer.Write(container.Span);
+            }
+            else
+            {
+                if(holder.Align < 0)
+                {
+                    writer.Write(container.Span);
+                }
+
+                var pad = Math.Abs(holder.Align) - written;
+
+                writer.Write(new string(' ', pad));
+
+                if(holder.Align > 0)
+                {
+                    writer.Write(container.Span);
+                }
+            }
+
+            container.Clear();
+        }
+
+        container.Dispose();
     }
 
     private static void PropertyRender(
         TextWriter writer,
-        TemplateHolder token,
-        LoggerMessageContext context,
-        TemplateEnumerator message,
+        in TemplateHolder token,
+        in LoggerMessageContext message,
+        in PropertyDictionary properties,
         IFormatProvider? formatProvider)
     {
-        if(token.Indent > 0)
-        {
-            writer.Write(new string(' ', token.Indent));
-        }
-
         if(token.Name == Level)
         {
-            var level = LevelFormatHelper.Format(context.Level, token.Format);
+            var level = LevelFormatHelper.Format(message.Level, token.Format);
 
-            Padding(writer, level, token.Align);
+            writer.Write(level);
         }
         else if(token.Name == NewLine)
         {
-            Padding(writer, Environment.NewLine, token.Align);
+            writer.WriteLine();
         }
         else if(token.Name == Exception)
         {
-            Padding(writer, context.Exception?.ToString() ?? string.Empty, token.Align);
+            writer.Write(message.Exception?.ToString() ?? string.Empty);
+        }
+        else if(token.Name == Timestamp)
+        {
+            LiteralRender(writer, message.Timestamp, token.Type, token.Format, formatProvider);
+        }
+        else if(token.Name == File)
+        {
+            writer.Write(message.File);
+        }
+        else if(token.Name == Member)
+        {
+            writer.Write(message.Member);
+        }
+        else if(token.Name == Line)
+        {
+            LiteralRender(writer, message.Line, token.Type, token.Format, formatProvider);
         }
         else
         {
-            var w = token.Align != 0 ? new StringWriter() : writer;
-
-            if(token.Name == Timestamp)
+            if(!properties.TryGetValue(token.Name!, out var propertyValue))
             {
-                LiteralRender(context.Timestamp, w, token.Type, token.Format, formatProvider);
-            }
-            else if(token.Name == Message && message.Equals(default) == false)
-            {
-                RenderMessage(w, message, context, formatProvider);
-            }
-            else
-            {
-                if(!context.Properties.TryGetValue(token.Name!, out var templatePropertyValue))
-                {
-                    writer.Write(TemplateConstants.Property.Null);
-                    return;
-                }
-
-                templatePropertyValue.Render(w, token.Type, token.Format, formatProvider);
-            }
-
-            if(token.Align != 0)
-            {
-                Padding(writer, ((StringWriter)w).ToString(), token.Align);
-            }
-        }
-    }
-
-    private static void PropertyValueRender(
-        TextWriter writer,
-        TemplateHolder token,
-        ITemplatePropertyValue? value,
-        IFormatProvider? formatProvider)
-    {
-        if(value == null)
-        {
-            writer.Write(TemplateConstants.Property.Null);
-            return;
-        }
-
-        if(token.Indent != 0)
-        {
-            writer.Write(new string(' ', token.Indent));
-        }
-
-        var w = token.Align != 0 ? new StringWriter() : writer;
-
-        value.Render(writer, token.Type, token.Format, formatProvider);
-
-        if(token.Align != 0)
-        {
-            var internalWriter = ((StringWriter)w).GetStringBuilder();
-
-            if(internalWriter.Length >= token.Align)
-            {
-                writer.Write(internalWriter);
+                writer.Write(TemplateConstants.Property.Null);
                 return;
             }
 
-            var pad = token.Align - internalWriter.Length;
-
-            if(token.Align < 0)
-            {
-                writer.Write(internalWriter);
-            }
-
-            writer.Write(new string(' ', pad));
-
-            if(token.Align > 0)
-            {
-                writer.Write(internalWriter);
-            }
-        }
-    }
-
-    private static void Padding(TextWriter writer, string value, sbyte align)
-    {
-        if(align != 0 || value.Length >= align)
-        {
-            writer.Write(value);
-            return;
-        }
-
-        var pad = align - value.Length;
-
-        if(align < 0)
-        {
-            writer.Write(value);
-        }
-
-        writer.Write(new string(' ', pad));
-
-        if(align > 0)
-        {
-            writer.Write(value);
+            LiteralRender(writer, propertyValue, token.Type, token.Format, formatProvider);
         }
     }
 
     internal static void LiteralRender<TValue>(
-       TValue? value,
        TextWriter writer,
+       TValue? value,
        PropertyType type,
        string? format,
        IFormatProvider? formatProvider)
@@ -208,16 +153,16 @@ public static class TemplateRenderHelper
             return;
         }
 
+        if(value is IFormattable f)
+        {
+            writer.Write(f.ToString(format, formatProvider ?? CultureInfo.InvariantCulture));
+            return;
+        }
+
         var custom = (ICustomFormatter?)formatProvider?.GetFormat(typeof(ICustomFormatter));
         if(custom != null)
         {
             writer.Write(custom.Format(format, value, formatProvider));
-            return;
-        }
-
-        if(value is IFormattable f)
-        {
-            writer.Write(f.ToString(format, formatProvider ?? CultureInfo.InvariantCulture));
             return;
         }
 

@@ -2,10 +2,12 @@ namespace OneI.Logable;
 
 public static class LoggerConstants
 {
-    internal const string MessagePlaceHolder = $"{{{PropertyNames.Message}}}";
+    internal const string MessagePlaceHolder = $"{{{Propertys.Message}}}";
 
-    public static class PropertyNames
+    public static class Propertys
     {
+        public const int MaxCount = 100;
+
         public const string Level = nameof(Level);
 
         public const string NewLine = nameof(NewLine);

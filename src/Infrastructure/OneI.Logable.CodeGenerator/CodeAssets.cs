@@ -74,12 +74,6 @@ internal static class CodeAssets
                 LoggerExtensions.WriteCore(_logger, level, exception, message, default);
             }
 
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public static void Write(LoggerMessageContext context)
-            {
-                _logger?.Write(context);
-            }
-
             #endregion Write
 
             #region Verbose

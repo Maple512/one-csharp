@@ -9,10 +9,6 @@ public class Logger_Test
     [Fact]
     public void size_of()
     {
-        Unsafe.SizeOf<TextAlignment>().ShouldBe(8);
-
-        // Unsafe.SizeOf<TemplateHolder>().ShouldBe(8);
-
         TestTools.PrintLayoutToFile<TemplateHolder>();
 
         TestTools.PrintLayoutToFile<TemplateEnumerator>();
@@ -50,7 +46,7 @@ public class Logger_Test
 
         var id = Guid.NewGuid();
         var name = "Id";
-        var propertyId = (ITemplatePropertyValue?)null;
+        var propertyId = (PropertyValue?)null;
 
         var logger = Fake.CreateLogger(
             logger: logger => logger
@@ -58,7 +54,7 @@ public class Logger_Test
             .Use(new ActionMiddleware(_ => order.Add(2)))
             .Audit.Attach(c =>
             {
-                c.Context.Properties.TryGetValue(name, out propertyId);
+                c.Message.Properties.TryGetValue(name, out propertyId);
             }));
 
         var scope = new ILoggerMiddleware[]

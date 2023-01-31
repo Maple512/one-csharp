@@ -12,14 +12,16 @@ public class LogFileBenchmark : BenchmarkItem
     public override void GlobalInlitialize()
     {
         serilog = new Serilog.LoggerConfiguration()
-                .WriteTo.File("./Logs/serilog.log", outputTemplate: "{NewLine}", rollingInterval: RollingInterval.Minute)
+                .WriteTo.File("./Logs/serilog.log",
+                outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss}[{Level}]{Message}{NewLine}",
+                rollingInterval: RollingInterval.Hour)
                 .CreateLogger();
 
         logger = new LoggerConfiguration()
-            .Template.Default("{NewLine}")
+            .Template.Default("{Timestamp:yyyy-MM-dd HH:mm:ss}[{Level}]{Message}{NewLine}")
             .Sink.File("./Logs/logable.log", options =>
             {
-                options.Frequency = RollFrequency.Minute;
+                options.Frequency = RollFrequency.Hour;
             })
             .CreateLogger();
 
@@ -35,7 +37,7 @@ public class LogFileBenchmark : BenchmarkItem
     [Benchmark(Baseline = true)]
     public void UseSeriLog()
     {
-        for (var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             serilog.Information(" {0} {1} {2} {3} ", 1, 2, 3, new object());
         }
@@ -44,7 +46,7 @@ public class LogFileBenchmark : BenchmarkItem
     [Benchmark]
     public void UseLogable()
     {
-        for (var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             logger.Information(" {0} {1} {2} {3} ", 1, 2, 3, new object());
         }
@@ -53,7 +55,7 @@ public class LogFileBenchmark : BenchmarkItem
     [Benchmark]
     public void UseNLog()
     {
-        for (var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             nlog.Info(" {0} {1} {2} {3} ", 1, 2, 3, new object());
         }

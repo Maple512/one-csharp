@@ -32,7 +32,7 @@ internal class FileSink : ILoggerSink, IDisposable
         }
     }
 
-    public void Invoke(LoggerContext context)
+    public void Invoke(in LoggerContext context)
     {
         lock(_lock)
         {

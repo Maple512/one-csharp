@@ -1,25 +1,20 @@
 namespace OneI.Logable;
 
 using OneI.Logable.Templates;
-using Templates;
 
 public struct LoggerMessageContext
 {
-    private string _message;
-
     internal LoggerMessageContext(
         LogLevel level,
         string message,
-        in Exception? exception,
-        PropertyDictionary<string, ITemplatePropertyValue> properties,
+        Exception? exception,
         string filePath,
         string memberName,
         int line)
     {
         Timestamp = DateTimeOffset.Now;
         Level = level;
-        _message = message;
-        Properties = properties;
+        Message = message;
         Exception = exception;
         File = filePath;
         Member = memberName;
@@ -28,34 +23,32 @@ public struct LoggerMessageContext
 
     public readonly DateTimeOffset Timestamp { get; }
     public readonly LogLevel Level { get; }
-    public readonly string Message => _message;
+    public string Message { get; private set; }
     public readonly Exception? Exception { get; }
     public readonly string File { get; }
     public readonly string Member { get; }
     public readonly int Line { get; }
 
-    public PropertyDictionary<string, ITemplatePropertyValue> Properties
+    public PropertyDictionary Properties
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get;
     }
 
-    /// <inheritdoc cref="PropertyCollection.Add(string, ITemplatePropertyValue)"/>
     public LoggerMessageContext AddProperty<T>(string name, T value)
     {
-        Check.NotNull(name);
+        _ = Check.NotNull(name);
 
-        Properties.Add(name, new LiteralValue<T>(value));
+        Properties.Add(name, new(value));
 
         return this;
     }
 
-    /// <inheritdoc cref="PropertyCollection.AddOrUpdate(string, ITemplatePropertyValue)"/>
     public LoggerMessageContext AddOrUpdateProperty<T>(string name, T value)
     {
-        Check.NotNull(name);
+        _ = Check.NotNull(name);
 
-        Properties.Add(name, new LiteralValue<T>(value));
+        Properties.Add(name, new(value));
 
         return this;
     }
@@ -64,7 +57,7 @@ public struct LoggerMessageContext
     {
         if(!text.IsEmpty)
         {
-            _message = string.Concat(_message, text);
+            Message = string.Concat(Message, text);
         }
 
         return this;
@@ -72,6 +65,6 @@ public struct LoggerMessageContext
 
     public override int GetHashCode()
     {
-        return _message.GetHashCode();
+        return Message.GetHashCode();
     }
 }

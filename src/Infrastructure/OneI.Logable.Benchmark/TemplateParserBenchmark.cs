@@ -14,7 +14,7 @@ public class TemplateParserBenchmark
     [Benchmark(Baseline = true)]
     public void UseSeriLog()
     {
-        for(var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             var _ = new MessageTemplateParser().Parse(text);
         }
@@ -24,16 +24,16 @@ public class TemplateParserBenchmark
 
     public void UseLogable()
     {
-        for(var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
-            var _ = new TemplateEnumerator(text);
+            var _ = new TemplateEnumerator(text.AsMemory());
         }
     }
 
     [Benchmark]
     public void UseNLog()
     {
-        for(var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             var enumerator = new NLogTemplateEnumerator(text);
             while(enumerator.MoveNext())

@@ -11,7 +11,7 @@ public sealed class StringOutputSink : ILoggerSink
         _renderer = new LoggerRenderer(null);
     }
 
-    public void Invoke(LoggerContext context)
+    public void Invoke(in LoggerContext context)
     {
         var _writer = new StringWriter();
 

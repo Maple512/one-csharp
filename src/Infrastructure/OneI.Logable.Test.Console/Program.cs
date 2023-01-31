@@ -7,27 +7,27 @@ public class Program
         Console.WriteLine("Hello, World!");
 
         using var logger = new LoggerConfiguration()
-            .Sink.FileWhen(c => c.Context.Level == LogLevel.Verbose,
+            .Sink.FileWhen(c => c.Message.Level == LogLevel.Verbose,
             $"./Logs/{nameof(LogLevel.Verbose)}log.log")
             .Sink.FileWhen(c =>
             {
-                return c.Context.Level == LogLevel.Debug;
+                return c.Message.Level == LogLevel.Debug;
             }, $"./Logs/{nameof(LogLevel.Debug)}log.log")
             .Sink.FileWhen(c =>
             {
-                return c.Context.Level == LogLevel.Information;
+                return c.Message.Level == LogLevel.Information;
             }, $"./Logs/{nameof(LogLevel.Information)}log.log")
             .Sink.FileWhen(c =>
             {
-                return c.Context.Level == LogLevel.Warning;
+                return c.Message.Level == LogLevel.Warning;
             }, $"./Logs/{nameof(LogLevel.Warning)}og.log")
             .Sink.FileWhen(c =>
             {
-                return c.Context.Level == LogLevel.Error;
+                return c.Message.Level == LogLevel.Error;
             }, $"./Logs/{nameof(LogLevel.Error)}og.log")
             .Sink.FileWhen(c =>
             {
-                return c.Context.Level == LogLevel.Fatal;
+                return c.Message.Level == LogLevel.Fatal;
             }, $"./Logs/{nameof(LogLevel.Fatal)}log.log")
             .CreateLogger();
 

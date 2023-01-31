@@ -11,7 +11,7 @@ public class ConditionalSink : ILoggerSink
         _sink = sink;
     }
 
-    public void Invoke(LoggerContext context)
+    public void Invoke(in LoggerContext context)
     {
         if(_condition(context))
         {

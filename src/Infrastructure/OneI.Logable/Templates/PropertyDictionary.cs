@@ -6,34 +6,29 @@ using System.ComponentModel;
 /// <summary>
 /// 容量：尽量多分配，这个字典不会自动扩容
 /// </summary>
-/// <typeparam name="TKey"></typeparam>
-/// <typeparam name="TValue"></typeparam>
-public struct PropertyDictionary<TKey, TValue>
-    where TKey : IEquatable<TKey>?
+public struct PropertyDictionary
 {
-    const int MaxCapacity = 100;
+    private const int MaxCapacity = 100;
 
-    private TKey[] _keys;
-    private TValue[] _values;
-    private int _position;
-
+    private string[] _keys;
+    private PropertyValue[] _values;
     [ThreadStatic]
-    private static TKey[]? keyBuffer;
+    private static string[]? keyBuffer;
     [ThreadStatic]
-    private static TValue[]? valuesBuffer;
+    private static PropertyValue[]? valuesBuffer;
     [ThreadStatic]
     private static bool _buffered;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public PropertyDictionary()
     {
-        if (_buffered)
+        if(_buffered)
         {
             ThrowNonDisposeException();
         }
 
-        _keys = keyBuffer ??= new TKey[MaxCapacity];
-        _values = valuesBuffer ??= new TValue[MaxCapacity];
+        _keys = keyBuffer ??= new string[MaxCapacity];
+        _values = valuesBuffer ??= new PropertyValue[MaxCapacity];
 
         _buffered = true;
     }
@@ -41,47 +36,47 @@ public struct PropertyDictionary<TKey, TValue>
     public bool IsEmpty
     {
         [method: MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _position == 0;
+        get => Length == 0;
     }
 
     public int Length
     {
         [method: MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _position;
+        get; private set;
     }
 
     [ReadOnly(true)]
-    public KeyValuePair<TKey, TValue> this[int index]
+    public KeyValuePair<string, PropertyValue> this[int index]
     {
         get
         {
-            if (index > _position)
+            if(index > Length)
             {
                 ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index);
             }
 
-            return new KeyValuePair<TKey, TValue>(_keys[index], _values[index]);
+            return new KeyValuePair<string, PropertyValue>(_keys[index], _values[index]);
         }
     }
 
-    public ReadOnlySpan<TKey> Keys
+    public ReadOnlySpan<string> Keys
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _keys.AsSpan(0, _position);
+        get => _keys.AsSpan(0, Length);
     }
 
-    public ReadOnlySpan<TValue> Values
+    public ReadOnlySpan<PropertyValue> Values
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _values.AsSpan(0, _position);
+        get => _values.AsSpan(0, Length);
     }
 
-    public void AddRange(PropertyDictionary<TKey, TValue> other)
+    public void AddRange(PropertyDictionary other)
     {
-        if (other._position != 0)
+        if(other.Length != 0)
         {
-            other.Keys.CopyTo(_keys.AsSpan()[_position..]);
-            other.Values.CopyTo(_values.AsSpan()[_position..]);
+            other.Keys.CopyTo(_keys.AsSpan()[Length..]);
+            other.Values.CopyTo(_values.AsSpan()[Length..]);
         }
     }
 
@@ -95,9 +90,9 @@ public struct PropertyDictionary<TKey, TValue>
     /// <exception cref="ArgumentNullException">给定的<paramref name="key"/>为<see langword="null"/></exception>
     /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Add(TKey key, TValue value)
+    public void Add(string key, PropertyValue value)
     {
-        TryInsert(key, value, InsertionBehavior.ThrowOnExisting);
+        _ = TryInsert(key, value, InsertionBehavior.ThrowOnExisting);
     }
 
     /// <summary>
@@ -109,7 +104,7 @@ public struct PropertyDictionary<TKey, TValue>
     /// <exception cref="ArgumentNullException">给定的<paramref name="key"/>为<see langword="null"/></exception>
     /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryAdd(TKey key, TValue value)
+    public bool TryAdd(string key, PropertyValue value)
     {
         return TryInsert(key, value, InsertionBehavior.None);
     }
@@ -122,9 +117,9 @@ public struct PropertyDictionary<TKey, TValue>
     /// <exception cref="ArgumentNullException">给定的<paramref name="key"/>为<see langword="null"/></exception>
     /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AddOrUpdate(TKey key, TValue value)
+    public void AddOrUpdate(string key, PropertyValue value)
     {
-        TryInsert(key, value, InsertionBehavior.OverwriteExisting);
+        _ = TryInsert(key, value, InsertionBehavior.OverwriteExisting);
     }
 
     /// <summary>
@@ -133,21 +128,35 @@ public struct PropertyDictionary<TKey, TValue>
     /// <param name="key"></param>
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool ContainsKey(TKey key)
+    public bool ContainsKey(string key)
     {
         return Keys.IndexOf(key) != -1;
     }
 
-    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue? value)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public T GetValue<T>(string key)
     {
-        if (key == null)
+        var index = Keys.IndexOf(key);
+
+        // TODO: 这里的强转需要检查下
+        if(index != -1)
+        {
+            return (T)_values[index].Value!;
+        }
+
+        throw new KeyNotFoundException();
+    }
+
+    public bool TryGetValue(string key, [NotNullWhen(true)] out PropertyValue? value)
+    {
+        if(key == null)
         {
             ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key);
         }
 
         var index = Keys.IndexOf(key);
 
-        if (index != -1)
+        if(index != -1)
         {
             value = _values[index];
             return true;
@@ -166,30 +175,30 @@ public struct PropertyDictionary<TKey, TValue>
     /// <exception cref="ArgumentException">已存在指定的<paramref name="key"/></exception>
     /// <exception cref="ArgumentNullException">给定的<paramref name="key"/>为<see langword="null"/></exception>
     /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
-    private bool TryInsert(TKey key, TValue value, InsertionBehavior behavior)
+    private bool TryInsert(string key, PropertyValue value, InsertionBehavior behavior)
     {
-        if (key == null)
+        if(key == null)
         {
             ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key);
         }
 
-        if (_position >= _keys.Length - 1)
+        if(Length >= _keys.Length - 1)
         {
             throw new ArgumentOutOfRangeException("To reach the maximum length of the dictionary.");
         }
 
         var existed = Keys.IndexOf(key) != -1;
 
-        if (existed)
+        if(existed)
         {
-            if (behavior == InsertionBehavior.OverwriteExisting)
+            if(behavior == InsertionBehavior.OverwriteExisting)
             {
-                _keys[_position] = key;
-                _values[_position] = value;
+                _keys[Length] = key;
+                _values[Length] = value;
                 return true;
             }
 
-            if (behavior == InsertionBehavior.ThrowOnExisting)
+            if(behavior == InsertionBehavior.ThrowOnExisting)
             {
                 ThrowHelper.ThrowAddingDuplicateWithKeyArgumentException(key);
             }
@@ -197,9 +206,9 @@ public struct PropertyDictionary<TKey, TValue>
             return false;
         }
 
-        _keys[_position] = key;
-        _values[_position] = value;
-        _position++;
+        _keys[Length] = key;
+        _values[Length] = value;
+        Length++;
 
         return true;
     }
@@ -207,11 +216,11 @@ public struct PropertyDictionary<TKey, TValue>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose()
     {
-        if (_keys != null)
+        if(_keys != null)
         {
             _keys = null!;
             _values = null!;
-            _position = 0;
+            Length = 0;
             _buffered = false;
         }
     }

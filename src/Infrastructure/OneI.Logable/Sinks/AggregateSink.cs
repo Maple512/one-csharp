@@ -10,7 +10,7 @@ public class AggregateSink : ILoggerSink
         _isSilent = isSilent;
     }
 
-    public void Invoke(LoggerContext context)
+    public void Invoke(in LoggerContext context)
     {
         List<Exception>? exceptions = null;
 

@@ -3,6 +3,7 @@ namespace OneI.Utilityable;
 using System.Globalization;
 using BenchmarkDotNet.Columns;
 using Cysharp.Text;
+using DotNext.Runtime;
 
 [GroupBenchmarksBy]
 public class StringTransferBenchmark : BenchmarkItem
@@ -12,9 +13,9 @@ public class StringTransferBenchmark : BenchmarkItem
 
     [Params(100)]
     public int length;
+
     public override void GlobalInlitialize()
     {
-        length = 100;
         var result = UseString();
 
         var bytes = Encoding.UTF8.GetByteCount(string.Concat(result));
@@ -33,7 +34,7 @@ public class StringTransferBenchmark : BenchmarkItem
     {
         var result = new List<string>();
 
-        for (var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             result.Add(StringTransfer(text));
         }
@@ -47,7 +48,7 @@ public class StringTransferBenchmark : BenchmarkItem
     {
         var result = new List<string>();
 
-        for (var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             var t = text.AsMemory();
 
@@ -65,7 +66,7 @@ public class StringTransferBenchmark : BenchmarkItem
     {
         var result = new List<string>();
 
-        for (var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             var builder = new Utf16ValueStringBuilder(true);
 

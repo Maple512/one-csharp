@@ -2,10 +2,15 @@ namespace OneI.Logable;
 
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using OneI.Logable.Templates;
 
 public interface ILogger : IDisposable, IAsyncDisposable
 {
+    void Write(ref LoggerMessageContext context, ref PropertyDictionary properties);
+
     bool IsEnable(LogLevel level);
+
+    #region For Context
 
     /// <summary>
     /// 在现有<see cref="ILogger"/>的基础上，创建一个新的<see cref="ILogger"/>
@@ -19,6 +24,10 @@ public interface ILogger : IDisposable, IAsyncDisposable
     /// </summary>
     /// <returns></returns>
     ILogger ForContext<TValue>(string name, TValue value);
+
+    #endregion
+
+    #region Begin Scope
 
     /// <summary>
     /// 在现有<see cref="ILogger"/>的基础上，添加指定的<see cref="ILoggerMiddleware"/>
@@ -36,9 +45,9 @@ public interface ILogger : IDisposable, IAsyncDisposable
     /// <returns></returns>
     IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares);
 
-    #region Write
+    #endregion
 
-    void Write(in LoggerMessageContext context);
+    #region Write
 
     void Write(LogLevel level, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0);
 
@@ -99,183 +108,26 @@ public readonly struct NoneLogger : ILogger
 {
     public static readonly ILogger Instance = new NoneLogger();
 
-    public IDisposable BeginScope(params ILoggerMiddleware[] middlewares)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Debug(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Debug(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Debug(string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Debug(Exception exception, string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Dispose()
-    {
-        throw new NotImplementedException();
-    }
-
-    public ValueTask DisposeAsync()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Error(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Error(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Error(string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Error(Exception exception, string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Fatal(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Fatal(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Fatal(string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Fatal(Exception exception, string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public ILogger ForContext(Action<ILoggerConfiguration> configure)
-    {
-        throw new NotImplementedException();
-    }
-
-    public ILogger ForContext<TValue>(string name, TValue value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Information(in string message, [CallerFilePath] in string? file = null, [CallerMemberName] in string? member = null, [CallerLineNumber] in int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Information(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Information(string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Information(Exception exception, string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool IsEnable(LogLevel level)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Verbose(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Verbose(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Verbose(string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Verbose(Exception exception, string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Warning(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Warning(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Warning(string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Warning(Exception exception, string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Write(in LoggerMessageContext context)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Write(LogLevel level, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Write(LogLevel level, Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Write(LogLevel level, string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Write(LogLevel level, Exception exception, string? message, params object?[] args)
-    {
-        throw new NotImplementedException();
-    }
+    public IDisposable BeginScope(params ILoggerMiddleware[] middlewares) => throw new NotImplementedException();
+    public IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares) => throw new NotImplementedException();
+    public void Debug(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public void Debug(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public void Dispose() => throw new NotImplementedException();
+    public ValueTask DisposeAsync() => throw new NotImplementedException();
+    public void Error(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public void Error(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public void Fatal(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public void Fatal(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public ILogger ForContext(Action<ILoggerConfiguration> configure) => throw new NotImplementedException();
+    public ILogger ForContext<TValue>(string name, TValue value) => throw new NotImplementedException();
+    public void Information(in string message, [CallerFilePath] in string? file = null, [CallerMemberName] in string? member = null, [CallerLineNumber] in int line = 0) => throw new NotImplementedException();
+    public void Information(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public bool IsEnable(LogLevel level) => throw new NotImplementedException();
+    public void Verbose(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public void Verbose(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public void Warning(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public void Warning(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public void Write(ref LoggerMessageContext context, ref PropertyDictionary properties) => throw new NotImplementedException();
+    public void Write(LogLevel level, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
+    public void Write(LogLevel level, Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0) => throw new NotImplementedException();
 }

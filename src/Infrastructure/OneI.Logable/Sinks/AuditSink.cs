@@ -4,7 +4,7 @@ public class AuditSink : ILoggerSink
 {
 
 
-    public void Invoke(LoggerContext context)
+    public void Invoke(in LoggerContext context)
     {
         throw new NotImplementedException();
     }

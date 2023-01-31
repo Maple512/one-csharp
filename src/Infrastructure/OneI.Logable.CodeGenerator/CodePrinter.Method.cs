@@ -8,14 +8,14 @@ internal static partial class CodePrinter
     {
         builder.Append($"public static void {method.Name}");
 
-        if (method.TypeArguments.Count > 0)
+        if(method.TypeArguments.Count > 0)
         {
             builder.Append($"<{string.Join(", ", method.TypeArguments.Keys)}>");
         }
 
         // 方法参数
         builder.AppendLine("(");
-        using (builder.Indent())
+        using(builder.Indent())
         {
             PrintMethodParameters(builder, method);
         }
@@ -23,7 +23,7 @@ internal static partial class CodePrinter
         builder.AppendLine("{");
 
         // body
-        using (builder.Indent())
+        using(builder.Indent())
         {
             PrintMethodBody(builder, method);
         }
@@ -33,24 +33,24 @@ internal static partial class CodePrinter
 
     private static void PrintMethodParameters(IndentedStringBuilder builder, MethodDef method)
     {
-        if (method.IsLogger)
+        if(method.IsLogger)
         {
             builder.AppendLine($"this global::{CodeAssets.LoggerFullName} logger, ");
         }
 
-        if (method.HasLevel)
+        if(method.HasLevel)
         {
             builder.AppendLine($"{CodeAssets.LogLevelParameterType} {CodeAssets.LogLevelParameterName}, ");
         }
 
-        if (method.HasException)
+        if(method.HasException)
         {
             builder.AppendLine($"{CodeAssets.ExceptionParameterType} {CodeAssets.ExceptionParameterName}, ");
         }
 
         builder.AppendLine($"{CodeAssets.MessageParameterType} {CodeAssets.MessageParameterName}, ");
 
-        for (var i = 0; i < method.Parameters.Count; i++)
+        for(var i = 0;i < method.Parameters.Count;i++)
         {
             var item = method.Parameters[i];
 
@@ -62,7 +62,7 @@ internal static partial class CodePrinter
         builder.AppendLine("[global::System.Runtime.CompilerServices.CallerLineNumber] global::System.Int32 line = 0)");
 
         // 泛型约束
-        foreach (var x in method.TypeArguments
+        foreach(var x in method.TypeArguments
             .Where(x => string.IsNullOrWhiteSpace(x.Value) == false))
         {
             builder.AppendLine($"where {x.Key}: {x.Value}");
@@ -71,16 +71,16 @@ internal static partial class CodePrinter
 
     private static void PrintMethodBody(IndentedStringBuilder builder, MethodDef method)
     {
-        builder.AppendLine($"var properties = new global::OneI.Logable.Templates.PropertyDictionary<global::System.String, global::OneI.Logable.Templates.ITemplatePropertyValue>();");
+        builder.AppendLine($"var properties = new global::OneI.Logable.Templates.PropertyDictionary();");
 
-        for (var i = 0; i < method.Parameters.Count; i++)
+        for(var i = 0;i < method.Parameters.Count;i++)
         {
             var parameter = method.Parameters[i];
 
             builder.Append($"properties.Add(\"__{i}\", ");
 
             var type = _types.FirstOrDefault(x => x.Equals(parameter.Type));
-            if (type is not null)
+            if(type is not null)
             {
                 builder.Append($"{CodeAssets.LoggerPropertyCreateCalledName}({parameter.Name})");
             }
@@ -95,7 +95,7 @@ internal static partial class CodePrinter
         builder.AppendLine();
 
         // call LoggerExtensions.WriteCore
-        if (method.IsLogger)
+        if(method.IsLogger)
         {
             builder.Append("global::OneI.Logable.LoggerExtensions.WriteCore(logger, ");
         }
@@ -104,7 +104,7 @@ internal static partial class CodePrinter
             builder.Append("global::OneI.Logable.LoggerExtensions.WriteCore(_logger, ");
         }
 
-        if (method.HasLevel)
+        if(method.HasLevel)
         {
             builder.Append($"{CodeAssets.LogLevelParameterName}, ");
         }
@@ -113,7 +113,7 @@ internal static partial class CodePrinter
             builder.Append($"{CodeAssets.LogLevelParameterType}.{method.Name}, ");
         }
 
-        if (method.HasException)
+        if(method.HasException)
         {
             builder.Append($"{CodeAssets.ExceptionParameterName}, ");
         }
@@ -125,5 +125,7 @@ internal static partial class CodePrinter
         builder.Append($"{CodeAssets.MessageParameterName}, ");
 
         builder.AppendLine("properties, file, member, line);");
+
+        builder.AppendLine("properties.Dispose();");
     }
 }

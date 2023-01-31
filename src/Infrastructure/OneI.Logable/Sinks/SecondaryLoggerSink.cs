@@ -11,15 +11,16 @@ public class SecondaryLoggerSink : ILoggerSink, IDisposable, IAsyncDisposable
         _autoDispose = autoDispose;
     }
 
-    public void Invoke(LoggerContext context)
+    public void Invoke(in LoggerContext context)
     {
-        _secondaryLogger.Write(context.Context);
+        var message = context.Message;
+        var properties = context.Properties;
+
+        _secondaryLogger.Write(ref message, ref properties);
     }
 
     public void Dispose()
     {
-
-
         if(_autoDispose && _secondaryLogger is IDisposable d)
         {
             d.Dispose();
@@ -30,8 +31,6 @@ public class SecondaryLoggerSink : ILoggerSink, IDisposable, IAsyncDisposable
     {
         if(_autoDispose && _secondaryLogger is IAsyncDisposable ad)
         {
-
-
             await ad.DisposeAsync();
             return;
         }

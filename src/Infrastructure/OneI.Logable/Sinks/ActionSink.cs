@@ -9,7 +9,7 @@ public class ActionSink : ILoggerSink
         _action = action;
     }
 
-    public void Invoke(LoggerContext context)
+    public void Invoke(in LoggerContext context)
     {
         _action(context);
     }

@@ -22,11 +22,53 @@ internal class Logger : ILogger
         _templateProvider = templateProvider;
     }
 
+    private void Dispatch(ref LoggerMessageContext context, ref PropertyDictionary properties)
+    {
+        var template = _templateProvider.GetTemplate(ref context);
+
+        var loggerContext = new LoggerContext(template, properties, context);
+
+        List<Exception>? exceptions = null;
+
+        foreach(var item in _middlewares)
+        {
+            item.Invoke(context);
+        }
+
+        for(var i = 0;i < _sinks.Length;i++)
+        {
+            try
+            {
+                _sinks[i].Invoke(loggerContext);
+            }
+            catch(Exception ex)
+            {
+                exceptions ??= new List<Exception>(_sinks.Length);
+                exceptions.Add(ex);
+            }
+        }
+
+        if(exceptions is { Count: > 0 })
+        {
+            throw new AggregateException(exceptions);
+        }
+    }
+
+    public void Write(ref LoggerMessageContext context, ref PropertyDictionary properties)
+    {
+        if(IsEnable(context.Level))
+        {
+            Dispatch(ref context, ref properties);
+        }
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsEnable(LogLevel level)
     {
         return _levelMap.IsEnabled(level);
     }
+
+    #region For Context
 
     public ILogger ForContext(Action<ILoggerConfiguration> configure)
     {
@@ -41,7 +83,7 @@ internal class Logger : ILogger
     {
         var middleware = new PropertyMiddleware<TValue>(name, value, true);
 
-        if(name.AsSpan().Equals(LoggerConstants.PropertyNames.SourceContext, StringComparison.InvariantCulture)
+        if(name.AsSpan().Equals(LoggerConstants.Propertys.SourceContext, StringComparison.InvariantCulture)
             && value is string sourceContext)
         {
             var range = _levelMap.GetEffectiveLevel(sourceContext);
@@ -59,23 +101,7 @@ internal class Logger : ILogger
         });
     }
 
-    public void Write(in LoggerMessageContext context)
-    {
-        if(IsEnable(context.Level))
-        {
-            Dispatch(context);
-        }
-    }
-
-    public IDisposable BeginScope(params ILoggerMiddleware[] middlewares)
-    {
-        return CreateScope(middlewares);
-    }
-
-    public IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares)
-    {
-        return CreateScope(middlewares);
-    }
+    #endregion
 
     #region Write
 
@@ -246,6 +272,18 @@ internal class Logger : ILogger
 
     #endregion Fatal
 
+    #region Scope
+
+    public IDisposable BeginScope(params ILoggerMiddleware[] middlewares)
+    {
+        return CreateScope(middlewares);
+    }
+
+    public IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares)
+    {
+        return CreateScope(middlewares);
+    }
+
     private DisposeAction<LoggerScope> CreateScope(params ILoggerMiddleware[] middlewares)
     {
         if(middlewares.Length == 0)
@@ -274,37 +312,7 @@ internal class Logger : ILogger
         return new(state => _middlewares = state.Middlewares, scope);
     }
 
-    private void Dispatch(LoggerMessageContext context)
-    {
-        foreach(var item in _middlewares)
-        {
-            item.Invoke(context);
-        }
-
-        var enumerator = _templateProvider.GetTemplate(context);
-
-        var loggerContext = new LoggerContext(context, enumerator.Template, enumerator.Message);
-
-        List<Exception>? exceptions = null;
-
-        for(var i = 0; i < _sinks.Length; i++)
-        {
-            try
-            {
-                _sinks[i].Invoke(loggerContext);
-            }
-            catch(Exception ex)
-            {
-                exceptions ??= new List<Exception>(_sinks.Length);
-                exceptions.Add(ex);
-            }
-        }
-
-        if(exceptions is { Count: > 0 })
-        {
-            throw new AggregateException(exceptions);
-        }
-    }
+    #endregion
 
     public void Dispose()
     {

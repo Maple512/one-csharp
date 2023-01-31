@@ -13,39 +13,41 @@ internal static partial class CodePrinter
             builder.AppendLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         }
 
-        builder.AppendLine($"public static global::OneI.Logable.Templates.ITemplatePropertyValue {CodeAssets.LoggerPropertyCreateMethodName}({type.ToDisplayString()} arg)");
+        builder.AppendLine($"public static global::OneI.Logable.Templates.PropertyValue {CodeAssets.LoggerPropertyCreateMethodName}({type.ToDisplayString()} arg)");
 
         builder.AppendLine("{");
 
         using(var _ = builder.Indent())
         {
-            switch(type.Kind)
-            {
-                case TypeDefKind.Object:
-                    BuildObject(builder, type);
-                    break;
 
-                case TypeDefKind.ValueTuple:
-                    BuildValueTuple(builder, type);
-                    break;
+            builder.AppendLine($"return new global::OneI.Logable.Templates.PropertyValue(arg);");
+            //switch(type.Kind)
+            //{
+            //    case TypeDefKind.Object:
+            //        BuildObject(builder, type);
+            //        break;
 
-                case TypeDefKind.Nullable:
-                    BuildNullable(builder, type);
-                    break;
+            //    case TypeDefKind.ValueTuple:
+            //        BuildValueTuple(builder, type);
+            //        break;
 
-                case TypeDefKind.Array:
-                case TypeDefKind.Enumerable:
-                    BuildEnumerable(builder);
-                    break;
+            //    case TypeDefKind.Nullable:
+            //        BuildNullable(builder, type);
+            //        break;
 
-                case TypeDefKind.Dictionary:
-                    BuildDictionary(builder, type);
-                    break;
+            //    case TypeDefKind.Array:
+            //    case TypeDefKind.Enumerable:
+            //        BuildEnumerable(builder);
+            //        break;
 
-                default:
-                    Default(builder, type);
-                    break;
-            }
+            //    case TypeDefKind.Dictionary:
+            //        BuildDictionary(builder, type);
+            //        break;
+
+            //    default:
+            //        Default(builder, type);
+            //        break;
+            //}
         }
 
         builder.AppendLine("}");
@@ -53,7 +55,7 @@ internal static partial class CodePrinter
 
     private static void Default(IndentedStringBuilder builder, TypeDef type)
     {
-        builder.AppendLine($"return new global::OneI.Logable.Templates.LiteralValue<{type.ToDisplayString()}>(arg);");
+        builder.AppendLine($"return new global::OneI.Logable.Templates.PropertyValue(arg);");
     }
 
     private static void BuildEnumerable(IndentedStringBuilder builder)

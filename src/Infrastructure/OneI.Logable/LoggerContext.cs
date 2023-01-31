@@ -4,28 +4,19 @@ using OneI.Logable.Templates;
 
 public readonly struct LoggerContext
 {
-    public LoggerContext(LoggerMessageContext context, TemplateEnumerator template, TemplateEnumerator message)
+    public LoggerContext(
+        TemplateEnumerator template,
+        PropertyDictionary properties,
+        LoggerMessageContext message)
     {
-        Context = context;
         Template = template;
+        Properties = properties;
         Message = message;
     }
 
-    public LoggerMessageContext Context
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get;
-    }
+    public readonly TemplateEnumerator Template;
 
-    public TemplateEnumerator Template
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get;
-    }
+    public readonly PropertyDictionary Properties;
 
-    public TemplateEnumerator Message
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get;
-    }
+    public readonly LoggerMessageContext Message;
 }

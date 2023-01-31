@@ -13,23 +13,29 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
     private const char _indent = '\'';
     private const char _align = ',';
 
-    public readonly string Template;
+    public readonly ReadOnlyMemory<char> Text;
     private TemplateHolder _current;
     private TemplateHolder _next;
     private readonly ushort _length;
     private ushort _position;
 
-    public TemplateEnumerator(string template)
+    public TemplateEnumerator(ReadOnlyMemory<char> template)
     {
-        if(template is null or { Length: > ushort.MaxValue })
+        if(template is { Length: > ushort.MaxValue })
         {
             throw new ArgumentOutOfRangeException(nameof(template));
         }
 
-        Template = template;
+        Text = template;
         _current = default;
         _length = (ushort)template.Length;
         _position = 0;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ReadOnlyMemory<char> GetCurrentText()
+    {
+        return Text.Slice(Current.Position, Current.Length);
     }
 
     public bool MoveNext()
@@ -58,7 +64,7 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
 
             var length = (ushort)(_length - position);
 
-            scoped var remainder = Template.AsSpan().Slice(position, length);
+            scoped var remainder = Text.Span.Slice(position, length);
 
             // '}'
             var closeIndex = remainder.IndexOf(_close);
@@ -128,7 +134,7 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
 
     public override string ToString()
     {
-        return Template.ToString();
+        return Text.ToString();
     }
 
     private static bool TryParseProperty(in ReadOnlySpan<char> text, ushort position, [NotNullWhen(true)] out TemplateHolder token)
@@ -372,7 +378,7 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
 
     public bool Equals(TemplateEnumerator other)
     {
-        return Template.Equals(other.Template, StringComparison.InvariantCulture);
+        return Text.Equals(other.Text);
     }
 
     public override bool Equals(object? obj)
@@ -382,6 +388,16 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
 
     public override int GetHashCode()
     {
-        return Template.GetHashCode();
+        return Text.GetHashCode();
+    }
+
+    public static bool operator ==(TemplateEnumerator left, TemplateEnumerator right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(TemplateEnumerator left, TemplateEnumerator right)
+    {
+        return !(left == right);
     }
 }

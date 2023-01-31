@@ -15,6 +15,11 @@ public class LoggerRenderer : ILoggerRenderer
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Render(LoggerContext context, TextWriter writer)
     {
-        TemplateRenderHelper.Render(writer, context.Template, context.Message, context.Context, _formatProvider);
+        TemplateRenderHelper.Render(
+            writer,
+            context.Template,
+            context.Message,
+            context.Properties,
+            _formatProvider);
     }
 }
