@@ -1,24 +1,26 @@
 namespace OneI.Logable.Middlewares;
 
+using OneI.Logable.Templates;
+
 public class AggregateMiddleware : ILoggerMiddleware
 {
+    private readonly bool                           _isSilent;
     private readonly IEnumerable<ILoggerMiddleware> _middlewares;
-    private readonly bool _isSilent;
 
     public AggregateMiddleware(IEnumerable<ILoggerMiddleware> middlewares, bool isSilent = false)
     {
         _middlewares = middlewares;
-        _isSilent = isSilent;
+        _isSilent    = isSilent;
     }
 
-    public void Invoke(LoggerMessageContext context)
+    public void Invoke(in LoggerMessageContext context, ref PropertyDictionary properties)
     {
         List<Exception>? exceptions = null;
         foreach(var middleware in _middlewares)
         {
             try
             {
-                middleware.Invoke(context);
+                middleware.Invoke(context, ref properties);
             }
             catch(Exception ex)
             {

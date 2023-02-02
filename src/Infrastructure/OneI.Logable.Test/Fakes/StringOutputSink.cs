@@ -1,22 +1,19 @@
 namespace OneI.Logable.Fakes;
 
-using OneI.Logable;
+using OneI.Logable.Templates;
 
 public sealed class StringOutputSink : ILoggerSink
 {
-    private readonly ILoggerRenderer _renderer;
+    private readonly Action<string> _receiver;
 
-    public StringOutputSink(string tempalte)
-    {
-        _renderer = new LoggerRenderer(null);
-    }
+    public StringOutputSink(Action<string> receiver) => _receiver = receiver;
 
     public void Invoke(in LoggerContext context)
     {
-        var _writer = new StringWriter();
+        var writer = new StringWriter();
 
-        _renderer.Render(context, _writer);
+        TemplateRenderHelper.Render(writer, context, null);
 
-        Debug.Write(_writer.ToString(), nameof(StringOutputSink));
+        _receiver.Invoke(writer.ToString());
     }
 }

@@ -1,4 +1,4 @@
-namespace OneI.Utilityable;
+namespace OneI.Utilityable.Strings;
 
 using System.Globalization;
 using BenchmarkDotNet.Columns;

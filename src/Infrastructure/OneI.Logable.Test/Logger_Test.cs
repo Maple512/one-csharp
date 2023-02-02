@@ -1,7 +1,7 @@
 namespace OneI.Logable;
 
-using Fakes;
-using Middlewares;
+using OneI.Logable.Fakes;
+using OneI.Logable.Middlewares;
 using OneI.Logable.Templates;
 
 public class Logger_Test
@@ -9,11 +9,13 @@ public class Logger_Test
     [Fact]
     public void size_of()
     {
-        TestTools.PrintLayoutToFile<TemplateHolder>();
+        TestTools.PrintLayoutToFile<object>().Size.ShouldBe(8);
 
-        TestTools.PrintLayoutToFile<TemplateEnumerator>();
+        TestTools.PrintLayoutToFile<TemplateHolder>().Size.ShouldBe(32);
 
-        TestTools.PrintLayoutToFile<ReadOnlyMemory<char>>();
+        TestTools.PrintLayoutToFile<TemplateEnumerator>().Size.ShouldBe(88);
+
+        TestTools.PrintLayoutToFile<ReadOnlyMemory<char>>().Size.ShouldBe(16);
     }
 
     [Fact]
@@ -27,8 +29,8 @@ public class Logger_Test
 
         // override type
         logger = new LoggerConfiguration()
-           .Level.Override<Logger_Test>(LogLevel.Information)
-           .CreateLogger();
+                 .Level.Override<Logger_Test>(LogLevel.Information)
+                 .CreateLogger();
         logger.ForContext<Logger_Test>().IsEnable(LogLevel.Verbose).ShouldBeFalse();
         logger.ForContext<Logger_Test>().IsEnable(LogLevel.Information).ShouldBeTrue();
         logger.ForContext<Logger_Test>().IsEnable(LogLevel.Fatal).ShouldBeTrue();
@@ -44,24 +46,23 @@ public class Logger_Test
     {
         var order = new List<int>(100);
 
-        var id = Guid.NewGuid();
-        var name = "Id";
+        var id         = Guid.NewGuid();
+        var name       = "Id";
         var propertyId = (PropertyValue?)null;
 
         var logger = Fake.CreateLogger(
-            logger: logger => logger
-            .Use(new ActionMiddleware(_ => order.Add(1)))
-            .Use(new ActionMiddleware(_ => order.Add(2)))
-            .Audit.Attach(c =>
-            {
-                c.Message.Properties.TryGetValue(name, out propertyId);
-            }));
+                                       logger: logger => logger
+                                                         .Use(new ActionMiddleware(_ => order.Add(1)))
+                                                         .Use(new ActionMiddleware(_ => order.Add(2)))
+                                                         .Audit.Attach(c =>
+                                                         {
+                                                             c.Properties.TryGetValue(name, out propertyId);
+                                                         }));
 
         var scope = new ILoggerMiddleware[]
         {
-            new ActionMiddleware(_=> order.Add(3)),
-            new PropertyMiddleware<Guid>(name, id),
-            new ActionMiddleware(_ => order.Add(4)),
+            new ActionMiddleware(_ => order.Add(3)), new PropertyMiddleware<Guid>(name, id)
+            , new ActionMiddleware(_ => order.Add(4)),
         };
 
         using(logger.BeginScope("1", 1))
@@ -86,13 +87,12 @@ public class Logger_Test
     }
 
     [Fact]
-    
     public void logger_test()
     {
         var logger = Fake.CreateLogger(logger: configure =>
-            {
-                configure.Template.UseWhen(c => c.Exception is not null, Fake.ErrorTemplate);
-            });
+        {
+            configure.Template.UseWhen(c => c.Exception is not null, Fake.ErrorTemplate);
+        });
 
         logger.ForContext<Middleware_Test>().Error(new ArgumentException(), "Include Source Context");
 
@@ -103,10 +103,10 @@ public class Logger_Test
         logger.Error("Exclude Source Context");
 
         logger.Error(
-            "{0} {1} {2} {3}{NewLine}{FileName'4}#L{LineNumber}@{MemberName}",
-            "0",
-            1,
-            new Dictionary<int, int> { { 2, 3 } },
-            new List<int> { 4, 5, 6 });
+                     "{0} {1} {2} {3}{NewLine}{FileName'4}#L{LineNumber}@{MemberName}",
+                     "0",
+                     1,
+                     new Dictionary<int, int> { { 2, 3 }, },
+                     new List<int> { 4, 5, 6, });
     }
 }

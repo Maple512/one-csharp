@@ -5,14 +5,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj" />
-        <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj" />
+        <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj"/>
+        <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj"/>
     </ItemGroup>
 
-    <Import Project="../../common.xunit.codegen.props" />
+    <Import Project="../../common.xunit.codegen.props"/>
 
     <ItemGroup>
-        <Compile Include="*\*\*.verified.cs" />
+        <Compile Include="*\*\*.verified.cs"/>
     </ItemGroup>
 
 </Project>

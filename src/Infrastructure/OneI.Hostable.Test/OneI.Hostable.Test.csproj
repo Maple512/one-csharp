@@ -4,12 +4,12 @@
         <TargetFramework>$(NetFramework)</TargetFramework>
     </PropertyGroup>
 
-    <Import Project="../../common.xunit.props" />
+    <Import Project="../../common.xunit.props"/>
 
     <ItemGroup>
-      <ProjectReference Include="..\OneI.Hostable.Systemd\OneI.Hostable.Systemd.csproj" />
-      <ProjectReference Include="..\OneI.Hostable.Windows\OneI.Hostable.Windows.csproj" />
-      <ProjectReference Include="..\OneI.Hostable\OneI.Hostable.csproj" />
+        <ProjectReference Include="..\OneI.Hostable.Systemd\OneI.Hostable.Systemd.csproj"/>
+        <ProjectReference Include="..\OneI.Hostable.Windows\OneI.Hostable.Windows.csproj"/>
+        <ProjectReference Include="..\OneI.Hostable\OneI.Hostable.csproj"/>
     </ItemGroup>
 
 </Project>

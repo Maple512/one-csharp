@@ -10,7 +10,6 @@ public sealed class ValueStringWriter : TextWriter
 {
     private Utf16ValueStringBuilder container;
     private bool isOpen;
-    private UnicodeEncoding? encoding;
 
     /// <summary>
     /// Creates a new instance using <see cref="CultureInfo.CurrentCulture"/> as format provider.
@@ -43,7 +42,7 @@ public sealed class ValueStringWriter : TextWriter
         isOpen = false;
     }
 
-    public override Encoding Encoding => encoding ??= new UnicodeEncoding(false, false);
+    public override Encoding Encoding => Encoding.UTF8;
 
     public int Length
     {
@@ -89,7 +88,7 @@ public sealed class ValueStringWriter : TextWriter
     {
         AssertNotDisposed();
 
-        if(value != null)
+        if(value is { Length: > 0 })
         {
             container.Append(value);
         }

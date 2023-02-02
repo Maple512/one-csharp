@@ -4,10 +4,7 @@ public readonly struct EnumerableValue : ITemplatePropertyValue
 {
     private readonly List<ITemplatePropertyValue> _values;
 
-    public EnumerableValue()
-    {
-        _values = new List<ITemplatePropertyValue>();
-    }
+    public EnumerableValue() => _values = new List<ITemplatePropertyValue>();
 
     public IReadOnlyList<ITemplatePropertyValue> Values => _values;
 
@@ -17,7 +14,7 @@ public readonly struct EnumerableValue : ITemplatePropertyValue
 
         var length = _values.Count;
 
-        for(var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             _values[i].Render(writer, type, null, formatProvider);
 
@@ -39,8 +36,5 @@ public readonly struct EnumerableValue : ITemplatePropertyValue
         return writer.ToString();
     }
 
-    public void Add<T>(T value)
-    {
-        _values.Add(new LiteralValue<T>(value));
-    }
+    public void Add<T>(T value) => _values.Add(new LiteralValue<T>(value));
 }

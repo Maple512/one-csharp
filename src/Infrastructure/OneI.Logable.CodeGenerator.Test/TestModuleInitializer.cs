@@ -1,17 +1,13 @@
 namespace OneT.CodeGenerator;
 
 /// <summary>
-/// The test module initializer.
+///     The test module initializer.
 /// </summary>
-
 public static class TestModuleInitializer
 {
     /// <summary>
-    /// Inits the.
+    ///     Inits the.
     /// </summary>
     [ModuleInitializer]
-    public static void Init()
-    {
-        VerifySourceGenerators.Enable();
-    }
+    public static void Init() => VerifySourceGenerators.Enable();
 }

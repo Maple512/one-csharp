@@ -1,14 +1,14 @@
 namespace OneI.Logable;
 
-using Definitions;
+using OneI.Logable.Definitions;
 
 internal static partial class CodePrinter
 {
     internal static void PrintType(IndentedStringBuilder builder, TypeDef type)
     {
         if(type.Kind is not TypeDefKind.Array
-            and not TypeDefKind.Enumerable
-            and not TypeDefKind.Dictionary)
+                        and not TypeDefKind.Enumerable
+                        and not TypeDefKind.Dictionary)
         {
             builder.AppendLine("[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         }
@@ -19,8 +19,7 @@ internal static partial class CodePrinter
 
         using(var _ = builder.Indent())
         {
-
-            builder.AppendLine($"return new global::OneI.Logable.Templates.PropertyValue(arg);");
+            builder.AppendLine("return new global::OneI.Logable.Templates.PropertyValue(arg);");
             //switch(type.Kind)
             //{
             //    case TypeDefKind.Object:
@@ -54,9 +53,7 @@ internal static partial class CodePrinter
     }
 
     private static void Default(IndentedStringBuilder builder, TypeDef type)
-    {
-        builder.AppendLine($"return new global::OneI.Logable.Templates.PropertyValue(arg);");
-    }
+        => builder.AppendLine("return new global::OneI.Logable.Templates.PropertyValue(arg);");
 
     private static void BuildEnumerable(IndentedStringBuilder builder)
     {
@@ -84,7 +81,7 @@ internal static partial class CodePrinter
         builder.AppendLine("var value = new global::OneI.Logable.Templates.ObjectValue();");
         builder.AppendLine();
 
-        for(var i = 0; i < type.Properties.Count; i++)
+        for(var i = 0;i < type.Properties.Count;i++)
         {
             var item = type.Properties[i];
 
@@ -105,7 +102,7 @@ internal static partial class CodePrinter
         builder.AppendLine("var value = new global::OneI.Logable.Templates.ObjectValue();");
         builder.AppendLine();
 
-        for(var i = 0; i < type.Properties.Count; i++)
+        for(var i = 0;i < type.Properties.Count;i++)
         {
             var item = type.Properties[i];
 

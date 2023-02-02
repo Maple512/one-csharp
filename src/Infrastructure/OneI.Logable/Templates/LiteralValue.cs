@@ -8,7 +8,7 @@ public readonly struct LiteralValue<T> : ITemplatePropertyValue
 
     public void Render(TextWriter writer, PropertyType type, string? format, IFormatProvider? formatProvider)
     {
-        TemplateRenderHelper.LiteralRender(writer, Value, type, format, formatProvider);
+        //TemplateRenderHelper.LiteralRender(writer, Value, type, format, formatProvider);
     }
 
     public string ToString(string? format, IFormatProvider? formatProvider)
@@ -20,13 +20,7 @@ public readonly struct LiteralValue<T> : ITemplatePropertyValue
         return writer.ToString();
     }
 
-    public override bool Equals(object? obj)
-    {
-        return obj is LiteralValue<T> sv && Equals(sv.Value, Value);
-    }
+    public override bool Equals(object? obj) => obj is LiteralValue<T> sv && Equals(sv.Value, Value);
 
-    public override int GetHashCode()
-    {
-        return Value is null ? 0 : HashCode.Combine(Value);
-    }
+    public override int GetHashCode() => Value is null ? 0 : HashCode.Combine(Value);
 }

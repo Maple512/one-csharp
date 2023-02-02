@@ -1,20 +1,18 @@
 namespace OneI.Logable;
 
+using NLog;
+
 public class LogEmptyBenchmark : BenchmarkItem
 {
     private const int count = 1000;
 
-    private static Serilog.Core.Logger? serilog;
-    private static ILogger? logable;
-    private static NLog.Logger? nlog;
-
     public override void GlobalInlitialize()
     {
         serilog = new Serilog.LoggerConfiguration()
-                .CreateLogger();
+            .CreateLogger();
         logable = new LoggerConfiguration()
             .CreateLogger();
-        nlog = NLog.LogManager.LoadConfiguration("nlog.empty.config").GetCurrentClassLogger();
+        nlog = LogManager.LoadConfiguration("nlog.empty.config").GetCurrentClassLogger();
 
         UseSeriLog();
 
@@ -26,7 +24,7 @@ public class LogEmptyBenchmark : BenchmarkItem
     [Benchmark(Baseline = true)]
     public void UseSeriLog()
     {
-        for(var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             serilog.Information(" {0} {1} {2} {3} ", 1, 2, 3, new object());
         }
@@ -35,7 +33,7 @@ public class LogEmptyBenchmark : BenchmarkItem
     [Benchmark]
     public void UseLogable()
     {
-        for(var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             logable.Information(" {0} {1} {2} {3} ", 1, 2, 3, new object());
         }
@@ -44,9 +42,13 @@ public class LogEmptyBenchmark : BenchmarkItem
     [Benchmark]
     public void UseNLog()
     {
-        for(var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             nlog.Info(" {0} {1} {2} {3} ", 1, 2, 3, new object());
         }
     }
+
+    private static Serilog.Core.Logger serilog;
+    private static ILogger             logable;
+    private static NLog.Logger         nlog;
 }

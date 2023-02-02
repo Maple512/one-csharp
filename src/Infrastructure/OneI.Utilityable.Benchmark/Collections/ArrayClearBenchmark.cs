@@ -1,4 +1,4 @@
-namespace OneI.Utilityable;
+namespace OneI.Utilityable.Collections;
 
 public class ArrayClearBenchmark
 {
@@ -7,7 +7,7 @@ public class ArrayClearBenchmark
     [Benchmark(Baseline = true)]
     public void UseArray()
     {
-        for(var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             var a1 = new[] { 1, 2, 3, 4, 5, };
 
@@ -18,7 +18,7 @@ public class ArrayClearBenchmark
     [Benchmark]
     public void UseMemorySpan()
     {
-        for(var i = 0; i < count; i++)
+        for(var i = 0;i < count;i++)
         {
             var a1 = new[] { 1, 2, 3, 4, 5, };
 

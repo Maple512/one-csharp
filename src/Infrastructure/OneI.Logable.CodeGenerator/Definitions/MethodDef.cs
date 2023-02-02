@@ -2,12 +2,11 @@ namespace OneI.Logable.Definitions;
 
 public class MethodDef : IEquatable<MethodDef>
 {
+    public MethodDef(string name) => Name = name;
     public string Name { get; }
 
-    public MethodDef(string name) => Name = name;
-
     /// <summary>
-    /// 表示该方法的类型参数和对应的约束
+    ///     表示该方法的类型参数和对应的约束
     /// </summary>
     public Dictionary<string, string?> TypeArguments { get; } = new();
 
@@ -19,11 +18,6 @@ public class MethodDef : IEquatable<MethodDef>
 
     public List<ParameterDef> Parameters { get; } = new();
 
-    public void AddParameter(TypeDef type)
-    {
-        Parameters.Add(new ParameterDef(Parameters.Count, type));
-    }
-
     public bool Equals(MethodDef other)
     {
         if(other == null)
@@ -32,27 +26,20 @@ public class MethodDef : IEquatable<MethodDef>
         }
 
         return Name.Equals(other.Name, StringComparison.InvariantCulture)
-            && HasLevel == other.HasLevel
-            && HasException == other.HasException
-            && IsLogger == other.IsLogger
-            && TypeArguments.SequenceEqual(other.TypeArguments)
-            && Parameters.SequenceEqual(other.Parameters);
+               && HasLevel     == other.HasLevel
+               && HasException == other.HasException
+               && IsLogger     == other.IsLogger
+               && TypeArguments.SequenceEqual(other.TypeArguments)
+               && Parameters.SequenceEqual(other.Parameters);
     }
 
-    public override bool Equals(object obj)
-    {
-        return obj is MethodDef md && Equals(md);
-    }
+    public void AddParameter(TypeDef type) => Parameters.Add(new ParameterDef(Parameters.Count, type));
 
-    public bool Equals(MethodDef x, MethodDef y)
-    {
-        return x.Equals(y);
-    }
+    public override bool Equals(object obj) => obj is MethodDef md && Equals(md);
 
-    public int GetHashCode(MethodDef obj)
-    {
-        return obj.GetHashCode();
-    }
+    public bool Equals(MethodDef x, MethodDef y) => x.Equals(y);
+
+    public int GetHashCode(MethodDef obj) => obj.GetHashCode();
 
     public override int GetHashCode()
     {

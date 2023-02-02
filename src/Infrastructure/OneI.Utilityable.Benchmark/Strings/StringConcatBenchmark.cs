@@ -1,4 +1,4 @@
-namespace OneI.Utilityable;
+namespace OneI.Utilityable.Strings;
 
 using Cysharp.Text;
 using DotNext;
@@ -23,7 +23,7 @@ public class StringConcatBenchmark : BenchmarkItem
         var s2 = Randomizer.String(10);
         var s3 = Randomizer.String(10);
 
-        for(var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             _ = string.Concat(s1, s2, s3);
         }
@@ -36,7 +36,7 @@ public class StringConcatBenchmark : BenchmarkItem
         var s2 = Randomizer.String(10).AsSpan();
         var s3 = Randomizer.String(10).AsSpan();
 
-        for(var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             _ = string.Concat(s1, s2, s3);
         }
@@ -49,7 +49,7 @@ public class StringConcatBenchmark : BenchmarkItem
         var s2 = Randomizer.String(10);
         var s3 = Randomizer.String(10);
 
-        for(var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             _ = ZString.Concat(s1, s2, s3);
         }
@@ -62,7 +62,7 @@ public class StringConcatBenchmark : BenchmarkItem
         var s2 = Randomizer.String(10).AsSpan();
         var s3 = Randomizer.String(10).AsSpan();
 
-        for(var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             _ = s1.Concat(s2.Concat(s3).Span);
         }

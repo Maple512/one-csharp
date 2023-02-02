@@ -1,18 +1,18 @@
 namespace OneI.Logable;
 
-using Definitions;
 using Microsoft.CodeAnalysis.Text;
+using OneI.Logable.Definitions;
 
 internal static partial class CodePrinter
 {
     private static readonly HashSet<TypeDef> _types = new();
 
-    public static void AddType(TypeDef type)
-    {
-        _types.Add(type);
-    }
+    public static void AddType(TypeDef type) => _types.Add(type);
 
-    internal static void Print(IEnumerable<MethodDef> methods, out SourceText tyeps, out SourceText logExtensions, out SourceText loggerExtensions)
+    internal static void Print(IEnumerable<MethodDef> methods
+                               , out SourceText       tyeps
+                               , out SourceText       logExtensions
+                               , out SourceText       loggerExtensions)
     {
         tyeps = PrintTypes();
 
@@ -69,7 +69,7 @@ internal static partial class CodePrinter
         {
             var count = methods.Count;
 
-            for(var i = 0; i < count; i++)
+            for(var i = 0;i < count;i++)
             {
                 var item = methods[i];
 
@@ -105,7 +105,7 @@ internal static partial class CodePrinter
         {
             var count = methods.Count;
 
-            for(var i = 0; i < count; i++)
+            for(var i = 0;i < count;i++)
             {
                 var item = methods[i];
 

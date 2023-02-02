@@ -1,57 +1,24 @@
 namespace OneI.Logable;
 
-using Middlewares;
-using Templates;
+using OneI.Logable.Middlewares;
+using OneI.Logable.Templates;
 
 internal class Logger : ILogger
 {
-    internal readonly LogLevelMap _levelMap;
-    internal ILoggerMiddleware[] _middlewares;
-    internal readonly ILoggerSink[] _sinks;
-    internal readonly TemplateProvider _templateProvider;
+    internal readonly LogLevelMap         _levelMap;
+    internal readonly ILoggerSink[]       _sinks;
+    internal readonly TemplateProvider    _templateProvider;
+    internal          ILoggerMiddleware[] _middlewares;
 
-    internal Logger(
-        ILoggerMiddleware[] middleware,
-        ILoggerSink[] sinks,
-        LogLevelMap levelMap,
-        TemplateProvider templateProvider)
+    internal Logger(ILoggerMiddleware[] middleware
+                    , ILoggerSink[]     sinks
+                    , LogLevelMap       levelMap
+                    , TemplateProvider  templateProvider)
     {
-        _middlewares = middleware;
-        _sinks = sinks;
-        _levelMap = levelMap;
+        _middlewares      = middleware;
+        _sinks            = sinks;
+        _levelMap         = levelMap;
         _templateProvider = templateProvider;
-    }
-
-    private void Dispatch(ref LoggerMessageContext context, ref PropertyDictionary properties)
-    {
-        var template = _templateProvider.GetTemplate(ref context);
-
-        var loggerContext = new LoggerContext(template, properties, context);
-
-        List<Exception>? exceptions = null;
-
-        foreach(var item in _middlewares)
-        {
-            item.Invoke(context);
-        }
-
-        for(var i = 0;i < _sinks.Length;i++)
-        {
-            try
-            {
-                _sinks[i].Invoke(loggerContext);
-            }
-            catch(Exception ex)
-            {
-                exceptions ??= new List<Exception>(_sinks.Length);
-                exceptions.Add(ex);
-            }
-        }
-
-        if(exceptions is { Count: > 0 })
-        {
-            throw new AggregateException(exceptions);
-        }
     }
 
     public void Write(ref LoggerMessageContext context, ref PropertyDictionary properties)
@@ -63,12 +30,69 @@ internal class Logger : ILogger
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool IsEnable(LogLevel level)
+    public bool IsEnable(LogLevel level) => _levelMap.IsEnabled(level);
+
+    public void Dispose()
     {
-        return _levelMap.IsEnabled(level);
+        for(var i = 0;i < _sinks.Length;i++)
+        {
+            (_sinks[i] as IDisposable)?.Dispose();
+        }
     }
 
-    #region For Context
+    public async ValueTask DisposeAsync()
+    {
+        for(var i = 0;i < _sinks.Length;i++)
+        {
+            if(_sinks[i] is IAsyncDisposable d)
+            {
+                await d.DisposeAsync();
+            }
+        }
+    }
+
+    private void Dispatch(ref LoggerMessageContext context, ref PropertyDictionary properties)
+    {
+        var template = _templateProvider.GetTemplate(ref context);
+
+        var loggerContext = new LoggerContext(ref template, ref properties, ref context);
+
+        List<Exception>? exceptions = null;
+
+        for(var i = 0;i < _middlewares.Length;i++)
+        {
+            try
+            {
+                _middlewares[i].Invoke(context, ref properties);
+            }
+            catch(Exception ex)
+            {
+                exceptions ??= new List<Exception>(_sinks.Length + _middlewares.Length);
+                exceptions.Add(ex);
+            }
+        }
+
+        for(var i = 0;i < _sinks.Length;i++)
+        {
+            var sink = _sinks[i];
+            try
+            {
+                sink.Invoke(loggerContext);
+            }
+            catch(Exception ex)
+            {
+                exceptions ??= new List<Exception>(_sinks.Length);
+                exceptions.Add(ex);
+            }
+        }
+
+        if(exceptions is { Count: > 0, })
+        {
+            throw new AggregateException(exceptions);
+        }
+    }
+
+#region For Context
 
     public ILogger ForContext(Action<ILoggerConfiguration> configure)
     {
@@ -84,205 +108,211 @@ internal class Logger : ILogger
         var middleware = new PropertyMiddleware<TValue>(name, value, true);
 
         if(name.AsSpan().Equals(LoggerConstants.Propertys.SourceContext, StringComparison.InvariantCulture)
-            && value is string sourceContext)
+           && value is string sourceContext)
         {
             var range = _levelMap.GetEffectiveLevel(sourceContext);
 
             return ForContext(configure =>
             {
-                configure.Use(middleware)
-                .Level.Use(range.Minimum, range.Maximum);
+                _ = configure.Use(middleware)
+                             .Level.Use(range.Minimum, range.Maximum);
             });
         }
 
         return ForContext(configure =>
         {
-            configure.Use(middleware);
+            _ = configure.Use(middleware);
         });
     }
 
-    #endregion
+#endregion
 
-    #region Write
+#region Write
 
-    public void Write(LogLevel level, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
+    public void Write(LogLevel                     level
+                      , string                     message
+                      , [CallerFilePath]   string? file   = null
+                      , [CallerMemberName] string? member = null
+                      , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, level, null, message, default, file, member, line);
+        var properties = new PropertyDictionary();
+
+        LoggerExtensions.WriteCore(this, level, null, message, ref properties, file, member, line);
+
+        properties.Dispose();
     }
 
-    public void Write(LogLevel level, Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
+    public void Write(LogLevel                     level
+                      , Exception                  exception
+                      , string                     message
+                      , [CallerFilePath]   string? file   = null
+                      , [CallerMemberName] string? member = null
+                      , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, level, exception, message, default, file, member, line);
+        var properties = new PropertyDictionary();
+
+        LoggerExtensions.WriteCore(this, level, exception, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    public void Write(LogLevel level, string message, params object?[] args)
+#endregion Write
+
+#region Verbose
+
+    public void Verbose(string                       message
+                        , [CallerFilePath]   string? file   = null
+                        , [CallerMemberName] string? member = null
+                        , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, level, null, message, default);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Verbose, null, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    public void Write(LogLevel level, Exception exception, string message, params object?[] args)
+    public void Verbose(Exception                    exception
+                        , string                     message
+                        , [CallerFilePath]   string? file   = null
+                        , [CallerMemberName] string? member = null
+                        , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, level, exception, message, default);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Verbose, exception, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    #endregion Write
+#endregion Verbose
 
-    #region Verbose
+#region Debug
 
-    public void Verbose(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
+    public void Debug(string                       message
+                      , [CallerFilePath]   string? file   = null
+                      , [CallerMemberName] string? member = null
+                      , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Verbose, null, message, default, file, member, line);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Debug, null, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    public void Verbose(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
+    public void Debug(Exception                    exception
+                      , string                     message
+                      , [CallerFilePath]   string? file   = null
+                      , [CallerMemberName] string? member = null
+                      , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Verbose, exception, message, default, file, member, line);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Debug, exception, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    public void Verbose(string message, params object?[] args)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Verbose, null, message, default);
-    }
+#endregion Debug
 
-    public void Verbose(Exception exception, string message, params object?[] args)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Verbose, exception, message, default);
-    }
-
-    #endregion Verbose
-
-    #region Debug
-
-    public void Debug(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Debug, null, message, default, file, member, line);
-    }
-
-    public void Debug(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Debug, exception, message, default, file, member, line);
-    }
-
-    public void Debug(string message, params object?[] args)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Debug, null, message, default);
-    }
-
-    public void Debug(Exception exception, string message, params object?[] args)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Debug, exception, message, default);
-    }
-
-    #endregion Debug
-
-    #region Information
+#region Information
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Information(in string message, [CallerFilePath] in string? file = null, [CallerMemberName] in string? member = null, [CallerLineNumber] in int line = 0)
+    public void Information(in                      string  message
+                            , [CallerFilePath] in   string? file   = null
+                            , [CallerMemberName] in string? member = null
+                            , [CallerLineNumber] in int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Information, null, message, default, file, member, line);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Information, null, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    public void Information(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
+    public void Information(Exception                    exception
+                            , string                     message
+                            , [CallerFilePath]   string? file   = null
+                            , [CallerMemberName] string? member = null
+                            , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Information, exception, message, default, file, member, line);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Information, exception, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    public void Information(string message, params object?[] args)
+#endregion Information
+
+#region Warning
+
+    public void Warning(string                       message
+                        , [CallerFilePath]   string? file   = null
+                        , [CallerMemberName] string? member = null
+                        , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Information, null, message, default);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Warning, null, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    public void Information(Exception exception, string message, params object?[] args)
+    public void Warning(Exception                    exception
+                        , string                     message
+                        , [CallerFilePath]   string? file   = null
+                        , [CallerMemberName] string? member = null
+                        , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Information, exception, message, default);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Warning, exception, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    #endregion Information
+#endregion Warning
 
-    #region Warning
+#region Error
 
-    public void Warning(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
+    public void Error(string                       message
+                      , [CallerFilePath]   string? file   = null
+                      , [CallerMemberName] string? member = null
+                      , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Warning, null, message, default, file, member, line);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Error, null, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    public void Warning(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
+    public void Error(Exception                    exception
+                      , string                     message
+                      , [CallerFilePath]   string? file   = null
+                      , [CallerMemberName] string? member = null
+                      , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Warning, exception, message, default, file, member, line);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Error, exception, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    public void Warning(string message, params object?[] args)
+#endregion Error
+
+#region Fatal
+
+    public void Fatal(string                       message
+                      , [CallerFilePath]   string? file   = null
+                      , [CallerMemberName] string? member = null
+                      , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Warning, null, message, default);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Fatal, null, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    public void Warning(Exception exception, string message, params object?[] args)
+    public void Fatal(Exception                    exception
+                      , string                     message
+                      , [CallerFilePath]   string? file   = null
+                      , [CallerMemberName] string? member = null
+                      , [CallerLineNumber] int     line   = 0)
     {
-        LoggerExtensions.WriteCore(this, LogLevel.Warning, exception, message, default);
+        var properties = new PropertyDictionary();
+        LoggerExtensions.WriteCore(this, LogLevel.Fatal, exception, message, ref properties, file, member, line);
+        properties.Dispose();
     }
 
-    #endregion Warning
+#endregion Fatal
 
-    #region Error
+#region Scope
 
-    public void Error(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Error, null, message, default, file, member, line);
-    }
+    public IDisposable BeginScope(params ILoggerMiddleware[] middlewares) => CreateScope(middlewares);
 
-    public void Error(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Error, exception, message, default, file, member, line);
-    }
-
-    public void Error(string message, params object?[] args)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Error, null, message, default);
-    }
-
-    public void Error(Exception exception, string message, params object?[] args)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Error, exception, message, default);
-    }
-
-    #endregion Error
-
-    #region Fatal
-
-    public void Fatal(string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Fatal, null, message, default, file, member, line);
-    }
-
-    public void Fatal(Exception exception, string message, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null, [CallerLineNumber] int line = 0)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Fatal, exception, message, default, file, member, line);
-    }
-
-    public void Fatal(string message, params object?[] args)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Fatal, null, message, default);
-    }
-
-    public void Fatal(Exception exception, string message, params object?[] args)
-    {
-        LoggerExtensions.WriteCore(this, LogLevel.Fatal, exception, message, default);
-    }
-
-    #endregion Fatal
-
-    #region Scope
-
-    public IDisposable BeginScope(params ILoggerMiddleware[] middlewares)
-    {
-        return CreateScope(middlewares);
-    }
-
-    public IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares)
-    {
-        return CreateScope(middlewares);
-    }
+    public IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares) => CreateScope(middlewares);
 
     private DisposeAction<LoggerScope> CreateScope(params ILoggerMiddleware[] middlewares)
     {
@@ -291,16 +321,16 @@ internal class Logger : ILogger
             return DisposeAction<LoggerScope>.Nullable;
         }
 
-        var count = middlewares.Length + _middlewares.Length;
+        var count          = middlewares.Length + _middlewares.Length;
         var newMiddlewares = new Span<ILoggerMiddleware>(new ILoggerMiddleware[count]);
 
         Debugger.Break();
-        if(_middlewares is { Length: > 0 })
+        if(_middlewares is { Length: > 0, })
         {
             _middlewares.CopyTo(newMiddlewares);
         }
 
-        if(middlewares is { Length: > 0 })
+        if(middlewares is { Length: > 0, })
         {
             middlewares.CopyTo(newMiddlewares[_middlewares.Length..]);
         }
@@ -312,21 +342,5 @@ internal class Logger : ILogger
         return new(state => _middlewares = state.Middlewares, scope);
     }
 
-    #endregion
-
-    public void Dispose()
-    {
-        foreach(var item in _sinks.OfType<IDisposable>())
-        {
-            item.Dispose();
-        }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        foreach(var item in _sinks.OfType<IAsyncDisposable>())
-        {
-            await item.DisposeAsync();
-        }
-    }
+#endregion
 }

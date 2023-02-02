@@ -1,23 +1,34 @@
 namespace OneI.Logable;
 
-using System.Buffers;
-using DotNext.Buffers;
-
 public class Buffer_Test
 {
     [Fact]
-    public void buffer()
+    public async Task buffer()
+        => await Parallel.ForEachAsync(Enumerable.Range(0, 100), async (_, _) =>
+        {
+            await Run();
+        });
+
+    private Task Run()
     {
-        using var writer = new PooledArrayBufferWriter<byte> { BufferPool = ArrayPool<byte>.Shared };
-        writer.Write(Encoding.UTF8.GetBytes("message1"));
-        writer.Write(Encoding.UTF8.GetBytes("message2"));
+        var result = A();
 
-        var aa = Encoding.UTF8.GetString(writer.ToArray());
+        if(result is not "a")
+        {
+            throw new Exception("asdfasdfasdf");
+        }
 
-        Memory<byte> memory = Encoding.UTF8.GetBytes("Message");
+        return Task.CompletedTask;
+    }
 
-        ((ReadOnlySpan<byte>)Encoding.UTF8.GetBytes("span")).CopyTo(memory.Span);
+    private string A()
+    {
+        scoped Span<char> buffer = stackalloc char[1];
 
-        var result = Encoding.UTF8.GetString(memory.Span);
+        buffer.Fill('a');
+
+        ref var first = ref buffer[0];
+
+        return char.ToString(first);
     }
 }

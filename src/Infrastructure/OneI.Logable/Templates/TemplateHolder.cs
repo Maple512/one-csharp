@@ -1,75 +1,59 @@
 namespace OneI.Logable.Templates;
 
-using System.Diagnostics.CodeAnalysis;
-
 /// <summary>
-/// 模板占位符
+///     模板占位符
 /// </summary>
 [StructLayout(LayoutKind.Auto)]
 public readonly struct TemplateHolder : IEquatable<TemplateHolder>
 {
-    public static readonly TemplateHolder Default = default;
-
     public readonly byte Indent;
     public readonly sbyte Align;
     public readonly sbyte ParameterIndex;
     public readonly PropertyType Type;
-    public readonly ushort Position;
     public readonly ushort Length;
+    public readonly ReadOnlyMemory<char> Text;
     public readonly string? Name;
-    public readonly string? Format;
+    public readonly string Format;
 
-    public TemplateHolder()
-    {
-        ParameterIndex = -1;
-    }
+#pragma warning disable CS8618 
+    public TemplateHolder() => ParameterIndex = -1;
+#pragma warning restore CS8618
 
-    private TemplateHolder(
-        byte indent,
-        sbyte align,
-        sbyte parameterIndex,
-        PropertyType type,
-        ushort position,
-        ushort length,
-        string? name,
-        string? format)
+    private TemplateHolder(byte indent
+                           , sbyte align
+                           , sbyte parameterIndex
+                           , PropertyType type
+                           , ushort length
+                           , string? name
+                           , string format
+                           , ReadOnlyMemory<char> text)
     {
         Indent = indent;
         Align = align;
         ParameterIndex = parameterIndex;
         Type = type;
-        Position = position;
         Length = length;
         Name = name;
         Format = format;
+        Text = text;
     }
 
-    internal static TemplateHolder CreateText(ushort position, ushort length)
-    {
-        return new TemplateHolder(0, 0, -1, default, position, length, null, null);
-    }
+    internal static TemplateHolder CreateText(ReadOnlyMemory<char> text)
+        => new(0, 0, -1, default, (ushort)text.Length, null, null!, text);
 
-    internal static TemplateHolder CreateNamed(
-        byte indent,
-        sbyte align,
-        PropertyType type,
-        ushort position,
-        string? name,
-        string? format)
-    {
-        return new TemplateHolder(indent, align, -1, type, position, 0, name, format);
-    }
+    internal static TemplateHolder CreateNamed(byte indent
+                                               , sbyte align
+                                               , PropertyType type
+                                               , string? name
+                                               , string format)
+        => new(indent, align, -1, type, ushort.MinValue, name, format, null);
 
-    internal static TemplateHolder CreateIndexer(
-        byte indent,
-        sbyte align,
-        sbyte parameterIndex,
-        PropertyType type,
-        ushort position,
-        string? format)
-    {
-        return new TemplateHolder(indent, align, parameterIndex, type, position, 0, null, format);
-    }
+    internal static TemplateHolder CreateIndexer(byte indent
+                                                 , sbyte align
+                                                 , sbyte parameterIndex
+                                                 , PropertyType type
+                                                 , string format)
+        => new(indent, align, parameterIndex, type, ushort.MinValue, null, format, null);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsText() => Length != 0;
@@ -80,22 +64,14 @@ public readonly struct TemplateHolder : IEquatable<TemplateHolder>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool IsNamed() => ParameterIndex == -1;
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Indent, Align, ParameterIndex, Type, Name, Format);
-    }
+    public override int GetHashCode() => HashCode.Combine(Indent, Align, ParameterIndex, Type, Name, Format);
 
-    public override bool Equals([NotNullWhen(true)] object? obj)
-    {
-        return obj is TemplateHolder th && Equals(th);
-    }
+    public override bool Equals([NotNullWhen(true)] object? obj) => obj is TemplateHolder th && Equals(th);
 
     public override string ToString()
     {
-        var handler = new DefaultInterpolatedStringHandler(9, 4, null, stackalloc char[30]);
-        handler.AppendLiteral($"[{nameof(Position)}: ");
-        handler.AppendFormatted(Position);
-        handler.AppendLiteral(", ");
+        var handler = new DefaultInterpolatedStringHandler(9, 3, null, stackalloc char[30]);
+        handler.AppendLiteral($"[");
         if(IsText())
         {
             handler.AppendLiteral($"{nameof(Length)}: ");
@@ -122,8 +98,16 @@ public readonly struct TemplateHolder : IEquatable<TemplateHolder>
     }
 
     public bool Equals(TemplateHolder other)
+        => ParameterIndex == other.ParameterIndex
+           || Text.Equals(other.Text);
+
+    public static bool operator ==(TemplateHolder left, TemplateHolder right)
     {
-        return Position == other.Position
-            && Length == other.Length;
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(TemplateHolder left, TemplateHolder right)
+    {
+        return !(left == right);
     }
 }

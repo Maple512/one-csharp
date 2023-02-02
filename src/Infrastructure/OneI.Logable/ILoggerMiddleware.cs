@@ -1,6 +1,8 @@
 namespace OneI.Logable;
 
+using OneI.Logable.Templates;
+
 public interface ILoggerMiddleware
 {
-    void Invoke(LoggerMessageContext context);
+    void Invoke(in LoggerMessageContext context, ref PropertyDictionary properties);
 }

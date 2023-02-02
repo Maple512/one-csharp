@@ -30,7 +30,7 @@ public static class BenchmarkTool
         .AddColumn(new RankColumn(NumeralSystem.Arabic), CategoriesColumn.Default)
         .AddColumnProvider(DefaultColumnProviders.Instance)
         .AddJob(Job.Default.AsBaseline().AsDefault().WithArguments(new[] { new MsBuildArgument("/p:Optimize=true /p:AllowUnsafeBlocks=true") }))
-        .AddExporter(MarkdownExporter.GitHub, HtmlExporter.Default, RPlotExporter.Default)
+        .AddExporter(MarkdownExporter.GitHub, HtmlExporter.Default)
         .WithOptions(ConfigOptions.JoinSummary | ConfigOptions.DontOverwriteResults | ConfigOptions.KeepBenchmarkFiles);
 
     public static void RunAssymbly<T>(string[]? args = null, Action<IConfig>? configure = null)
@@ -65,7 +65,7 @@ public static class BenchmarkTool
 
         Inlitialize(assembly);
 
-        var unused = BenchmarkSwitcher.FromAssembly(assembly).Run( args, config);
+        var unused = BenchmarkSwitcher.FromAssembly(assembly).Run(args, config);
     }
 
     [Conditional(SharedConstants.DEBUG)]
@@ -76,7 +76,7 @@ public static class BenchmarkTool
             .Select(x => (BenchmarkItem)Activator.CreateInstance(x)!)
             .ToArray();
 
-        foreach (var item in benchmarks)
+        foreach(var item in benchmarks)
         {
             var unused1 = TryToSetParamsFields(item);
             var unused = TryToSetParamsProperties(item);
@@ -93,20 +93,20 @@ public static class BenchmarkTool
                 .Where(fieldInfo => fieldInfo.GetCustomAttributes(false).OfType<ParamsAttribute>().Any())
                 .ToArray();
 
-        if (!paramFields.Any())
+        if(!paramFields.Any())
         {
             return true;
         }
 
-        foreach (var paramField in paramFields)
+        foreach(var paramField in paramFields)
         {
-            if (!paramField.IsPublic)
+            if(!paramField.IsPublic)
             {
                 continue;
             }
 
             var values = paramField.GetCustomAttributes(false).OfType<ParamsAttribute>().Single().Values;
-            if (!values.Any())
+            if(!values.Any())
             {
                 continue;
             }
@@ -115,7 +115,7 @@ public static class BenchmarkTool
             {
                 paramField.SetValue(instance, values.First());
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 ex.ReThrow();
             }
@@ -132,21 +132,21 @@ public static class BenchmarkTool
                 .Where(propertyInfo => propertyInfo.GetCustomAttributes(false).OfType<ParamsAttribute>().Any())
                 .ToArray();
 
-        if (!paramProperties.Any())
+        if(!paramProperties.Any())
         {
             return true;
         }
 
-        foreach (var paramProperty in paramProperties)
+        foreach(var paramProperty in paramProperties)
         {
             var setter = paramProperty.SetMethod;
-            if (setter == null || !setter.IsPublic)
+            if(setter == null || !setter.IsPublic)
             {
                 continue;
             }
 
             var values = paramProperty.GetCustomAttributes(false).OfType<ParamsAttribute>().Single().Values;
-            if (!values.Any())
+            if(!values.Any())
             {
                 continue;
             }
@@ -155,7 +155,7 @@ public static class BenchmarkTool
             {
                 var unused = setter.Invoke(instance, new[] { values.First() });
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 ex.ReThrow();
             }

@@ -1,10 +1,18 @@
 namespace OneI.Logable.Templating;
 
-using Shouldly;
-using Templates;
+using OneI.Logable.Templates;
 
 public class TemplateParser_Test
 {
+    [Fact]
+    public void parae_properties()
+    {
+        var enumerator = new TemplateQueue("{$Msg} {1} {2}".AsMemory())
+            .ToList();
+
+        enumerator.Count.ShouldBe(5);
+    }
+
     [Fact]
     public void parse_property()
     {
@@ -36,10 +44,10 @@ public class TemplateParser_Test
     }
 
     [Theory]
-    [InlineData("as{{{f{0}", new[] { true, false })]
-    [InlineData("as{{{f{0}}{a}{b} {{{c}}}", new[] { true, false, true, false, false, true, false, true })]
-    [InlineData("{1}{2}{3}", new[] { false, false, false })]
-    [InlineData("{1}{2-+-asdf:::,,,}{3}", new[] { false, true, false })]
+    [InlineData("as{{{f{0}", new[] { true, false, })]
+    [InlineData("as{{{f{0}}{a}{b} {{{c}}}", new[] { true, false, true, false, false, true, false, true, })]
+    [InlineData("{1}{2}{3}", new[] { false, false, false, })]
+    [InlineData("{1}{2-+-asdf:::,,,}{3}", new[] { false, true, false, })]
     public void parse_admix(string text, bool[] expected)
     {
         var enumerator = new TemplateEnumerator(text.AsMemory());

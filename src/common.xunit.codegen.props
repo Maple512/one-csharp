@@ -6,13 +6,13 @@
 
     <ItemGroup>
         <None Include="**\*.received.cs;**\*.verified.cs"/>
-        <Compile Remove="**\*.received.cs;**\*.verified.cs" />
+        <Compile Remove="**\*.received.cs;**\*.verified.cs"/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Test\OneT.CodeGenerator\OneT.CodeGenerator.csproj" />
+        <ProjectReference Include="..\..\Test\OneT.CodeGenerator\OneT.CodeGenerator.csproj"/>
     </ItemGroup>
 
-    <Import Project="./common.xunit.props" />
+    <Import Project="./common.xunit.props"/>
 
 </Project>

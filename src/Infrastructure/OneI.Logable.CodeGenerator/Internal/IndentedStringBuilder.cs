@@ -1,50 +1,50 @@
 namespace System.Text;
 
 /// <summary>
-/// The indented string builder.
+///     The indented string builder.
 /// </summary>
-
 internal class IndentedStringBuilder
 {
     /// <summary>
-    /// The indent size.
+    ///     The indent size.
     /// </summary>
     private const byte IndentSize = 4;
-    private byte _indent;
+
     private readonly byte _size;
+
+    private readonly StringBuilder _stringBuilder;
+    private          byte          _indent;
 
     // 每一个append line都缩进，一行头一个append，其他不需要
     private bool _indentPending = true;
 
-    private readonly StringBuilder _stringBuilder;
-
     /// <summary>
-    /// Initializes a new instance of the <see cref="IndentedStringBuilder"/> class.
+    ///     Initializes a new instance of the <see cref="IndentedStringBuilder" /> class.
     /// </summary>
     public IndentedStringBuilder()
     {
-        _stringBuilder = new();
-        _size = IndentSize;
+        _stringBuilder = new StringBuilder();
+        _size          = IndentSize;
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="IndentedStringBuilder"/> class.
+    ///     Initializes a new instance of the <see cref="IndentedStringBuilder" /> class.
     /// </summary>
     /// <param name="capacity">The capacity.</param>
     /// <param name="size">The size.</param>
     public IndentedStringBuilder(int capacity, byte size = IndentSize)
     {
-        _stringBuilder = new(capacity);
-        _size = size;
+        _stringBuilder = new StringBuilder(capacity);
+        _size          = size;
     }
 
     /// <summary>
-    /// Gets the length.
+    ///     Gets the length.
     /// </summary>
     public virtual int Length => _stringBuilder.Length;
 
     /// <summary>
-    /// 将给定字符串分隔为多行，然后将每行（以当前缩进为前缀，后跟新行）追加到正在生成的字符串中。
+    ///     将给定字符串分隔为多行，然后将每行（以当前缩进为前缀，后跟新行）追加到正在生成的字符串中。
     /// </summary>
     /// <param name="value"></param>
     /// <param name="skipFinalNewline"></param>
@@ -53,7 +53,7 @@ internal class IndentedStringBuilder
     {
         using(var reader = new StringReader(value))
         {
-            var first = true;
+            var     first = true;
             string? line;
             while((line = reader.ReadLine()) != null)
             {
@@ -82,7 +82,7 @@ internal class IndentedStringBuilder
     }
 
     /// <summary>
-    /// Appends the line.
+    ///     Appends the line.
     /// </summary>
     /// <returns>An IndentedStringBuilder.</returns>
     public virtual IndentedStringBuilder AppendLine()
@@ -93,7 +93,7 @@ internal class IndentedStringBuilder
     }
 
     /// <summary>
-    /// Appends the line.
+    ///     Appends the line.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>An IndentedStringBuilder.</returns>
@@ -112,7 +112,7 @@ internal class IndentedStringBuilder
     }
 
     /// <summary>
-    /// Appends the.
+    ///     Appends the.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>An IndentedStringBuilder.</returns>
@@ -126,7 +126,7 @@ internal class IndentedStringBuilder
     }
 
     /// <summary>
-    /// Appends the.
+    ///     Appends the.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>An IndentedStringBuilder.</returns>
@@ -140,7 +140,7 @@ internal class IndentedStringBuilder
     }
 
     /// <summary>
-    /// Appends the.
+    ///     Appends the.
     /// </summary>
     /// <param name="values">The values.</param>
     /// <returns>An IndentedStringBuilder.</returns>
@@ -158,7 +158,7 @@ internal class IndentedStringBuilder
     }
 
     /// <summary>
-    /// Appends the.
+    ///     Appends the.
     /// </summary>
     /// <param name="value">The value.</param>
     /// <returns>An IndentedStringBuilder.</returns>
@@ -175,16 +175,13 @@ internal class IndentedStringBuilder
     }
 
     /// <summary>
-    /// Tos the string.
+    ///     Tos the string.
     /// </summary>
     /// <returns>A string.</returns>
-    public override string ToString()
-    {
-        return _stringBuilder.ToString();
-    }
+    public override string ToString() => _stringBuilder.ToString();
 
     /// <summary>
-    /// 递减缩进
+    ///     递减缩进
     /// </summary>
     /// <returns></returns>
     private IndentedStringBuilder Increment()
@@ -195,7 +192,7 @@ internal class IndentedStringBuilder
     }
 
     /// <summary>
-    /// 递增缩进
+    ///     递增缩进
     /// </summary>
     /// <returns></returns>
     private IndentedStringBuilder Decrement()
@@ -209,7 +206,7 @@ internal class IndentedStringBuilder
     }
 
     /// <summary>
-    /// Clears the.
+    ///     Clears the.
     /// </summary>
     /// <returns>An IndentedStringBuilder.</returns>
     public virtual IndentedStringBuilder Clear()
@@ -222,25 +219,19 @@ internal class IndentedStringBuilder
     }
 
     /// <summary>
-    /// 缩进
+    ///     缩进
     /// </summary>
     /// <returns></returns>
-    public virtual IDisposable Indent()
-    {
-        return new Indenter(this);
-    }
+    public virtual IDisposable Indent() => new Indenter(this);
 
     /// <summary>
-    /// 暂停缩进（缩进长度设置为0）
+    ///     暂停缩进（缩进长度设置为0）
     /// </summary>
     /// <returns></returns>
-    public virtual IDisposable SuspendIndent()
-    {
-        return new IndentSuspender(this);
-    }
+    public virtual IDisposable SuspendIndent() => new IndentSuspender(this);
 
     /// <summary>
-    /// Dos the indent.
+    ///     Dos the indent.
     /// </summary>
     private void DoIndent()
     {
@@ -253,42 +244,39 @@ internal class IndentedStringBuilder
     }
 
     /// <summary>
-    /// The indent suspender.
+    ///     The indent suspender.
     /// </summary>
     private sealed class IndentSuspender : IDisposable
     {
+        private readonly byte                  _indent;
         private readonly IndentedStringBuilder _stringBuilder;
-        private readonly byte _indent;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IndentSuspender"/> class.
+        ///     Initializes a new instance of the <see cref="IndentSuspender" /> class.
         /// </summary>
         /// <param name="stringBuilder">The string builder.</param>
         public IndentSuspender(IndentedStringBuilder stringBuilder)
         {
-            _stringBuilder = stringBuilder;
-            _indent = _stringBuilder._indent;
+            _stringBuilder         = stringBuilder;
+            _indent                = _stringBuilder._indent;
             _stringBuilder._indent = 0;
         }
 
         /// <summary>
-        /// Disposes the.
+        ///     Disposes the.
         /// </summary>
-        public void Dispose()
-        {
-            _stringBuilder._indent = _indent;
-        }
+        public void Dispose() => _stringBuilder._indent = _indent;
     }
 
     /// <summary>
-    /// The indenter.
+    ///     The indenter.
     /// </summary>
     private sealed class Indenter : IDisposable
     {
         private readonly IndentedStringBuilder _stringBuilder;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Indenter"/> class.
+        ///     Initializes a new instance of the <see cref="Indenter" /> class.
         /// </summary>
         /// <param name="stringBuilder">The string builder.</param>
         public Indenter(IndentedStringBuilder stringBuilder)
@@ -299,11 +287,8 @@ internal class IndentedStringBuilder
         }
 
         /// <summary>
-        /// Disposes the.
+        ///     Disposes the.
         /// </summary>
-        public void Dispose()
-        {
-            _stringBuilder.Decrement();
-        }
+        public void Dispose() => _stringBuilder.Decrement();
     }
 }

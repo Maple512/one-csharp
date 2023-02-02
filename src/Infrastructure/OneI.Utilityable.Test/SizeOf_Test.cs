@@ -36,5 +36,8 @@ public class SizeOf_Test
         sizeof(ulong*).ShouldBe(8);
         sizeof(double*).ShouldBe(8);
         sizeof(decimal*).ShouldBe(8);
+
+        Unsafe.SizeOf<string>().ShouldBe(8);
+        Unsafe.SizeOf<ReadOnlyMemory<char>>().ShouldBe(16);
     }
 }

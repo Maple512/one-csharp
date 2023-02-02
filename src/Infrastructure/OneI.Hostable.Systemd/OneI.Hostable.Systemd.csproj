@@ -6,10 +6,10 @@
         <TargetOS>unix</TargetOS>
     </PropertyGroup>
 
-    <Import Project="../../common.props" />
+    <Import Project="../../common.props"/>
 
     <ItemGroup>
-      <ProjectReference Include="..\OneI.Hostable\OneI.Hostable.csproj" />
+        <ProjectReference Include="..\OneI.Hostable\OneI.Hostable.csproj"/>
     </ItemGroup>
 
 </Project>

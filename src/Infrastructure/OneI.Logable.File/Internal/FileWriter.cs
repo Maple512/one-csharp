@@ -5,36 +5,47 @@ using Microsoft.Win32.SafeHandles;
 
 internal class FileWriter : TextWriter
 {
-    private SafeFileHandle _file;
-    private long _position;
-    private readonly Encoding _encoding;
+    private readonly Encoding       _encoding;
+    private          SafeFileHandle _file;
 
     public FileWriter(SafeFileHandle file, Encoding encoding, long position = 0)
     {
-        _file = file;
+        _file     = file;
         _encoding = encoding;
-        _position = position;
+        Position  = position;
     }
 
     public override Encoding Encoding => _encoding;
 
-    public long Position => _position;
+    public long Position { get; private set; }
 
-    #region Write
+    public override Task FlushAsync() => Task.CompletedTask;
+
+    protected override void Dispose(bool disposing) => _file.Dispose();
+
+    internal void ResetNewFile(SafeFileHandle file)
+    {
+        _file.Dispose();
+        _file    = default!;
+        _file    = file;
+        Position = 0;
+    }
+
+#region Write
 
     public override void Write(char value)
     {
-        RandomAccess.Write(_file, new ReadOnlySpan<byte>((byte)value), _position);
-        _position++;
+        RandomAccess.Write(_file, new ReadOnlySpan<byte>((byte)value), Position);
+        Position++;
     }
 
     public override void Write(char[] buffer, int index, int count)
     {
         var bytes = _encoding.GetBytes(buffer, index, count);
 
-        RandomAccess.Write(_file, bytes, _position);
+        RandomAccess.Write(_file, bytes, Position);
 
-        _position += bytes.Length;
+        Position += bytes.Length;
     }
 
     public override void Write(ReadOnlySpan<char> buffer)
@@ -45,22 +56,22 @@ internal class FileWriter : TextWriter
 
         var written = _encoding.GetBytes(buffer, span);
 
-        RandomAccess.Write(_file, span, _position);
+        RandomAccess.Write(_file, span, Position);
 
-        _position += written;
+        Position += written;
     }
 
     public override void Write(string? value)
     {
-        if(value is { Length: > 0 })
+        if(value is { Length: > 0, })
         {
             Write(value.AsSpan());
         }
     }
 
-    #endregion
+#endregion
 
-    #region Write Async
+#region Write Async
 
     public override async Task WriteAsync(char value)
     {
@@ -81,14 +92,14 @@ internal class FileWriter : TextWriter
     {
         var bytes = _encoding.GetBytes(buffer, index, count);
 
-        await RandomAccess.WriteAsync(_file, bytes, _position);
+        await RandomAccess.WriteAsync(_file, bytes, Position);
 
-        _position += bytes.Length;
+        Position += bytes.Length;
     }
 
     public override async Task WriteAsync(string? value)
     {
-        if(value is { Length: > 0 })
+        if(value is { Length: > 0, })
         {
             await WriteAsync(value.AsMemory());
         }
@@ -110,9 +121,9 @@ internal class FileWriter : TextWriter
         {
             var written = _encoding.GetBytes(buffer.Span, chars);
 
-            await RandomAccess.WriteAsync(_file, chars, _position, cancellationToken);
+            await RandomAccess.WriteAsync(_file, chars, Position, cancellationToken);
 
-            _position += written;
+            Position += written;
         }
         finally
         {
@@ -120,9 +131,9 @@ internal class FileWriter : TextWriter
         }
     }
 
-    #endregion
+#endregion
 
-    #region Write Line Async
+#region Write Line Async
 
     public override async Task WriteLineAsync(char value)
     {
@@ -145,30 +156,13 @@ internal class FileWriter : TextWriter
         await WriteLineAsync();
     }
 
-    public override async Task WriteLineAsync(ReadOnlyMemory<char> buffer, CancellationToken cancellationToken = default)
+    public override async Task WriteLineAsync(ReadOnlyMemory<char> buffer
+                                              , CancellationToken  cancellationToken = default)
     {
         await WriteAsync(buffer, cancellationToken);
 
         await WriteLineAsync();
     }
 
-    #endregion
-
-    public override Task FlushAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    protected override void Dispose(bool disposing)
-    {
-        _file.Dispose();
-    }
-
-    internal void ResetNewFile(SafeFileHandle file)
-    {
-        _file.Dispose();
-        _file = default!;
-        _file = file;
-        _position = 0;
-    }
+#endregion
 }

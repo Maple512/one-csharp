@@ -1,8 +1,8 @@
 namespace OneI.Logable;
 
 using OneI.Logable.NLogInternal;
+using OneI.Logable.Templates;
 using Serilog.Parsing;
-using Templates;
 
 public class TemplateParserBenchmark
 {
@@ -21,7 +21,6 @@ public class TemplateParserBenchmark
     }
 
     [Benchmark]
-
     public void UseLogable()
     {
         for(var i = 0;i < count;i++)

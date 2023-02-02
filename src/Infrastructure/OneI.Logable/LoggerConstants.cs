@@ -35,8 +35,7 @@ public static class LoggerConstants
 
     internal static class Formatters
     {
-        public const string UpperCase = "u";
-
-        public const string LowerCase = "l";
+        public const char UpperCase = 'u';
+        public const char LowerCase = 'l';
     }
 }

@@ -1,171 +1,228 @@
 namespace OneI.Logable.Templates;
 
 using System.Globalization;
+using Cysharp.Text;
 using OneI.Logable.Formatters;
-using OneI.Text;
 using static LoggerConstants.Propertys;
 
 public static class TemplateRenderHelper
 {
-    internal static void Render(
-        TextWriter writer,
-        TemplateEnumerator template,
-        in LoggerMessageContext message,
-        in PropertyDictionary properties,
-        IFormatProvider? formatProvider)
+    public static void Render(TextWriter writer, in LoggerContext context, IFormatProvider? formatProvider)
     {
-        PropertyValue value = default;
-        var container = new ValueStringWriter();
+        var template = context.Template;
+        var message = context.Message;
+        var properties = context.Properties;
 
+        PropertyValue value = default;
+        var container = ZString.CreateStringBuilder(true);
+
+        formatProvider ??= CultureInfo.InvariantCulture;
+
+        var argumentIndex = 0;
+        // 350us
         while(template.MoveNext())
         {
-            var length = container.Length;
-
+            // 800us
             var holder = template.Current;
 
             if(holder.Indent > 0)
             {
-                writer.Write(new string(' ', holder.Indent));
+                container.Append(' ', holder.Indent);
             }
 
-            if(holder.IsText())
+            if(holder is { Length: > 0 })
             {
-                container.Write(template.GetCurrentText().Span);
+                container.Append(holder.Text.Span);
             }
             else if(holder.IsIndexer())
             {
                 if(properties.Length > holder.ParameterIndex)
                 {
                     value = properties[holder.ParameterIndex].Value;
+                    argumentIndex++;
                 }
 
-                LiteralRender(container, value.Value, holder.Type, holder.Format, formatProvider);
+                LiteralRender(ref container, value.Value, ref holder, formatProvider);
             }
             else if(holder.IsNamed())
             {
-                PropertyRender(container, holder, message, properties, formatProvider);
+                PropertyRender(ref container, ref holder, ref message, ref properties, ref argumentIndex, formatProvider);
             }
 
-            var written = container.Length - length;
-
-            if(written >= holder.Align)
+            var written = container.Length;
+            if(written > 0)
             {
-                writer.Write(container.Span);
-            }
-            else
-            {
-                if(holder.Align < 0)
+                if(written >= holder.Align)
                 {
-                    writer.Write(container.Span);
+                    writer.Write(container.AsSpan());
+                }
+                else
+                {
+                    if(holder.Align < 0)
+                    {
+                        writer.Write(container.AsSpan());
+                    }
+
+                    var pad = Math.Abs(holder.Align) - written;
+                    WriteSpance(writer, pad);
+
+                    if(holder.Align > 0)
+                    {
+                        writer.Write(container.AsSpan());
+                    }
                 }
 
-                var pad = Math.Abs(holder.Align) - written;
-
-                writer.Write(new string(' ', pad));
-
-                if(holder.Align > 0)
-                {
-                    writer.Write(container.Span);
-                }
+                container.Clear();
             }
-
-            container.Clear();
         }
 
         container.Dispose();
     }
 
-    private static void PropertyRender(
-        TextWriter writer,
-        in TemplateHolder token,
-        in LoggerMessageContext message,
-        in PropertyDictionary properties,
-        IFormatProvider? formatProvider)
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void WriteSpance(TextWriter writer, int length)
     {
-        if(token.Name == Level)
-        {
-            var level = LevelFormatHelper.Format(message.Level, token.Format);
+        scoped Span<char> spaces = stackalloc char[length];
+        spaces.Fill(' ');
+        writer.Write(spaces);
+    }
 
-            writer.Write(level);
-        }
-        else if(token.Name == NewLine)
+    private static void PropertyRender(
+        ref Utf16ValueStringBuilder writer,
+        ref TemplateHolder holder,
+        ref LoggerMessageContext message,
+        ref PropertyDictionary properties,
+        ref int argumentIndex,
+        IFormatProvider formatProvider)
+    {
+        if(holder.Name == Level)
         {
-            writer.WriteLine();
+            var level = LevelFormatHelper.Format(message.Level, holder.Format);
+
+            writer.Append(level);
+            return;
         }
-        else if(token.Name == Exception)
+
+        if(holder.Name == NewLine)
         {
-            writer.Write(message.Exception?.ToString() ?? string.Empty);
+            writer.AppendLine();
+            return;
         }
-        else if(token.Name == Timestamp)
+
+        if(holder.Name == Exception)
         {
-            LiteralRender(writer, message.Timestamp, token.Type, token.Format, formatProvider);
-        }
-        else if(token.Name == File)
-        {
-            writer.Write(message.File);
-        }
-        else if(token.Name == Member)
-        {
-            writer.Write(message.Member);
-        }
-        else if(token.Name == Line)
-        {
-            LiteralRender(writer, message.Line, token.Type, token.Format, formatProvider);
-        }
-        else
-        {
-            if(!properties.TryGetValue(token.Name!, out var propertyValue))
+            if(message.Exception is not null)
             {
-                writer.Write(TemplateConstants.Property.Null);
-                return;
+                writer.Append(message.Exception.ToString());
             }
 
-            LiteralRender(writer, propertyValue, token.Type, token.Format, formatProvider);
+            return;
         }
+
+        if(holder.Name == Timestamp)
+        {
+            WriteSpanFormattable(ref writer, message.Timestamp, holder.Format, formatProvider);
+            return;
+        }
+
+        if(holder.Name == File)
+        {
+            writer.Append(message.File);
+            return;
+        }
+
+        if(holder.Name == Member)
+        {
+            writer.Append(message.Member);
+            return;
+        }
+
+        if(holder.Name == Line)
+        {
+            WriteSpanFormattable(ref writer, message.Line, holder.Format, formatProvider);
+
+            return;
+        }
+
+        if(!properties.TryGetValue(holder.Name!, out var propertyValue))
+        {
+            if(properties.Length > argumentIndex)
+            {
+                propertyValue = properties[argumentIndex++].Value;
+            }
+            else
+            {
+                writer.Append(TemplateConstants.Property.Null);
+                return;
+            }
+        }
+
+        LiteralRender(ref writer, propertyValue.Value.Value, ref holder, formatProvider);
     }
 
     internal static void LiteralRender<TValue>(
-       TextWriter writer,
-       TValue? value,
-       PropertyType type,
-       string? format,
-       IFormatProvider? formatProvider)
+        ref Utf16ValueStringBuilder writer,
+        in TValue? value,
+        ref TemplateHolder holder,
+        IFormatProvider formatProvider)
     {
         if(value == null)
         {
-            writer.Write(TemplateConstants.Property.Null);
+            writer.Append(TemplateConstants.Property.Null);
             return;
         }
 
         if(value is string str)
         {
-            if(type == PropertyType.Stringify)
+            if(holder.Type == PropertyType.Stringify)
             {
-                writer.Write("\"");
-                writer.Write(str.Replace("\"", "\\\""));
-                writer.Write("\"");
+                writer.Append('"');
+                writer.Append(str.Replace("\"", "\\\""));
+                writer.Append('"');
             }
             else
             {
-                writer.Write(str);
+                writer.Append(str);
             }
+
+            return;
+        }
+
+        if(value is ISpanFormattable sf)
+        {
+            WriteSpanFormattable(ref writer, sf, holder.Format, formatProvider);
 
             return;
         }
 
         if(value is IFormattable f)
         {
-            writer.Write(f.ToString(format, formatProvider ?? CultureInfo.InvariantCulture));
+            writer.Append(f.ToString(holder.Format, formatProvider));
             return;
         }
 
-        var custom = (ICustomFormatter?)formatProvider?.GetFormat(typeof(ICustomFormatter));
+        var custom = (ICustomFormatter?)formatProvider.GetFormat(typeof(ICustomFormatter));
         if(custom != null)
         {
-            writer.Write(custom.Format(format, value, formatProvider));
+            writer.Append(custom.Format(holder.Format, value, formatProvider));
             return;
         }
 
-        writer.Write(value.ToString());
+        writer.Append(value.ToString()!);
+    }
+
+    private const int maxBufferSize = int.MaxValue / 2;
+
+    private static void WriteSpanFormattable(
+        ref Utf16ValueStringBuilder writer,
+        ISpanFormattable spanFormattable,
+        string format,
+        IFormatProvider formatProvider)
+    {
+        scoped var buffer = writer.GetSpan(0);
+        if(spanFormattable.TryFormat(buffer, out var charsWritten, format, formatProvider))
+        {
+            writer.Advance(charsWritten);
+        }
     }
 }

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <Import Project="../../common.xunit.props" />
+    <Import Project="../../common.xunit.props"/>
 
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
@@ -9,7 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj" />
+        <ProjectReference Include="..\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj"/>
     </ItemGroup>
 
 </Project>

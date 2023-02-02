@@ -1,6 +1,6 @@
 namespace OneI.Logable;
 
-using Configurations;
+using OneI.Logable.Configurations;
 using OneI.Logable.Templates;
 
 public partial class LoggerConfiguration
@@ -9,21 +9,11 @@ public partial class LoggerConfiguration
     {
         private readonly LoggerConfiguration _parent;
 
-        public TemplateConfiguration(LoggerConfiguration parent)
-        {
-            _parent = parent;
-        }
-
-        public ILoggerConfiguration Default(string template)
-        {
-            _parent._defaultTemplate = template.AsMemory();
-
-            return _parent;
-        }
+        public TemplateConfiguration(LoggerConfiguration parent) => _parent = parent;
 
         public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, string template)
         {
-            Check.NotNull(condition);
+            Check.NotNullOrEmpty(template);
 
             _parent._templateProviders.Add(new TemplateItem(condition, template.AsMemory()));
 

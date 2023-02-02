@@ -1,7 +1,5 @@
 namespace OneI.Logable.Templates;
 
-using System.Diagnostics.CodeAnalysis;
-
 public readonly struct PropertyValue : IEquatable<PropertyValue>
 {
     public readonly object? Value;
@@ -15,7 +13,7 @@ public readonly struct PropertyValue : IEquatable<PropertyValue>
 
     public override string ToString()
     {
-        return Value?.ToString() ?? string.Empty;
+        return $"[{nameof(Value)}: {Value}, Type: {OneIReflectionExtensions.GetTypeDisplayName(Value, false)}]";
     }
 
     public bool Equals(PropertyValue other)
@@ -24,12 +22,23 @@ public readonly struct PropertyValue : IEquatable<PropertyValue>
         {
             return true;
         }
-        else if(Value is not null && other.Value is not null)
+
+        if(Value is not null && other.Value is not null)
         {
             // TODO: 这里要检查下，是不是调用原始对象的Equals方法，不能调用object的Equals方法
             return Value.Equals(other.Value);
         }
 
         return false;
+    }
+
+    public static bool operator ==(PropertyValue left, PropertyValue right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(PropertyValue left, PropertyValue right)
+    {
+        return !(left == right);
     }
 }

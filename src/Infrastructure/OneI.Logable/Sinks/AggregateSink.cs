@@ -1,13 +1,14 @@
 namespace OneI.Logable.Sinks;
+
 public class AggregateSink : ILoggerSink
 {
     private readonly IReadOnlyList<ILoggerSink> _endpoints;
-    private readonly bool _isSilent;
+    private readonly bool                       _isSilent;
 
     public AggregateSink(List<ILoggerSink> endpoints, bool isSilent = false)
     {
         _endpoints = endpoints;
-        _isSilent = isSilent;
+        _isSilent  = isSilent;
     }
 
     public void Invoke(in LoggerContext context)
@@ -26,7 +27,7 @@ public class AggregateSink : ILoggerSink
 
                 if(_isSilent == false)
                 {
-                    (exceptions ?? new()).Add(ex);
+                    (exceptions ?? new List<Exception>()).Add(ex);
                 }
             }
         }

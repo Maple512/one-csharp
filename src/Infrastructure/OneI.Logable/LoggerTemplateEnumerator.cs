@@ -4,73 +4,52 @@ using OneI.Logable.Templates;
 
 public struct LoggerTemplateEnumerator : IEnumerator<TemplateHolder>
 {
-    public readonly TemplateEnumerator Template;
-    public readonly TemplateEnumerator Message;
+    private int _messageIndex;
+    public readonly TemplateHolder[] Template;
+    public TemplateEnumerator Message;
 
-    public LoggerTemplateEnumerator(TemplateEnumerator template, TemplateEnumerator message)
+    public LoggerTemplateEnumerator(TemplateHolder[] template, int messageIndex, TemplateEnumerator message)
     {
+        _messageIndex = messageIndex;
         Template = template;
         Message = message;
     }
 
     public bool _isMessageScope;
+    private byte _index;
 
-    public TemplateHolder Current { get; private set; }
+    public TemplateHolder Current
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get; private set;
+    }
 
     object IEnumerator.Current => Current;
 
     public bool MoveNext()
     {
-        if(_isMessageScope)
+        if(_messageIndex == _index)
         {
-            _isMessageScope = MessageMove();
-            if(_isMessageScope)
+            if(Message.MoveNext())
             {
+                Current = Message.Current;
                 return true;
             }
+
+            _index++;
         }
 
-        if(Template.MoveNext())
+        if(_index >= Template.Length)
         {
-            Current = Template.Current;
-            if(Current.Name is { Length: > 0 } && Current.Name.Equals(LoggerConstants.Propertys.Message, StringComparison.InvariantCulture))
-            {
-                _isMessageScope = MessageMove();
-                if(_isMessageScope)
-                {
-                    return true;
-                }
-            }
-
-            return true;
+            return false;
         }
 
-        return false;
-    }
+        Current = Template[_index++];
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private bool MessageMove()
-    {
-        if(Message.MoveNext())
-        {
-            Current = Message.Current;
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     public void Reset() => throw new NotImplementedException();
 
     public void Dispose() => throw new NotImplementedException();
-
-    public ReadOnlyMemory<char> GetCurrentText()
-    {
-        if(_isMessageScope)
-        {
-            return Message.Text.Slice(Current.Position, Current.Length);
-        }
-
-        return Template.Text.Slice(Current.Position, Current.Length);
-    }
 }

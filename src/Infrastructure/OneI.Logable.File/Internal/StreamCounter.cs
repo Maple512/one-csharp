@@ -6,11 +6,22 @@ internal class StreamCounter : Stream
 
     public StreamCounter(Stream stream)
     {
-        _stream = stream ?? throw new ArgumentNullException(nameof(stream));
+        _stream       = stream ?? throw new ArgumentNullException(nameof(stream));
         CountedLength = stream.Length;
     }
 
-    public long CountedLength { get; private set; }
+    public          long CountedLength { get; private set; }
+    public override bool CanRead       => false;
+    public override bool CanSeek       => _stream.CanSeek;
+    public override bool CanWrite      => true;
+    public override long Length        => _stream.Length;
+
+
+    public override long Position
+    {
+        get => _stream.Position;
+        set => throw new NotSupportedException();
+    }
 
     protected override void Dispose(bool disposing)
     {
@@ -29,22 +40,9 @@ internal class StreamCounter : Stream
     }
 
     public override void Flush() => _stream.Flush();
-    public override bool CanRead => false;
-    public override bool CanSeek => _stream.CanSeek;
-    public override bool CanWrite => true;
-    public override long Length => _stream.Length;
-
-
-    public override long Position
-    {
-        get => _stream.Position;
-        set => throw new NotSupportedException();
-    }
 
     public override long Seek(long offset, SeekOrigin origin)
-    {
-        throw new InvalidOperationException($"Seek operations are not available through `{nameof(StreamCounter)}`.");
-    }
+        => throw new InvalidOperationException($"Seek operations are not available through `{nameof(StreamCounter)}`.");
 
     public override void SetLength(long value)
     {
@@ -52,13 +50,10 @@ internal class StreamCounter : Stream
 
         if(value < CountedLength)
         {
-            // File is now shorter and our position has changed to _stream.Length
+            // RollFile is now shorter and our position has changed to _stream.Length
             CountedLength = _stream.Length;
         }
     }
 
-    public override int Read(byte[] buffer, int offset, int count)
-    {
-        throw new NotSupportedException();
-    }
+    public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
 }

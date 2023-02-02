@@ -1,31 +1,34 @@
 namespace OneI.Logable.Middlewares;
+
+using OneI.Logable.Templates;
+
 public class PropertyMiddleware<T> : ILoggerMiddleware
 {
+    private readonly bool    _addOrUpdate;
     private readonly string? _name;
-    private readonly T? _value;
-    private readonly bool _addOrUpdate;
+    private readonly T?      _value;
 
     public PropertyMiddleware(string? name, T? value, bool addOrUpdate = false)
     {
-        _name = name;
-        _value = value;
+        _name        = name;
+        _value       = value;
         _addOrUpdate = addOrUpdate;
     }
 
-    public void Invoke(LoggerMessageContext context)
+    public void Invoke(in LoggerMessageContext context, ref PropertyDictionary properties)
     {
-        if(_name is not { Length: > 0 })
+        if(_name is not { Length: > 0, })
         {
             return;
         }
 
         if(_addOrUpdate)
         {
-            context.AddOrUpdateProperty(_name, _value);
+            properties.AddOrUpdate(_name, new PropertyValue(_value));
         }
         else
         {
-            context.AddProperty(_name, _value);
+            properties.Add(_name, new PropertyValue(_value));
         }
     }
 }

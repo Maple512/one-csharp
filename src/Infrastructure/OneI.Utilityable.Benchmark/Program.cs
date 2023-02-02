@@ -1,6 +1,7 @@
 namespace OneI.Utilityable.Benchmark;
 
 using BenchmarkDotNet.Configs;
+using OneI.Utilityable.Strings;
 
 internal class Program
 {
@@ -8,6 +9,6 @@ internal class Program
     {
         // BenchmarkTool.RunAssymbly<Program>(args);
 
-        BenchmarkTool.Switcher<StringTransferBenchmark>(args);
+        BenchmarkTool.Run<StringFormatBenchmark>(args);
     }
 }

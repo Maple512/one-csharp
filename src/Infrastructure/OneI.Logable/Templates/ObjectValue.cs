@@ -4,10 +4,7 @@ public readonly struct ObjectValue : ITemplatePropertyValue
 {
     private readonly Dictionary<string, ITemplatePropertyValue> _properties;
 
-    public ObjectValue(int capaticy)
-    {
-        _properties = new(capaticy);
-    }
+    public ObjectValue(int capaticy) => _properties = new Dictionary<string, ITemplatePropertyValue>(capaticy);
 
     public IReadOnlyDictionary<string, ITemplatePropertyValue> Properties => _properties;
 
@@ -39,8 +36,5 @@ public readonly struct ObjectValue : ITemplatePropertyValue
         return writer.ToString();
     }
 
-    public void Add<T>(string name, T value)
-    {
-        _properties.Add(name, new LiteralValue<T>(value));
-    }
+    public void Add<T>(string name, T value) => _properties.Add(name, new LiteralValue<T>(value));
 }

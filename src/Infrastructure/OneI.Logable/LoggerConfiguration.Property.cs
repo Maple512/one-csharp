@@ -1,7 +1,7 @@
 namespace OneI.Logable;
 
-using Configurations;
-using Middlewares;
+using OneI.Logable.Configurations;
+using OneI.Logable.Middlewares;
 
 public partial class LoggerConfiguration
 {
@@ -9,10 +9,7 @@ public partial class LoggerConfiguration
     {
         private readonly LoggerConfiguration _parent;
 
-        public LoggerPropertyConfiguration(LoggerConfiguration parent)
-        {
-            _parent = parent;
-        }
+        public LoggerPropertyConfiguration(LoggerConfiguration parent) => _parent = parent;
 
         public ILoggerConfiguration Add<T>(string name, T value)
         {

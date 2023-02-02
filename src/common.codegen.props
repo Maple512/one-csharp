@@ -1,6 +1,6 @@
 <Project>
 
-    <Import Project="./common.props" />
+    <Import Project="./common.props"/>
 
     <ItemGroup>
         <Using Include="Microsoft.CodeAnalysis"/>
@@ -10,7 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3" PrivateAssets="All"/>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" PrivateAssets="All"/>
     </ItemGroup>
-    
+
 </Project>

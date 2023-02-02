@@ -1,46 +1,40 @@
 namespace OneI.Logable;
 
+using OneT.Common;
+
 public class Program
 {
-    public static async Task Main(string[] args)
+    public static void Main(string[] args)
     {
         Console.WriteLine("Hello, World!");
 
+        var file = Path.Combine(TestTools.GetCSProjectDirecoty(), $"Logs/RollFile_log.log");
+
         using var logger = new LoggerConfiguration()
-            .Sink.FileWhen(c => c.Message.Level == LogLevel.Verbose,
-            $"./Logs/{nameof(LogLevel.Verbose)}log.log")
-            .Sink.FileWhen(c =>
-            {
-                return c.Message.Level == LogLevel.Debug;
-            }, $"./Logs/{nameof(LogLevel.Debug)}log.log")
-            .Sink.FileWhen(c =>
-            {
-                return c.Message.Level == LogLevel.Information;
-            }, $"./Logs/{nameof(LogLevel.Information)}log.log")
-            .Sink.FileWhen(c =>
-            {
-                return c.Message.Level == LogLevel.Warning;
-            }, $"./Logs/{nameof(LogLevel.Warning)}og.log")
-            .Sink.FileWhen(c =>
-            {
-                return c.Message.Level == LogLevel.Error;
-            }, $"./Logs/{nameof(LogLevel.Error)}og.log")
-            .Sink.FileWhen(c =>
-            {
-                return c.Message.Level == LogLevel.Fatal;
-            }, $"./Logs/{nameof(LogLevel.Fatal)}log.log")
-            .CreateLogger();
+                           .Sink.RollFile(file, configure =>
+                           {
+                               configure.Frequency = RollFrequency.Minute;
+                               configure.ExpiredTime = TimeSpan.FromHours(1);
+                               configure.CountLimit = 100;
+                               configure.SizeLimit = 1024;
+                           })
+                           .CreateLogger();
+
+        var message = $"这是一条消息";
 
         while(true)
         {
-            logger.Verbose(" {0} {1} {2} {3} {4:HH:mm:ss}", 1, 2, 3, new object(), DateTime.Now);
-            logger.Information(" {0} {1} {2} {3} {4:HH:mm:ss}", 1, 2, 3, new object(), DateTime.Now);
-            logger.Debug(" {0} {1} {2} {3} {4:HH:mm:ss}", 1, 2, 3, new object(), DateTime.Now);
-            logger.Warning(" {0} {1} {2} {3} {4:HH:mm:ss}", 1, 2, 3, new object(), DateTime.Now);
-            logger.Error(" {0} {1} {2} {3} {4:HH:mm:ss}", 1, 2, 3, new object(), DateTime.Now);
-            logger.Fatal(" {0} {1} {2} {3} {4:HH:mm:ss}", 1, 2, 3, new object(), DateTime.Now);
+            // TODO: 有bug，两个string不会触发源代码生成器
+            // TODO: 需要有一个纯异常的方法   logger.Warning(new Exception());
 
-            await Task.Delay(TimeSpan.FromMilliseconds(1 * 100));
+            try
+            {
+                throw new Exception("需要有一个纯异常的方法   logger.Warning(new Exception());");
+            }
+            catch(Exception ex)
+            {
+                logger.Verbose("{$Msg} {1} {2} {asdf} {0}", message, 3, new List<object>(), ex);
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 namespace OneI.Logable;
 
-using Definitions;
+using OneI.Logable.Definitions;
 
 internal static partial class CodePrinter
 {
@@ -63,7 +63,7 @@ internal static partial class CodePrinter
 
         // 泛型约束
         foreach(var x in method.TypeArguments
-            .Where(x => string.IsNullOrWhiteSpace(x.Value) == false))
+                               .Where(x => string.IsNullOrWhiteSpace(x.Value) == false))
         {
             builder.AppendLine($"where {x.Key}: {x.Value}");
         }
@@ -71,7 +71,7 @@ internal static partial class CodePrinter
 
     private static void PrintMethodBody(IndentedStringBuilder builder, MethodDef method)
     {
-        builder.AppendLine($"var properties = new global::OneI.Logable.Templates.PropertyDictionary();");
+        builder.AppendLine("var properties = new global::OneI.Logable.Templates.PropertyDictionary();");
 
         for(var i = 0;i < method.Parameters.Count;i++)
         {
@@ -86,7 +86,7 @@ internal static partial class CodePrinter
             }
             else
             {
-                builder.Append($"new global::OneI.Logable.Templates.LiteralValue<{parameter.Type}>({parameter.Name})");
+                builder.Append($"new global::OneI.Logable.Templates.PropertyValue({parameter.Name})");
             }
 
             builder.AppendLine(");");
@@ -94,14 +94,13 @@ internal static partial class CodePrinter
 
         builder.AppendLine();
 
-        // call LoggerExtensions.WriteCore
         if(method.IsLogger)
         {
             builder.Append("global::OneI.Logable.LoggerExtensions.WriteCore(logger, ");
         }
         else
         {
-            builder.Append("global::OneI.Logable.LoggerExtensions.WriteCore(_logger, ");
+            builder.Append("global::OneI.Logable.LoggerExtensions.WriteCore(Logger, ");
         }
 
         if(method.HasLevel)
@@ -124,7 +123,9 @@ internal static partial class CodePrinter
 
         builder.Append($"{CodeAssets.MessageParameterName}, ");
 
-        builder.AppendLine("properties, file, member, line);");
+        builder.AppendLine("ref properties, file, member, line);");
+
+        builder.AppendLine();
 
         builder.AppendLine("properties.Dispose();");
     }

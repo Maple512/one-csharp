@@ -5,25 +5,30 @@ using static LoggerConstants;
 internal static class LevelFormatHelper
 {
     private static readonly string[][] _levelMap =
-        {
-            new []{ "V", "Vrb", "Verbose" },
-            new []{ "D", "Dbg", "Debug" },
-            new []{ "I", "Inf", "Information" },
-            new []{ "W", "Wrn", "Warning" },
-            new []{ "E", "Err", "Error" },
-            new []{ "F", "Ftl", "Fatal" }
-        };
-
-    public static string Format(LogLevel level, string? format = null)
     {
-        if(format.IsNullOrWhiteSpace()
-            || level < LogLevel.Verbose && level > LogLevel.Fatal)
+        new[] { "V", "Vrb", "Verbose", },
+        new[] { "D", "Dbg", "Debug", },
+        new[] { "I", "Inf", "Information", } ,
+        new[] { "W", "Wrn", "Warning", },
+        new[] { "E", "Err", "Error", },
+        new[] { "F", "Ftl", "Fatal", },
+    };
+
+    public static string Format(LogLevel level, ReadOnlySpan<char> format)
+    {
+        char @case = default;
+        if(level is < LogLevel.Verbose or > LogLevel.Fatal)
         {
-            return Casing(level.ToString(), format)!;
+            if(format.Length > 0)
+            {
+                @case = format[0];
+            }
+
+            return Casing(level.ToString(), @case);
         }
 
-        int? order = null;
-        string? @case = null;
+        var order = 0;
+
         for(var i = 0; i < Math.Min(format.Length, 2); i++)
         {
             var item = format[i];
@@ -33,13 +38,13 @@ internal static class LevelFormatHelper
             }
             else if(char.IsLetter(item))
             {
-                @case = char.ToString(item);
+                @case = item;
             }
         }
 
         var minikers = _levelMap[(int)level];
 
-        var index = Math.Min(order ?? 0, minikers.Length) - 1;
+        var index = Math.Min(order, minikers.Length) - 1;
 
         if(index < 0)
         {
@@ -51,13 +56,12 @@ internal static class LevelFormatHelper
         return Casing(moniker, @case)!;
     }
 
-    public static string? Casing(string? value, string? format = null)
-    {
-        return format switch
+    [return: NotNullIfNotNull("value")]
+    public static string? Casing(string? value, char format)
+        => format switch
         {
             Formatters.UpperCase => value?.ToUpperInvariant(),
             Formatters.LowerCase => value?.ToLowerInvariant(),
             _ => value,
         };
-    }
 }

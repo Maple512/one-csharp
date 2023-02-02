@@ -910,7 +910,7 @@ internal static class ThrowHelper
             case ExceptionArgument.suffix:
                 return "suffix";
             case ExceptionArgument.buffer:
-                return "buffer";
+                return "_buffer";
             case ExceptionArgument.buffers:
                 return "buffers";
             case ExceptionArgument.offset:
@@ -940,7 +940,7 @@ internal static class ThrowHelper
             case ExceptionResource.ArgumentOutOfRange_IndexCount:
                 return "Index and count must refer to a location within the string.";
             case ExceptionResource.ArgumentOutOfRange_IndexCountBuffer:
-                return "Index and count must refer to a location within the buffer.";
+                return "Index and count must refer to a location within the _buffer.";
             case ExceptionResource.ArgumentOutOfRange_Count:
                 return "Count must be positive and count must refer to a location within the string/array/collection.";
             case ExceptionResource.ArgumentOutOfRange_Year:
@@ -1074,7 +1074,7 @@ internal static class ThrowHelper
             case ExceptionResource.Argument_AlignmentMustBePow2:
                 return "The alignment must be a power of two.";
             case ExceptionResource.ArgumentOutOfRange_NotGreaterThanBufferLength:
-                return "Must not be greater than the length of the buffer.";
+                return "Must not be greater than the length of the _buffer.";
             default:
                 Debug.Fail("The enum value is not defined, please check the ExceptionResource Enum.");
                 return "";

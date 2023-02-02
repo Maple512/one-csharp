@@ -1,141 +1,56 @@
-namespace OneI.Logable;
+namespace OneI.Logable.Internal;
 
 using System;
-using Internal;
-using Templates;
+using DotNext.IO;
+using OneI.Logable.Templates;
 
 internal class FileSink : ILoggerSink, IDisposable
 {
-    private TextWriter? _writer;
-    private StreamCounter? _counter;
-    private readonly ILoggerRenderer _renderer;
-    private DateTime? _nextPeroid;
     private readonly LogFileOptions _options;
-    private readonly List<FileItem> _files;
-
-    private static readonly object _lock = new();
+    private readonly TextWriter _writer;
 
     public FileSink(LogFileOptions options)
     {
         _options = options;
-        _files = new(options.CountLimit);
-        _renderer = options.Renderer;
+
+        var file = GetNewFile(options);
+
+        _writer = new FileBufferingWriter(new FileBufferingWriter.Options
+        {
+            AsyncIO = false,
+            FileBufferSize = options.BufferSize,
+            FileName = file,
+        }).AsTextWriter(options.Encoding);
     }
 
     public void Dispose()
     {
-        lock(_lock)
-        {
-            _writer?.Dispose();
+        Debugger.Break();
 
-            _nextPeroid = null;
-        }
+        _writer.Dispose();
     }
 
     public void Invoke(in LoggerContext context)
     {
-        lock(_lock)
+        lock(_writer)
         {
-            AlignFile(context, DateTime.Now);
-
-            _renderer.Render(context, _writer!);
+            TemplateRenderHelper.Render(_writer, context, _options.FormatProvider);
         }
     }
 
-    private void AlignFile(LoggerContext context, DateTime datetime)
+    public static string GetNewFile(LogFileOptions options, string? suffix = null)
     {
-        _nextPeroid ??= _options.Frequency.GetNextPeriod(datetime);
-
-        _writer ??= InlitializeTextWriter(context, datetime, true);
-
-        // 长度限制
-        if(_options.SizeLimit > 0 && _options.SizeLimit <= _counter!.Position)
-        {
-            OpenFile(context, datetime);
-        }
-
-        // 下个周期
-        if(datetime > _nextPeroid)
-        {
-            OpenFile(context, datetime);
-
-            _nextPeroid = _options.Frequency.GetNextPeriod(datetime);
-        }
-
-        // 时间限制
-        if(_options.ExpiredTime != TimeSpan.Zero)
-        {
-            var expired = datetime.Subtract(_options.ExpiredTime);
-
-            DeleteFiles(_files.Where(x => x.CreatedAt < expired));
-        }
-
-        // 数量限制
-        if(_options.CountLimit > 1
-            && _files.Count > _options.CountLimit)
-        {
-            DeleteFiles(_files.Take(_files.Count - _options.CountLimit));
-        }
-    }
-
-    
-    private void OpenFile(LoggerContext context, DateTime datetime)
-    {
-        _writer!.Dispose();
-
-        _writer = InlitializeTextWriter(context, datetime, false);
-    }
-
-    private static void DeleteFiles(IEnumerable<FileItem> files)
-    {
-        foreach(var item in files)
+        var fileInfo = Path.Combine(options.Directory, $"{options.FileName}{suffix}{options.FileExtensions}");
+        var sequenceNo = 0;
+        while(File.Exists(fileInfo))
         {
             try
             {
-                File.Delete(item.FullPath);
+                fileInfo = Path.Combine(options.Directory, $"{options.FileName}{suffix}_{++sequenceNo:000}{options.FileExtensions}");
             }
             catch { }
         }
-    }
 
-    private StreamWriter InlitializeTextWriter(LoggerContext context, DateTime datetime, bool init)
-    {
-        var path = _options.Path;
-
-        var directory = Path.GetDirectoryName(path)!;
-        var name = Path.GetFileNameWithoutExtension(path);
-        var extension = Path.GetExtension(path);
-
-        var fullPath = Path.Combine(directory, $"{name}{datetime.ToString(_options.Frequency.GetFormat())}{extension}");
-
-        if(init)
-        {
-            IOTools.EnsureExistedDirectory(fullPath);
-        }
-
-        var options = new FileStreamOptions
-        {
-            Access = FileAccess.Write,
-            Mode = FileMode.OpenOrCreate,
-            //Options = FileOptions.RandomAccess | FileOptions.Asynchronous,
-            Share = FileShare.Read,
-            PreallocationSize = _options.SizeLimit,
-            BufferSize = _options.BufferSize,
-        };
-
-        Stream stream = new FileStream(fullPath, options);
-        if(init)
-        {
-            stream.Seek(0, SeekOrigin.End);
-        }
-
-        if(_options.SizeLimit > 0)
-        {
-            stream = _counter = new StreamCounter(stream);
-        }
-
-        _files.Add(new FileItem(fullPath));
-
-        return new StreamWriter(stream);
+        return fileInfo;
     }
 }

@@ -1,50 +1,41 @@
 namespace OneI.Logable.Configurations;
 
-using Middlewares;
+using OneI.Logable.Middlewares;
 
 public interface ILoggerPipelineConfiguration
 {
     /// <summary>
-    /// 向管道中添加一个中间件
+    ///     向管道中添加一个中间件
     /// </summary>
     /// <param name="middleware"></param>
     ILoggerConfiguration Use(ILoggerMiddleware middleware);
 
-    public ILoggerConfiguration Use<TMiddleware>() where TMiddleware : ILoggerMiddleware, new()
-    {
-        return Use(new TMiddleware());
-    }
+    public ILoggerConfiguration Use<TMiddleware>()
+        where TMiddleware : ILoggerMiddleware, new()
+        => Use(new TMiddleware());
 
     /// <summary>
-    /// 向管道中添加一个中间件
+    ///     向管道中添加一个中间件
     /// </summary>
-    public ILoggerConfiguration Use(Action<LoggerMessageContext> middleware)
-    {
-        return Use(new ActionMiddleware(middleware));
-    }
+    public ILoggerConfiguration Use(Action<LoggerMessageContext> middleware) => Use(new ActionMiddleware(middleware));
 
     /// <summary>
-    /// 向管道中添加一个中间件
+    ///     向管道中添加一个中间件
     /// </summary>
     public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, ILoggerMiddleware middleware)
-    {
-        return Use(new ConditionalMiddleware(condition, middleware));
-    }
+        => Use(new ConditionalMiddleware(condition, middleware));
 
     /// <summary>
-    /// 向管道中添加一个中间件
+    ///     向管道中添加一个中间件
     /// </summary>
     public ILoggerConfiguration UseWhen<TMiddleware>(Func<LoggerMessageContext, bool> condition)
         where TMiddleware : ILoggerMiddleware, new()
-    {
-        return UseWhen(condition, new TMiddleware());
-    }
+        => UseWhen(condition, new TMiddleware());
 
     /// <summary>
-    /// 向管道中添加一个中间件
+    ///     向管道中添加一个中间件
     /// </summary>
-    public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, Action<LoggerMessageContext> middleware)
-    {
-        return UseWhen(condition, new ActionMiddleware(middleware));
-    }
+    public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition
+                                        , Action<LoggerMessageContext>   middleware)
+        => UseWhen(condition, new ActionMiddleware(middleware));
 }

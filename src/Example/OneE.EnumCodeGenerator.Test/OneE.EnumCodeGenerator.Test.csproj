@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>$(NetFramework)</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OneE.EnumCodeGenerator\OneE.EnumCodeGenerator.csproj" />
-  </ItemGroup>
-    
-    <Import Project="../../common.xunit.codegen.props" />
+    <ItemGroup>
+        <ProjectReference Include="..\OneE.EnumCodeGenerator\OneE.EnumCodeGenerator.csproj"/>
+    </ItemGroup>
+
+    <Import Project="../../common.xunit.codegen.props"/>
 
 </Project>

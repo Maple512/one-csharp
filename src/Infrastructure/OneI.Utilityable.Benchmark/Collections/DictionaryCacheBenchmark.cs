@@ -1,4 +1,4 @@
-namespace OneI.Utilityable;
+namespace OneI.Utilityable.Collections;
 
 public class DictionaryCacheBenchmark
 {
@@ -11,7 +11,7 @@ public class DictionaryCacheBenchmark
     {
         Dictionary<string, int> _cache = new(5);
 
-        for(var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             foreach(var item in StringValue)
             {
@@ -25,7 +25,7 @@ public class DictionaryCacheBenchmark
     {
         Dictionary<string, int> _cache = new(5, EqualityComparer<string>.Default);
 
-        for(var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             foreach(var item in StringValue)
             {
@@ -39,7 +39,7 @@ public class DictionaryCacheBenchmark
     {
         Dictionary<int, int> _cache = new(5);
 
-        for(var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             foreach(var item in StringValue)
             {
@@ -53,7 +53,7 @@ public class DictionaryCacheBenchmark
     {
         Dictionary<int, string> _cache = new(5, EqualityComparer<int>.Default);
 
-        for(var i = 0; i < length; i++)
+        for(var i = 0;i < length;i++)
         {
             foreach(var item in StringValue)
             {

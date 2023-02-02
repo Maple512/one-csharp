@@ -1,20 +1,19 @@
 namespace OneI.Logable;
 
-using Definitions;
+using OneI.Logable.Definitions;
 
 /// <summary>
-/// The type symbol parser.
+///     The type symbol parser.
 /// </summary>
-
 public static class TypeSymbolParser
 {
     /// <summary>
-    /// Object类型，适用于：dynamic, anonymous
+    ///     Object类型，适用于：dynamic, anonymous
     /// </summary>
     private static readonly TypeDef DefaultType = new(nameof(System), nameof(Object));
 
     /// <summary>
-    /// Tries the parse.
+    ///     Tries the parse.
     /// </summary>
     /// <param name="symbol">The symbol.</param>
     /// <param name="type">The type.</param>
@@ -28,33 +27,34 @@ public static class TypeSymbolParser
         }
 
         type = symbol switch
-        {
-            IFieldSymbol field => Parse(field.Type),
-            ILocalSymbol local => Parse(local.Type),
-            IMethodSymbol method => Parse(method.ReturnType),
-            ITypeSymbol typeSymbol => Parse(typeSymbol),
-            IPropertySymbol property => Parse(property.Type),
-            _ => throw new ArgumentException($"Unknown symbol type: {symbol.GetType().FullName}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}"),
-        };
+               {
+                   IFieldSymbol field => Parse(field.Type), ILocalSymbol local => Parse(local.Type)
+                   , IMethodSymbol method => Parse(method.ReturnType), ITypeSymbol typeSymbol => Parse(typeSymbol)
+                   , IPropertySymbol property => Parse(property.Type)
+                   , _ => throw new
+                       ArgumentException($"Unknown symbol type: {symbol.GetType().FullName}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}")
+                   ,
+               };
 
         return type is not null;
     }
 
     /// <summary>
-    /// Parses the.
+    ///     Parses the.
     /// </summary>
     /// <param name="symbol">The symbol.</param>
     /// <returns>A TypeDef.</returns>
     public static TypeDef Parse(ITypeSymbol symbol)
     {
         var type = symbol switch
-        {
-            IArrayTypeSymbol array => PraseArrayType(array),
-            IDynamicTypeSymbol _ => DefaultType,
-            ITypeParameterSymbol typeParameter => PraseTypeParameter(typeParameter),
-            INamedTypeSymbol namedType => ParseNamedType(namedType),
-            _ => throw new ArgumentException($"Unknown type symbol: {symbol.GetType().FullName}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}"),
-        };
+                   {
+                       IArrayTypeSymbol array => PraseArrayType(array), IDynamicTypeSymbol _ => DefaultType
+                       , ITypeParameterSymbol typeParameter => PraseTypeParameter(typeParameter)
+                       , INamedTypeSymbol namedType => ParseNamedType(namedType)
+                       , _ => throw new
+                           ArgumentException($"Unknown type symbol: {symbol.GetType().FullName}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}")
+                       ,
+                   };
 
         if(type.IsTypeParameters == false)
         {
@@ -65,13 +65,14 @@ public static class TypeSymbolParser
     }
 
     /// <summary>
-    /// Parses the named type.
+    ///     Parses the named type.
     /// </summary>
     /// <param name="symbol">The symbol.</param>
     /// <returns>A TypeDef.</returns>
     private static TypeDef ParseNamedType(INamedTypeSymbol symbol)
     {
-        Debug.WriteLine($"SpecialType: {symbol.SpecialType}, TypeKind: {symbol.TypeKind}, FullName: {symbol}, interfaces: {symbol.AllInterfaces.Select(x => $"{x}").Join()}", nameof(ParseNamedType));
+        Debug.WriteLine($"SpecialType: {symbol.SpecialType}, TypeKind: {symbol.TypeKind}, FullName: {symbol}, interfaces: {symbol.AllInterfaces.Select(x => $"{x}").Join()}"
+                        , nameof(ParseNamedType));
 
         if(symbol.IsAnonymousType)
         {
@@ -127,8 +128,9 @@ public static class TypeSymbolParser
         if(symbol.IsSerializable)
         {
             var properties = symbol.GetMembers()
-                .Where(x => x.Kind == SymbolKind.Property && x.DeclaredAccessibility == Accessibility.Public)
-                .OfType<IPropertySymbol>();
+                                   .Where(x => x.Kind                  == SymbolKind.Property &&
+                                               x.DeclaredAccessibility == Accessibility.Public)
+                                   .OfType<IPropertySymbol>();
 
             foreach(var item in properties)
             {
@@ -149,7 +151,7 @@ public static class TypeSymbolParser
     }
 
     /// <summary>
-    /// Prases the array type.
+    ///     Prases the array type.
     /// </summary>
     /// <param name="symbol">The symbol.</param>
     /// <returns>A TypeDef.</returns>
@@ -159,14 +161,13 @@ public static class TypeSymbolParser
 
         return new TypeDef(elementType.Names)
         {
-            Kind = TypeDefKind.Array
+            Kind = TypeDefKind.Array,
         };
     }
 
 
-
     /// <summary>
-    /// Prases the type parameter.
+    ///     Prases the type parameter.
     /// </summary>
     /// <param name="symbol">The symbol.</param>
     /// <returns>A TypeDef.</returns>
@@ -174,7 +175,7 @@ public static class TypeSymbolParser
     {
         var type = new TypeDef(symbol.Name)
         {
-            IsTypeParameters = true
+            IsTypeParameters = true,
         };
 
         if(symbol.HasConstructorConstraint)
@@ -217,7 +218,7 @@ public static class TypeSymbolParser
     }
 
     /// <summary>
-    /// Parses the named type names.
+    ///     Parses the named type names.
     /// </summary>
     /// <param name="symbol">The symbol.</param>
     /// <param name="type">The type.</param>
@@ -247,7 +248,7 @@ public static class TypeSymbolParser
     }
 
     /// <summary>
-    /// Parses the namespace.
+    ///     Parses the namespace.
     /// </summary>
     /// <param name="symbol">The symbol.</param>
     /// <param name="type">The type.</param>

@@ -1,14 +1,12 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Templates;
-
 public class DictionaryBenchmark : BenchmarkItem
 {
-    [Params(100)]
-    public int count;
-
     [Params(20)]
     public int capacity;
+
+    [Params(100)]
+    public int count;
 
     //public override void GlobalInlitialize()
     //{

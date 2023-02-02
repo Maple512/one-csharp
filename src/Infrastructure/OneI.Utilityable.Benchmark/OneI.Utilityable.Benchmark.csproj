@@ -8,13 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DotNext.IO" Version="4.8.2" />
+        <PackageReference Include="DotNext.IO" Version="4.8.2" />
+        <PackageReference Include="ZLogger" Version="1.7.0" />
     </ItemGroup>
 
     <Import Project="../../common.test.benchmark.props" />
 
     <ItemGroup>
-      <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
+        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>
 
 </Project>

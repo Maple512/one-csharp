@@ -1,12 +1,17 @@
 namespace OneI.Logable.Templates;
-
-using System.Globalization;
-using static TemplateConstants.Property;
-
-public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
+public class TemplateQueue : IEnumerable<TemplateHolder>
 {
-    private static readonly char[] HoleDelimiters = { _close, _format, _indent, _align };
-    private static readonly char[] TextDelimiters = { '{', '}' };
+    public readonly ReadOnlyMemory<char> Text;
+
+    public TemplateQueue(ReadOnlyMemory<char> text) => Text = text;
+
+    public IEnumerator<TemplateHolder> GetEnumerator() => new TemplateEnumerator(Text);
+
+    IEnumerator IEnumerable.GetEnumerator() => new TemplateEnumerator(Text);
+}
+
+public struct TemplateEnumerator : IEquatable<TemplateEnumerator>, IEnumerator<TemplateHolder>
+{
     private const char _open = '{';
     private const char _close = '}';
     private const char _format = ':';
@@ -14,42 +19,35 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
     private const char _align = ',';
 
     public readonly ReadOnlyMemory<char> Text;
-    private TemplateHolder _current;
-    private TemplateHolder _next;
+    private TemplateHolder? _next;
     private readonly ushort _length;
     private ushort _position;
 
     public TemplateEnumerator(ReadOnlyMemory<char> template)
     {
-        if(template is { Length: > ushort.MaxValue })
+        if(template is { Length: > ushort.MaxValue, })
         {
             throw new ArgumentOutOfRangeException(nameof(template));
         }
 
         Text = template;
-        _current = default;
+        Current = default;
         _length = (ushort)template.Length;
         _position = 0;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ReadOnlyMemory<char> GetCurrentText()
-    {
-        return Text.Slice(Current.Position, Current.Length);
-    }
-
     public bool MoveNext()
     {
+        if(_next is not null)
+        {
+            Current = _next.Value;
+            _next = null;
+            return true;
+        }
+
         if(_position >= _length)
         {
             return false;
-        }
-
-        if(_next.Equals(TemplateHolder.Default) == false)
-        {
-            _current = _next;
-            _next = TemplateHolder.Default;
-            return true;
         }
 
         // 剩余
@@ -91,27 +89,27 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
 
             // !'{x}'
             if(openIndex > closeIndex
-                || closeIndex == openIndex + 1)
+               || closeIndex == openIndex + 1)
             {
-                position += (ushort)(Math.Max(openIndex, closeIndex) + 1);
+                position += (ushort)(closeIndex + 1);
                 continue;
             }
 
             position += (ushort)openIndex;
             var property = remainder[(openIndex + 1)..closeIndex];
 
-            if(TryParseProperty(property, position, out _next))
+            if(TryParseProperty(ref property, out _next))
             {
                 if(_position != position)
                 {
                     length = (ushort)(position - _position);
-                    _current = TemplateHolder.CreateText(_position, length);
+                    Current = TemplateHolder.CreateText(Text.Slice(_position, length));
                     _position = (ushort)(position + property.Length + 2);
                     return true;
                 }
 
-                _current = _next;
-                _next = default;
+                Current = _next.Value;
+                _next = null;
                 _position += (ushort)(closeIndex + 1);
                 return true;
             }
@@ -120,7 +118,7 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
         }
 
         var len = _length - _position;
-        _current = TemplateHolder.CreateText(_position, (ushort)len);
+        Current = TemplateHolder.CreateText(Text.Slice(_position, len));
         _position = _length;
 
         return true;
@@ -129,17 +127,19 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
     public TemplateHolder Current
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _current;
+        get;
+        private set;
     }
 
-    public override string ToString()
-    {
-        return Text.ToString();
-    }
+    object IEnumerator.Current => Current;
 
-    private static bool TryParseProperty(in ReadOnlySpan<char> text, ushort position, [NotNullWhen(true)] out TemplateHolder token)
+    public override string ToString() => Text.ToString();
+
+    private static bool TryParseProperty(
+        ref ReadOnlySpan<char> text,
+        [NotNullWhen(true)] out TemplateHolder? token)
     {
-        token = default;
+        token = null;
 
         if(text.IsEmpty)
         {
@@ -181,12 +181,10 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
         };
 
         var start = type > PropertyType.None ? 1 : 0;
-
-        var nameRange = default(Range);
-        var formatRange = default(Range);
-        var alignRange = default(Range);
-        var indentRange = default(Range);
-
+        Range nameRange;
+        Range formatRange;
+        Range alignRange;
+        Range indentRange;
         if(ai > fi && ii > fi)
         {
             nameRange = new Range(start, fi);
@@ -236,7 +234,7 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
 
         var name = text[nameRange.Start..nameRange.End];
 
-        if(name.IsEmpty || TryVerifyPropertyName(ref name) == false)
+        if(name.IsEmpty)
         {
             return false;
         }
@@ -245,11 +243,6 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
         if(formatRange.IsValid())
         {
             format = text[formatRange.Start..formatRange.End];
-
-            if(TryVerifyFormat(ref format) == false)
-            {
-                return false;
-            }
         }
 
         sbyte align = 0;
@@ -257,10 +250,7 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
         {
             var alignText = text[alignRange.Start..alignRange.End];
 
-            if(TryParseAlign(ref alignText, ref align) == false)
-            {
-                return false;
-            }
+            _ = sbyte.TryParse(alignText, out align);
         }
 
         byte indent = 0;
@@ -268,136 +258,31 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>
         {
             var indentText = text[indentRange.Start..indentRange.End];
 
-            if(TryPraseIndent(ref indentText, ref indent) == false)
-            {
-                return false;
-            }
+            _ = byte.TryParse(indentText, out indent);
         }
 
-        if(sbyte.TryParse(name, NumberStyles.Integer, CultureInfo.InvariantCulture, out var number)
-            && number >= 0)
+        if(byte.TryParse(name, out var parameterIndex))
         {
-            token = TemplateHolder.CreateIndexer(indent, align, number, type, position, format.ToString());
+            token = TemplateHolder.CreateIndexer(indent, align, (sbyte)parameterIndex, type, format.ToString());
         }
         else
         {
-            token = TemplateHolder.CreateNamed(indent, align, type, position, name.ToString(), format.ToString());
+            token = TemplateHolder.CreateNamed(indent, align, type, name.ToString(), format.ToString());
         }
 
         return true;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryVerifyPropertyName(ref ReadOnlySpan<char> text)
-    {
-        if(text.Length > NameLengthLimit)
-        {
-            return false;
-        }
+    public bool Equals(TemplateEnumerator other) => Text.Equals(other.Text);
 
-        var index = text.IndexOfAnyExcept(PropertyNameValidChars);
+    public override bool Equals(object? obj) => obj is TemplateEnumerator other && Equals(other);
 
-        return index == -1;
-    }
+    public override int GetHashCode() => Text.GetHashCode();
 
-    private static bool TryVerifyFormat(ref ReadOnlySpan<char> text)
-    {
-        if(text.Length > FormatLengthLimit)
-        {
-            return false;
-        }
+    public void Reset() => _position = 0;
+    public void Dispose() { }
 
-        var index = 0;
-        do
-        {
-            ref readonly var c = ref text[index];
+    public static bool operator ==(TemplateEnumerator left, TemplateEnumerator right) => left.Equals(right);
 
-            if(char.IsLetterOrDigit(c) // 字母或数字
-                || char.IsPunctuation(c) // 标点符号
-                || char.IsWhiteSpace(c) // 空格
-                || char.IsSymbol(c)) // 字符
-            {
-                continue;
-            }
-
-            return false;
-
-        } while(index++ < text.Length - 1);
-
-        return true;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryPraseIndent(ref ReadOnlySpan<char> text, ref byte indent)
-    {
-        if(text.Length > 2)
-        {
-            return false;
-        }
-
-        if(text.IndexOfAnyExcept(IndentStringValidChars) == -1)
-        {
-            var number = byte.Parse(text);
-
-            if(number > IndexNumericLimit)
-            {
-                return false;
-            }
-
-            indent = number;
-            return true;
-        }
-
-        return false;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryParseAlign(ref ReadOnlySpan<char> text, ref sbyte align)
-    {
-        if(text.Length > 3)
-        {
-            return false;
-        }
-
-        if(text.IndexOfAnyExcept(AlignStringValidChars) == -1)
-        {
-            var number = sbyte.Parse(text);
-
-            if(number > AlignNumericLimit)
-            {
-                return false;
-            }
-
-            align = number;
-
-            return true;
-        }
-
-        return false;
-    }
-
-    public bool Equals(TemplateEnumerator other)
-    {
-        return Text.Equals(other.Text);
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return obj is TemplateEnumerator other && Equals(other);
-    }
-
-    public override int GetHashCode()
-    {
-        return Text.GetHashCode();
-    }
-
-    public static bool operator ==(TemplateEnumerator left, TemplateEnumerator right)
-    {
-        return left.Equals(right);
-    }
-
-    public static bool operator !=(TemplateEnumerator left, TemplateEnumerator right)
-    {
-        return !(left == right);
-    }
+    public static bool operator !=(TemplateEnumerator left, TemplateEnumerator right) => !(left == right);
 }

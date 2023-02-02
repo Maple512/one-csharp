@@ -4,17 +4,16 @@ using OneI.Logable.Templates;
 
 public readonly struct LoggerContext
 {
-    public LoggerContext(
-        TemplateEnumerator template,
-        PropertyDictionary properties,
-        LoggerMessageContext message)
+    public LoggerContext(ref LoggerTemplateEnumerator template
+                         , ref PropertyDictionary properties
+                         , ref LoggerMessageContext message)
     {
         Template = template;
         Properties = properties;
         Message = message;
     }
 
-    public readonly TemplateEnumerator Template;
+    public readonly LoggerTemplateEnumerator Template;
 
     public readonly PropertyDictionary Properties;
 

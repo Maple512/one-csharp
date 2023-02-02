@@ -12,17 +12,14 @@ internal class LogLevelMap
 
     public LogLevelMap()
     {
-        _overrides = new(StringComparer.InvariantCulture);
-        _range = new(MinimumLevelDefault, MaximumLevelDefault);
+        _overrides = new Dictionary<string, LogLevelRange>(StringComparer.InvariantCulture);
+        _range     = new LogLevelRange(MinimumLevelDefault, MaximumLevelDefault);
     }
 
     public LogLevel Minimum => _range.Minimum;
     public LogLevel Maximum => _range.Maximum;
 
-    public void Override(LogLevel minimum, LogLevel maximum)
-    {
-        _range = new(minimum, maximum);
-    }
+    public void Override(LogLevel minimum, LogLevel maximum) => _range = new LogLevelRange(minimum, maximum);
 
     public void Override(string sourceContext, LogLevel minimum, LogLevel maximum)
     {
@@ -43,13 +40,13 @@ internal class LogLevelMap
 
     public LogLevelRange GetEffectiveLevel(string? context = null)
     {
-        if(context is { Length: > 0 }
-            && _overrides is { Count: > 0 })
+        if(context is { Length     : > 0, }
+           && _overrides is { Count: > 0, })
         {
             foreach(var item in _overrides)
             {
                 if(context.AsSpan().StartsWith(item.Key)
-                    && (context.Length == item.Key.Length || context[item.Key.Length] == '.'))
+                   && (context.Length == item.Key.Length || context[item.Key.Length] == '.'))
                 {
                     return item.Value;
                 }

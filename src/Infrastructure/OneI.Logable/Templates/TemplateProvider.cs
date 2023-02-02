@@ -1,103 +1,77 @@
 namespace OneI.Logable.Templates;
 
-using Cysharp.Text;
-
 internal class TemplateProvider
 {
-    private readonly ReadOnlyMemory<char> _default;
+    private readonly TemplateItem _default;
     private readonly TemplateItem[] _providers;
 
-    public TemplateProvider(ReadOnlyMemory<char> template, TemplateItem[] providers)
+    public TemplateProvider(TemplateItem template, TemplateItem[] providers)
     {
         _default = template;
-
         _providers = providers;
     }
 
-    public TemplateEnumerator GetTemplate(ref LoggerMessageContext context)
+    public LoggerTemplateEnumerator GetTemplate(ref LoggerMessageContext context)
     {
         var template = _default;
-        if(_providers is { Length: > 0 })
+        if(_providers is { Length: > 0, })
         {
             foreach(var item in _providers)
             {
-                if(item.IsSupported(ref context))
+                if(item.Condition?.Invoke(context) == true)
                 {
-                    template = item.Template;
+                    template = item;
                     break;
                 }
             }
         }
 
-        var builder = ZString.CreateStringBuilder(true);
-
-        try
-        {
-            builder.Append(template);
-            builder.Replace(LoggerConstants.Propertys.Message, template.Span);
-
-            return TemplateTokenCache.GetOrAdd(builder);
-        }
-        finally
-        {
-            builder.Dispose();
-        }
+        return TemplateTokenCache.GetOrAdd(ref template, ref context);
     }
 }
 
 internal readonly struct TemplateItem
 {
-    private readonly Func<LoggerMessageContext, bool>? _condition;
+    public readonly TemplateHolder[] Holders;
 
-    public TemplateItem(Func<LoggerMessageContext, bool> condition, ReadOnlyMemory<char> template)
+    public readonly Func<LoggerMessageContext, bool>? Condition;
+    public readonly int MessageIndex;
+
+    public TemplateItem(Func<LoggerMessageContext, bool>? condition, ReadOnlyMemory<char> template)
     {
-        _condition = condition;
-        Template = template;
+        Holders = new TemplateQueue(template).ToArray();
+        for(var i = 0;i < Holders.Length;i++)
+        {
+            if(Holders[i].Name?.Equals(LoggerConstants.Propertys.Message, StringComparison.InvariantCulture) == true)
+            {
+                MessageIndex = i;
+                break;
+            }
+        }
+
+        Condition = condition;
     }
 
-    internal ReadOnlyMemory<char> Template
-    {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool IsSupported(ref LoggerMessageContext context) => _condition is null || _condition(context);
+    public override int GetHashCode() => HashCode.Combine(Holders, Condition, MessageIndex);
 }
 
 internal static class TemplateTokenCache
 {
-    private static readonly Dictionary<int, TemplateEnumerator> _cache = new(4);
+    private static readonly Dictionary<int, LoggerTemplateEnumerator> _cache = new(20);
 
-    public static TemplateEnumerator GetOrAdd(in Utf16ValueStringBuilder builder)
+    public static LoggerTemplateEnumerator GetOrAdd(ref TemplateItem template, ref LoggerMessageContext context)
     {
-        var key = builder.GetHashCode();
+        var key = HashCode.Combine(template.GetHashCode(), context.Message.GetHashCode());
+
         if(_cache.TryGetValue(key, out var value))
         {
             return value;
         }
 
-        value = new TemplateEnumerator(builder.AsMemory());
+        value = new LoggerTemplateEnumerator(template.Holders, template.MessageIndex, new TemplateEnumerator(context.Message.AsMemory()));
 
         _cache.Add(key, value);
 
         return value;
     }
-
-    //public static LoggerTemplateEnumerator GetOrAdd(string message, ReadOnlyMemory<char> template)
-    //{
-    //    var chche = _cache;
-    //    var key = HashCode.Combine(message.GetHashCode(), template.GetHashCode());
-
-    //    if(chche.TryGetValue(key, out var result))
-    //    {
-    //        return result;
-    //    }
-
-    //    var value = new LoggerTemplateEnumerator(template, new TemplateEnumerator(message.AsMemory()));
-
-    //    chche.Add(key, value);
-
-    //    return value;
-    //}
 }

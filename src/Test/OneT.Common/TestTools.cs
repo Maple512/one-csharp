@@ -24,17 +24,13 @@ public static class TestTools
     /// 打印内存中类或结构的数据字段的物理布局
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public static void PrintLayoutToFile<T>([CallerFilePath] string? file = null, [CallerMemberName] string? member = null)
+    public static TypeLayout PrintLayoutToFile<T>([CallerFilePath] string? file = null, [CallerMemberName] string? member = null)
     {
-        PrintToFile($"[{DateTime.Now:HH:mm}] {TypeLayout.GetLayout<T>()}", file, member);
-    }
+        var layout = TypeLayout.GetLayout(typeof(T));
 
-    /// <summary>
-    /// 打印内存中类或结构的数据字段的物理布局
-    /// </summary>
-    public static void PrintLayoutToFile(Type type, [CallerFilePath] string? file = null, [CallerMemberName] string? member = null)
-    {
-        PrintToFile($"[{DateTime.Now:HH:mm}] {TypeLayout.GetLayout(type)}", file, member);
+        PrintToFile($"[{DateTime.Now:HH:mm}] {layout}", file, member);
+
+        return layout;
     }
 
     /// <summary>

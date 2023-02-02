@@ -13,8 +13,8 @@
         <PackageReference Include="DotNext.Threading" Version="4.8.2" />
         <PackageReference Include="DotNext.Unsafe" Version="4.8.1" />
         <PackageReference Include="Fody" Version="6.6.4">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="InlineIL.Fody" Version="1.7.4" PrivateAssets="All" />
         <PackageReference Include="Perfolizer" Version="0.2.1" />

@@ -1,12 +1,11 @@
-namespace OneI.Utilityable;
+namespace OneI.Utilityable.Strings;
 
 using Cysharp.Text;
-using Text;
 
 public class StringFormatBenchmark : BenchmarkItem
 {
     private const string format = "{0},{1}";
-    private static User user = new User(512, "Maple512");
+    private static User user = new(512, "Maple512");
     private const int capacity = 256;
     private const int count = 100;
 
@@ -15,7 +14,8 @@ public class StringFormatBenchmark : BenchmarkItem
         var result = UseStringBuilder();
 
         AreEquals(result, UseList());
-       // IBenchmark.AreEquals(result, UseZString());
+
+        AreEquals(result, UseZString());
     }
 
     [Benchmark(Baseline = true)]
@@ -26,15 +26,15 @@ public class StringFormatBenchmark : BenchmarkItem
         {
             for(var i = 0; i < count; i++)
             {
-                writer.AppendFormat(format, 100, user);
-                writer.AppendLine();
+                _ = writer.AppendFormat(format, 100, user);
+                _ = writer.AppendLine();
             }
 
             return writer.ToString();
         }
         finally
         {
-            writer.Clear();
+            _ = writer.Clear();
         }
     }
 
@@ -59,14 +59,14 @@ public class StringFormatBenchmark : BenchmarkItem
 
         for(var i = 0; i < count; i++)
         {
-            writer.AppendFormat(null, format, 100, user);
+            writer.AppendFormat(format, 100, user);
             writer.AppendLine();
         }
 
         return writer.ToString();
     }
 
-    struct User
+    private struct User
     {
         public int Id;
         public string Name;

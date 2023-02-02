@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
+        <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj"/>
     </ItemGroup>
 
-    <Import Project="../../common.props" />
+    <Import Project="../../common.props"/>
 
 </Project>

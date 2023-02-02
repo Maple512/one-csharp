@@ -1,6 +1,6 @@
 namespace OneI.Logable;
 
-using Configurations;
+using OneI.Logable.Configurations;
 
 public partial class LoggerConfiguration
 {
@@ -8,10 +8,7 @@ public partial class LoggerConfiguration
     {
         private readonly ILoggerConfiguration _parent;
 
-        public AuditConfiguration(ILoggerConfiguration parent)
-        {
-            _parent = parent;
-        }
+        public AuditConfiguration(ILoggerConfiguration parent) => _parent = parent;
 
         public ILoggerConfiguration Attach(ILoggerSink auditor)
         {

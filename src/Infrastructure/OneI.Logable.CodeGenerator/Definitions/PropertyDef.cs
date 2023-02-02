@@ -1,16 +1,16 @@
 namespace OneI.Logable.Definitions;
+
 public class PropertyDef
 {
     public PropertyDef(string name, TypeDef type)
         : this(name, -1, type)
-    {
-    }
+    { }
 
     public PropertyDef(string name, int index, TypeDef type)
     {
-        Name = name;
+        Name  = name;
         Index = index;
-        Type = type;
+        Type  = type;
     }
 
     public string Name { get; }
@@ -20,17 +20,12 @@ public class PropertyDef
     public TypeDef Type { get; }
 
     public bool Equals(PropertyDef other)
-    {
-        return other is not null
-             && Name.Equals(other.Name, StringComparison.InvariantCulture)
-             && Index == other.Index
-             && Type.Equals(other.Type);
-    }
+        => other is not null
+           && Name.Equals(other.Name, StringComparison.InvariantCulture)
+           && Index == other.Index
+           && Type.Equals(other.Type);
 
-    public override bool Equals(object obj)
-    {
-        return obj is PropertyDef pd && Equals(pd);
-    }
+    public override bool Equals(object obj) => obj is PropertyDef pd && Equals(pd);
 
     public override int GetHashCode()
     {
@@ -41,8 +36,5 @@ public class PropertyDef
         return hashCode;
     }
 
-    public override string ToString()
-    {
-        return Name;
-    }
+    public override string ToString() => Name;
 }
