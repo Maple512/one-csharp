@@ -4,6 +4,7 @@ using Basic.Reference.Assemblies;
 using Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using OneI;
 
 /// <summary>
 /// 代码生成器 快试帮助类
@@ -49,7 +50,7 @@ public class CodeGeneratorSnapshotTest
 
         var folder = Path.Combine(TestTools.GetCSProjectDirecoty(filePath), "Logs");
 
-        IOTools.EnsureDirectoryExisted(folder);
+        IOTools.EnsureDirectory(folder);
 
         var verify = Verifier.Verify(driver.RunGenerators(compilation))
             .UseDirectory(folder)

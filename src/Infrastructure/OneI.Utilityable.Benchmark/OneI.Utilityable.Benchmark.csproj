@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
         <OutputType>Exe</OutputType>
-        <IncludeShared>true</IncludeShared>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 

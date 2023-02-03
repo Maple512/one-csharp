@@ -44,22 +44,6 @@ internal static class IOTools
         }
     }
 
-    [Obsolete]
-    public static void EnsureExistedDirectory(string path)
-    {
-        if(path is not { Length: > 0 })
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
-
-        var dire = GetDirectory(path, true);
-
-        if(!dire.Exists)
-        {
-            dire.Create();
-        }
-    }
-
     private static DirectoryInfo GetDirectory(string path, bool mayByDir)
     {
         var attributes = (int)new FileInfo(path).Attributes;
@@ -74,23 +58,5 @@ internal static class IOTools
         {
             return new DirectoryInfo(Path.GetDirectoryName(path)!);
         }
-    }
-
-    [Obsolete]
-    public static void EnsureEmptyDirectory(string path)
-    {
-        if(path is not { Length: > 0 })
-        {
-            throw new ArgumentNullException(nameof(path));
-        }
-
-        var dire = GetDirectory(path, true);
-
-        if(dire.Exists)
-        {
-            dire.Delete(true);
-        }
-
-        dire.Create();
     }
 }

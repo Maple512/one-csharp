@@ -1,8 +1,6 @@
 namespace OneI.Logable;
 
-using System.Numerics;
-using Cysharp.Text;
-
+[OneI.Generateable.ToFastString]
 public enum LogLevel : sbyte
 {
     /// <summary>
@@ -35,17 +33,3 @@ public enum LogLevel : sbyte
     /// </summary>
     Fatal,
 }
-
-//public readonly struct LogLevel
-//{
-//    private readonly sbyte _value;
-
-//    public LogLevel(sbyte value) => _value = value;
-
-//    public static LogLevel Verbose = new Logable.LogLevel
-
-//    public override string ToString()
-//    {
-//        return char.ToString((char)_value);
-//    }
-//}

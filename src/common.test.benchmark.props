@@ -1,7 +1,6 @@
 <Project>
 
     <PropertyGroup>
-        <IncludeShared>false</IncludeShared>
         <NoWarn>$(NoWarn);CA1822;CS0649;CS8618;</NoWarn>
     </PropertyGroup>
 

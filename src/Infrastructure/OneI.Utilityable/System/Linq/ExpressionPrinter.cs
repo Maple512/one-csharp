@@ -649,7 +649,7 @@ public class ExpressionPrinter : ExpressionVisitor
         if(extensionMethod)
         {
             Visit(methodArguments[0]);
-            _stringBuilder.IncrementIndent();
+            _stringBuilder.Indent();
             _stringBuilder.AppendLine();
             _stringBuilder.Append($".{method.Name}");
             methodArguments = methodArguments.Skip(1).ToList();
@@ -662,7 +662,9 @@ public class ExpressionPrinter : ExpressionVisitor
         {
             if(method.IsStatic)
             {
-                _stringBuilder.Append(method.DeclaringType!.Name).Append(".");
+                _stringBuilder.Append(method.DeclaringType!.Name);
+
+                _stringBuilder.Append('.');
             }
 
             _stringBuilder.Append(method.Name);
@@ -721,7 +723,7 @@ public class ExpressionPrinter : ExpressionVisitor
 
         if(extensionMethod)
         {
-            _stringBuilder.DecrementIndent();
+            _stringBuilder.DeIndent();
         }
 
         return methodCallExpression;
@@ -983,7 +985,7 @@ public class ExpressionPrinter : ExpressionVisitor
         Visit(switchExpression.SwitchValue);
         _stringBuilder.AppendLine(")");
         _stringBuilder.AppendLine("{");
-        _stringBuilder.IncrementIndent();
+        _stringBuilder.Indent();
 
         foreach(var @case in switchExpression.Cases)
         {
@@ -1013,7 +1015,7 @@ public class ExpressionPrinter : ExpressionVisitor
             _stringBuilder.AppendLine();
         }
 
-        _stringBuilder.DecrementIndent();
+        _stringBuilder.DeIndent();
         _stringBuilder.AppendLine("}");
 
         return switchExpression;

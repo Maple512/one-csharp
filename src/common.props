@@ -13,7 +13,7 @@
     </PropertyGroup>
 
     <PropertyGroup Label="Custom Property">
-        <IncludeShared>true</IncludeShared>
+        <IncludeShared Condition="$(IncludeShared) == ''">true</IncludeShared>
         <IsPackable>true</IsPackable>
         <!--https://github.com/dotnet/runtime/blob/ac2ffdf4ff87e7e3a5506a8ef69ce633f6fcda85/src/libraries/System.Private.CoreLib/src/System.Private.CoreLib.Shared.projitems#L22-->
         <Is64Bit Condition="'$(Platform)' == 'arm64' or '$(Platform)' == 'x64' or '$(Platform)' == 's390x' or '$(Platform)' == 'loongarch64' or '$(Platform)' == 'ppc64le'">true</Is64Bit>

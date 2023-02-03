@@ -13,7 +13,7 @@ internal class IndentedStringBuilder
     private readonly byte _size;
 
     private readonly StringBuilder _stringBuilder;
-    private          byte          _indent;
+    private byte _indent;
 
     // 每一个append line都缩进，一行头一个append，其他不需要
     private bool _indentPending = true;
@@ -24,7 +24,7 @@ internal class IndentedStringBuilder
     public IndentedStringBuilder()
     {
         _stringBuilder = new StringBuilder();
-        _size          = IndentSize;
+        _size = IndentSize;
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ internal class IndentedStringBuilder
     public IndentedStringBuilder(int capacity, byte size = IndentSize)
     {
         _stringBuilder = new StringBuilder(capacity);
-        _size          = size;
+        _size = size;
     }
 
     /// <summary>
@@ -53,7 +53,7 @@ internal class IndentedStringBuilder
     {
         using(var reader = new StringReader(value))
         {
-            var     first = true;
+            var first = true;
             string? line;
             while((line = reader.ReadLine()) != null)
             {
@@ -225,14 +225,17 @@ internal class IndentedStringBuilder
     public virtual IDisposable Indent() => new Indenter(this);
 
     /// <summary>
+    /// 前进（反向缩进）
+    /// </summary>
+    /// <returns></returns>
+    public virtual IDisposable DeIndent() => new DeIndenter(this);
+
+    /// <summary>
     ///     暂停缩进（缩进长度设置为0）
     /// </summary>
     /// <returns></returns>
     public virtual IDisposable SuspendIndent() => new IndentSuspender(this);
 
-    /// <summary>
-    ///     Dos the indent.
-    /// </summary>
     private void DoIndent()
     {
         if(_indentPending && _indent > 0)
@@ -243,42 +246,25 @@ internal class IndentedStringBuilder
         _indentPending = false;
     }
 
-    /// <summary>
-    ///     The indent suspender.
-    /// </summary>
     private sealed class IndentSuspender : IDisposable
     {
-        private readonly byte                  _indent;
+        private readonly byte _indent;
         private readonly IndentedStringBuilder _stringBuilder;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="IndentSuspender" /> class.
-        /// </summary>
-        /// <param name="stringBuilder">The string builder.</param>
         public IndentSuspender(IndentedStringBuilder stringBuilder)
         {
-            _stringBuilder         = stringBuilder;
-            _indent                = _stringBuilder._indent;
+            _stringBuilder = stringBuilder;
+            _indent = _stringBuilder._indent;
             _stringBuilder._indent = 0;
         }
 
-        /// <summary>
-        ///     Disposes the.
-        /// </summary>
         public void Dispose() => _stringBuilder._indent = _indent;
     }
 
-    /// <summary>
-    ///     The indenter.
-    /// </summary>
     private sealed class Indenter : IDisposable
     {
         private readonly IndentedStringBuilder _stringBuilder;
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Indenter" /> class.
-        /// </summary>
-        /// <param name="stringBuilder">The string builder.</param>
         public Indenter(IndentedStringBuilder stringBuilder)
         {
             _stringBuilder = stringBuilder;
@@ -286,9 +272,20 @@ internal class IndentedStringBuilder
             _stringBuilder.Increment();
         }
 
-        /// <summary>
-        ///     Disposes the.
-        /// </summary>
         public void Dispose() => _stringBuilder.Decrement();
+    }
+
+    private sealed class DeIndenter : IDisposable
+    {
+        private readonly IndentedStringBuilder _stringBuilder;
+
+        public DeIndenter(IndentedStringBuilder stringBuilder)
+        {
+            _stringBuilder = stringBuilder;
+
+            _stringBuilder.Decrement();
+        }
+
+        public void Dispose() => _stringBuilder.Increment();
     }
 }

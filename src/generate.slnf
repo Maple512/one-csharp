@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "one.sln",
+    "projects": [
+      "Infrastructure\\OneI.Generateable.Generic\\OneI.Generateable.Generic.csproj",
+      "Infrastructure\\OneI.Generateable.Test\\OneI.Generateable.Test.csproj"
+    ]
+  }
+}

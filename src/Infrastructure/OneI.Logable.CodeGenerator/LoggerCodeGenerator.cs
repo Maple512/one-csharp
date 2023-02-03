@@ -30,8 +30,9 @@ public class LoggerCodeGenerator : IIncrementalGenerator
     /// </summary>
     /// <param name="context"></param>
     private static void RegisterPostInitializationOutput(IncrementalGeneratorPostInitializationContext context)
-        => context.AddSource(CodeAssets.LogFileName,
-                             SourceText.From(CodeAssets.LogFileContent, Encoding.UTF8));
+    {
+        context.AddSource(CodeAssets.LogFileName, SourceText.From(CodeAssets.LogFileContent, Encoding.UTF8));
+    }
 
     /// <summary>
     ///     获取目标语法节点数据
@@ -87,14 +88,14 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
         var memberAccessSyntax = (invocation.Expression as MemberAccessExpressionSyntax)!;
 
-        var symbolInfo = ModelExtensions.GetSymbolInfo(cts.SemanticModel, memberAccessSyntax);
+        var symbolInfo = cts.SemanticModel.GetSymbolInfo(memberAccessSyntax);
 
         var method = symbolInfo.Symbol as IMethodSymbol;
 
         if(method is not null)
         {
             var isParams = method.Parameters.Any(x => x.IsParams);
-            var name     = method.Name;
+            var name = method.Name;
             if(isParams == false || !_methodNames.Contains(name))
             {
                 return null;
@@ -138,9 +139,9 @@ public class LoggerCodeGenerator : IIncrementalGenerator
     /// <param name="compilation"></param>
     /// <param name="nodes"></param>
     /// <param name="context"></param>
-    private static void Execute(Compilation                      compilation
+    private static void Execute(Compilation compilation
                                 , ImmutableArray<TargetContext?> nodes
-                                , SourceProductionContext        context)
+                                , SourceProductionContext context)
     {
         if(nodes.IsDefaultOrEmpty)
         {

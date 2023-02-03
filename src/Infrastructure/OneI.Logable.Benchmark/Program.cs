@@ -1,3 +1,3 @@
 using OneI.Logable;
 
-BenchmarkTool.RunAssymbly<LogFileBenchmark>();
+BenchmarkTool.Switcher<LogFileBenchmark>();

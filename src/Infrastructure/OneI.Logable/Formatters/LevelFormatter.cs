@@ -1,5 +1,6 @@
 namespace OneI.Logable.Formatters;
 
+using OneI.Generateable;
 using static LoggerConstants;
 
 internal static class LevelFormatHelper
@@ -16,7 +17,7 @@ internal static class LevelFormatHelper
 
     public static string Format(LogLevel level, ReadOnlySpan<char> format)
     {
-        char @case = default;
+        var @case = char.MinValue;
         if(level is < LogLevel.Verbose or > LogLevel.Fatal)
         {
             if(format.Length > 0)
@@ -24,14 +25,14 @@ internal static class LevelFormatHelper
                 @case = format[0];
             }
 
-            return Casing(level.ToString(), @case);
+            return Casing(level.ToFastString(), @case);
         }
 
         var order = 0;
 
         for(var i = 0; i < Math.Min(format.Length, 2); i++)
         {
-            var item = format[i];
+            ref readonly var item = ref format[i];
             if(char.IsDigit(item))
             {
                 order = item - '0';

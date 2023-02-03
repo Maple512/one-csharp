@@ -1,4 +1,4 @@
-namespace OneI.Logable;
+namespace OneI.Generateable;
 
 public static class TestModuleInitializer
 {

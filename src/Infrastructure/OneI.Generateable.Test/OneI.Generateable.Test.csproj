@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>$(NetFramework)</TargetFramework>
+        <IncludeShared>false</IncludeShared>
+	</PropertyGroup>
+
+	<Import Project="../../common.xunit.codegen.props" />
+
+	<ItemGroup>
+		<Compile Include="*\*\*.verified.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\OneI.Generateable.Generic\OneI.Generateable.Generic.csproj" />
+	</ItemGroup>
+
+</Project>

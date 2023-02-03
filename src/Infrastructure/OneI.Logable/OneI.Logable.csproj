@@ -5,6 +5,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\OneI.Generateable.Generic\OneI.Generateable.Generic.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"/>
         <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>
 

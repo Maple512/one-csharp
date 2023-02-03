@@ -24,7 +24,7 @@ public class LogEmptyBenchmark : BenchmarkItem
     [Benchmark(Baseline = true)]
     public void UseSeriLog()
     {
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             serilog.Information(" {0} {1} {2} {3} ", 1, 2, 3, new object());
         }
@@ -33,7 +33,7 @@ public class LogEmptyBenchmark : BenchmarkItem
     [Benchmark]
     public void UseLogable()
     {
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             logable.Information(" {0} {1} {2} {3} ", 1, 2, 3, new object());
         }
@@ -42,13 +42,13 @@ public class LogEmptyBenchmark : BenchmarkItem
     [Benchmark]
     public void UseNLog()
     {
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             nlog.Info(" {0} {1} {2} {3} ", 1, 2, 3, new object());
         }
     }
 
     private static Serilog.Core.Logger serilog;
-    private static ILogger             logable;
-    private static NLog.Logger         nlog;
+    private static ILogger logable;
+    private static NLog.Logger nlog;
 }
