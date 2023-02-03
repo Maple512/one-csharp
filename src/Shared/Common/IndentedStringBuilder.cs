@@ -1,13 +1,7 @@
 namespace System.Text;
 
-/// <summary>
-///     The indented string builder.
-/// </summary>
 internal class IndentedStringBuilder
 {
-    /// <summary>
-    ///     The indent size.
-    /// </summary>
     private const byte IndentSize = 4;
 
     private readonly byte _size;
@@ -18,30 +12,19 @@ internal class IndentedStringBuilder
     // 每一个append line都缩进，一行头一个append，其他不需要
     private bool _indentPending = true;
 
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="IndentedStringBuilder" /> class.
-    /// </summary>
     public IndentedStringBuilder()
     {
         _stringBuilder = new StringBuilder();
         _size = IndentSize;
     }
 
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="IndentedStringBuilder" /> class.
-    /// </summary>
-    /// <param name="capacity">The capacity.</param>
-    /// <param name="size">The size.</param>
     public IndentedStringBuilder(int capacity, byte size = IndentSize)
     {
         _stringBuilder = new StringBuilder(capacity);
         _size = size;
     }
 
-    /// <summary>
-    ///     Gets the length.
-    /// </summary>
-    public virtual int Length => _stringBuilder.Length;
+    public int Length => _stringBuilder.Length;
 
     /// <summary>
     ///     将给定字符串分隔为多行，然后将每行（以当前缩进为前缀，后跟新行）追加到正在生成的字符串中。
@@ -49,7 +32,7 @@ internal class IndentedStringBuilder
     /// <param name="value"></param>
     /// <param name="skipFinalNewline"></param>
     /// <returns></returns>
-    public virtual IndentedStringBuilder AppendLines(string value, bool skipFinalNewline = false)
+    public void AppendLines(string value, bool skipFinalNewline = false)
     {
         using(var reader = new StringReader(value))
         {
@@ -77,170 +60,97 @@ internal class IndentedStringBuilder
         {
             AppendLine();
         }
-
-        return this;
     }
 
-    /// <summary>
-    ///     Appends the line.
-    /// </summary>
-    /// <returns>An IndentedStringBuilder.</returns>
-    public virtual IndentedStringBuilder AppendLine()
+    public void AppendLine()
     {
         AppendLine(string.Empty);
-
-        return this;
     }
 
-    /// <summary>
-    ///     Appends the line.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>An IndentedStringBuilder.</returns>
-    public virtual IndentedStringBuilder AppendLine(string value)
+    public void AppendLine(string value)
     {
         if(value.Length != 0)
         {
             DoIndent();
         }
 
-        _stringBuilder.AppendLine(value);
+        _ = _stringBuilder.AppendLine(value);
 
         _indentPending = true;
-
-        return this;
     }
 
-    /// <summary>
-    ///     Appends the.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>An IndentedStringBuilder.</returns>
-    public virtual IndentedStringBuilder Append(char value)
+    public void Append(char value)
     {
         DoIndent();
 
-        _stringBuilder.Append(value);
-
-        return this;
+        _ = _stringBuilder.Append(value);
     }
 
-    /// <summary>
-    ///     Appends the.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>An IndentedStringBuilder.</returns>
-    public virtual IndentedStringBuilder Append(string value)
+    public void Append(string value)
     {
         DoIndent();
 
-        _stringBuilder.Append(value);
-
-        return this;
+        _ = _stringBuilder.Append(value);
     }
 
-    /// <summary>
-    ///     Appends the.
-    /// </summary>
-    /// <param name="values">The values.</param>
-    /// <returns>An IndentedStringBuilder.</returns>
-    public virtual IndentedStringBuilder Append(IEnumerable<string> values)
+    public void Append(IEnumerable<string> values)
     {
         DoIndent();
 
         // AppendJoin也是使用的foreach
         foreach(var value in values)
         {
-            _stringBuilder.Append(value);
+            _ = _stringBuilder.Append(value);
         }
-
-        return this;
     }
 
-    /// <summary>
-    ///     Appends the.
-    /// </summary>
-    /// <param name="value">The value.</param>
-    /// <returns>An IndentedStringBuilder.</returns>
-    public virtual IndentedStringBuilder Append(IEnumerable<char> value)
+    public void Append(IEnumerable<char> value)
     {
         DoIndent();
 
         foreach(var chr in value)
         {
-            _stringBuilder.Append(chr);
+            _ = _stringBuilder.Append(chr);
         }
-
-        return this;
     }
 
-    /// <summary>
-    ///     Tos the string.
-    /// </summary>
-    /// <returns>A string.</returns>
     public override string ToString() => _stringBuilder.ToString();
 
-    /// <summary>
-    ///     递减缩进
-    /// </summary>
-    /// <returns></returns>
-    private IndentedStringBuilder Increment()
+    private void Increment()
     {
         _indent++;
-
-        return this;
     }
 
-    /// <summary>
-    ///     递增缩进
-    /// </summary>
-    /// <returns></returns>
-    private IndentedStringBuilder Decrement()
+    private void Decrement()
     {
         if(_indent > 0)
         {
             _indent--;
         }
-
-        return this;
     }
 
-    /// <summary>
-    ///     Clears the.
-    /// </summary>
-    /// <returns>An IndentedStringBuilder.</returns>
-    public virtual IndentedStringBuilder Clear()
+    public void Clear()
     {
-        _stringBuilder.Clear();
+        _ = _stringBuilder.Clear();
 
         _indent = 0;
-
-        return this;
     }
 
-    /// <summary>
-    ///     缩进
-    /// </summary>
-    /// <returns></returns>
-    public virtual IDisposable Indent() => new Indenter(this);
+    public IDisposable Indent() => new Indenter(this);
 
-    /// <summary>
-    /// 前进（反向缩进）
-    /// </summary>
-    /// <returns></returns>
-    public virtual IDisposable DeIndent() => new DeIndenter(this);
+    public IDisposable DeIndent() => new DeIndenter(this);
 
     /// <summary>
     ///     暂停缩进（缩进长度设置为0）
     /// </summary>
     /// <returns></returns>
-    public virtual IDisposable SuspendIndent() => new IndentSuspender(this);
+    public IDisposable SuspendIndent() => new IndentSuspender(this);
 
     private void DoIndent()
     {
         if(_indentPending && _indent > 0)
         {
-            _stringBuilder.Append(' ', _indent * _size);
+            _ = _stringBuilder.Append(' ', _indent * _size);
         }
 
         _indentPending = false;

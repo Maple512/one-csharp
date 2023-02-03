@@ -44,7 +44,7 @@ public class IntParseBenchmark : BenchmarkItem
 
             ref readonly var c = ref text[0];
 
-            switch (c)
+            switch(c)
             {
                 case '+':
                     index--;
@@ -62,9 +62,9 @@ public class IntParseBenchmark : BenchmarkItem
                 var num = c - '0';
 
                 result += Pow(index - 1) * num;
-            } while (index-- > 1);
+            } while(index-- > 1);
 
-            if (nagate == 1)
+            if(nagate == 1)
             {
                 return -result;
             }
@@ -74,7 +74,7 @@ public class IntParseBenchmark : BenchmarkItem
 
         public static int Pow(int length)
         {
-            if (length == 0)
+            if(length == 0)
             {
                 return 1;
             }
@@ -85,7 +85,7 @@ public class IntParseBenchmark : BenchmarkItem
             {
                 n *= 10;
 
-            } while (index-- > 1);
+            } while(index-- > 1);
 
             return n;
         }

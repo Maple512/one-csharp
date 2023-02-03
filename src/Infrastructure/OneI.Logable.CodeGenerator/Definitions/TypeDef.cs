@@ -8,10 +8,10 @@ public class TypeDef : IEquatable<TypeDef>
 
     public TypeDef(List<string> names)
     {
-        Names         = names;
+        Names = names;
         TypeArguments = new();
-        Constraints   = new();
-        Properties    = new();
+        Constraints = new();
+        Properties = new();
     }
 
     public List<string> Names { get; }
@@ -56,8 +56,8 @@ public class TypeDef : IEquatable<TypeDef>
         return Names.SequenceEqual(other.Names, StringComparer.InvariantCulture)
                && TypeArguments.SequenceEqual(other.TypeArguments)
                && IsTypeParameters == other.IsTypeParameters
-               && IsGenericType    == other.IsGenericType
-               && Kind             == other.Kind
+               && IsGenericType == other.IsGenericType
+               && Kind == other.Kind
                && Properties.SequenceEqual(other.Properties);
     }
 
@@ -74,7 +74,7 @@ public class TypeDef : IEquatable<TypeDef>
             content.Append("global::");
         }
 
-        for(var i = 0;i < Names.Count;i++)
+        for(var i = 0; i < Names.Count; i++)
         {
             content.Append(Names[i]);
             if(i < Names.Count - 1)
@@ -87,7 +87,7 @@ public class TypeDef : IEquatable<TypeDef>
         {
             content.Append('<');
 
-            for(var i = 0;i < TypeArguments.Count;i++)
+            for(var i = 0; i < TypeArguments.Count; i++)
             {
                 content.Append(TypeArguments[i].ToDisplayString());
                 if(i < TypeArguments.Count - 1)

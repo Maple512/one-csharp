@@ -46,8 +46,8 @@ public class Logger_Test
     {
         var order = new List<int>(100);
 
-        var id         = Guid.NewGuid();
-        var name       = "Id";
+        var id = Guid.NewGuid();
+        var name = "Id";
         var propertyId = (PropertyValue?)null;
 
         var logger = Fake.CreateLogger(

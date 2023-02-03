@@ -13,14 +13,14 @@ public partial class LoggerConfiguration
 
         public ILoggerConfiguration Add<T>(string name, T value)
         {
-            Check.NotNullOrEmpty(name);
+            _ = Check.NotNullOrEmpty(name);
 
             return _parent.Use(new PropertyMiddleware<T>(name, value));
         }
 
         public ILoggerConfiguration AddOrUpdate<T>(string name, T value)
         {
-            Check.NotNullOrEmpty(name);
+            _ = Check.NotNullOrEmpty(name);
 
             return _parent.Use(new PropertyMiddleware<T>(name, value, true));
         }

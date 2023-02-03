@@ -36,6 +36,6 @@ public interface ILoggerPipelineConfiguration
     ///     向管道中添加一个中间件
     /// </summary>
     public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition
-                                        , Action<LoggerMessageContext>   middleware)
+                                        , Action<LoggerMessageContext> middleware)
         => UseWhen(condition, new ActionMiddleware(middleware));
 }

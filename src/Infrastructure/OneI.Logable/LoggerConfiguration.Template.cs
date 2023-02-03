@@ -13,7 +13,7 @@ public partial class LoggerConfiguration
 
         public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, string template)
         {
-            Check.NotNullOrEmpty(template);
+            _ = Check.NotNullOrEmpty(template);
 
             _parent._templateProviders.Add(new TemplateItem(condition, template.AsMemory()));
 

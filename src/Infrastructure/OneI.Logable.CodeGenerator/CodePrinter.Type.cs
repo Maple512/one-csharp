@@ -81,7 +81,7 @@ internal static partial class CodePrinter
         builder.AppendLine("var value = new global::OneI.Logable.Templates.ObjectValue();");
         builder.AppendLine();
 
-        for(var i = 0;i < type.Properties.Count;i++)
+        for(var i = 0; i < type.Properties.Count; i++)
         {
             var item = type.Properties[i];
 
@@ -102,7 +102,7 @@ internal static partial class CodePrinter
         builder.AppendLine("var value = new global::OneI.Logable.Templates.ObjectValue();");
         builder.AppendLine();
 
-        for(var i = 0;i < type.Properties.Count;i++)
+        for(var i = 0; i < type.Properties.Count; i++)
         {
             var item = type.Properties[i];
 

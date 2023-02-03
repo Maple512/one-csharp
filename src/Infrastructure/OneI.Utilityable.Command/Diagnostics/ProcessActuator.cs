@@ -1,8 +1,5 @@
 namespace System.Diagnostics;
 
-/// <summary>
-/// The process actuator.
-/// </summary>
 
 public partial class ProcessActuator
 {

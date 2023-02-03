@@ -282,7 +282,13 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>, IEnumerator<T
     public void Reset() => _position = 0;
     public void Dispose() { }
 
-    public static bool operator ==(TemplateEnumerator left, TemplateEnumerator right) => left.Equals(right);
+    public static bool operator ==(TemplateEnumerator left, TemplateEnumerator right)
+    {
+        return left.Equals(right);
+    }
 
-    public static bool operator !=(TemplateEnumerator left, TemplateEnumerator right) => !(left == right);
+    public static bool operator !=(TemplateEnumerator left, TemplateEnumerator right)
+    {
+        return !(left == right);
+    }
 }

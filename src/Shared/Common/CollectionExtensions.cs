@@ -18,7 +18,7 @@ internal static class CollectionExtensions
     /// <param name="item">The item.</param>
     public static void AddIfNotContains<T>(this ICollection<T> source, T item)
     {
-        Check.NotNull(source);
+        _ = Check.NotNull(source);
 
         if(!source.Contains(item))
         {
@@ -33,7 +33,7 @@ internal static class CollectionExtensions
     /// <param name="items">The items.</param>
     public static void AddIfNotContains<T>(this ICollection<T> source, IEnumerable<T> items)
     {
-        Check.NotNull(source);
+        _ = Check.NotNull(source);
 
         foreach(var item in items)
         {
@@ -56,7 +56,7 @@ internal static class CollectionExtensions
 
         foreach(var item in items)
         {
-            source.Remove(item);
+            _ = source.Remove(item);
         }
 
         return items;

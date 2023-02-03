@@ -75,7 +75,7 @@ public class EnvironmentMiddleware : ILoggerMiddleware
 public static class EnvironmentMiddlewareExtensions
 {
     public static ILoggerConfiguration WithEnvironment(this ILoggerConfiguration configuration
-                                                       , EnvironmentOptions      options)
+                                                       , EnvironmentOptions options)
     {
         _ = configuration.Use(new EnvironmentMiddleware(options));
 

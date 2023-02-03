@@ -5,14 +5,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BenchmarkDotNet" Version="0.13.2"/>
-        <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.2"/>
-        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.3">
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
 
-    <Import Project="../../common.test.props"/>
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.4" />
+        <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.4" />
+    </ItemGroup>
+
+    <Import Project="../../common.test.props" />
 
 </Project>

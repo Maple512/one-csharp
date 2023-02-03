@@ -24,7 +24,7 @@ public abstract class BenchmarkItem
     {
         comparer ??= EqualityComparer<T>.Default;
 
-        if (left.SequenceEqual(right, comparer) == false)
+        if(left.SequenceEqual(right, comparer) == false)
         {
             throw new ArgumentException($"\"{leftEx}\" != \"{rightEx}\"");
         }
@@ -40,7 +40,7 @@ public abstract class BenchmarkItem
     {
         comparer ??= EqualityComparer<T>.Default;
 
-        if (comparer.Equals(left, right) == false)
+        if(comparer.Equals(left, right) == false)
         {
             throw new ArgumentException($"\"{leftEx}\" != \"{rightEx}\"");
         }

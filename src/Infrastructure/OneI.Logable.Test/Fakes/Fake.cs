@@ -9,9 +9,9 @@ public static class Fake
     public const string ErrorTemplate
         = "{Timestamp:yyyy-MM-dd HH:mm:ss} {SourceContext} [{Level}] {Message}{NewLine}{Exception'4}{NewLine}{FilePath'4}#L{LineNumber}@{MemberName}{NewLine}";
 
-    public static ILogger CreateLogger(string?                         template = null
-                                       , Action<ILoggerConfiguration>? logger   = null
-                                       , Action<LogRollFileOptions>?       file     = null)
+    public static ILogger CreateLogger(string? template = null
+                                       , Action<ILoggerConfiguration>? logger = null
+                                       , Action<LogRollFileOptions>? file = null)
     {
         var path = Path.Combine(TestTools.GetCSProjectDirecoty()!, "Logs"
                                 , $"{{{FileNameWithoutExtension}}}@{{{Member}}}.txt");

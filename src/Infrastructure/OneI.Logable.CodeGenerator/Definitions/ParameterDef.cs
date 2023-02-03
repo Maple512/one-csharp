@@ -8,9 +8,9 @@ public class ParameterDef : IEquatable<ParameterDef>
 
     public ParameterDef(int index, string name, TypeDef type)
     {
-        Name  = name;
+        Name = name;
         Index = index;
-        Type  = type;
+        Type = type;
     }
 
     public string Name { get; }

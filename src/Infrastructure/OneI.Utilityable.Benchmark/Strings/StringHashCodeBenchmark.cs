@@ -15,7 +15,7 @@ public class StringHashCodeBenchmark : BenchmarkItem
     {
         var result = false;
 
-        for(var i = 0;i < 100;i++)
+        for(var i = 0; i < 100; i++)
         {
             result = s1.Equals(s2, StringComparison.OrdinalIgnoreCase);
         }
@@ -28,7 +28,7 @@ public class StringHashCodeBenchmark : BenchmarkItem
     {
         var result = false;
 
-        for(var i = 0;i < 100;i++)
+        for(var i = 0; i < 100; i++)
         {
             result = string.Compare(s1, s2, StringComparison.OrdinalIgnoreCase) == 0;
         }
@@ -41,7 +41,7 @@ public class StringHashCodeBenchmark : BenchmarkItem
     {
         var result = false;
 
-        for(var i = 0;i < 100;i++)
+        for(var i = 0; i < 100; i++)
         {
             var h1 = s1.GetHashCode();
             var h2 = s2.GetHashCode();
@@ -58,7 +58,7 @@ public class StringHashCodeBenchmark : BenchmarkItem
     {
         var result = false;
 
-        for(var i = 0;i < 100;i++)
+        for(var i = 0; i < 100; i++)
         {
             result = EqualityComparer<string>.Default.Equals(s1, s2);
         }
@@ -71,7 +71,7 @@ public class StringHashCodeBenchmark : BenchmarkItem
     {
         var result = false;
 
-        for(var i = 0;i < 100;i++)
+        for(var i = 0; i < 100; i++)
         {
             result = s1.AsSpan().SequenceEqual(s2);
         }
@@ -84,7 +84,7 @@ public class StringHashCodeBenchmark : BenchmarkItem
     {
         var result = false;
 
-        for(var i = 0;i < 100;i++)
+        for(var i = 0; i < 100; i++)
         {
             result = s1.AsSpan().CompareTo(s2, StringComparison.InvariantCulture) == 0;
         }
@@ -97,7 +97,7 @@ public class StringHashCodeBenchmark : BenchmarkItem
     {
         var result = false;
 
-        for(var i = 0;i < 100;i++)
+        for(var i = 0; i < 100; i++)
         {
             result = s1.AsSpan().Equals(s2, StringComparison.InvariantCulture);
         }

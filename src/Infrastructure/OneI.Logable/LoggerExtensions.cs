@@ -6,14 +6,14 @@ using OneI.Logable.Templates;
 
 public static class LoggerExtensions
 {
-    public static void WriteCore(ILogger                  logger
-                                 , LogLevel               level
-                                 , Exception?             exception
-                                 , string                 message
+    public static void WriteCore(ILogger logger
+                                 , LogLevel level
+                                 , Exception? exception
+                                 , string message
                                  , ref PropertyDictionary properties
-                                 , string?                file   = null
-                                 , string?                member = null
-                                 , int                    line   = 0)
+                                 , string? file = null
+                                 , string? member = null
+                                 , int line = 0)
     {
         var context = new LoggerMessageContext(
                                                level,
@@ -26,7 +26,7 @@ public static class LoggerExtensions
         logger.Write(ref context, ref properties);
     }
 
-#region ForContext
+    #region ForContext
 
     /// <summary>
     ///     在现有<see cref="ILogger" />的基础上，添加指定的<see cref="ILoggerMiddleware" />
@@ -49,7 +49,7 @@ public static class LoggerExtensions
     /// <returns></returns>
     public static ILogger ForContext<
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)]
-        TSourceContext>(this ILogger logger)
+    TSourceContext>(this ILogger logger)
         => logger.ForContext(typeof(TSourceContext).FullName!);
 
     /// <summary>
@@ -62,9 +62,9 @@ public static class LoggerExtensions
     public static ILogger ForContext(this ILogger logger, string sourceContext)
         => logger.ForContext(LoggerConstants.Propertys.SourceContext, sourceContext);
 
-#endregion
+    #endregion
 
-#region Begin Scope
+    #region Begin Scope
 
     /// <summary>
     ///     在现有<see cref="ILogger" />的基础上，添加指定的属性
@@ -90,9 +90,9 @@ public static class LoggerExtensions
     public static IAsyncDisposable BeginScopeAsync<T>(this ILogger logger, string name, T value)
         => logger.BeginScopeAsync(new PropertyMiddleware<T>(name, value));
 
-#endregion
+    #endregion
 
-#region Write
+    #region Write
 
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -101,16 +101,16 @@ public static class LoggerExtensions
 
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Write(this ILogger       logger
-                             , LogLevel         level
-                             , Exception        exception
-                             , string           message
+    public static void Write(this ILogger logger
+                             , LogLevel level
+                             , Exception exception
+                             , string message
                              , params object?[] args)
         => throw new NotSupportedException();
 
-#endregion Write
+    #endregion Write
 
-#region Verbose
+    #region Verbose
 
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -122,9 +122,9 @@ public static class LoggerExtensions
     public static void Verbose(this ILogger logger, Exception exception, string message, params object?[] args)
         => throw new NotSupportedException();
 
-#endregion Verbose
+    #endregion Verbose
 
-#region Debug
+    #region Debug
 
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -136,9 +136,9 @@ public static class LoggerExtensions
     public static void Debug(this ILogger logger, Exception exception, string message, params object?[] args)
         => throw new NotSupportedException();
 
-#endregion Debug
+    #endregion Debug
 
-#region Information
+    #region Information
 
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -150,9 +150,9 @@ public static class LoggerExtensions
     public static void Information(this ILogger logger, Exception exception, string message, params object?[] args)
         => throw new NotSupportedException();
 
-#endregion Information
+    #endregion Information
 
-#region Warning
+    #region Warning
 
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -164,9 +164,9 @@ public static class LoggerExtensions
     public static void Warning(this ILogger logger, Exception exception, string message, params object?[] args)
         => throw new NotSupportedException();
 
-#endregion Warning
+    #endregion Warning
 
-#region Error
+    #region Error
 
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -178,9 +178,9 @@ public static class LoggerExtensions
     public static void Error(this ILogger logger, Exception exception, string message, params object?[] args)
         => throw new NotSupportedException();
 
-#endregion Error
+    #endregion Error
 
-#region Fatal
+    #region Fatal
 
     [Conditional(SharedConstants.DEBUG)]
     [EditorBrowsable(EditorBrowsableState.Never)]
@@ -192,5 +192,5 @@ public static class LoggerExtensions
     public static void Fatal(this ILogger logger, Exception exception, string message, params object?[] args)
         => throw new NotSupportedException();
 
-#endregion Fatal
+    #endregion Fatal
 }

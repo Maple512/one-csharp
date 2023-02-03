@@ -13,7 +13,7 @@ public class HashCodeBenchmark
             new object().GetHashCode();
         }
     }
-    
+
     [Benchmark]
     public void UseHashCode()
     {
@@ -28,7 +28,7 @@ public class HashCodeBenchmark
     {
         for(int i = 0; i < length; i++)
         {
-           EqualityComparer<object>.Default.GetHashCode(new object());
+            EqualityComparer<object>.Default.GetHashCode(new object());
         }
     }
 }

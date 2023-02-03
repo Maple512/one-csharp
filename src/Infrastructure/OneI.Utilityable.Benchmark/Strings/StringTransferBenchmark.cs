@@ -34,7 +34,7 @@ public class StringTransferBenchmark : BenchmarkItem
     {
         var result = new List<string>();
 
-        for(var i = 0;i < length;i++)
+        for(var i = 0; i < length; i++)
         {
             result.Add(StringTransfer(text));
         }
@@ -48,7 +48,7 @@ public class StringTransferBenchmark : BenchmarkItem
     {
         var result = new List<string>();
 
-        for(var i = 0;i < length;i++)
+        for(var i = 0; i < length; i++)
         {
             var t = text.AsMemory();
 
@@ -66,7 +66,7 @@ public class StringTransferBenchmark : BenchmarkItem
     {
         var result = new List<string>();
 
-        for(var i = 0;i < length;i++)
+        for(var i = 0; i < length; i++)
         {
             var builder = new Utf16ValueStringBuilder(true);
 

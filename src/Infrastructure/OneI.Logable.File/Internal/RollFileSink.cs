@@ -12,7 +12,7 @@ internal class RollFileSink : ILoggerSink, IDisposable
     private DateTime _nextPeroid;
     private TextWriter _writer;
     private FileBufferingWriter _growableBuffer;
-    private static object _lock = new object();
+    private static readonly object _lock = new();
 
 #pragma warning disable CS8618 
     public RollFileSink(LogRollFileOptions options)
@@ -75,7 +75,7 @@ internal class RollFileSink : ILoggerSink, IDisposable
         {
             var expired = datetime.Subtract(_options.ExpiredTime);
 
-            for(var i = 0;i < _files.Count;i++)
+            for(var i = 0; i < _files.Count; i++)
             {
                 var file = _files.Peek();
                 if(file.CreatedAt < expired)
@@ -94,7 +94,7 @@ internal class RollFileSink : ILoggerSink, IDisposable
         {
             Debugger.Break();
             var count = _files.Count - _options.CountLimit;
-            for(var i = 0;i < count;i++)
+            for(var i = 0; i < count; i++)
             {
                 DeleteFile(_files.Dequeue());
             }

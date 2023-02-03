@@ -41,7 +41,7 @@ public static class BenchmarkTool
 
         Inlitialize(assembly);
 
-        var unused = BenchmarkRunner.Run(assembly, config, args);
+        _ = BenchmarkRunner.Run(assembly, config, args!);
     }
 
     public static void Run<T>(string[]? args = null, Action<IConfig>? configure = null)
@@ -52,7 +52,7 @@ public static class BenchmarkTool
 
         configure?.Invoke(config);
 
-        var unused = BenchmarkRunner.Run(startType, config, args);
+        _ = BenchmarkRunner.Run(startType, config, args!);
     }
 
     public static void Switcher<T>(string[]? args = null, Action<IConfig>? configure = null)
@@ -65,7 +65,7 @@ public static class BenchmarkTool
 
         Inlitialize(assembly);
 
-        var unused = BenchmarkSwitcher.FromAssembly(assembly).Run(args, config);
+        _ = BenchmarkSwitcher.FromAssembly(assembly).Run(args!, config);
     }
 
     [Conditional(SharedConstants.DEBUG)]

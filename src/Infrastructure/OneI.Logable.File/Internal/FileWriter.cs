@@ -5,14 +5,14 @@ using Microsoft.Win32.SafeHandles;
 
 internal class FileWriter : TextWriter
 {
-    private readonly Encoding       _encoding;
-    private          SafeFileHandle _file;
+    private readonly Encoding _encoding;
+    private SafeFileHandle _file;
 
     public FileWriter(SafeFileHandle file, Encoding encoding, long position = 0)
     {
-        _file     = file;
+        _file = file;
         _encoding = encoding;
-        Position  = position;
+        Position = position;
     }
 
     public override Encoding Encoding => _encoding;
@@ -26,12 +26,12 @@ internal class FileWriter : TextWriter
     internal void ResetNewFile(SafeFileHandle file)
     {
         _file.Dispose();
-        _file    = default!;
-        _file    = file;
+        _file = default!;
+        _file = file;
         Position = 0;
     }
 
-#region Write
+    #region Write
 
     public override void Write(char value)
     {
@@ -69,9 +69,9 @@ internal class FileWriter : TextWriter
         }
     }
 
-#endregion
+    #endregion
 
-#region Write Async
+    #region Write Async
 
     public override async Task WriteAsync(char value)
     {
@@ -131,9 +131,9 @@ internal class FileWriter : TextWriter
         }
     }
 
-#endregion
+    #endregion
 
-#region Write Line Async
+    #region Write Line Async
 
     public override async Task WriteLineAsync(char value)
     {
@@ -157,12 +157,12 @@ internal class FileWriter : TextWriter
     }
 
     public override async Task WriteLineAsync(ReadOnlyMemory<char> buffer
-                                              , CancellationToken  cancellationToken = default)
+                                              , CancellationToken cancellationToken = default)
     {
         await WriteAsync(buffer, cancellationToken);
 
         await WriteLineAsync();
     }
 
-#endregion
+    #endregion
 }

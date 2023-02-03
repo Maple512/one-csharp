@@ -40,7 +40,7 @@ internal readonly struct TemplateItem
     public TemplateItem(Func<LoggerMessageContext, bool>? condition, ReadOnlyMemory<char> template)
     {
         Holders = new TemplateQueue(template).ToArray();
-        for(var i = 0;i < Holders.Length;i++)
+        for(var i = 0; i < Holders.Length; i++)
         {
             if(Holders[i].Name?.Equals(LoggerConstants.Propertys.Message, StringComparison.InvariantCulture) == true)
             {

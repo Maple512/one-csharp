@@ -8,9 +8,9 @@ public class PropertyDef
 
     public PropertyDef(string name, int index, TypeDef type)
     {
-        Name  = name;
+        Name = name;
         Index = index;
-        Type  = type;
+        Type = type;
     }
 
     public string Name { get; }

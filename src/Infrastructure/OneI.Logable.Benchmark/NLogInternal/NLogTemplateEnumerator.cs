@@ -13,11 +13,11 @@ internal readonly struct Hole
     /// </summary>
     public Hole(string name, string format, CaptureType captureType, short parameterIndex, short alignment)
     {
-        Name        = name;
-        Format      = format;
+        Name = name;
+        Format = format;
         CaptureType = captureType;
-        Index       = parameterIndex;
-        Alignment   = alignment;
+        Index = parameterIndex;
+        Alignment = alignment;
     }
 
     /// <summary>Parameter name sent to structured loggers.</summary>
@@ -61,7 +61,7 @@ internal readonly struct Literal
     public Literal(int print, int skip)
     {
         Print = print;
-        Skip  = skip;
+        Skip = skip;
     }
 }
 
@@ -76,7 +76,7 @@ internal struct LiteralHole
     public LiteralHole(Literal literal, Hole hole)
     {
         Literal = literal;
-        Hole    = hole;
+        Hole = hole;
     }
 
     public bool MaybePositionalTemplate
@@ -88,11 +88,11 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
     private static readonly char[] HoleDelimiters = { '}', ':', ',', };
     private static readonly char[] TextDelimiters = { '{', '}', };
 
-    private       string _template;
-    private       int    _length;
-    private       int    _position;
-    private       int    _literalLength;
-    private const short  Zero = 0;
+    private string _template;
+    private int _length;
+    private int _position;
+    private int _literalLength;
+    private const short Zero = 0;
 
     /// <summary>
     ///     Parse a template.
@@ -102,11 +102,11 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
     /// <returns>Template, never null</returns>
     public NLogTemplateEnumerator(string template)
     {
-        _template      = template ?? throw new ArgumentNullException(nameof(template));
-        _length        = _template.Length;
-        _position      = 0;
+        _template = template ?? throw new ArgumentNullException(nameof(template));
+        _length = _template.Length;
+        _position = 0;
         _literalLength = 0;
-        Current        = default;
+        Current = default;
     }
 
     /// <summary>
@@ -122,7 +122,7 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
     public void Dispose()
     {
         _template = string.Empty;
-        _length   = 0;
+        _length = 0;
         Reset();
     }
 
@@ -131,9 +131,9 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
     /// </summary>
     public void Reset()
     {
-        _position      = 0;
+        _position = 0;
         _literalLength = 0;
-        Current        = default;
+        Current = default;
     }
 
     /// <summary>
@@ -178,7 +178,7 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
 
     private void AddLiteral()
     {
-        Current        = new LiteralHole(new Literal(_literalLength, Zero), default);
+        Current = new LiteralHole(new Literal(_literalLength, Zero), default);
         _literalLength = 0;
     }
 
@@ -223,14 +223,14 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
 
     private void ParseHole(CaptureType type)
     {
-        var     start     = _position;
-        var     name      = ParseName(out var parameterIndex);
-        var     alignment = 0;
-        string? format    = null;
+        var start = _position;
+        var name = ParseName(out var parameterIndex);
+        var alignment = 0;
+        string? format = null;
         if(Peek() != '}')
         {
             alignment = Peek() == ',' ? ParseAlignment() : 0;
-            format    = Peek() == ':' ? ParseFormat() : null;
+            format = Peek() == ':' ? ParseFormat() : null;
             Skip('}');
         }
         else
@@ -258,7 +258,7 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
         // If the name matches /^\d+ *$/ we consider it positional
         if(c is >= '0' and <= '9')
         {
-            var start       = _position;
+            var start = _position;
             var parsedIndex = ReadInt();
             c = Peek();
 
@@ -287,10 +287,20 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
 
     private static string ParameterIndexToString(int parameterIndex)
         => parameterIndex switch
-           {
-               0   => "0", 1 => "1", 2 => "2", 3 => "3", 4 => "4", 5 => "5", 6 => "6", 7 => "7", 8 => "8", 9 => "9"
-               , _ => parameterIndex.ToString(CultureInfo.InvariantCulture),
-           };
+        {
+            0 => "0",
+            1 => "1",
+            2 => "2",
+            3 => "3",
+            4 => "4",
+            5 => "5",
+            6 => "6",
+            7 => "7",
+            8 => "8",
+            9 => "9"
+               ,
+            _ => parameterIndex.ToString(CultureInfo.InvariantCulture),
+        };
 
     /// <summary>
     ///     Parse format after hole name/index. Handle the escaped { and } in the format. Don't read the last }
@@ -307,41 +317,41 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
             switch(c)
             {
                 case '}':
-                {
-                    if(_position < _length && Peek() == '}')
                     {
-                        //this is an escaped } and need to be added to the format.
-                        Skip('}');
-                        format += "}";
-                    }
-                    else
-                    {
-                        //done. unread the '}' .
-                        _position--;
-                        //done
-                        return format;
-                    }
+                        if(_position < _length && Peek() == '}')
+                        {
+                            //this is an escaped } and need to be added to the format.
+                            Skip('}');
+                            format += "}";
+                        }
+                        else
+                        {
+                            //done. unread the '}' .
+                            _position--;
+                            //done
+                            return format;
+                        }
 
-                    break;
-                }
+                        break;
+                    }
                 case '{':
-                {
-                    //we need a second {, otherwise this format is wrong.
-                    var next = Peek();
-                    if(next == '{')
                     {
-                        //this is an escaped } and need to be added to the format.
-                        Skip('{');
-                        format += "{";
-                    }
-                    else
-                    {
-                        throw new TemplateParserException($"Expected '{{' but found '{next}' instead in format.",
-                                                          _position, _template);
-                    }
+                        //we need a second {, otherwise this format is wrong.
+                        var next = Peek();
+                        if(next == '{')
+                        {
+                            //this is an escaped } and need to be added to the format.
+                            Skip('{');
+                            format += "{";
+                        }
+                        else
+                        {
+                            throw new TemplateParserException($"Expected '{{' but found '{next}' instead in format.",
+                                                              _position, _template);
+                        }
 
-                    break;
-                }
+                        break;
+                    }
             }
 
             format += ReadUntil(TextDelimiters);
@@ -388,7 +398,7 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
     private int SkipUntil(char[] search, bool required = true)
     {
         var start = _position;
-        var i     = _template.IndexOfAny(search, _position);
+        var i = _template.IndexOfAny(search, _position);
         if(i == -1 && required)
         {
             var formattedChars = string.Join(", ", search.Select(c => string.Concat("'", c.ToString(), "'")).ToArray());
@@ -402,8 +412,8 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
     private int ReadInt()
     {
         var negative = false;
-        var i        = 0;
-        for(var x = 0;x < 12;++x)
+        var i = 0;
+        for(var x = 0; x < 12; ++x)
         {
             var c = Peek();
 

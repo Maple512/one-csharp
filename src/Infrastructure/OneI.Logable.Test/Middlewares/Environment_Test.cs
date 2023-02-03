@@ -21,8 +21,10 @@ public class Environment_Test
 
                                            config.WithEnvironment(new EnvironmentOptions
                                            {
-                                               HasProcessId     = true, HasFrameworkDescription = true
-                                               , HasCommandLine = true,
+                                               HasProcessId = true,
+                                               HasFrameworkDescription = true
+                                               ,
+                                               HasCommandLine = true,
                                            });
                                        });
 
@@ -52,10 +54,10 @@ public class Environment_Test
         var a12 = Environment.ProcessorCount; // 当前进程可用的处理器数12
         var a1 = Environment
             .ProcessPath; // 启动当前正在执行的进程的可执行文件的路径**\one-csharp\Infrastructure\OneI.Logable.Test\bin\Debug\net7.0\testhost.exe
-        var b1  = Environment.StackTrace; // 当前的堆栈跟踪信息   at System.Environment.get_StackTrace()
+        var b1 = Environment.StackTrace; // 当前的堆栈跟踪信息   at System.Environment.get_StackTrace()
         var a13 = Environment.SystemDirectory; // 系统目录的完全限定路径C:\WINDOWS\system32
         var a14 = Environment.SystemPageSize; // 操作系统的内存页的字节数4096
-        var b2  = Environment.TickCount; // 系统启动后经过的毫秒数46688359
+        var b2 = Environment.TickCount; // 系统启动后经过的毫秒数46688359
         var a15 = Environment.UserDomainName; // 与当前用户关联的网络域名DESKTOP-QMCPFK5
         var a16 = Environment.UserInteractive; // 用以指示当前进程是否在用户交互模式中运行true
         var a17 = Environment.UserName; // 与当前线程相关联的用户的用户名Administrator

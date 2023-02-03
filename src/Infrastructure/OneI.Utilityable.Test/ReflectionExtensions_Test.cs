@@ -1,4 +1,4 @@
-﻿namespace OneI;
+namespace OneI;
 
 public class ReflectionExtensions_Test
 {

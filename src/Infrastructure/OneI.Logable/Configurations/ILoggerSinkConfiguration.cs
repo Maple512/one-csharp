@@ -8,16 +8,16 @@ public interface ILoggerSinkConfiguration
 
     ILoggerConfiguration Use(Action<LoggerContext> sink) => Use(new ActionSink(sink));
 
-    ILoggerConfiguration UseWhen(Func<LoggerContext,bool> condition, ILoggerSink sink)
+    ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, ILoggerSink sink)
         => Use(new ConditionalSink(condition, sink));
 
-    ILoggerConfiguration UseWhen(Func<LoggerContext,bool> condition, Action<LoggerContext> sink)
+    ILoggerConfiguration UseWhen(Func<LoggerContext, bool> condition, Action<LoggerContext> sink)
         => Use(new ConditionalSink(condition, new ActionSink(sink)));
 
     ILoggerConfiguration Logger(ILogger logger, bool autoDispose = false)
         => Use(new SecondaryLoggerSink(logger, autoDispose));
 
-    ILoggerConfiguration LoggerWhen(Func<LoggerContext,bool> condition, ILogger logger, bool autoDispose = false)
+    ILoggerConfiguration LoggerWhen(Func<LoggerContext, bool> condition, ILogger logger, bool autoDispose = false)
         => UseWhen(condition, new SecondaryLoggerSink(logger, autoDispose));
 
     ILoggerConfiguration Logger(Action<ILoggerConfiguration> configure, bool autoDispose = false)
@@ -29,9 +29,9 @@ public interface ILoggerSinkConfiguration
         return Logger(logger, autoDispose);
     }
 
-    ILoggerConfiguration LoggerWhen(Func<LoggerContext,bool>                condition
+    ILoggerConfiguration LoggerWhen(Func<LoggerContext, bool> condition
                                     , Action<ILoggerConfiguration> configure
-                                    , bool                         autoDispose = false)
+                                    , bool autoDispose = false)
     {
         var configuration = new LoggerConfiguration();
         configure(configuration);

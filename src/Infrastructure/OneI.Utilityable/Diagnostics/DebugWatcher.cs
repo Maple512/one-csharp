@@ -80,7 +80,7 @@ public static class DebugWatcher
             {
                 var point = _points[0];
                 var interval = TimeInterval.FromNanoseconds(point.timestamp.TotalNanoseconds);
-                container.AppendLine($"Total：{interval} ns");
+                _ = container.AppendLine($"Total：{interval} ns");
 
                 var totalSeconds = interval.ToSeconds();
                 receiver?.Invoke(container.ToString(), totalSeconds, totalSeconds);
@@ -88,7 +88,7 @@ public static class DebugWatcher
                 return;
             }
 
-            container.AppendLine();
+            _ = container.AppendLine();
             var totalTimestamp = TimeSpan.Zero;
 
             for(var i = 0; i < _points.Count - 1; i++)
@@ -98,23 +98,23 @@ public static class DebugWatcher
 
                 var diff = next.timestamp - item.timestamp;
 
-                container.Append($"{i + 1}：{TimeInterval.FromNanoseconds(diff.TotalNanoseconds)} (");
+                _ = container.Append($"{i + 1}：{TimeInterval.FromNanoseconds(diff.TotalNanoseconds)} (");
 
                 var itemFile = Path.GetFileNameWithoutExtension(item.filepath);
                 var nextFile = Path.GetFileNameWithoutExtension(item.filepath);
 
-                container.Append($"{itemFile}#L{item.line}");
-                container.Append(" - ");
-                container.Append($"{nextFile}#L{next.line}");
+                _ = container.Append($"{itemFile}#L{item.line}");
+                _ = container.Append(" - ");
+                _ = container.Append($"{nextFile}#L{next.line}");
 
-                container.AppendLine(")");
+                _ = container.AppendLine(")");
 
                 totalTimestamp += diff;
             }
 
             var total = TimeInterval.FromNanoseconds(totalTimestamp.TotalNanoseconds);
             var avg = total / _points.Count;
-            container.Insert(0, $"Total: {total}, Avg: {avg}");
+            _ = container.Insert(0, $"Total: {total}, Avg: {avg}");
 
             receiver?.Invoke(container.ToString(), total.ToSeconds(), avg.ToSeconds());
         }

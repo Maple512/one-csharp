@@ -10,7 +10,7 @@ public class AllockArrayBenchmark
     [Benchmark(Baseline = true)]
     public void UseList_Int()
     {
-        for(var i = 0;i < _count;i++)
+        for(var i = 0; i < _count; i++)
         {
             _ = new List<int>(_capacity);
         }
@@ -19,7 +19,7 @@ public class AllockArrayBenchmark
     [Benchmark]
     public void UseArray()
     {
-        for(var i = 0;i < _count;i++)
+        for(var i = 0; i < _count; i++)
         {
             _ = new int[_capacity];
         }
@@ -28,7 +28,7 @@ public class AllockArrayBenchmark
     [Benchmark]
     public void UseStackAlloc()
     {
-        for(var i = 0;i < _count;i++)
+        for(var i = 0; i < _count; i++)
         {
 #pragma warning disable CA2014 // 不要循环使用 stackalloc
             _ = stackalloc int[_capacity];
@@ -39,7 +39,7 @@ public class AllockArrayBenchmark
     [Benchmark]
     public void UseArrayPool()
     {
-        for(var i = 0;i < _count;i++)
+        for(var i = 0; i < _count; i++)
         {
             _ = ArrayPool<int>.Shared.Rent(_capacity);
         }
@@ -48,7 +48,7 @@ public class AllockArrayBenchmark
     [Benchmark]
     public void UseMemoryPool()
     {
-        for(var i = 0;i < _count;i++)
+        for(var i = 0; i < _count; i++)
         {
             _ = MemoryPool<int>.Shared.Rent(_capacity);
         }
@@ -57,7 +57,7 @@ public class AllockArrayBenchmark
     [Benchmark]
     public void UseGCAllocate()
     {
-        for(var i = 0;i < _count;i++)
+        for(var i = 0; i < _count; i++)
         {
             _ = GC.AllocateArray<int>(_capacity);
         }
@@ -66,16 +66,16 @@ public class AllockArrayBenchmark
     [Benchmark]
     public void UseGCAllocate_Pinned()
     {
-        for(var i = 0;i < _count;i++)
+        for(var i = 0; i < _count; i++)
         {
-            _ = GC.AllocateArray<int>(_capacity,true);
+            _ = GC.AllocateArray<int>(_capacity, true);
         }
     }
 
     [Benchmark]
     public void UseGCAllocateUninitialized()
     {
-        for(var i = 0;i < _count;i++)
+        for(var i = 0; i < _count; i++)
         {
             _ = GC.AllocateUninitializedArray<int>(_capacity);
         }
@@ -84,7 +84,7 @@ public class AllockArrayBenchmark
     [Benchmark]
     public void UseGCAllocateUninitialized_Pinned()
     {
-        for(var i = 0;i < _count;i++)
+        for(var i = 0; i < _count; i++)
         {
             _ = GC.AllocateUninitializedArray<int>(_capacity, true);
         }

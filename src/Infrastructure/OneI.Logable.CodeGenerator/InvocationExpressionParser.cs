@@ -21,7 +21,7 @@ internal static class InvocationExpressionParser
         };
 
         int index;
-        for(index = 0;index < context.Parameters.Length;index++)
+        for(index = 0; index < context.Parameters.Length; index++)
         {
             var parameter = context.Parameters[index];
 
@@ -66,68 +66,69 @@ internal static class InvocationExpressionParser
         var semanticModel = compilation.GetSemanticModel(syntax.SyntaxTree);
 
         var symbol = syntax switch
-                     {
-                         // default(int)
-                         DefaultExpressionSyntax expression
-                             => semanticModel.GetSymbolInfo(expression.Type).Symbol
+        {
+            // default(int)
+            DefaultExpressionSyntax expression
+                => semanticModel.GetSymbolInfo(expression.Type).Symbol
                          ,
-                         // 对象访问
-                         MemberAccessExpressionSyntax expression
-                             => semanticModel.GetSymbolInfo(expression).Symbol
+            // 对象访问
+            MemberAccessExpressionSyntax expression
+                => semanticModel.GetSymbolInfo(expression).Symbol
                          ,
-                         // 变量名：user ( var user = new User(); )
-                         IdentifierNameSyntax expression
-                             => semanticModel.GetSymbolInfo(expression).Symbol
+            // 变量名：user ( var user = new User(); )
+            IdentifierNameSyntax expression
+                => semanticModel.GetSymbolInfo(expression).Symbol
                          ,
-                         // 创建对象
-                         ObjectCreationExpressionSyntax expression
-                             => semanticModel.GetSymbolInfo(expression.Type).Symbol
+            // 创建对象
+            ObjectCreationExpressionSyntax expression
+                => semanticModel.GetSymbolInfo(expression.Type).Symbol
                          ,
-                         // lambda
-                         ParenthesizedLambdaExpressionSyntax expression
-                             => semanticModel.GetSymbolInfo(expression.ReturnType!).Symbol
-                         ,
-
-                         // typeof
-                         TypeOfExpressionSyntax expression
-                             => semanticModel.GetTypeInfo(expression).Type
-                         ,
-                         // 常量
-                         LiteralExpressionSyntax expression
-                             => semanticModel.GetTypeInfo(expression).Type
-                         ,
-                         // 调用, nameof
-                         InvocationExpressionSyntax expression
-                             => semanticModel.GetTypeInfo(expression).Type
-                         ,
-                         // 强制转换
-                         CastExpressionSyntax expression
-                             => semanticModel.GetTypeInfo(expression).Type
-                         ,
-                         // struct with { Id = 1}
-                         WithExpressionSyntax expression
-                             => semanticModel.GetTypeInfo(expression).Type
-                         ,
-                         // array IArrayTypeSymbol
-                         ArrayCreationExpressionSyntax expression
-                             => semanticModel.GetTypeInfo(expression).Type
-                         ,
-                         // new[] {1,2,3}
-                         ImplicitArrayCreationExpressionSyntax expression => semanticModel.GetTypeInfo(expression).Type
-                         ,
-                         // new {Id = 1,Name = "Maple512", Age =18};
-                         AnonymousObjectCreationExpressionSyntax expression => semanticModel.GetTypeInfo(expression)
-                             .Type
-                         ,
-                         // await
-                         AwaitExpressionSyntax expression => semanticModel.GetTypeInfo(expression).Type
+            // lambda
+            ParenthesizedLambdaExpressionSyntax expression
+                => semanticModel.GetSymbolInfo(expression.ReturnType!).Symbol
                          ,
 
-                         // array[0] or array[0..1]
-                         ElementAccessExpressionSyntax expression
-                             => TryParseElementAccessExpressionSyntax(expression, semanticModel)
-                         , _ => TryParseDefault(syntax, semanticModel),
-                     };
+            // typeof
+            TypeOfExpressionSyntax expression
+                => semanticModel.GetTypeInfo(expression).Type
+                         ,
+            // 常量
+            LiteralExpressionSyntax expression
+                => semanticModel.GetTypeInfo(expression).Type
+                         ,
+            // 调用, nameof
+            InvocationExpressionSyntax expression
+                => semanticModel.GetTypeInfo(expression).Type
+                         ,
+            // 强制转换
+            CastExpressionSyntax expression
+                => semanticModel.GetTypeInfo(expression).Type
+                         ,
+            // struct with { Id = 1}
+            WithExpressionSyntax expression
+                => semanticModel.GetTypeInfo(expression).Type
+                         ,
+            // array IArrayTypeSymbol
+            ArrayCreationExpressionSyntax expression
+                => semanticModel.GetTypeInfo(expression).Type
+                         ,
+            // new[] {1,2,3}
+            ImplicitArrayCreationExpressionSyntax expression => semanticModel.GetTypeInfo(expression).Type
+                         ,
+            // new {Id = 1,Name = "Maple512", Age =18};
+            AnonymousObjectCreationExpressionSyntax expression => semanticModel.GetTypeInfo(expression)
+                .Type
+                         ,
+            // await
+            AwaitExpressionSyntax expression => semanticModel.GetTypeInfo(expression).Type
+                         ,
+
+            // array[0] or array[0..1]
+            ElementAccessExpressionSyntax expression
+                => TryParseElementAccessExpressionSyntax(expression, semanticModel)
+                         ,
+            _ => TryParseDefault(syntax, semanticModel),
+        };
 
         if(symbol is null or { Kind: SymbolKind.DynamicType, })
         {
@@ -139,7 +140,7 @@ internal static class InvocationExpressionParser
 
     private static ISymbol? TryParseDefault(ExpressionSyntax expression, SemanticModel semanticModel)
     {
-        var type   = semanticModel.GetTypeInfo(expression).Type;
+        var type = semanticModel.GetTypeInfo(expression).Type;
         var symbol = type ?? semanticModel.GetSymbolInfo(expression).Symbol;
 
         Debug.Assert(symbol != null);
@@ -148,7 +149,7 @@ internal static class InvocationExpressionParser
     }
 
     private static ISymbol? TryParseElementAccessExpressionSyntax(ElementAccessExpressionSyntax elementAccess
-                                                                  , SemanticModel               semanticModel)
+                                                                  , SemanticModel semanticModel)
     {
         var elementType = semanticModel.GetTypeInfo(elementAccess).Type;
 

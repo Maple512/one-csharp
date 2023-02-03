@@ -9,7 +9,7 @@ public class TextWriterSameCharBenchmark : BenchmarkItem
     {
         var writer = new StringWriter();
 
-        for (var i = 0; i < 100; i++)
+        for(var i = 0; i < 100; i++)
         {
             writer.Write(new string(' ', count));
         }
@@ -22,7 +22,7 @@ public class TextWriterSameCharBenchmark : BenchmarkItem
     {
         var writer = new StringWriter();
 
-        for (var i = 0; i < 100; i++)
+        for(var i = 0; i < 100; i++)
         {
 #pragma warning disable CA2014 // 不要循环使用 stackalloc
             Span<char> span = stackalloc char[count];

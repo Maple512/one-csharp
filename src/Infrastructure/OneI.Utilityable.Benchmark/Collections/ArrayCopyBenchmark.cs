@@ -10,7 +10,7 @@ public class ArrayCopyBenchmark
         var a1 = new[] { 1, 2, 3, 4, 5, };
         var a2 = new int[a1.Length];
 
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             Array.Copy(a1, a2, a2.Length);
         }
@@ -23,7 +23,7 @@ public class ArrayCopyBenchmark
         var a1 = new[] { 1, 2, 3, 4, 5, };
         var a2 = new int[a1.Length];
 
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             a1.CopyTo(a2.AsSpan());
         }
@@ -35,7 +35,7 @@ public class ArrayCopyBenchmark
         var a1 = new[] { 1, 2, 3, 4, 5, };
         var a2 = new int[a1.Length];
 
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             a1.CopyTo(a2.AsMemory());
         }
@@ -47,7 +47,7 @@ public class ArrayCopyBenchmark
         var a1 = new[] { 1, 2, 3, 4, 5, };
         var a2 = new int[a1.Length];
 
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             Buffer.BlockCopy(a1, 0, a2, 0, a2.Length * sizeof(int));
         }
@@ -60,7 +60,7 @@ public class ArrayCopyBenchmark
         var a1 = new[] { 1, 2, 3, 4, 5, };
         var a2 = new int[a1.Length];
 
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             Buffer.MemoryCopy(
                 Unsafe.AsPointer(ref MemoryMarshal.GetArrayDataReference(a1)),

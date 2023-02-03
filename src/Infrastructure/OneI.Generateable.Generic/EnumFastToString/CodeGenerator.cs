@@ -73,7 +73,7 @@ public class CodeGenerator : IIncrementalGenerator
         }
 
         var enums = Parse(compilation, nodes.Where(x => x is not null)
-            .Select(x => x.Value).Distinct()!, context.CancellationToken);
+            .Select(x => x!.Value).Distinct()!, context.CancellationToken);
 
         context.AddSource(CodeAssets.Extension.FileName, SourceText.From(Build(enums), Encoding.UTF8));
     }

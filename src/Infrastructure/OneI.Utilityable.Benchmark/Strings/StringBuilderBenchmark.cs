@@ -24,7 +24,7 @@ public class StringBuilderBenchmark
         var writer = new StringBuilder(capacity);
         try
         {
-            for(var i = 0;i < count;i++)
+            for(var i = 0; i < count; i++)
             {
                 writer.Append(StringValue);
 
@@ -46,7 +46,7 @@ public class StringBuilderBenchmark
         var StringValue = Randomizer.String(stringCount);
         var builder = new List<string>();
 
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             builder.Add(StringValue);
             builder.Add(Environment.NewLine);
@@ -63,7 +63,7 @@ public class StringBuilderBenchmark
 
         using var builder = new Utf16ValueStringBuilder(true);
 
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             builder.Append(StringValue);
             builder.AppendLine();
@@ -78,7 +78,7 @@ public class StringBuilderBenchmark
         var StringValue = Randomizer.String(stringCount);
         using scoped var builder = new RefValueStringBuilder(capacity);
 
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             builder.Append(StringValue);
             builder.AppendLine();
@@ -97,7 +97,7 @@ public class StringBuilderBenchmark
             Capacity = capacity
         };
 
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             writer.Write(StringValue);
             writer.WriteLine();
@@ -112,7 +112,7 @@ public class StringBuilderBenchmark
     {
         var StringValue = Randomizer.String(stringCount);
         using var writer = new SparseBufferWriter<char>(capacity);
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             writer.Write(StringValue);
             writer.WriteLine();
@@ -128,7 +128,7 @@ public class StringBuilderBenchmark
         var writer = new BufferWriterSlim<char>(capacity);
         try
         {
-            for(var i = 0;i < count;i++)
+            for(var i = 0; i < count; i++)
             {
                 writer.Write(StringValue);
                 writer.WriteLine();

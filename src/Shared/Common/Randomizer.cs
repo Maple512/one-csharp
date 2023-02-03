@@ -36,7 +36,7 @@ internal static partial class Randomizer
     {
         _ = Check.NotNull(source);
 
-        for (var i = 0; i < count; i++)
+        for(var i = 0; i < count; i++)
         {
             yield return source[Integer(source.Length)];
         }
@@ -48,7 +48,7 @@ internal static partial class Randomizer
     {
         _ = Check.NotNull(list);
 
-        for (var i = 0; i < count; i++)
+        for(var i = 0; i < count; i++)
         {
             yield return list.ElementAt(Integer(list.Count()));
         }
@@ -63,7 +63,7 @@ internal static partial class Randomizer
         var currentList = new List<T>(items);
         var randomList = new List<T>();
 
-        while (currentList.Any())
+        while(currentList.Any())
         {
             var randomIndex = Integer(0, currentList.Count);
 
@@ -85,14 +85,14 @@ internal static partial class Randomizer
 
         var builder = new StringBuilder(length);
 
-        for (var i = 0; i < length; i++)
+        for(var i = 0; i < length; i++)
         {
             var r1 = Integer(11, 14);
             var b1 = bytes[r1];
 
             //区位码第2位
             int r2;
-            if (r1 == 13)
+            if(r1 == 13)
             {
                 r2 = Integer(0, 7);
             }
@@ -133,7 +133,7 @@ internal static partial class Randomizer
     {
         scoped Span<char> span = stackalloc char[length];
 
-        for (var i = 0; i < length; i++)
+        for(var i = 0; i < length; i++)
         {
             span[i] = Item<char>(character_set);
         }
@@ -163,7 +163,7 @@ internal static partial class Randomizer
 
         for(var i = 0; i < length; i++)
         {
-            span.Append(Item<char>(character_set));
+            _ = span.Append(Item<char>(character_set));
         }
 
         return span.ToString();

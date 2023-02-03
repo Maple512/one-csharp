@@ -119,42 +119,42 @@ internal static partial class StringExtensions
                 switch(snakeCaseState)
                 {
                     case SnakeCaseState.Upper:
-                    {
-                        var flag = i + 1 < str.Length;
-                        if(i > 0 && flag)
                         {
-                            var c = str[i + 1];
-                            if(!char.IsUpper(c) && c != separator)
+                            var flag = i + 1 < str.Length;
+                            if(i > 0 && flag)
                             {
-                                stringBuilder.Append(separator);
+                                var c = str[i + 1];
+                                if(!char.IsUpper(c) && c != separator)
+                                {
+                                    _ = stringBuilder.Append(separator);
+                                }
                             }
-                        }
 
-                        break;
-                    }
+                            break;
+                        }
                     case SnakeCaseState.Lower:
                     case SnakeCaseState.NewWord:
-                        stringBuilder.Append(separator);
+                        _ = stringBuilder.Append(separator);
                         break;
                 }
 
                 var value = char.ToLowerInvariant(str[i]);
-                stringBuilder.Append(value);
+                _ = stringBuilder.Append(value);
                 snakeCaseState = SnakeCaseState.Upper;
             }
             else if(str[i] == separator)
             {
-                stringBuilder.Append(separator);
+                _ = stringBuilder.Append(separator);
                 snakeCaseState = SnakeCaseState.Start;
             }
             else
             {
                 if(snakeCaseState == SnakeCaseState.NewWord)
                 {
-                    stringBuilder.Append(separator);
+                    _ = stringBuilder.Append(separator);
                 }
 
-                stringBuilder.Append(str[i]);
+                _ = stringBuilder.Append(str[i]);
                 snakeCaseState = SnakeCaseState.Lower;
             }
         }
@@ -170,13 +170,11 @@ internal static partial class StringExtensions
 {
 #region Check
 
-    
     public static bool IsNullOrEmpty(this string? str)
     {
         return string.IsNullOrEmpty(str);
     }
 
-    
     public static bool NotNullOrEmpty(this string? str)
     {
         return string.IsNullOrEmpty(str) == false;
@@ -270,42 +268,42 @@ internal static partial class StringExtensions
                 switch(snakeCaseState)
                 {
                     case SnakeCaseState.Upper:
-                    {
-                        var flag = i + 1 < str.Length;
-                        if(i > 0 && flag)
                         {
-                            var c = str[i + 1];
-                            if(!char.IsUpper(c) && c != separator)
+                            var flag = i + 1 < str.Length;
+                            if(i > 0 && flag)
                             {
-                                stringBuilder.Append(separator);
+                                var c = str[i + 1];
+                                if(!char.IsUpper(c) && c != separator)
+                                {
+                                    _ = stringBuilder.Append(separator);
+                                }
                             }
-                        }
 
-                        break;
-                    }
+                            break;
+                        }
                     case SnakeCaseState.Lower:
                     case SnakeCaseState.NewWord:
-                        stringBuilder.Append(separator);
+                        _ = stringBuilder.Append(separator);
                         break;
                 }
 
                 var value = char.ToLowerInvariant(str[i]);
-                stringBuilder.Append(value);
+                _ = stringBuilder.Append(value);
                 snakeCaseState = SnakeCaseState.Upper;
             }
             else if(str[i] == separator)
             {
-                stringBuilder.Append(separator);
+                _ = stringBuilder.Append(separator);
                 snakeCaseState = SnakeCaseState.Start;
             }
             else
             {
                 if(snakeCaseState == SnakeCaseState.NewWord)
                 {
-                    stringBuilder.Append(separator);
+                    _ = stringBuilder.Append(separator);
                 }
 
-                stringBuilder.Append(str[i]);
+                _ = stringBuilder.Append(str[i]);
                 snakeCaseState = SnakeCaseState.Lower;
             }
         }

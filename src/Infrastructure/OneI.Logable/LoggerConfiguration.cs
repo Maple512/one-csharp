@@ -16,7 +16,7 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
 
     public LoggerConfiguration(string template = DefaultTemplate)
     {
-        Check.NotNullOrEmpty(template);
+        _ = Check.NotNullOrEmpty(template);
 
         _defaultTemplate = new TemplateItem(null, template.AsMemory());
         _templateProviders = new List<TemplateItem>();

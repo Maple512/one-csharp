@@ -44,7 +44,7 @@ public class FileStreamBenchmark : BenchmarkItem
 
         using var fs = new StreamWriter(File.Open(file.FullName, Options), Encoding.UTF8);
 
-        for(var i = 0;i < length;i++)
+        for(var i = 0; i < length; i++)
         {
             fs.Write(Randomizer.String(timesStringLength));
         }
@@ -59,7 +59,7 @@ public class FileStreamBenchmark : BenchmarkItem
 
         var writer = new AsyncStreamLineMessageWriter(stream, new ZLoggerOptions());
 
-        for(var i = 0;i < length;i++)
+        for(var i = 0; i < length; i++)
         {
             var entry = new MessageLogState<object>(null, Randomizer.String(timesStringLength))
                 .CreateLogEntry(new LogInfo(nameof(UseZLogger), DateTimeOffset.Now, LogLevel.Information, 0, null));
@@ -82,7 +82,7 @@ public class FileStreamBenchmark : BenchmarkItem
             FileName = file,
         }).AsTextWriter(Encoding.UTF8);
 
-        for(var i = 0;i < length;i++)
+        for(var i = 0; i < length; i++)
         {
             writer.Write(Randomizer.String(timesStringLength));
         }

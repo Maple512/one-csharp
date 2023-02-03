@@ -27,14 +27,19 @@ public static class TypeSymbolParser
         }
 
         type = symbol switch
-               {
-                   IFieldSymbol field => Parse(field.Type), ILocalSymbol local => Parse(local.Type)
-                   , IMethodSymbol method => Parse(method.ReturnType), ITypeSymbol typeSymbol => Parse(typeSymbol)
-                   , IPropertySymbol property => Parse(property.Type)
-                   , _ => throw new
+        {
+            IFieldSymbol field => Parse(field.Type),
+            ILocalSymbol local => Parse(local.Type)
+                   ,
+            IMethodSymbol method => Parse(method.ReturnType),
+            ITypeSymbol typeSymbol => Parse(typeSymbol)
+                   ,
+            IPropertySymbol property => Parse(property.Type)
+                   ,
+            _ => throw new
                        ArgumentException($"Unknown symbol type: {symbol.GetType().FullName}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}")
                    ,
-               };
+        };
 
         return type is not null;
     }
@@ -47,14 +52,18 @@ public static class TypeSymbolParser
     public static TypeDef Parse(ITypeSymbol symbol)
     {
         var type = symbol switch
-                   {
-                       IArrayTypeSymbol array => PraseArrayType(array), IDynamicTypeSymbol _ => DefaultType
-                       , ITypeParameterSymbol typeParameter => PraseTypeParameter(typeParameter)
-                       , INamedTypeSymbol namedType => ParseNamedType(namedType)
-                       , _ => throw new
+        {
+            IArrayTypeSymbol array => PraseArrayType(array),
+            IDynamicTypeSymbol _ => DefaultType
+                       ,
+            ITypeParameterSymbol typeParameter => PraseTypeParameter(typeParameter)
+                       ,
+            INamedTypeSymbol namedType => ParseNamedType(namedType)
+                       ,
+            _ => throw new
                            ArgumentException($"Unknown type symbol: {symbol.GetType().FullName}, {string.Join(", ", symbol.GetType().GetInterfaces().ToList())}")
                        ,
-                   };
+        };
 
         if(type.IsTypeParameters == false)
         {
@@ -94,19 +103,19 @@ public static class TypeSymbolParser
                 type.Kind = TypeDefKind.Nullable;
                 return type;
             case "System.ValueTuple":
-            {
-                type.Kind = TypeDefKind.ValueTuple;
-
-                foreach(var item in symbol.TupleElements)
                 {
-                    if(TryParse(item.Type, out var tupleType))
-                    {
-                        type.Properties.Add(new PropertyDef(item.Name, tupleType!));
-                    }
-                }
+                    type.Kind = TypeDefKind.ValueTuple;
 
-                return type;
-            }
+                    foreach(var item in symbol.TupleElements)
+                    {
+                        if(TryParse(item.Type, out var tupleType))
+                        {
+                            type.Properties.Add(new PropertyDef(item.Name, tupleType!));
+                        }
+                    }
+
+                    return type;
+                }
         }
 
         var fullName = type.ToDisplayString();
@@ -128,7 +137,7 @@ public static class TypeSymbolParser
         if(symbol.IsSerializable)
         {
             var properties = symbol.GetMembers()
-                                   .Where(x => x.Kind                  == SymbolKind.Property &&
+                                   .Where(x => x.Kind == SymbolKind.Property &&
                                                x.DeclaredAccessibility == Accessibility.Public)
                                    .OfType<IPropertySymbol>();
 

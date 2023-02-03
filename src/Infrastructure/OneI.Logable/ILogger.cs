@@ -8,7 +8,7 @@ public interface ILogger : IDisposable, IAsyncDisposable
 
     bool IsEnable(LogLevel level);
 
-#region For Context
+    #region For Context
 
     /// <summary>
     ///     在现有<see cref="ILogger" />的基础上，创建一个新的<see cref="ILogger" />
@@ -23,9 +23,9 @@ public interface ILogger : IDisposable, IAsyncDisposable
     /// <returns></returns>
     ILogger ForContext<TValue>(string name, TValue value);
 
-#endregion
+    #endregion
 
-#region Begin Scope
+    #region Begin Scope
 
     /// <summary>
     ///     在现有<see cref="ILogger" />的基础上，添加指定的<see cref="ILoggerMiddleware" />
@@ -43,114 +43,114 @@ public interface ILogger : IDisposable, IAsyncDisposable
     /// <returns></returns>
     IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares);
 
-#endregion
+    #endregion
 
-#region Write
+    #region Write
 
-    void Write(LogLevel                     level
-               , string                     message
-               , [CallerFilePath]   string? file   = null
+    void Write(LogLevel level
+               , string message
+               , [CallerFilePath] string? file = null
                , [CallerMemberName] string? member = null
-               , [CallerLineNumber] int     line   = 0);
+               , [CallerLineNumber] int line = 0);
 
-    void Write(LogLevel                     level
-               , Exception                  exception
-               , string                     message
-               , [CallerFilePath]   string? file   = null
+    void Write(LogLevel level
+               , Exception exception
+               , string message
+               , [CallerFilePath] string? file = null
                , [CallerMemberName] string? member = null
-               , [CallerLineNumber] int     line   = 0);
+               , [CallerLineNumber] int line = 0);
 
-#endregion Write
+    #endregion Write
 
-#region Verbose
+    #region Verbose
 
-    void Verbose(string                       message
-                 , [CallerFilePath]   string? file   = null
+    void Verbose(string message
+                 , [CallerFilePath] string? file = null
                  , [CallerMemberName] string? member = null
-                 , [CallerLineNumber] int     line   = 0);
+                 , [CallerLineNumber] int line = 0);
 
-    void Verbose(Exception                    exception
-                 , string                     message
-                 , [CallerFilePath]   string? file   = null
+    void Verbose(Exception exception
+                 , string message
+                 , [CallerFilePath] string? file = null
                  , [CallerMemberName] string? member = null
-                 , [CallerLineNumber] int     line   = 0);
+                 , [CallerLineNumber] int line = 0);
 
-#endregion Verbose
+    #endregion Verbose
 
-#region Debug
+    #region Debug
 
-    void Debug(string                       message
-               , [CallerFilePath]   string? file   = null
+    void Debug(string message
+               , [CallerFilePath] string? file = null
                , [CallerMemberName] string? member = null
-               , [CallerLineNumber] int     line   = 0);
+               , [CallerLineNumber] int line = 0);
 
-    void Debug(Exception                    exception
-               , string                     message
-               , [CallerFilePath]   string? file   = null
+    void Debug(Exception exception
+               , string message
+               , [CallerFilePath] string? file = null
                , [CallerMemberName] string? member = null
-               , [CallerLineNumber] int     line   = 0);
+               , [CallerLineNumber] int line = 0);
 
-#endregion Debug
+    #endregion Debug
 
-#region Information
+    #region Information
 
-    void Information(in                      string  message
-                     , [CallerFilePath] in   string? file   = null
+    void Information(in string message
+                     , [CallerFilePath] in string? file = null
                      , [CallerMemberName] in string? member = null
-                     , [CallerLineNumber] in int     line   = 0);
+                     , [CallerLineNumber] in int line = 0);
 
-    void Information(Exception                    exception
-                     , string                     message
-                     , [CallerFilePath]   string? file   = null
+    void Information(Exception exception
+                     , string message
+                     , [CallerFilePath] string? file = null
                      , [CallerMemberName] string? member = null
-                     , [CallerLineNumber] int     line   = 0);
+                     , [CallerLineNumber] int line = 0);
 
-#endregion Information
+    #endregion Information
 
-#region Warning
+    #region Warning
 
-    void Warning(string                       message
-                 , [CallerFilePath]   string? file   = null
+    void Warning(string message
+                 , [CallerFilePath] string? file = null
                  , [CallerMemberName] string? member = null
-                 , [CallerLineNumber] int     line   = 0);
+                 , [CallerLineNumber] int line = 0);
 
-    void Warning(Exception                    exception
-                 , string                     message
-                 , [CallerFilePath]   string? file   = null
+    void Warning(Exception exception
+                 , string message
+                 , [CallerFilePath] string? file = null
                  , [CallerMemberName] string? member = null
-                 , [CallerLineNumber] int     line   = 0);
+                 , [CallerLineNumber] int line = 0);
 
-#endregion Warning
+    #endregion Warning
 
-#region Error
+    #region Error
 
-    void Error(string                       message
-               , [CallerFilePath]   string? file   = null
+    void Error(string message
+               , [CallerFilePath] string? file = null
                , [CallerMemberName] string? member = null
-               , [CallerLineNumber] int     line   = 0);
+               , [CallerLineNumber] int line = 0);
 
-    void Error(Exception                    exception
-               , string                     message
-               , [CallerFilePath]   string? file   = null
+    void Error(Exception exception
+               , string message
+               , [CallerFilePath] string? file = null
                , [CallerMemberName] string? member = null
-               , [CallerLineNumber] int     line   = 0);
+               , [CallerLineNumber] int line = 0);
 
-#endregion Error
+    #endregion Error
 
-#region Fatal
+    #region Fatal
 
-    void Fatal(string                       message
-               , [CallerFilePath]   string? file   = null
+    void Fatal(string message
+               , [CallerFilePath] string? file = null
                , [CallerMemberName] string? member = null
-               , [CallerLineNumber] int     line   = 0);
+               , [CallerLineNumber] int line = 0);
 
-    void Fatal(Exception                    exception
-               , string                     message
-               , [CallerFilePath]   string? file   = null
+    void Fatal(Exception exception
+               , string message
+               , [CallerFilePath] string? file = null
                , [CallerMemberName] string? member = null
-               , [CallerLineNumber] int     line   = 0);
+               , [CallerLineNumber] int line = 0);
 
-#endregion Fatal
+    #endregion Fatal
 }
 
 public readonly struct NoneLogger : ILogger
@@ -162,107 +162,107 @@ public readonly struct NoneLogger : ILogger
     public IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares)
         => throw new NotImplementedException();
 
-    public void Debug(string                       message
-                      , [CallerFilePath]   string? file   = null
+    public void Debug(string message
+                      , [CallerFilePath] string? file = null
                       , [CallerMemberName] string? member = null
-                      , [CallerLineNumber] int     line   = 0)
+                      , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
-    public void Debug(Exception                    exception
-                      , string                     message
-                      , [CallerFilePath]   string? file   = null
+    public void Debug(Exception exception
+                      , string message
+                      , [CallerFilePath] string? file = null
                       , [CallerMemberName] string? member = null
-                      , [CallerLineNumber] int     line   = 0)
+                      , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
-    public void      Dispose()      => throw new NotImplementedException();
+    public void Dispose() => throw new NotImplementedException();
     public ValueTask DisposeAsync() => throw new NotImplementedException();
 
-    public void Error(string                       message
-                      , [CallerFilePath]   string? file   = null
+    public void Error(string message
+                      , [CallerFilePath] string? file = null
                       , [CallerMemberName] string? member = null
-                      , [CallerLineNumber] int     line   = 0)
+                      , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
-    public void Error(Exception                    exception
-                      , string                     message
-                      , [CallerFilePath]   string? file   = null
+    public void Error(Exception exception
+                      , string message
+                      , [CallerFilePath] string? file = null
                       , [CallerMemberName] string? member = null
-                      , [CallerLineNumber] int     line   = 0)
+                      , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
-    public void Fatal(string                       message
-                      , [CallerFilePath]   string? file   = null
+    public void Fatal(string message
+                      , [CallerFilePath] string? file = null
                       , [CallerMemberName] string? member = null
-                      , [CallerLineNumber] int     line   = 0)
+                      , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
-    public void Fatal(Exception                    exception
-                      , string                     message
-                      , [CallerFilePath]   string? file   = null
+    public void Fatal(Exception exception
+                      , string message
+                      , [CallerFilePath] string? file = null
                       , [CallerMemberName] string? member = null
-                      , [CallerLineNumber] int     line   = 0)
+                      , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
-    public ILogger ForContext(Action<ILoggerConfiguration> configure)          => throw new NotImplementedException();
-    public ILogger ForContext<TValue>(string               name, TValue value) => throw new NotImplementedException();
+    public ILogger ForContext(Action<ILoggerConfiguration> configure) => throw new NotImplementedException();
+    public ILogger ForContext<TValue>(string name, TValue value) => throw new NotImplementedException();
 
-    public void Information(in                      string  message
-                            , [CallerFilePath] in   string? file   = null
+    public void Information(in string message
+                            , [CallerFilePath] in string? file = null
                             , [CallerMemberName] in string? member = null
-                            , [CallerLineNumber] in int     line   = 0)
+                            , [CallerLineNumber] in int line = 0)
         => throw new NotImplementedException();
 
-    public void Information(Exception                    exception
-                            , string                     message
-                            , [CallerFilePath]   string? file   = null
+    public void Information(Exception exception
+                            , string message
+                            , [CallerFilePath] string? file = null
                             , [CallerMemberName] string? member = null
-                            , [CallerLineNumber] int     line   = 0)
+                            , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
     public bool IsEnable(LogLevel level) => throw new NotImplementedException();
 
-    public void Verbose(string                       message
-                        , [CallerFilePath]   string? file   = null
+    public void Verbose(string message
+                        , [CallerFilePath] string? file = null
                         , [CallerMemberName] string? member = null
-                        , [CallerLineNumber] int     line   = 0)
+                        , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
-    public void Verbose(Exception                    exception
-                        , string                     message
-                        , [CallerFilePath]   string? file   = null
+    public void Verbose(Exception exception
+                        , string message
+                        , [CallerFilePath] string? file = null
                         , [CallerMemberName] string? member = null
-                        , [CallerLineNumber] int     line   = 0)
+                        , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
-    public void Warning(string                       message
-                        , [CallerFilePath]   string? file   = null
+    public void Warning(string message
+                        , [CallerFilePath] string? file = null
                         , [CallerMemberName] string? member = null
-                        , [CallerLineNumber] int     line   = 0)
+                        , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
-    public void Warning(Exception                    exception
-                        , string                     message
-                        , [CallerFilePath]   string? file   = null
+    public void Warning(Exception exception
+                        , string message
+                        , [CallerFilePath] string? file = null
                         , [CallerMemberName] string? member = null
-                        , [CallerLineNumber] int     line   = 0)
+                        , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
     public void Write(ref LoggerMessageContext context, ref PropertyDictionary properties)
         => throw new NotImplementedException();
 
-    public void Write(LogLevel                     level
-                      , string                     message
-                      , [CallerFilePath]   string? file   = null
+    public void Write(LogLevel level
+                      , string message
+                      , [CallerFilePath] string? file = null
                       , [CallerMemberName] string? member = null
-                      , [CallerLineNumber] int     line   = 0)
+                      , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 
-    public void Write(LogLevel                     level
-                      , Exception                  exception
-                      , string                     message
-                      , [CallerFilePath]   string? file   = null
+    public void Write(LogLevel level
+                      , Exception exception
+                      , string message
+                      , [CallerFilePath] string? file = null
                       , [CallerMemberName] string? member = null
-                      , [CallerLineNumber] int     line   = 0)
+                      , [CallerLineNumber] int line = 0)
         => throw new NotImplementedException();
 }

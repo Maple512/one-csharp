@@ -3,9 +3,9 @@ namespace OneI.Logable.Middlewares;
 public class Middleware_Test
 {
     [Theory]
-    [InlineData(LogLevel.Verbose,     2)]
+    [InlineData(LogLevel.Verbose, 2)]
     [InlineData(LogLevel.Information, 3)]
-    [InlineData(LogLevel.Debug,       2)]
+    [InlineData(LogLevel.Debug, 2)]
     public void middleware_order(LogLevel level, int count)
     {
         var orders = new List<int>();

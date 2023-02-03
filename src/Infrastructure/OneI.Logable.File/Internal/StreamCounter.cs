@@ -6,16 +6,19 @@ internal class StreamCounter : Stream
 
     public StreamCounter(Stream stream)
     {
-        _stream       = stream ?? throw new ArgumentNullException(nameof(stream));
+        _stream = stream ?? throw new ArgumentNullException(nameof(stream));
         CountedLength = stream.Length;
     }
 
-    public          long CountedLength { get; private set; }
-    public override bool CanRead       => false;
-    public override bool CanSeek       => _stream.CanSeek;
-    public override bool CanWrite      => true;
-    public override long Length        => _stream.Length;
+    public long CountedLength { get; private set; }
 
+    public override bool CanRead => false;
+
+    public override bool CanSeek => _stream.CanSeek;
+
+    public override bool CanWrite => true;
+
+    public override long Length => _stream.Length;
 
     public override long Position
     {

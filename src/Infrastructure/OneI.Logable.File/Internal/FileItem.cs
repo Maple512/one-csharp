@@ -5,7 +5,7 @@ internal readonly struct FileItem
     public FileItem(string fullPath)
     {
         CreatedAt = DateTime.Now;
-        FullPath  = fullPath;
+        FullPath = fullPath;
     }
 
     public string FullPath { get; }

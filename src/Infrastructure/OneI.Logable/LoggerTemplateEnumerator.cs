@@ -4,7 +4,7 @@ using OneI.Logable.Templates;
 
 public struct LoggerTemplateEnumerator : IEnumerator<TemplateHolder>
 {
-    private int _messageIndex;
+    private readonly int _messageIndex;
     public readonly TemplateHolder[] Template;
     public TemplateEnumerator Message;
 

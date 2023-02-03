@@ -14,7 +14,7 @@ public readonly struct EnumerableValue : ITemplatePropertyValue
 
         var length = _values.Count;
 
-        for(var i = 0;i < length;i++)
+        for(var i = 0; i < length; i++)
         {
             _values[i].Render(writer, type, null, formatProvider);
 

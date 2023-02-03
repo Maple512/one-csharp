@@ -90,7 +90,7 @@ public class LogGenerator_Test : CodeGeneratorSnapshotTest
         var a1 = await Task.FromResult(1);
 
         var bb = (dynamic)1;
-        var a  = new SturctModel1 { Id = 1, };
+        var a = new SturctModel1 { Id = 1, };
 
         var b = a with { Id = 2, };
     }

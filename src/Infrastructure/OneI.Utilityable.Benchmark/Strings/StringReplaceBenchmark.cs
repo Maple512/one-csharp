@@ -12,7 +12,7 @@ public class StringReplaceBenchmark : BenchmarkItem
     {
         var text = Randomizer.String(100);
 
-        for(var i = 0;i < length;i++)
+        for(var i = 0; i < length; i++)
         {
             _ = text.Replace("\"", "\\\"");
         }
@@ -24,7 +24,7 @@ public class StringReplaceBenchmark : BenchmarkItem
         var text = Randomizer.String(100);
         var builder = ZString.CreateStringBuilder(true);
 
-        for(var i = 0;i < length;i++)
+        for(var i = 0; i < length; i++)
         {
             builder.Replace("\"", "\\\"");
 

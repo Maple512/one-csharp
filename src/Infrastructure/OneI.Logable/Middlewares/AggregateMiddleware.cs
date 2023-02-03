@@ -4,13 +4,13 @@ using OneI.Logable.Templates;
 
 public class AggregateMiddleware : ILoggerMiddleware
 {
-    private readonly bool                           _isSilent;
+    private readonly bool _isSilent;
     private readonly IEnumerable<ILoggerMiddleware> _middlewares;
 
     public AggregateMiddleware(IEnumerable<ILoggerMiddleware> middlewares, bool isSilent = false)
     {
         _middlewares = middlewares;
-        _isSilent    = isSilent;
+        _isSilent = isSilent;
     }
 
     public void Invoke(in LoggerMessageContext context, ref PropertyDictionary properties)

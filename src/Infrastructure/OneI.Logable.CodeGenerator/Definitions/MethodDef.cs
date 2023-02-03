@@ -26,9 +26,9 @@ public class MethodDef : IEquatable<MethodDef>
         }
 
         return Name.Equals(other.Name, StringComparison.InvariantCulture)
-               && HasLevel     == other.HasLevel
+               && HasLevel == other.HasLevel
                && HasException == other.HasException
-               && IsLogger     == other.IsLogger
+               && IsLogger == other.IsLogger
                && TypeArguments.SequenceEqual(other.TypeArguments)
                && Parameters.SequenceEqual(other.Parameters);
     }

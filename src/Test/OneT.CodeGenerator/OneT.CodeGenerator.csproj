@@ -5,18 +5,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Basic.Reference.Assemblies" Version="1.4.1"/>
-        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.4.0"/>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0"/>
-        <PackageReference Include="Verify.XUnit" Version="19.0.0"/>
-        <PackageReference Include="Verify.SourceGenerators" Version="2.0.0"/>
+        <PackageReference Include="Basic.Reference.Assemblies" Version="1.4.1" />
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.4.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" />
+        <PackageReference Include="Verify.XUnit" Version="19.8.2" />
+        <PackageReference Include="Verify.SourceGenerators" Version="2.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Infrastructure\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj"/>
-        <ProjectReference Include="..\OneT.Common\OneT.Common.csproj"/>
+        <ProjectReference Include="..\..\Infrastructure\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj" />
+        <ProjectReference Include="..\OneT.Common\OneT.Common.csproj" />
     </ItemGroup>
 
-    <Import Project="../../common.test.props"/>
+    <Import Project="../../common.test.props" />
 
 </Project>

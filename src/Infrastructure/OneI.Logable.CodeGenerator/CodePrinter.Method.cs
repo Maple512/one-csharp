@@ -50,7 +50,7 @@ internal static partial class CodePrinter
 
         builder.AppendLine($"{CodeAssets.MessageParameterType} {CodeAssets.MessageParameterName}, ");
 
-        for(var i = 0;i < method.Parameters.Count;i++)
+        for(var i = 0; i < method.Parameters.Count; i++)
         {
             var item = method.Parameters[i];
 
@@ -73,7 +73,7 @@ internal static partial class CodePrinter
     {
         builder.AppendLine("var properties = new global::OneI.Logable.Templates.PropertyDictionary();");
 
-        for(var i = 0;i < method.Parameters.Count;i++)
+        for(var i = 0; i < method.Parameters.Count; i++)
         {
             var parameter = method.Parameters[i];
 

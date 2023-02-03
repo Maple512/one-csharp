@@ -8,7 +8,7 @@ public class LogFileOptions
 
         if(file.Directory is not { Exists: true })
         {
-            System.IO.Directory.CreateDirectory(file.DirectoryName!);
+            _ = System.IO.Directory.CreateDirectory(file.DirectoryName!);
         }
 
         Path = file.FullName;

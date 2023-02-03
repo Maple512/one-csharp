@@ -21,7 +21,7 @@ public class TextWriterBenchmark
 
         using var writer = new StringWriter(builder);
 
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             writer.Write(StringValue);
 
@@ -38,7 +38,7 @@ public class TextWriterBenchmark
 
         using var writer = new ZStringWriter();
 
-        for(var i = 0;i < count;i++)
+        for(var i = 0; i < count; i++)
         {
             writer.Write(StringValue);
             writer.WriteLine();

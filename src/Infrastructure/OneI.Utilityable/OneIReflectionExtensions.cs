@@ -1,4 +1,4 @@
-﻿namespace OneI;
+namespace OneI;
 
 using Cysharp.Text;
 
@@ -95,23 +95,23 @@ public static class OneIReflectionExtensions
 
     private static void ProcessType(ref Utf16ValueStringBuilder builder, Type type, in DisplayNameOptions options)
     {
-        if (type.IsGenericType)
+        if(type.IsGenericType)
         {
             var genericArguments = type.GetGenericArguments();
 
             ProcessGenericType(ref builder, type, genericArguments, genericArguments.Length, options);
         }
-        else if (type.IsArray)
+        else if(type.IsArray)
         {
             ProcessArrayType(ref builder, type, options);
         }
-        else if (_builtInTypeNames.TryGetValue(type, out var builtInName))
+        else if(_builtInTypeNames.TryGetValue(type, out var builtInName))
         {
             builder.Append(builtInName);
         }
-        else if (type.IsGenericParameter)
+        else if(type.IsGenericParameter)
         {
-            if (options.IncludeGenericParameterNames)
+            if(options.IncludeGenericParameterNames)
             {
                 builder.Append(type.Name);
             }
@@ -121,7 +121,7 @@ public static class OneIReflectionExtensions
             var name = options.FullName ? type.FullName! : type.Name;
 
             builder.Append(name);
-            if (options.NestedTypeDelimiter != DefaultNestedTypeDelimiter)
+            if(options.NestedTypeDelimiter != DefaultNestedTypeDelimiter)
             {
                 builder.Replace(DefaultNestedTypeDelimiter, options.NestedTypeDelimiter, builder.Length - name.Length, name.Length);
             }
@@ -131,14 +131,14 @@ public static class OneIReflectionExtensions
     private static void ProcessArrayType(ref Utf16ValueStringBuilder builder, Type type, in DisplayNameOptions options)
     {
         var innerType = type;
-        while (innerType.IsArray)
+        while(innerType.IsArray)
         {
             innerType = innerType.GetElementType()!;
         }
 
         ProcessType(ref builder!, innerType, options);
 
-        while (type.IsArray)
+        while(type.IsArray)
         {
             builder.Append('[');
             builder.Append(',', type.GetArrayRank() - 1);
@@ -150,19 +150,19 @@ public static class OneIReflectionExtensions
     private static void ProcessGenericType(ref Utf16ValueStringBuilder builder, Type type, Type[] genericArguments, int length, in DisplayNameOptions options)
     {
         var offset = 0;
-        if (type.IsNested)
+        if(type.IsNested)
         {
             offset = type.DeclaringType!.GetGenericArguments().Length;
         }
 
-        if (options.FullName)
+        if(options.FullName)
         {
-            if (type.IsNested)
+            if(type.IsNested)
             {
                 ProcessGenericType(ref builder, type.DeclaringType!, genericArguments, offset, options);
                 builder.Append(options.NestedTypeDelimiter);
             }
-            else if (!string.IsNullOrEmpty(type.Namespace))
+            else if(!string.IsNullOrEmpty(type.Namespace))
             {
                 builder.Append(type.Namespace);
                 builder.Append('.');
@@ -170,7 +170,7 @@ public static class OneIReflectionExtensions
         }
 
         var genericPartIndex = type.Name.IndexOf('`');
-        if (genericPartIndex <= 0)
+        if(genericPartIndex <= 0)
         {
             builder.Append(type.Name);
             return;
@@ -178,19 +178,19 @@ public static class OneIReflectionExtensions
 
         builder.Append(type.Name, 0, genericPartIndex);
 
-        if (options.IncludeGenericParameters)
+        if(options.IncludeGenericParameters)
         {
             builder.Append('<');
-            for (var i = offset; i < length; i++)
+            for(var i = offset; i < length; i++)
             {
                 ProcessType(ref builder!, genericArguments[i], options);
-                if (i + 1 == length)
+                if(i + 1 == length)
                 {
                     continue;
                 }
 
                 builder.Append(',');
-                if (options.IncludeGenericParameterNames || !genericArguments[i + 1].IsGenericParameter)
+                if(options.IncludeGenericParameterNames || !genericArguments[i + 1].IsGenericParameter)
                 {
                     builder.Append(' ');
                 }

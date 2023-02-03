@@ -12,7 +12,7 @@ public partial class LoggerConfiguration
 
         public ILoggerConfiguration Attach(ILoggerSink auditor)
         {
-            _parent.Sink.Use(auditor);
+            _ = _parent.Sink.Use(auditor);
 
             return _parent;
         }

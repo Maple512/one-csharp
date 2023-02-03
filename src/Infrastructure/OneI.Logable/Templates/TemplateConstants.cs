@@ -4,17 +4,17 @@ internal static class TemplateConstants
 {
     public static class Property
     {
-        public const int NameLengthLimit   = 32;
+        public const int NameLengthLimit = 32;
         public const int FormatLengthLimit = 32;
-        public const int IndexLengthLimit  = 3;
+        public const int IndexLengthLimit = 3;
         public const int IndexNumericLimit = 99;
-        public const int AlignLengthLimit  = 3;
+        public const int AlignLengthLimit = 3;
         public const int AlignNumericLimit = 99;
 
         public static string PropertyNameValidChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
         public static string IndentStringValidChars = "0123456789";
-        public static string AlignStringValidChars  = "0123456789-";
-        public static string Null                   = "[Null]";
+        public static string AlignStringValidChars = "0123456789-";
+        public static string Null = "[Null]";
     }
 
     public static class Formatters

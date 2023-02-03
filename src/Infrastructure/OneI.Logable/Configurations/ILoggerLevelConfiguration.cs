@@ -70,6 +70,6 @@ public interface ILoggerLevelConfiguration
     /// <exception cref="ArgumentNullException"></exception>
     ILoggerConfiguration
         Override<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(LogLevel minimum
-            , LogLevel?                                                                                maximum = null)
+            , LogLevel? maximum = null)
         => Override(typeof(T).FullName!, minimum, maximum);
 }
