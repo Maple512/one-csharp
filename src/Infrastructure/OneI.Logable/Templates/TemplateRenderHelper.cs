@@ -162,7 +162,7 @@ public static class TemplateRenderHelper
 
     internal static void LiteralRender<TValue>(
         ref Utf16ValueStringBuilder writer,
-        in TValue? value,
+        TValue? value,
         ref TemplateHolder holder,
         IFormatProvider formatProvider)
     {
@@ -170,6 +170,16 @@ public static class TemplateRenderHelper
         {
             writer.Append(TemplateConstants.Property.Null);
             return;
+        }
+
+        if(value is IPropertyValueFormattable pf)
+        {
+            scoped var destination = writer.GetSpan(0);
+            if(pf.TryFormat(destination, holder.Type, out var written))
+            {
+                writer.Advance(written);
+                return;
+            }
         }
 
         if(value is string str)
@@ -220,6 +230,7 @@ public static class TemplateRenderHelper
         IFormatProvider formatProvider)
     {
         scoped var buffer = writer.GetSpan(0);
+
         if(spanFormattable.TryFormat(buffer, out var charsWritten, format, formatProvider))
         {
             writer.Advance(charsWritten);

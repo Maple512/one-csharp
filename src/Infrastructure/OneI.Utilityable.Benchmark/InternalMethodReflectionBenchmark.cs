@@ -61,7 +61,7 @@ public class InternalMethodReflectionBenchmark : BenchmarkItem
         return null;
     }
 
-    public override void GlobalInlitialize()
+    public override void Inlitialize()
     {
         UseReflection_Method();
         UseDotNext_Method();

@@ -105,7 +105,7 @@ public class StringHashCodeBenchmark : BenchmarkItem
         return result;
     }
 
-    public override void GlobalInlitialize()
+    public override void Inlitialize()
     {
         var result = UseStringEquals();
 

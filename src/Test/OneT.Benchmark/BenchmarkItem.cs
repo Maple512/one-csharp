@@ -9,7 +9,7 @@ public abstract class BenchmarkItem
     /// 当前基准测试类中初始化方法，只会执行一次
     /// </summary>
     [GlobalSetup]
-    public virtual void GlobalInlitialize()
+    public virtual void Inlitialize()
     {
 
     }

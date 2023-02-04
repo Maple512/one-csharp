@@ -61,14 +61,18 @@ internal static class TemplateTokenCache
 
     public static LoggerTemplateEnumerator GetOrAdd(ref TemplateItem template, ref LoggerMessageContext context)
     {
-        var key = HashCode.Combine(template.GetHashCode(), context.Message.GetHashCode());
+        var key = HashCode.Combine(template.GetHashCode(), context.GetHashCode());
 
         if(_cache.TryGetValue(key, out var value))
         {
             return value;
         }
 
-        value = new LoggerTemplateEnumerator(template.Holders, template.MessageIndex, new TemplateEnumerator(context.Message.AsMemory()));
+        var message = context.Message is null
+            ? default
+            : new TemplateEnumerator(context.Message.AsMemory());
+
+        value = new LoggerTemplateEnumerator(template.Holders, template.MessageIndex, message);
 
         _cache.Add(key, value);
 

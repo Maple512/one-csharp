@@ -1,6 +1,6 @@
 namespace OneI.Logable.Definitions;
 
-public class ParameterDef : IEquatable<ParameterDef>
+internal class ParameterDef : IEquatable<ParameterDef>
 {
     public ParameterDef(int index, TypeDef type)
         : this(index, $"arg{index}", type)

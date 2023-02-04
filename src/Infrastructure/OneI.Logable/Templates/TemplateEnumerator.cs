@@ -23,6 +23,12 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>, IEnumerator<T
     private readonly ushort _length;
     private ushort _position;
 
+    public TemplateEnumerator()
+    {
+        _position = 0;
+        _length = 0;
+    }
+
     public TemplateEnumerator(ReadOnlyMemory<char> template)
     {
         if(template is { Length: > ushort.MaxValue, })

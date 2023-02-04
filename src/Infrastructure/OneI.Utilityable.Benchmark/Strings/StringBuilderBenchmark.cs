@@ -3,7 +3,7 @@ namespace OneI.Utilityable.Strings;
 using System.Buffers;
 using Cysharp.Text;
 using DotNext.Buffers;
-using Text;
+using OneI.Text;
 
 public class StringBuilderBenchmark
 {

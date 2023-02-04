@@ -1,8 +1,8 @@
 using System.Runtime.Versioning;
 using OneI;
 
-[assembly: UnsupportedOSPlatform(SharedConstants.OSPlatformName.Android)]
-[assembly: UnsupportedOSPlatform(SharedConstants.OSPlatformName.Browser)]
-[assembly: UnsupportedOSPlatform(SharedConstants.OSPlatformName.iOS)]
-[assembly: UnsupportedOSPlatform(SharedConstants.OSPlatformName.MacCatalyst)]
-[assembly: UnsupportedOSPlatform(SharedConstants.OSPlatformName.tvOS)]
+[assembly: UnsupportedOSPlatform(SharedConstants.OSPlatform.Android)]
+[assembly: UnsupportedOSPlatform(SharedConstants.OSPlatform.Browser)]
+[assembly: UnsupportedOSPlatform(SharedConstants.OSPlatform.iOS)]
+[assembly: UnsupportedOSPlatform(SharedConstants.OSPlatform.MacCatalyst)]
+[assembly: UnsupportedOSPlatform(SharedConstants.OSPlatform.tvOS)]

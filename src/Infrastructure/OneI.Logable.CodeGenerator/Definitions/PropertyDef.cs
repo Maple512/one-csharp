@@ -1,6 +1,6 @@
 namespace OneI.Logable.Definitions;
 
-public class PropertyDef
+internal class PropertyDef
 {
     public PropertyDef(string name, TypeDef type)
         : this(name, -1, type)

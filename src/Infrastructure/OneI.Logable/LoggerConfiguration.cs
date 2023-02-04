@@ -6,7 +6,7 @@ using OneI.Logable.Templates;
 
 public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipelineConfiguration
 {
-    public const string DefaultTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}";
+    public const string DefaultTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss}[{Level}]{Message}{NewLine}";
     private readonly TemplateItem _defaultTemplate;
     private readonly LogLevelMap _logLevelMap;
 
@@ -14,6 +14,7 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
     private readonly List<ILoggerSink> _sinks;
     private readonly List<TemplateItem> _templateProviders;
 
+    /// <param name="template">日志默认模板，默认：<c>{Timestamp:yyyy-MM-dd HH:mm:ss}[{Level}]{Message}{NewLine}</c></param>
     public LoggerConfiguration(string template = DefaultTemplate)
     {
         _ = Check.NotNullOrEmpty(template);

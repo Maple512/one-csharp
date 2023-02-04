@@ -18,7 +18,7 @@
         <!--https://github.com/dotnet/runtime/blob/ac2ffdf4ff87e7e3a5506a8ef69ce633f6fcda85/src/libraries/System.Private.CoreLib/src/System.Private.CoreLib.Shared.projitems#L22-->
         <Is64Bit Condition="'$(Platform)' == 'arm64' or '$(Platform)' == 'x64' or '$(Platform)' == 's390x' or '$(Platform)' == 'loongarch64' or '$(Platform)' == 'ppc64le'">true</Is64Bit>
 
-        <Target_Windows Condition="'$(TargetOS)' == 'windows'">true</Target_Windows>
+        <Target_Windows Condition="'$(TargetOS)' != 'unix'">true</Target_Windows>
         <Target_Unix Condition="'$(TargetOS)' == 'unix'">true</Target_Unix>
         <Target_Standard Condition="'$([MSBuild]::GetTargetFrameworkIdentifier($(TargetFramework)))' == '.NETStandard'">true</Target_Standard>
     </PropertyGroup>
@@ -26,6 +26,8 @@
     <PropertyGroup>
         <DefineConstants Condition="'$(Is64Bit)' != 'true'">$(DefineConstants);TARGET_32BIT</DefineConstants>
         <DefineConstants Condition="'$(Is64Bit)' == 'true'">$(DefineConstants);TARGET_64BIT</DefineConstants>
+        <DefineConstants Condition="'$(Target_Windows)' == 'true'">$(DefineConstants);WINDOWS</DefineConstants>
+        <DefineConstants Condition="'$(Target_Windows)' != 'true'">$(DefineConstants);UNIX</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup Label="Common Shard Files" Condition="$(IncludeShared)">
@@ -52,6 +54,7 @@
         <Using Include="System.Runtime.CompilerServices"/>
         <Using Include="System.Runtime.InteropServices"/>
         <Using Include="System.Text"/>
+        <Using Include="SimdLinq" Condition="$(Target_Standard) != 'true'"/>
     </ItemGroup>
 
     <!--Root Namespace-->
@@ -89,6 +92,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Condition="$(Target_Standard) != 'true'" Include="SimdLinq" Version="1.3.0" />
     </ItemGroup>
 
     <!--github action-->

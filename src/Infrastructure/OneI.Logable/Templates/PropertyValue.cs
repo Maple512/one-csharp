@@ -1,10 +1,14 @@
 namespace OneI.Logable.Templates;
 
+[StructLayout(LayoutKind.Auto)]
 public readonly struct PropertyValue : IEquatable<PropertyValue>
 {
     public readonly object? Value;
 
-    public PropertyValue(object? value) => Value = value;
+    public PropertyValue(object? value)
+    {
+        Value = value;
+    }
 
     public override bool Equals([NotNullWhen(true)] object? obj) => obj is PropertyValue pv && Equals(pv);
 
@@ -18,6 +22,7 @@ public readonly struct PropertyValue : IEquatable<PropertyValue>
 
     public bool Equals(PropertyValue other)
     {
+        Debugger.Break();
         if(Value is null && other.Value is null)
         {
             return true;

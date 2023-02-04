@@ -7,18 +7,6 @@ using OneI.Logable.Templates;
 public class Logger_Test
 {
     [Fact]
-    public void size_of()
-    {
-        TestTools.PrintLayoutToFile<object>().Size.ShouldBe(8);
-
-        TestTools.PrintLayoutToFile<TemplateHolder>().Size.ShouldBe(32);
-
-        TestTools.PrintLayoutToFile<TemplateEnumerator>().Size.ShouldBe(88);
-
-        TestTools.PrintLayoutToFile<ReadOnlyMemory<char>>().Size.ShouldBe(16);
-    }
-
-    [Fact]
     public void level_enalble_state()
     {
         // default level

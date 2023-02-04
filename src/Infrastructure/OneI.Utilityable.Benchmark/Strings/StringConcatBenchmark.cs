@@ -8,7 +8,7 @@ public class StringConcatBenchmark : BenchmarkItem
     [Params(100)]
     public int length;
 
-    public override void GlobalInlitialize()
+    public override void Inlitialize()
     {
         UseDefault();
         UseDefault_AsSpan();

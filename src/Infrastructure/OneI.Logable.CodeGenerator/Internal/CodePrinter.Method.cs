@@ -1,8 +1,9 @@
 namespace OneI.Logable;
 
 using OneI.Logable.Definitions;
+using OneI.Logable.Internal;
 
-internal static partial class CodePrinter
+internal partial class CodePrinter
 {
     internal static void PrintMethod(IndentedStringBuilder builder, MethodDef method)
     {
@@ -33,10 +34,7 @@ internal static partial class CodePrinter
 
     private static void PrintMethodParameters(IndentedStringBuilder builder, MethodDef method)
     {
-        if(method.IsLogger)
-        {
-            builder.AppendLine($"this global::{CodeAssets.LoggerFullName} logger, ");
-        }
+        builder.AppendLine($"this global::{CodeAssets.LoggerFullName} logger, ");
 
         if(method.HasLevel)
         {
@@ -48,7 +46,10 @@ internal static partial class CodePrinter
             builder.AppendLine($"{CodeAssets.ExceptionParameterType} {CodeAssets.ExceptionParameterName}, ");
         }
 
-        builder.AppendLine($"{CodeAssets.MessageParameterType} {CodeAssets.MessageParameterName}, ");
+        if(method.HasMessage)
+        {
+            builder.AppendLine($"{CodeAssets.MessageParameterType} {CodeAssets.MessageParameterName}, ");
+        }
 
         for(var i = 0; i < method.Parameters.Count; i++)
         {
@@ -79,10 +80,11 @@ internal static partial class CodePrinter
 
             builder.Append($"properties.Add(\"__{i}\", ");
 
-            var type = _types.FirstOrDefault(x => x.Equals(parameter.Type));
-            if(type is not null)
+            var type = _types.Values.FirstOrDefault(x => x.Equals(parameter.Type));
+
+            if(type.Kind is not TypeDefKind.Literal)
             {
-                builder.Append($"{CodeAssets.LoggerPropertyCreateCalledName}({parameter.Name})");
+                builder.Append($"new global::OneI.Logable.Templates.PropertyValue(new {string.Join("_", type.Names)}_Wrapper({parameter.Name}))");
             }
             else
             {
@@ -94,14 +96,7 @@ internal static partial class CodePrinter
 
         builder.AppendLine();
 
-        if(method.IsLogger)
-        {
-            builder.Append("global::OneI.Logable.LoggerExtensions.WriteCore(logger, ");
-        }
-        else
-        {
-            builder.Append("global::OneI.Logable.LoggerExtensions.WriteCore(Logger, ");
-        }
+        builder.Append("global::OneI.Logable.LoggerExtensions.WriteCore(logger, ");
 
         if(method.HasLevel)
         {
@@ -121,7 +116,14 @@ internal static partial class CodePrinter
             builder.Append("null, ");
         }
 
-        builder.Append($"{CodeAssets.MessageParameterName}, ");
+        if(method.HasMessage)
+        {
+            builder.Append($"{CodeAssets.MessageParameterName}, ");
+        }
+        else
+        {
+            builder.Append($"null, ");
+        }
 
         builder.AppendLine("ref properties, file, member, line);");
 

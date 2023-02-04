@@ -6,7 +6,7 @@ public class LogEmptyBenchmark : BenchmarkItem
 {
     private const int count = 1000;
 
-    public override void GlobalInlitialize()
+    public override void Inlitialize()
     {
         serilog = new Serilog.LoggerConfiguration()
             .CreateLogger();

@@ -15,7 +15,7 @@ public class FileStreamBenchmark : BenchmarkItem
     private const int bufferSize = 65536;
     private const int timesStringLength = 1024;
 
-    public override void GlobalInlitialize()
+    public override void Inlitialize()
     {
         Options = new FileStreamOptions
         {

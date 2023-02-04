@@ -1,6 +1,10 @@
 namespace OneI.Logable.Definitions;
 
-public class MethodDef : IEquatable<MethodDef>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+internal class MethodDef : IEquatable<MethodDef>
 {
     public MethodDef(string name) => Name = name;
     public string Name { get; }
@@ -14,7 +18,7 @@ public class MethodDef : IEquatable<MethodDef>
 
     public bool HasException { get; set; }
 
-    public bool IsLogger { get; set; }
+    public bool HasMessage { get; set; }
 
     public List<ParameterDef> Parameters { get; } = new();
 
@@ -28,7 +32,6 @@ public class MethodDef : IEquatable<MethodDef>
         return Name.Equals(other.Name, StringComparison.InvariantCulture)
                && HasLevel == other.HasLevel
                && HasException == other.HasException
-               && IsLogger == other.IsLogger
                && TypeArguments.SequenceEqual(other.TypeArguments)
                && Parameters.SequenceEqual(other.Parameters);
     }
@@ -45,6 +48,9 @@ public class MethodDef : IEquatable<MethodDef>
     {
         var hashCode = 1825788138;
         hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Name);
+        hashCode = hashCode * -1521134295 + HasException.GetHashCode();
+        hashCode = hashCode * -1521134295 + HasMessage.GetHashCode();
+        hashCode = hashCode * -1521134295 + HasLevel.GetHashCode();
 
         foreach(var item in TypeArguments)
         {
@@ -54,7 +60,6 @@ public class MethodDef : IEquatable<MethodDef>
 
         hashCode = hashCode * -1521134295 + HasLevel.GetHashCode();
         hashCode = hashCode * -1521134295 + HasException.GetHashCode();
-        hashCode = hashCode * -1521134295 + IsLogger.GetHashCode();
         foreach(var item in Parameters)
         {
             hashCode = hashCode * -1521134295 + item.GetHashCode();

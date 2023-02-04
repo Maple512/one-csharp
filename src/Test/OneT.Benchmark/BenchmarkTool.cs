@@ -81,7 +81,7 @@ public static class BenchmarkTool
             var unused1 = TryToSetParamsFields(item);
             var unused = TryToSetParamsProperties(item);
 
-            item.GlobalInlitialize();
+            item.Inlitialize();
         }
     }
 

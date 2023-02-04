@@ -4,7 +4,6 @@
     "projects": [
       "Infrastructure\\OneI.Utilityable.Benchmark\\OneI.Utilityable.Benchmark.csproj",
       "Infrastructure\\OneI.Utilityable.Command\\OneI.Utilityable.Command.csproj",
-      "Infrastructure\\OneI.Utilityable.Test.DnSpy\\OneI.Utilityable.Test.DnSpy.csproj",
       "Infrastructure\\OneI.Utilityable.Test\\OneI.Utilityable.Test.csproj",
       "Infrastructure\\OneI.Utilityable\\OneI.Utilityable.csproj"
     ]

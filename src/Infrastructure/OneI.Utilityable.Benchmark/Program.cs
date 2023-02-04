@@ -9,6 +9,6 @@ internal class Program
     {
         // BenchmarkTool.RunAssymbly<Program>(args);
 
-        BenchmarkTool.Run<StringFormatBenchmark>(args);
+        BenchmarkTool.Run<StringEscapeBenchmark>(args);
     }
 }

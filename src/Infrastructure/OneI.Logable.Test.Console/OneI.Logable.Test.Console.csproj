@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>exe</OutputType>
@@ -9,12 +9,17 @@
         <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj"
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false"/>
-        <ProjectReference Include="..\OneI.Logable.Extensions\OneI.Logable.Extensions.csproj"/>
-        <ProjectReference Include="..\OneI.Logable.File\OneI.Logable.File.csproj"/>
-        <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj"/>
-        <ProjectReference Include="..\..\Test\OneT.Common\OneT.Common.csproj"/>
+        <ProjectReference Include="..\OneI.Logable.Extensions\OneI.Logable.Extensions.csproj" />
+        <ProjectReference Include="..\OneI.Logable.File\OneI.Logable.File.csproj" />
+        <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj" />
+        <ProjectReference Include="..\..\Test\OneT.Common\OneT.Common.csproj" />
     </ItemGroup>
 
-    <Import Project="../../common.test.props"/>
+    <Import Project="../../common.test.props" />
+
+    <PropertyGroup>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <IncludeShared>false</IncludeShared>
+    </PropertyGroup>
 
 </Project>

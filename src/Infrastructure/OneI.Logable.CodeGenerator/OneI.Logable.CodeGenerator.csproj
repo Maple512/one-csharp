@@ -2,8 +2,9 @@
 
     <PropertyGroup>
         <TargetFramework>$(NetStandard)</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
     </PropertyGroup>
 
-    <Import Project="../../common.codegen.props"/>
+    <Import Project="../../common.codegen.props" />
 
 </Project>

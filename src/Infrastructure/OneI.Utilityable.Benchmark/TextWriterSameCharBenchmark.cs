@@ -38,7 +38,7 @@ public class TextWriterSameCharBenchmark : BenchmarkItem
         return writer.ToString();
     }
 
-    public override void GlobalInlitialize()
+    public override void Inlitialize()
     {
         var result = UseString();
 

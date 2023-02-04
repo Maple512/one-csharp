@@ -7,7 +7,7 @@ public class IntParseBenchmark : BenchmarkItem
 {
     private static readonly string number = "-87654321";
 
-    public override void GlobalInlitialize()
+    public override void Inlitialize()
     {
         var result = UseSystem();
 

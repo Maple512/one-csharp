@@ -3,14 +3,13 @@ namespace OneI.Logable;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.Text;
 using OneI.Logable.Definitions;
+using OneI.Logable.Internal;
 
-/// <inheritdoc />
 [Generator]
 public class LoggerCodeGenerator : IIncrementalGenerator
 {
     private static readonly string[] _methodNames = "Write,Verbose,Debug,Information,Warning,Error,Fatal,".Split(',');
 
-    /// <inheritdoc />
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         context.RegisterPostInitializationOutput(RegisterPostInitializationOutput);
@@ -31,7 +30,7 @@ public class LoggerCodeGenerator : IIncrementalGenerator
     /// <param name="context"></param>
     private static void RegisterPostInitializationOutput(IncrementalGeneratorPostInitializationContext context)
     {
-        context.AddSource(CodeAssets.LogFileName, SourceText.From(CodeAssets.LogFileContent, Encoding.UTF8));
+        context.AddSource(CodeAssets.LoggerExtension.FileNmae, SourceText.From(CodeAssets.LoggerExtension.Content, Encoding.UTF8));
     }
 
     /// <summary>
@@ -68,7 +67,7 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
             var count = invocation.ArgumentList.Arguments.Count;
 
-            return count is > 0 and < 30;
+            return count is > 0 and < 15;
         }
 
         return false;
@@ -90,47 +89,24 @@ public class LoggerCodeGenerator : IIncrementalGenerator
 
         var symbolInfo = cts.SemanticModel.GetSymbolInfo(memberAccessSyntax);
 
-        var method = symbolInfo.Symbol as IMethodSymbol;
-
-        if(method is not null)
+        if(symbolInfo.Symbol is not IMethodSymbol method)
         {
-            var isParams = method.Parameters.Any(x => x.IsParams);
-            var name = method.Name;
-            if(isParams == false || !_methodNames.Contains(name))
-            {
-                return null;
-            }
-
-            var typename = method.ContainingType?.ToDisplayString();
-
-            if(typename is CodeAssets.LogClassFullName)
-            {
-                return new TargetContext(invocation, false, method.Name, method.Parameters);
-            }
-
-            if(typename is CodeAssets.LoggerExtensionFullName)
-            {
-                return new TargetContext(invocation, true, method.Name, method.Parameters);
-            }
-
             return null;
         }
 
-        method = symbolInfo.CandidateSymbols.FirstOrDefault() as IMethodSymbol;
-        if(method is not null)
+        if(!_methodNames.Contains(method.Name))
         {
-            var typename = method.ContainingType?.ToDisplayString();
-
-            if(typename is CodeAssets.LoggerFullName)
-            {
-                return new TargetContext(invocation, true, method.Name
-                                         , method.Parameters.Take(method.Parameters.Length - 3).ToImmutableArray());
-            }
-
             return null;
         }
 
-        return null;
+        var typename = method.ContainingType?.ToDisplayString();
+
+        if(typename is not CodeAssets.LoggerExtension.ClassFullName)
+        {
+            return null;
+        }
+
+        return new TargetContext(invocation, method);
     }
 
     /// <summary>
@@ -139,47 +115,38 @@ public class LoggerCodeGenerator : IIncrementalGenerator
     /// <param name="compilation"></param>
     /// <param name="nodes"></param>
     /// <param name="context"></param>
-    private static void Execute(Compilation compilation
-                                , ImmutableArray<TargetContext?> nodes
-                                , SourceProductionContext context)
+    private static void Execute(
+        Compilation compilation,
+        ImmutableArray<TargetContext?> nodes,
+        SourceProductionContext context)
     {
         if(nodes.IsDefaultOrEmpty)
         {
             return;
         }
 
-        var methods = new HashSet<MethodDef>(MethodDefComparer.Instance);
+        var methods = new Dictionary<int, MethodDef>();
         foreach(var item in nodes.Where(x => x is not null).Select(x => x!.Value))
         {
             if(InvocationExpressionParser.TryParse(item!, compilation, out var result))
             {
-                methods.Add(result!);
+                var key = result!.GetHashCode();
+
+                if(methods.ContainsKey(key) == false)
+                {
+                    methods.Add(key, result);
+                }
             }
         }
 
         if(methods.Any())
         {
-            CodePrinter.Print(methods, out var types, out var logExtensions, out var loggerExtensions);
+            CodePrinter.Print(methods.Values, out var types, out var loggerExtensions);
 
-            context.AddSource(CodeAssets.LoggerPropertyCreatorClassFileName, types);
+            context.AddSource(CodeAssets.PropertyFactory.FileName, types);
 
-            context.AddSource(CodeAssets.LogExtensionsFileName, logExtensions);
-
-            context.AddSource(CodeAssets.LoggerExtensionExtensionClassFileName, loggerExtensions);
+            context.AddSource(CodeAssets.LoggerExtension.PartialName, loggerExtensions);
         }
     }
 }
 
-public class MethodDefComparer : IEqualityComparer<MethodDef>
-{
-    public static readonly IEqualityComparer<MethodDef> Instance = new MethodDefComparer();
-
-    public bool Equals(MethodDef x, MethodDef y) => x.Equals(y);
-
-    public int GetHashCode(MethodDef obj)
-    {
-        var a = obj.GetHashCode();
-
-        return a;
-    }
-}

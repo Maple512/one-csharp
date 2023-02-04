@@ -6,22 +6,23 @@ using OneI.Logable.Templates;
 
 public static class LoggerExtensions
 {
-    public static void WriteCore(ILogger logger
-                                 , LogLevel level
-                                 , Exception? exception
-                                 , string message
-                                 , ref PropertyDictionary properties
-                                 , string? file = null
-                                 , string? member = null
-                                 , int line = 0)
+    public static void WriteCore(
+        ILogger logger,
+        LogLevel level,
+        Exception? exception,
+        string? message,
+        ref PropertyDictionary properties,
+        string? file = null,
+        string? member = null,
+        int line = 0)
     {
         var context = new LoggerMessageContext(
-                                               level,
-                                               message,
-                                               exception,
-                                               file!,
-                                               member!,
-                                               line);
+            level,
+            message,
+            exception,
+            file!,
+            member!,
+            line);
 
         logger.Write(ref context, ref properties);
     }
@@ -91,106 +92,4 @@ public static class LoggerExtensions
         => logger.BeginScopeAsync(new PropertyMiddleware<T>(name, value));
 
     #endregion
-
-    #region Write
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Write(this ILogger logger, LogLevel level, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Write(this ILogger logger
-                             , LogLevel level
-                             , Exception exception
-                             , string message
-                             , params object?[] args)
-        => throw new NotSupportedException();
-
-    #endregion Write
-
-    #region Verbose
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Verbose(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Verbose(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    #endregion Verbose
-
-    #region Debug
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Debug(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Debug(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    #endregion Debug
-
-    #region Information
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Information(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Information(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    #endregion Information
-
-    #region Warning
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Warning(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Warning(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    #endregion Warning
-
-    #region Error
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Error(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Error(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    #endregion Error
-
-    #region Fatal
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Fatal(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    [Conditional(SharedConstants.DEBUG)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static void Fatal(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
-
-    #endregion Fatal
 }

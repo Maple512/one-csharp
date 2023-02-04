@@ -9,7 +9,7 @@ public class StringFormatBenchmark : BenchmarkItem
     private const int capacity = 256;
     private const int count = 100;
 
-    public override void GlobalInlitialize()
+    public override void Inlitialize()
     {
         var result = UseStringBuilder();
 

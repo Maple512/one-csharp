@@ -2,23 +2,29 @@ namespace OneI.Logable;
 
 using Microsoft.CodeAnalysis.Text;
 using OneI.Logable.Definitions;
+using OneI.Logable.Internal;
 
 internal static partial class CodePrinter
 {
-    private static readonly HashSet<TypeDef> _types = new();
+    private static readonly ConcurrentDictionary<ISymbol, TypeDef> _types = new();
 
-    public static void AddType(TypeDef type) => _types.Add(type);
+    public static void AddType(ISymbol symbol, TypeDef type)
+    {
+        _types[symbol] = type;
+    }
+
+    public static bool TryGetType(ISymbol symbol, out TypeDef type)
+    {
+        return _types.TryGetValue(symbol, out type);
+    }
 
     internal static void Print(IEnumerable<MethodDef> methods
                                , out SourceText tyeps
-                               , out SourceText logExtensions
                                , out SourceText loggerExtensions)
     {
         tyeps = PrintTypes();
 
-        loggerExtensions = PrintLoggerExtensions(methods.Where(x => x.IsLogger).ToList());
-
-        logExtensions = PrintLogExtensions(methods.Where(x => x.IsLogger == false).ToList());
+        loggerExtensions = PrintLoggerExtensions(methods.ToList());
     }
 
     private static SourceText PrintTypes()
@@ -32,17 +38,24 @@ internal static partial class CodePrinter
         content.AppendLine("using global::System;");
         content.AppendLine("using global::System.Runtime.CompilerServices;");
         content.AppendLine();
-        content.AppendLine("[global::System.Diagnostics.DebuggerStepThrough]");
-        content.AppendLine($"internal static class {CodeAssets.LoggerPropertyCreatorClassName}");
+        content.AppendLine($"partial class {CodeAssets.LoggerExtension.Name}");
         content.AppendLine("{");
 
+        // 创建自定义属性
         using(var _ = content.Indent())
         {
-            foreach(var item in _types)
+            var types = _types.Values.Where(x => x.Kind != TypeDefKind.Literal).OrderBy(x => x.Kind)
+                .ThenBy(x => x.Properties.Count).ToList();
+
+            var index = 0;
+            foreach(var item in types)
             {
                 PrintType(content, item);
 
-                content.AppendLine();
+                if(++index < types.Count)
+                {
+                    content.AppendLine();
+                }
             }
         }
 
@@ -61,8 +74,9 @@ internal static partial class CodePrinter
         content.AppendLine("namespace OneI.Logable;");
         content.AppendLine();
         content.AppendLine("using global::System;");
+        content.AppendLine("using global::System.Runtime.CompilerServices;");
         content.AppendLine();
-        content.AppendLine($"public static partial class {CodeAssets.LoggerExtensionClassName}");
+        content.AppendLine($"partial class {CodeAssets.LoggerExtension.Name}");
         content.AppendLine("{");
 
         using(var _ = content.Indent())

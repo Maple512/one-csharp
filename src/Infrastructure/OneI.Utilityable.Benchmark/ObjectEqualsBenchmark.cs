@@ -7,7 +7,7 @@ public class ObjectEqualsBenchmark : BenchmarkItem
     [Params(10)]
     private int count;
 
-    public override void GlobalInlitialize()
+    public override void Inlitialize()
     {
         var result = UseInt();
 

@@ -1,6 +1,6 @@
 namespace OneI.Logable.Definitions;
 
-public class TypeDef : IEquatable<TypeDef>
+internal class TypeDef : IEquatable<TypeDef>
 {
     public TypeDef(params string[] names)
         : this(names.ToList())
@@ -12,9 +12,15 @@ public class TypeDef : IEquatable<TypeDef>
         TypeArguments = new();
         Constraints = new();
         Properties = new();
+        BaseTypes=  new();
+        Interfaces =  new();
     }
 
     public List<string> Names { get; }
+
+    public List<string> BaseTypes { get;  }
+
+    public List<string> Interfaces { get;}
 
     /// <summary>
     ///     类型参数
@@ -40,6 +46,16 @@ public class TypeDef : IEquatable<TypeDef>
     ///     Gets or sets the kind.
     /// </summary>
     public TypeDefKind Kind { get; set; }
+
+    public bool IsSpanFormattable { get; set; }
+
+    public bool IsFormattable { get; set; }
+
+    public bool IsCustomFormatter { get; set; }
+
+    public bool IsPropertyValueFormattable { get; set; }
+
+    public bool IsException { get; set; }
 
     /// <summary>
     ///     类型定义的属性
@@ -71,37 +87,37 @@ public class TypeDef : IEquatable<TypeDef>
 
         if(IsTypeParameters == false)
         {
-            content.Append("global::");
+            _ = content.Append("global::");
         }
 
         for(var i = 0; i < Names.Count; i++)
         {
-            content.Append(Names[i]);
+            _ = content.Append(Names[i]);
             if(i < Names.Count - 1)
             {
-                content.Append('.');
+                _ = content.Append('.');
             }
         }
 
         if(TypeArguments.Count > 0)
         {
-            content.Append('<');
+            _ = content.Append('<');
 
             for(var i = 0; i < TypeArguments.Count; i++)
             {
-                content.Append(TypeArguments[i].ToDisplayString());
+                _ = content.Append(TypeArguments[i].ToDisplayString());
                 if(i < TypeArguments.Count - 1)
                 {
-                    content.Append(", ");
+                    _ = content.Append(", ");
                 }
             }
 
-            content.Append('>');
+            _ = content.Append('>');
         }
 
         if(Kind == TypeDefKind.Array)
         {
-            content.Append("[]");
+            _ = content.Append("[]");
         }
 
         return content.ToString();
@@ -142,5 +158,5 @@ public class TypeDef : IEquatable<TypeDef>
 /// </summary>
 public enum TypeDefKind : byte
 {
-    None, Literal, ValueTuple, Nullable, Object, Array, Enumerable, Dictionary,
+    None, Literal, Object, ValueTuple, Nullable, Array, EnumerableT, Dictionary, Enumerable,
 }
