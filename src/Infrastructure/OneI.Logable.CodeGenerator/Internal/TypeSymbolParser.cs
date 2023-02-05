@@ -1,4 +1,4 @@
-namespace OneI.Logable;
+namespace OneI.Logable.Internal;
 
 using OneI.Logable.Definitions;
 
@@ -7,7 +7,7 @@ internal static class TypeSymbolParser
     /// <summary>
     /// Object类型，适用于：dynamic, anonymous
     /// </summary>
-    private static readonly TypeDef DefaultType = new(nameof(System), nameof(Object))
+    public static readonly TypeDef DefaultType = new(nameof(System), nameof(Object))
     {
         Kind = TypeDefKind.Literal,
     };
@@ -16,7 +16,7 @@ internal static class TypeSymbolParser
     {
         type = DefaultType;
 
-        if(symbol is null)
+        if(symbol is null or IErrorTypeSymbol)
         {
             return true;
         }
@@ -124,19 +124,11 @@ internal static class TypeSymbolParser
             type.Kind = TypeDefKind.Literal;
             return type;
         }
-        // netstandard2.0的某些内置类型在net7之后实现了ISpanFormattable，这里手动判断
-
         if(interfaces.Any(x => x == "System.ISpanFormattable")
             || ISpanFormattables.Contains(type.ToString()))
         {
             type.Kind = TypeDefKind.Literal;
             type.IsSpanFormattable = true;
-            return type;
-        }
-        if(interfaces.Any(x => x == "System.ICustomFormatter"))
-        {
-            type.Kind = TypeDefKind.Literal;
-            type.IsCustomFormatter = true;
             return type;
         }
         if(interfaces.Any(x => x == "System.IFormattable"))
@@ -158,13 +150,15 @@ internal static class TypeSymbolParser
 
             return type;
         }
+
         if(name == "System.Nullable")
         {
             type.Kind = TypeDefKind.Nullable;
 
             return type;
         }
-        if(name == "System.ValueTuple")
+
+        if(name is "System.ValueTuple")
         {
             type.Kind = TypeDefKind.ValueTuple;
 
@@ -173,6 +167,24 @@ internal static class TypeSymbolParser
             foreach(var item in symbol.TupleElements)
             {
                 if(TryParse(item.Type, out var tupleType, deep))
+                {
+                    type.Properties.Add(new PropertyDef(item.Name, tupleType!));
+                }
+            }
+
+            Debug.WriteLine(string.Empty);
+            return type;
+        }
+
+        if(name is "System.Tuple")
+        {
+            type.Kind = TypeDefKind.Tuple;
+
+            ++deep;
+
+            foreach(var item in symbol.TypeArguments)
+            {
+                if(TryParse(item, out var tupleType, deep))
                 {
                     type.Properties.Add(new PropertyDef(item.Name, tupleType!));
                 }
@@ -236,10 +248,17 @@ internal static class TypeSymbolParser
     {
         var elementType = Parse(symbol.ElementType, deep);
 
-        return new TypeDef(elementType.Names)
+        var names = new List<string>(2 + elementType.Names.Count) { "System", "Array" };
+        names.AddRange(elementType.Names);
+
+        var result = new TypeDef(names)
         {
             Kind = TypeDefKind.Array,
         };
+
+        result.TypeArguments.Add(elementType);
+
+        return result;
     }
 
     private static TypeDef PraseTypeParameter(ITypeParameterSymbol symbol, int deep)

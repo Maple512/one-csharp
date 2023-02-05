@@ -1,4 +1,4 @@
-namespace OneI.Logable;
+namespace OneI.Logable.Internal;
 
 using System;
 using Microsoft.CodeAnalysis;

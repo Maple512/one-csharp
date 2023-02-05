@@ -1,7 +1,9 @@
 namespace OneI.Logable;
 
+using AutoBogus;
 using BenchmarkDotNet.Engines;
 using Microsoft.Extensions.Logging;
+using Moq;
 using NLog;
 using Serilog;
 using ZLogger;
@@ -9,7 +11,14 @@ using ZLogger;
 [SimpleJob(RunStrategy.Throughput, baseline: true)]
 public class LogFileBenchmark : BenchmarkItem
 {
+    private static Serilog.Core.Logger serilog;
+    private static ILogger logger;
+    private static NLog.Logger nlog;
+    private static Microsoft.Extensions.Logging.ILogger zlogger;
+
     private const int count = 1000;
+
+    static List<Model1> _models;
 
     public override void Inlitialize()
     {
@@ -32,6 +41,8 @@ public class LogFileBenchmark : BenchmarkItem
                                                                      , TimeSpan.Zero),
                                           1 * 1024 * 1024);
         }).CreateLogger("LogFileBenchmark");
+
+        _models = AutoFaker.Create().Generate<List<Model1>>();
     }
 
     [Benchmark(Baseline = true)]
@@ -39,7 +50,7 @@ public class LogFileBenchmark : BenchmarkItem
     {
         for(var i = 0; i < count; i++)
         {
-            serilog.Information(" {0} {1} {2} {3} ", 1, 2, 3, new object());
+            serilog.Information(" {0} ", _models);
         }
     }
 
@@ -48,7 +59,7 @@ public class LogFileBenchmark : BenchmarkItem
     {
         for(var i = 0; i < count; i++)
         {
-            logger.Information(" {0} {1} {2} {3} ", 1, 2, 3, new object());
+            logger.Information(" {0} ", _models);
         }
     }
 
@@ -57,22 +68,29 @@ public class LogFileBenchmark : BenchmarkItem
     {
         for(var i = 0; i < count; i++)
         {
-            nlog.Info(" {0} {1} {2} {3} ", 1, 2, 3, new object());
+            nlog.Info(" {0} ", _models);
         }
     }
 
-    [Benchmark]
+    //[Benchmark]
     public void UseZLog()
     {
         for(var i = 0; i < count; i++)
         {
-            zlogger.ZLogInformation(" {0} {1} {2} {3} ", 1, 2, 3, new object());
+            zlogger.ZLogInformation(" {0}  ", _models);
         }
     }
-#pragma warning disable CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
-    private static Serilog.Core.Logger serilog;
-    private static ILogger logger;
-    private static NLog.Logger nlog;
-    private static Microsoft.Extensions.Logging.ILogger zlogger;
-#pragma warning restore CS8618 // 在退出构造函数时，不可为 null 的字段必须包含非 null 值。请考虑声明为可以为 null。
+
+    public class Model1
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string DisplayName { get; set; }
+
+        public int Age { get; set; }
+
+        public Dictionary<int, string> Profiles { get; set; }
+    }
 }

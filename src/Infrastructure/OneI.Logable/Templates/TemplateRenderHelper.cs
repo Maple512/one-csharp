@@ -13,7 +13,7 @@ public static class TemplateRenderHelper
         var message = context.Message;
         var properties = context.Properties;
 
-        PropertyValue value = default;
+        object? value = default;
         var container = ZString.CreateStringBuilder(true);
 
         formatProvider ??= CultureInfo.InvariantCulture;
@@ -42,7 +42,7 @@ public static class TemplateRenderHelper
                     argumentIndex++;
                 }
 
-                LiteralRender(ref container, value.Value, ref holder, formatProvider);
+                LiteralRender(ref container, value, holder.Type, holder.Format, formatProvider);
             }
             else if(holder.IsNamed())
             {
@@ -144,11 +144,11 @@ public static class TemplateRenderHelper
             return;
         }
 
-        if(!properties.TryGetValue(holder.Name!, out var propertyValue))
+        if(!properties.TryGetValue(holder.Name!, out var value))
         {
             if(properties.Length > argumentIndex)
             {
-                propertyValue = properties[argumentIndex++].Value;
+                value = properties[argumentIndex++].Value;
             }
             else
             {
@@ -157,14 +157,15 @@ public static class TemplateRenderHelper
             }
         }
 
-        LiteralRender(ref writer, propertyValue.Value.Value, ref holder, formatProvider);
+        LiteralRender(ref writer, value, holder.Type, holder.Format, formatProvider);
     }
 
-    internal static void LiteralRender<TValue>(
+    public static void LiteralRender<TValue>(
         ref Utf16ValueStringBuilder writer,
         TValue? value,
-        ref TemplateHolder holder,
-        IFormatProvider formatProvider)
+        PropertyType type,
+        string? format,
+        IFormatProvider? formatProvider)
     {
         if(value == null)
         {
@@ -174,17 +175,14 @@ public static class TemplateRenderHelper
 
         if(value is IPropertyValueFormattable pf)
         {
-            scoped var destination = writer.GetSpan(0);
-            if(pf.TryFormat(destination, holder.Type, out var written))
-            {
-                writer.Advance(written);
-                return;
-            }
+            pf.Format(ref writer, type);
+
+            return;
         }
 
         if(value is string str)
         {
-            if(holder.Type == PropertyType.Stringify)
+            if(type == PropertyType.Stringify)
             {
                 writer.Append('"');
                 writer.Append(str.Replace("\"", "\\\""));
@@ -200,34 +198,32 @@ public static class TemplateRenderHelper
 
         if(value is ISpanFormattable sf)
         {
-            WriteSpanFormattable(ref writer, sf, holder.Format, formatProvider);
+            WriteSpanFormattable(ref writer, sf, format, formatProvider);
 
             return;
         }
 
         if(value is IFormattable f)
         {
-            writer.Append(f.ToString(holder.Format, formatProvider));
+            writer.Append(f.ToString(format, formatProvider));
             return;
         }
 
-        var custom = (ICustomFormatter?)formatProvider.GetFormat(typeof(ICustomFormatter));
+        var custom = (ICustomFormatter?)formatProvider?.GetFormat(typeof(ICustomFormatter));
         if(custom != null)
         {
-            writer.Append(custom.Format(holder.Format, value, formatProvider));
+            writer.Append(custom.Format(format, value, formatProvider));
             return;
         }
 
         writer.Append(value.ToString()!);
     }
 
-    private const int maxBufferSize = int.MaxValue / 2;
-
-    private static void WriteSpanFormattable(
+    public static void WriteSpanFormattable(
         ref Utf16ValueStringBuilder writer,
         ISpanFormattable spanFormattable,
-        string format,
-        IFormatProvider formatProvider)
+        string? format,
+        IFormatProvider? formatProvider)
     {
         scoped var buffer = writer.GetSpan(0);
 

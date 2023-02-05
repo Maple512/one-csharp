@@ -1,5 +1,8 @@
 namespace OneI.Logable.Templates;
 
+using Cysharp.Text;
+
+[Obsolete]
 [StructLayout(LayoutKind.Auto)]
 public readonly struct PropertyValue : IEquatable<PropertyValue>
 {

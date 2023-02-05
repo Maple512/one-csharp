@@ -10,13 +10,13 @@ public struct PropertyDictionary
     private const int MaxCapacity = 100;
 
     private string[] _keys;
-    private PropertyValue[] _values;
+    private object?[] _values;
 
     [ThreadStatic]
     private static string[]? keyBuffer;
 
     [ThreadStatic]
-    private static PropertyValue[]? valuesBuffer;
+    private static object?[]? valuesBuffer;
 
     [ThreadStatic]
     private static bool _buffered;
@@ -30,7 +30,7 @@ public struct PropertyDictionary
         }
 
         _keys = keyBuffer ??= new string[MaxCapacity];
-        _values = valuesBuffer ??= new PropertyValue[MaxCapacity];
+        _values = valuesBuffer ??= new object?[MaxCapacity];
 
         _buffered = true;
     }
@@ -49,7 +49,7 @@ public struct PropertyDictionary
     }
 
     [ReadOnly(true)]
-    public KeyValuePair<string, PropertyValue> this[int index]
+    public KeyValuePair<string, object?> this[int index]
     {
         get
         {
@@ -58,7 +58,7 @@ public struct PropertyDictionary
                 ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index);
             }
 
-            return new KeyValuePair<string, PropertyValue>(_keys[index], _values[index]);
+            return new KeyValuePair<string, object?>(_keys[index], _values[index]);
         }
     }
 
@@ -68,7 +68,7 @@ public struct PropertyDictionary
         get => _keys.AsSpan(0, Length);
     }
 
-    public ReadOnlySpan<PropertyValue> Values
+    public ReadOnlySpan<object?> Values
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => _values.AsSpan(0, Length);
@@ -95,7 +95,7 @@ public struct PropertyDictionary
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AddProperty<T>(string key, T value)
     {
-        _ = TryInsert(key, new PropertyValue(value), InsertionBehavior.ThrowOnExisting);
+        _ = TryInsert(key, value, InsertionBehavior.ThrowOnExisting);
     }
 
     /// <summary>
@@ -108,7 +108,7 @@ public struct PropertyDictionary
     /// <exception cref="ArgumentNullException">给定的<paramref name="key" />为<see langword="null" /></exception>
     /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Add(string key, PropertyValue value)
+    public void Add(string key, object? value)
     {
         _ = TryInsert(key, value, InsertionBehavior.ThrowOnExisting);
     }
@@ -122,7 +122,7 @@ public struct PropertyDictionary
     /// <exception cref="ArgumentNullException">给定的<paramref name="key" />为<see langword="null" /></exception>
     /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryAdd(string key, PropertyValue value) => TryInsert(key, value, InsertionBehavior.None);
+    public bool TryAdd(string key, object? value) => TryInsert(key, value, InsertionBehavior.None);
 
     /// <summary>
     ///     向缓冲区中添加指定的键值对，如果指定的<paramref name="key" />已存在，则更新
@@ -132,7 +132,7 @@ public struct PropertyDictionary
     /// <exception cref="ArgumentNullException">给定的<paramref name="key" />为<see langword="null" /></exception>
     /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AddOrUpdate(string key, PropertyValue value)
+    public void AddOrUpdate(string key, object? value)
         => _ = TryInsert(key, value, InsertionBehavior.OverwriteExisting);
 
     /// <summary>
@@ -143,21 +143,7 @@ public struct PropertyDictionary
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool ContainsKey(string key) => Keys.IndexOf(key) != -1;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public T GetValue<T>(string key)
-    {
-        var index = Keys.IndexOf(key);
-
-        // TODO: 这里的强转需要检查下
-        if(index != -1)
-        {
-            return (T)_values[index].Value!;
-        }
-
-        throw new KeyNotFoundException();
-    }
-
-    public bool TryGetValue(string key, [NotNullWhen(true)] out PropertyValue? value)
+    public bool TryGetValue(string key, out object? value)
     {
         if(key == null)
         {
@@ -185,7 +171,7 @@ public struct PropertyDictionary
     /// <exception cref="ArgumentException">已存在指定的<paramref name="key" /></exception>
     /// <exception cref="ArgumentNullException">给定的<paramref name="key" />为<see langword="null" /></exception>
     /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
-    private bool TryInsert(string key, PropertyValue value, InsertionBehavior behavior)
+    private bool TryInsert(string key, object? value, InsertionBehavior behavior)
     {
         if(key == null)
         {

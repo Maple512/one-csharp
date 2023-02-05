@@ -5,6 +5,6 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
-    <Import Project="../../common.test.props"/>
+    <Import Project="../../common.test.props" />
 
 </Project>

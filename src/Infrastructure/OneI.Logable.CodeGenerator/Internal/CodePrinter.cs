@@ -1,4 +1,4 @@
-namespace OneI.Logable;
+namespace OneI.Logable.Internal;
 
 using Microsoft.CodeAnalysis.Text;
 using OneI.Logable.Definitions;
@@ -6,7 +6,7 @@ using OneI.Logable.Internal;
 
 internal static partial class CodePrinter
 {
-    private static readonly ConcurrentDictionary<ISymbol, TypeDef> _types = new();
+    private static readonly ConcurrentDictionary<ISymbol, TypeDef> _types = new(EqualityComparer<ISymbol>.Default);
 
     public static void AddType(ISymbol symbol, TypeDef type)
     {
@@ -38,14 +38,18 @@ internal static partial class CodePrinter
         content.AppendLine("using global::System;");
         content.AppendLine("using global::System.Runtime.CompilerServices;");
         content.AppendLine();
-        content.AppendLine($"partial class {CodeAssets.LoggerExtension.Name}");
+        content.AppendLine($"internal static partial class {CodeAssets.LoggerExtension.Name}");
         content.AppendLine("{");
 
         // 创建自定义属性
         using(var _ = content.Indent())
         {
-            var types = _types.Values.Where(x => x.Kind != TypeDefKind.Literal).OrderBy(x => x.Kind)
-                .ThenBy(x => x.Properties.Count).ToList();
+            var types = _types.Values.OrderBy(x => x.Kind)
+                .ThenBy(x => x.WrapperName)
+                .ThenBy(x => x.Properties.Count)
+                .ToList();
+
+            types.Add(TypeSymbolParser.DefaultType);
 
             var index = 0;
             foreach(var item in types)
@@ -55,6 +59,45 @@ internal static partial class CodePrinter
                 if(++index < types.Count)
                 {
                     content.AppendLine();
+                }
+            }
+
+            var formatter = types.Where(
+                x => x.Kind is not TypeDefKind.Literal or TypeDefKind.None)
+                .ToList();
+            if(formatter.Count > 0)
+            {
+                content.AppendLine();
+                index = 0;
+                foreach(var item in formatter)
+                {
+                    switch(item.Kind)
+                    {
+                        case TypeDefKind.Tuple:
+                        case TypeDefKind.ValueTuple:
+                            TupleFormatter(content, item);
+                            break;
+                        case TypeDefKind.Array:
+                            ArrayFormatter(content, item);
+                            break;
+                        case TypeDefKind.EnumerableT:
+                            EnumerableTFormatter(content, item);
+                            break;
+                        case TypeDefKind.Dictionary:
+                            DictionaryFormatter(content, item);
+                            break;
+                        case TypeDefKind.Enumerable:
+                            EnumerableFormatter(content, item);
+                            break;
+                        case TypeDefKind.Object:
+                            ObjectTypeFormatter(content, item);
+                            break;
+                    }
+
+                    if(++index < formatter.Count)
+                    {
+                        content.AppendLine();
+                    }
                 }
             }
         }
@@ -76,7 +119,7 @@ internal static partial class CodePrinter
         content.AppendLine("using global::System;");
         content.AppendLine("using global::System.Runtime.CompilerServices;");
         content.AppendLine();
-        content.AppendLine($"partial class {CodeAssets.LoggerExtension.Name}");
+        content.AppendLine($"internal static partial class {CodeAssets.LoggerExtension.Name}");
         content.AppendLine("{");
 
         using(var _ = content.Indent())

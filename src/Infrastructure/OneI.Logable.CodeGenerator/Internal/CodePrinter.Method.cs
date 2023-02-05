@@ -1,9 +1,9 @@
-namespace OneI.Logable;
+namespace OneI.Logable.Internal;
 
 using OneI.Logable.Definitions;
 using OneI.Logable.Internal;
 
-internal partial class CodePrinter
+partial class CodePrinter
 {
     internal static void PrintMethod(IndentedStringBuilder builder, MethodDef method)
     {
@@ -72,30 +72,40 @@ internal partial class CodePrinter
 
     private static void PrintMethodBody(IndentedStringBuilder builder, MethodDef method)
     {
+        if(method.HasMessage)
+        {
+            builder.AppendLine("if(message is { Length: > 128 })");
+            builder.AppendLine("{");
+            using(builder.Indent())
+            {
+                builder.AppendLine("throw new global::System.ArgumentOutOfRangeException(\"The String is to long, Please try to use a short string(length <= 128)\", nameof(message));");
+            }
+            builder.AppendLine("}");
+            builder.AppendLine();
+        }
         builder.AppendLine("var properties = new global::OneI.Logable.Templates.PropertyDictionary();");
 
         for(var i = 0; i < method.Parameters.Count; i++)
         {
             var parameter = method.Parameters[i];
 
-            builder.Append($"properties.Add(\"__{i}\", ");
-
             var type = _types.Values.FirstOrDefault(x => x.Equals(parameter.Type));
 
-            if(type.Kind is not TypeDefKind.Literal)
+            builder.Append($"properties.Add(\"__{i}\", ");
+
+            if(type != null)
             {
-                builder.Append($"new global::OneI.Logable.Templates.PropertyValue(new {string.Join("_", type.Names)}_Wrapper({parameter.Name}))");
+                builder.Append($"{parameter.Type.WrapperMethod}({parameter.Name})");
             }
             else
             {
-                builder.Append($"new global::OneI.Logable.Templates.PropertyValue({parameter.Name})");
+                builder.Append(parameter.Name);
             }
 
             builder.AppendLine(");");
         }
 
         builder.AppendLine();
-
         builder.Append("global::OneI.Logable.LoggerExtensions.WriteCore(logger, ");
 
         if(method.HasLevel)

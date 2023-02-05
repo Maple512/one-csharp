@@ -12,15 +12,27 @@ internal class TypeDef : IEquatable<TypeDef>
         TypeArguments = new();
         Constraints = new();
         Properties = new();
-        BaseTypes=  new();
-        Interfaces =  new();
+        BaseTypes = new();
+        Interfaces = new();
+    }
+
+    private string? id;
+
+    public string Id
+    {
+        get
+        {
+            id ??= $"{Randomizer.Latter(5)}_{Math.Abs(GetHashCode())}";
+
+            return id;
+        }
     }
 
     public List<string> Names { get; }
 
-    public List<string> BaseTypes { get;  }
+    public List<string> BaseTypes { get; }
 
-    public List<string> Interfaces { get;}
+    public List<string> Interfaces { get; }
 
     /// <summary>
     ///     类型参数
@@ -51,8 +63,6 @@ internal class TypeDef : IEquatable<TypeDef>
 
     public bool IsFormattable { get; set; }
 
-    public bool IsCustomFormatter { get; set; }
-
     public bool IsPropertyValueFormattable { get; set; }
 
     public bool IsException { get; set; }
@@ -61,6 +71,30 @@ internal class TypeDef : IEquatable<TypeDef>
     ///     类型定义的属性
     /// </summary>
     public List<PropertyDef> Properties { get; }
+
+    public string WrapperMethod
+    {
+        get
+        {
+            return $"Create_{WrapperName}";
+        }
+    }
+
+    public string WrapperName
+    {
+        get
+        {
+            return $"Wrapper_{Id}";
+        }
+    }
+
+    public string FormatterName
+    {
+        get
+        {
+            return $"Formatter_{Id}";
+        }
+    }
 
     public bool Equals(TypeDef other)
     {
@@ -90,29 +124,43 @@ internal class TypeDef : IEquatable<TypeDef>
             _ = content.Append("global::");
         }
 
-        for(var i = 0; i < Names.Count; i++)
+        if(Kind is TypeDefKind.Array)
         {
-            _ = content.Append(Names[i]);
-            if(i < Names.Count - 1)
-            {
-                _ = content.Append('.');
-            }
-        }
-
-        if(TypeArguments.Count > 0)
-        {
-            _ = content.Append('<');
-
             for(var i = 0; i < TypeArguments.Count; i++)
             {
-                _ = content.Append(TypeArguments[i].ToDisplayString());
+                _ = content.Append(TypeArguments[i]);
                 if(i < TypeArguments.Count - 1)
                 {
-                    _ = content.Append(", ");
+                    _ = content.Append('.');
+                }
+            }
+        }
+        else
+        {
+            for(var i = 0; i < Names.Count; i++)
+            {
+                _ = content.Append(Names[i]);
+                if(i < Names.Count - 1)
+                {
+                    _ = content.Append('.');
                 }
             }
 
-            _ = content.Append('>');
+            if(TypeArguments.Count > 0)
+            {
+                _ = content.Append('<');
+
+                for(var i = 0; i < TypeArguments.Count; i++)
+                {
+                    _ = content.Append(TypeArguments[i].ToDisplayString());
+                    if(i < TypeArguments.Count - 1)
+                    {
+                        _ = content.Append(", ");
+                    }
+                }
+
+                _ = content.Append('>');
+            }
         }
 
         if(Kind == TypeDefKind.Array)
@@ -158,5 +206,5 @@ internal class TypeDef : IEquatable<TypeDef>
 /// </summary>
 public enum TypeDefKind : byte
 {
-    None, Literal, Object, ValueTuple, Nullable, Array, EnumerableT, Dictionary, Enumerable,
+    None, Literal, Object, ValueTuple, Tuple, Nullable, Array, Dictionary, EnumerableT, Enumerable,
 }

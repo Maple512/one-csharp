@@ -24,11 +24,11 @@ public class PropertyMiddleware<T> : ILoggerMiddleware
 
         if(_addOrUpdate)
         {
-            properties.AddOrUpdate(_name, new PropertyValue(_value));
+            properties.AddOrUpdate(_name, _value);
         }
         else
         {
-            properties.Add(_name, new PropertyValue(_value));
+            properties.Add(_name, _value);
         }
     }
 }

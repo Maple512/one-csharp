@@ -21,6 +21,7 @@ internal static class CodeAssets
 
         public const string Content =
 """
+#nullable enable
 namespace OneI.Generateable
 {
     /// <summary>
@@ -85,6 +86,7 @@ namespace OneI.Generateable
         public string? MethodName { get; }
     }
 }
+#nullable restore
 """;
     }
 }

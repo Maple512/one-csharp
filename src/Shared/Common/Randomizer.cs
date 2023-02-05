@@ -11,7 +11,13 @@ using System.Text;
 [DebuggerStepThrough]
 internal static partial class Randomizer
 {
-    private const string character_set = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_-+=[{]};:>|./?";
+    const string latter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private const string character_set = $"0123456789{latter}!@#$%^&*()_-+=[{{]}};:>|./?";
+
+    public static string Latter()
+    {
+        return Latter(Integer(latter.Length));
+    }
 
     public static string String()
     {
@@ -129,6 +135,18 @@ internal static partial class Randomizer
 [StackTraceHidden]
 internal static partial class Randomizer
 {
+    public static string Latter(int length)
+    {
+        scoped Span<char> span = stackalloc char[length];
+
+        for(var i = 0; i < length; i++)
+        {
+            span[i] = Item<char>(latter);
+        }
+
+        return span.ToString();
+    }
+
     public static string String(int length)
     {
         scoped Span<char> span = stackalloc char[length];
@@ -156,6 +174,18 @@ internal static partial class Randomizer
 internal static partial class Randomizer
 {
     private static readonly Random _random = new();
+
+    public static string Latter(int length)
+    {
+        scoped Span<char> span = stackalloc char[length];
+
+        for(var i = 0; i < length; i++)
+        {
+            span[i] = Item<char>(latter);
+        }
+
+        return span.ToString();
+    }
 
     public static string String(int length)
     {

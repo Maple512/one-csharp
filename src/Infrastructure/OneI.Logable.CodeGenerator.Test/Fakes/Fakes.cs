@@ -25,7 +25,6 @@ public class User1
 }
 
 
-[Serializable]
 public class User2
 {
     public int Id { get; set; }
@@ -47,7 +46,20 @@ public class User3
 }
 
 [Serializable]
-public class User4
+public class User4 : ICustomFormatter
 {
     public int Id { get; set; }
+
+    public string Format(string? format, object? arg, IFormatProvider? formatProvider)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public class ModelFormattable : IFormattable
+{
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        return $"{nameof(ModelFormattable)} {DateTime.Now:mm:ss}";
+    }
 }

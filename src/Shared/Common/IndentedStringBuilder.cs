@@ -64,7 +64,7 @@ internal class IndentedStringBuilder
 
     public void AppendLine()
     {
-        AppendLine(string.Empty);
+        _stringBuilder.AppendLine();
     }
 
     public void AppendLine(string value)

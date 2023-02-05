@@ -1,6 +1,7 @@
 namespace OneI.Logable;
 
 using System;
+using System.ComponentModel;
 using System.Numerics;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ public class UserService
         var logger = new LoggerConfiguration()
         .CreateLogger();
 
-        logger.Error(new InvalidCastException(), 12, 3, "");
+        logger.Error(new InvalidCastException(),"", Array.Empty<int>(), default(int?), new List<User1>(), new Dictionary<int,int>(), new string[10], 1, (1,2,3,4), new User1());
 
         //logger.Write(LogLevel.Verbose, new Exception(), "", 1, 1, 1, 1);
         //logger.Error("message", new BitArray(10));
@@ -48,57 +49,6 @@ public class UserService
         //logger.Error("message", new List<int>(10));     
         //logger.Error("message", new Dictionary<int,int>(10));
     }
-}
-
-[Serializable]
-public class User
-{
-    public int Id { get; set; }
-
-    public int Age { get; set; }
-
-public string Name { get; set; }
-public string Description { get; set; }
-
-    public User1 Child { get; set;}
-}
-
-[Serializable]
-public class User1
-{
-    public int Id { get; set; }
-
-    public User2 Child { get; set;}
-public User2 Child1 { get; set;}
-public User2 Child2 { get; set;}
-}    
-
-
-[Serializable]
-public class User2
-{
-    public int Id { get; set; }
-
-    public User3 Child { get; set;}  
-    public User3 Child1 { get; set;}
-    public User3 Child2 { get; set;}
-    public User3 Child3 { get; set;}
-    public User3 Child4 { get; set;}
-
-}
-
-[Serializable]
-public class User3
-{
-    public int Id { get; set; }
-
-    public User4 Child { get; set;}
-}
-
-[Serializable]
-public class User4
-{
-    public int Id { get; set; }
 }
 
 #nullable restore
@@ -118,28 +68,15 @@ public class User4
     {
         public SturctModel1 Value;
 
-        public bool TryFormat(Span<char> destination, PropertyType type, out int charsWritten)
+        public void Format(ref Utf16ValueStringBuilder writer, PropertyType type)
         {
-            charsWritten = 0;
-            try
-            {
-                var container = new RefValueStringBuilder(destination);
+            writer.Append('{');
 
-                container.Append('{');
+            writer.Append($"{nameof(Value.Id)}:");
 
-                container.Append($"{nameof(Value.Id)}:");
-                container.AppendSpanFormattable(Value.Id);
+            TemplateRenderHelper.WriteSpanFormattable(ref writer, Value.Id, null, null);
 
-                container.Append('}');
-
-                charsWritten = container.Length;
-
-                return true;
-            }
-            catch(Exception)
-            {
-                return false;
-            }
+            writer.Append('}');
         }
     }
 

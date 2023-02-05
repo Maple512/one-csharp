@@ -1,6 +1,8 @@
 namespace OneI.Logable.Templates;
 
+using Cysharp.Text;
+
 public interface IPropertyValueFormattable
 {
-    bool TryFormat(Span<char> destination, PropertyType type, out int charsWritten);
+    void Format(ref Utf16ValueStringBuilder writer, PropertyType type);
 }

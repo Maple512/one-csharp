@@ -31,14 +31,14 @@ csharp_using_directive_placement = inside_namespace:silent
 csharp_style_expression_bodied_methods = false:suggestion
 csharp_style_expression_bodied_constructors = false:suggestion
 csharp_style_expression_bodied_operators = false:suggestion
-csharp_style_expression_bodied_properties = false:suggestion
+csharp_style_expression_bodied_properties = false:silent
 csharp_style_expression_bodied_indexers = false:suggestion
-csharp_style_expression_bodied_accessors = false:suggestion
+csharp_style_expression_bodied_accessors = false:silent
 csharp_style_expression_bodied_lambdas = false:suggestion
 csharp_style_expression_bodied_local_functions = false:suggestion
 csharp_style_conditional_delegate_call = true:suggestion
 csharp_prefer_simple_using_statement = true:suggestion
-csharp_prefer_braces = true:silent
+csharp_prefer_braces = when_multiline:silent
 csharp_style_namespace_declarations = file_scoped:silent
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_prefer_top_level_statements = true:silent
@@ -152,51 +152,5 @@ dotnet_naming_style.pascal_case.required_prefix =
 dotnet_naming_style.pascal_case.required_suffix = 
 dotnet_naming_style.pascal_case.word_separator = 
 dotnet_naming_style.pascal_case.capitalization = pascal_case
-
-[*.vb]
-#### 命名样式 ####
-
-# 命名规则
-
-dotnet_naming_rule.interface_should_be_以_i_开始.severity = suggestion
-dotnet_naming_rule.interface_should_be_以_i_开始.symbols = interface
-dotnet_naming_rule.interface_should_be_以_i_开始.style = 以_i_开始
-
-dotnet_naming_rule.类型_should_be_帕斯卡拼写法.severity = suggestion
-dotnet_naming_rule.类型_should_be_帕斯卡拼写法.symbols = 类型
-dotnet_naming_rule.类型_should_be_帕斯卡拼写法.style = 帕斯卡拼写法
-
-dotnet_naming_rule.非字段成员_should_be_帕斯卡拼写法.severity = suggestion
-dotnet_naming_rule.非字段成员_should_be_帕斯卡拼写法.symbols = 非字段成员
-dotnet_naming_rule.非字段成员_should_be_帕斯卡拼写法.style = 帕斯卡拼写法
-
-# 符号规范
-
-dotnet_naming_symbols.interface.applicable_kinds = interface
-dotnet_naming_symbols.interface.applicable_accessibilities = public, friend, private, protected, protected_friend, private_protected
-dotnet_naming_symbols.interface.required_modifiers = 
-
-dotnet_naming_symbols.类型.applicable_kinds = class, struct, interface, enum
-dotnet_naming_symbols.类型.applicable_accessibilities = public, friend, private, protected, protected_friend, private_protected
-dotnet_naming_symbols.类型.required_modifiers = 
-
-dotnet_naming_symbols.非字段成员.applicable_kinds = property, event, method
-dotnet_naming_symbols.非字段成员.applicable_accessibilities = public, friend, private, protected, protected_friend, private_protected
-dotnet_naming_symbols.非字段成员.required_modifiers = 
-
-# 命名样式
-
-dotnet_naming_style.以_i_开始.required_prefix = I
-dotnet_naming_style.以_i_开始.required_suffix = 
-dotnet_naming_style.以_i_开始.word_separator = 
-dotnet_naming_style.以_i_开始.capitalization = pascal_case
-
-dotnet_naming_style.帕斯卡拼写法.required_prefix = 
-dotnet_naming_style.帕斯卡拼写法.required_suffix = 
-dotnet_naming_style.帕斯卡拼写法.word_separator = 
-dotnet_naming_style.帕斯卡拼写法.capitalization = pascal_case
-
-dotnet_naming_style.帕斯卡拼写法.required_prefix = 
-dotnet_naming_style.帕斯卡拼写法.required_suffix = 
-dotnet_naming_style.帕斯卡拼写法.word_separator = 
-dotnet_naming_style.帕斯卡拼写法.capitalization = pascal_case
+csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental = true:silent
+csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental = true:silent

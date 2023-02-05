@@ -14,8 +14,6 @@ internal static class CodeAssets
     public const string ExceptionParameterName = "exception";
     public const string ExceptionParameterType = "global::System.Exception";
 
-    public const string PropertyValue = "global::OneI.Logable.Templates.PropertyValue";
-
     public static class PropertyFactory
     {
         public const string FileName = "OneILoggerExtensions.f.g.cs";
@@ -23,8 +21,8 @@ internal static class CodeAssets
 
     public static class LoggerExtension
     {
-        public const string Name = "OneILoggerExtensions";
-        public const string ClassFullName = $"{LogableNamespace}.OneILoggerExtensions";
+        public const string Name = "OneILoggerCodeGeneratorExtensions";
+        public const string ClassFullName = $"{LogableNamespace}.{Name}";
         public const string FileNmae = "OneILoggerExtensions.g.cs";
         public const string PartialName = "OneILoggerExtensions.p.g.cs";
         public const string Content =
@@ -39,7 +37,7 @@ using global::OneI.Logable.Middlewares;
 using global::OneI.Logable.Templates;
 
 [global::System.Diagnostics.DebuggerStepThrough]
-internal static partial class OneILoggerExtensions
+internal static partial class OneILoggerCodeGeneratorExtensions
 {
     #region Write
 
