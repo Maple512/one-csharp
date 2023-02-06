@@ -40,22 +40,74 @@ public class CodeGenerator : IIncrementalGenerator
             foreach(var attributeSyntax in attributeListSyntax.Attributes)
             {
                 var symbolInfo = cts.SemanticModel.GetSymbolInfo(attributeSyntax);
-                if(symbolInfo.Symbol is not IMethodSymbol attributeSymbol)
+                if(symbolInfo.Symbol is not IMethodSymbol method)
                 {
                     continue;
                 }
 
-                var attributeContainingType = attributeSymbol.ContainingType;
+                var type = method.ContainingType;
 
-                var fullname = attributeContainingType.ToDisplayString();
+                var fullname = type.ToDisplayString();
 
                 if(fullname == CodeAssets.Attribute.FullClassName)
                 {
-                    var methodName = attributeSyntax.ArgumentList?.Arguments.FirstOrDefault()?.ToFullString()
-                        ?.Replace("\"", null)
-                        ?? CodeAssets.Extension.MethodDefaultName;
+                    var baseType = "global::System.Int32";
 
-                    return (enumSyntax, methodName);
+                    if(enumSyntax.BaseList is { Types: { Count: > 0 } })
+                    {
+                        var typeSymbol = cts.SemanticModel.GetSymbolInfo(enumSyntax.BaseList.Types.First().Type).Symbol;
+                        if(typeSymbol is not null)
+                        {
+                            if(TypeSymbolParser.TryParse(typeSymbol, out var btype))
+                            {
+                                baseType = btype!.ToDisplayString();
+                            }
+                        }
+                    }
+
+                    var methodName = CodeAssets.Extension.ToStringMethodName;
+                    var hasDictionary = false;
+                    string? dictionaryMethodName = null;
+
+                    if(attributeSyntax.ArgumentList is { Arguments: { Count: > 0 } })
+                    {
+                        for(var i = 0; i < attributeSyntax.ArgumentList!.Arguments.Count; i++)
+                        {
+                            var argument = attributeSyntax.ArgumentList!.Arguments[i];
+                            var argumentName = argument.NameEquals?.Name.ToFullString().Trim();
+
+                            var methodParameter = method.Parameters.FirstOrDefault();
+                            var expression = argument.Expression as LiteralExpressionSyntax;
+
+                            if(methodParameter?.Name == "methodName")
+                            {
+                                methodName = argument.Expression
+                                    .ToFullString()
+                                    .Replace("\"", null) ?? CodeAssets.Extension.ToStringMethodName;
+                            }
+                            else if(argumentName == "DictionaryMethodName")
+                            {
+                                dictionaryMethodName = argument.Expression
+                                    .ToFullString()
+                                    .Replace("\"", null);
+                            }
+                            else if(argumentName == "HasDictionary")
+                            {
+                                hasDictionary = expression?.IsKind(SyntaxKind.TrueLiteralExpression) == true;
+                            }
+                        }
+                    }
+
+                    if(hasDictionary)
+                    {
+                        dictionaryMethodName ??= CodeAssets.Extension.DictionaryMethodName;
+                    }
+                    else if(dictionaryMethodName is { Length: > 0 })
+                    {
+                        hasDictionary = true;
+                    }
+
+                    return (enumSyntax, methodName, hasDictionary, dictionaryMethodName, baseType);
                 }
             }
         }
@@ -73,31 +125,32 @@ public class CodeGenerator : IIncrementalGenerator
         }
 
         var enums = Parse(compilation, nodes.Where(x => x is not null)
-            .Select(x => x!.Value).Distinct()!, context.CancellationToken);
+            .Select(x => x!.Value).Distinct()!, context.CancellationToken)
+            .OrderBy(x => x.Name);
 
-        context.AddSource(CodeAssets.Extension.FileName, SourceText.From(Build(enums), Encoding.UTF8));
+        context.AddSource(CodeAssets.Extension.FileName, SourceText.From(Build(enums.ToList()), Encoding.UTF8));
     }
 
-    private static List<EnumInformation> Parse(
+    private static IEnumerable<EnumInformation> Parse(
         Compilation compilation,
         IEnumerable<EnumDeclarationInformation> syntaxes,
         CancellationToken cancellationToken)
     {
-        var result = new List<EnumInformation>();
-
         var attribute = compilation.GetTypeByMetadataName(CodeAssets.Attribute.FullClassName);
 
         if(attribute == null)
         {
-            return result;
+            return Array.Empty<EnumInformation>();
         }
 
-        foreach((var syntax, var methodName) in syntaxes)
+        var result = new List<EnumInformation>();
+
+        foreach(var @enum in syntaxes)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var symbol = compilation.GetSemanticModel(syntax.SyntaxTree)
-                .GetDeclaredSymbol(syntax, cancellationToken);
+            var symbol = compilation.GetSemanticModel(@enum.Syntax.SyntaxTree)
+                .GetDeclaredSymbol(@enum.Syntax, cancellationToken);
 
             if(symbol is not INamedTypeSymbol named)
             {
@@ -105,12 +158,11 @@ public class CodeGenerator : IIncrementalGenerator
             }
 
             var name = symbol.ToString();
-            var fields = symbol.GetMembers()
-                .Where(x => x is IFieldSymbol { ConstantValue: { } })
-                .Select(x => x.Name)
-                .ToList();
+            var fields = symbol.GetMembers().OfType<IFieldSymbol>()
+                .Where(x => x is IFieldSymbol)
+                .ToDictionary(k => k.Name, v => v.ConstantValue);
 
-            result.Add(new EnumInformation(name, methodName, fields));
+            result.Add(new EnumInformation(name, @enum, fields));
         }
 
         return result;
@@ -120,6 +172,7 @@ public class CodeGenerator : IIncrementalGenerator
     {
         var container = new IndentedStringBuilder();
 
+        container.AppendLine("#nullable enable");
         container.AppendLine($"namespace {CodeAssets.Extension.Namespace}");
         container.AppendLine("{");
         using(container.Indent())
@@ -128,10 +181,11 @@ public class CodeGenerator : IIncrementalGenerator
             container.AppendLine("{");
             using(container.Indent())
             {
+                var index = 0;
                 foreach(var item in enums)
                 {
                     var name = $"global::{item.Name}";
-                    container.AppendLine($"public static string {item.MethodName}(this {name} @enum, [CallerArgumentExpression(\"enum\")] string? expression = null)");
+                    container.AppendLine($"public static string {item.Declaration.MethodName}(this {name} @enum, [CallerArgumentExpression(nameof(@enum))] string? expression = null)");
                     using(container.Indent())
                     {
                         container.AppendLine("=> @enum switch");
@@ -140,13 +194,50 @@ public class CodeGenerator : IIncrementalGenerator
                         {
                             foreach(var field in item.Fields)
                             {
-                                container.AppendLine($"{name}.{field} => nameof({name}.{field}),");
+                                container.AppendLine($"{name}.{field.Key} => nameof({name}.{field.Key}),");
                             }
 
                             container.AppendLine($"_ => throw new ArgumentException($\"The enum(\\\"{{expression}}\\\") does not in \\\"{item.Name}\\\".\"),");
                         }
 
                         container.AppendLine("};");
+                    }
+
+                    if(item.Declaration.HasDictionary)
+                    {
+                        container.AppendLine();
+                        var returnType = $"global::System.Collections.Generic.Dictionary<{item.Declaration.BaseType}, global::System.String>";
+
+                        container.AppendLine($"public static {returnType} {item.Declaration.DictionaryMethodName}(this {name} @enum)");
+                        using(container.Indent())
+                        {
+                            container.AppendLine($"=> new {returnType}({item.Fields.Count})");
+                            container.AppendLine("{");
+                            using(container.Indent())
+                            {
+                                var findex = 0;
+                                foreach(var field in item.Fields)
+                                {
+                                    container.Append($"{{({item.Declaration.BaseType}){field.Value}, nameof({name}.{field.Key})}}");
+
+                                    if(++findex < item.Fields.Count)
+                                    {
+                                        container.AppendLine(",");
+                                    }
+                                    else
+                                    {
+                                        container.AppendLine(string.Empty);
+                                    }
+                                }
+                            }
+
+                            container.AppendLine("};");
+                        }
+                    }
+
+                    if(++index < enums.Count)
+                    {
+                        container.AppendLine();
                     }
                 }
             }
@@ -155,6 +246,7 @@ public class CodeGenerator : IIncrementalGenerator
         }
 
         container.AppendLine("}");
+        container.AppendLine("#nullable restore");
 
         return container.ToString();
     }
@@ -169,19 +261,24 @@ public class CodeGenerator : IIncrementalGenerator
     }
 }
 
-internal record struct EnumInformation(string Name, string? MethodName, List<string> Fields)
+internal record struct EnumInformation(string Name, EnumDeclarationInformation Declaration, Dictionary<string, object?> Fields)
 {
 }
 
-internal record struct EnumDeclarationInformation(EnumDeclarationSyntax Syntax, string MethodName)
+internal record struct EnumDeclarationInformation(
+    EnumDeclarationSyntax Syntax,
+    string MethodName,
+    bool HasDictionary,
+    string? DictionaryMethodName,
+    string BaseType)
 {
-    public static implicit operator (EnumDeclarationSyntax Syntax, string MethodName)(EnumDeclarationInformation value)
+    public static implicit operator (EnumDeclarationSyntax Syntax, string MethodName, bool HasDictionary, string? DictionaryMethodName, string BaseType)(EnumDeclarationInformation value)
     {
-        return (value.Syntax, value.MethodName);
+        return (value.Syntax, value.MethodName, value.HasDictionary, value.DictionaryMethodName, value.BaseType);
     }
 
-    public static implicit operator EnumDeclarationInformation((EnumDeclarationSyntax Syntax, string MethodName) value)
+    public static implicit operator EnumDeclarationInformation((EnumDeclarationSyntax Syntax, string MethodName, bool HasDictionary, string? DictionaryMethodName, string BaseType) value)
     {
-        return new EnumDeclarationInformation(value.Syntax, value.MethodName);
+        return new EnumDeclarationInformation(value.Syntax, value.MethodName, value.HasDictionary, value.DictionaryMethodName, value.BaseType);
     }
 }

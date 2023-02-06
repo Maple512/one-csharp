@@ -6,8 +6,4 @@
 
     <Import Project="../../common.codegen.props" />
 
-    <ItemGroup>
-      <ProjectReference Include="..\OneI.Generateable\OneI.Generateable.csproj" />
-    </ItemGroup>
-
 </Project>

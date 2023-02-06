@@ -12,10 +12,30 @@ public class EnumToString_Test : CodeGeneratorSnapshotTest
 """
 namespace OneI.Generateable;
 
-[ToFastString("ToSomeEnum")]
-public enum SomeEnum
+using System;
+
+[ToFastString]
+public enum SomeEnum : byte
 {
-    A, B, C, D, E, F
+    A = 20, B, C, D, E, F
+}
+
+[ToFastString(HasDictionary = true)]
+public enum SomeEnum1 : byte
+{
+    A = 20, B, C, F
+}
+
+[ToFastString(HasDictionary = true, DictionaryMethodName = "GetAAA")]
+public enum SomeEnum2 : byte
+{
+    A = 20, B, C, D, E, F
+}
+
+[ToFastString("GETDDD",HasDictionary = true, DictionaryMethodName = "GetAAA")]
+public enum SomeEnum3 : byte
+{
+    A = 20, B, C, D, E, F
 }
 """;
 
@@ -26,4 +46,19 @@ public enum SomeEnum
 public enum SomeEnum
 {
     A, B, C, D, E, F
+}
+
+public enum SomeEnum1 : byte
+{
+    A = 20, B, C, F
+}
+
+public enum SomeEnum2 : byte
+{
+    A = 20, B, C, D, E, F
+}
+
+public enum SomeEnum3 : byte
+{
+    A = 20, B, C, D, E, F
 }

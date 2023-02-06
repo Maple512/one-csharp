@@ -10,7 +10,9 @@ internal static class CodeAssets
 
         public const string FileName = $"{ClassName}.e.g.cs";
 
-        public const string MethodDefaultName = "ToFastString";
+        public const string ToStringMethodName = "ToFastString";
+
+        public const string DictionaryMethodName = "GetDictionaryMap";
     }
 
     public static class Attribute
@@ -40,8 +42,8 @@ namespace OneI.Generateable
     ///  };
     /// </code>
     /// </remarks>
-    [global::System.AttributeUsage(System.AttributeTargets.Enum)]
-    internal class ToFastStringAttribute : global::System.Attribute
+    [global::System.AttributeUsage(global::System.AttributeTargets.Enum, AllowMultiple = false, Inherited = false)]
+    public class ToFastStringAttribute : global::System.Attribute
     {
         /// <summary>
         /// Indicates to use the code generator to produce the ToFastString method for this Enum
@@ -78,12 +80,25 @@ namespace OneI.Generateable
         ///  };
         /// </code>
         /// </remarks>
-        public ToFastStringAttribute(string methodName) 
+        public ToFastStringAttribute(global::System.String? methodName)
         {
             MethodName = methodName;
         }
 
-        public string? MethodName { get; }
+        /// <summary>
+        /// Custome ToFastString method name.
+        /// </summary>
+        public global::System.String? MethodName { get; }
+
+        /// <summary>
+        /// Generate enum and number mapping dictionary
+        /// </summary>
+        public global::System.Boolean HasDictionary { get; init; }
+
+        /// <summary>
+        /// Mapping dictionary method name
+        /// </summary>
+        public global::System.String? DictionaryMethodName { get; init; }
     }
 }
 #nullable restore
