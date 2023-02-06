@@ -3,7 +3,8 @@ namespace OneI.Logable;
 using OneI.Logable.Middlewares;
 using OneI.Logable.Templates;
 
-internal class Logger : ILogger
+[StackTraceHidden]
+public class Logger : ILogger
 {
     internal readonly LogLevelMap _levelMap;
     internal readonly ILoggerSink[] _sinks;

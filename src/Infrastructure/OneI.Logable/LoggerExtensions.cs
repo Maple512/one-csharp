@@ -4,6 +4,7 @@ using System.ComponentModel;
 using OneI.Logable.Middlewares;
 using OneI.Logable.Templates;
 
+[StackTraceHidden]
 public static class LoggerExtensions
 {
     public static void WriteCore(

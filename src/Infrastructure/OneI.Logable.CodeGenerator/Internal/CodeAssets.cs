@@ -37,6 +37,7 @@ using global::OneI.Logable.Middlewares;
 using global::OneI.Logable.Templates;
 
 [global::System.Diagnostics.DebuggerStepThrough]
+[global::System.Diagnostics.StackTraceHidden]
 internal static partial class OneILoggerCodeGeneratorExtensions
 {
     #region Write

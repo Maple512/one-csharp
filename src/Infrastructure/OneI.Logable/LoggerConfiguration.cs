@@ -85,6 +85,15 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
         return new Logger(_middlewares.ToArray(), _sinks.ToArray(), _logLevelMap, templateSelector);
     }
 
+    public ILogger<T> CreateLogger<T>()
+    {
+        var templateSelector = new TemplateProvider(_defaultTemplate, _templateProviders.ToArray());
+
+        Properties.Add(LoggerConstants.Propertys.SourceContext, typeof(T).FullName!);
+
+        return new Logger<T>(_middlewares.ToArray(), _sinks.ToArray(), _logLevelMap, templateSelector);
+    }
+
     internal ILogger CreateWithLogger(Logger logger)
     {
         var defaultTemplate = _defaultTemplate;

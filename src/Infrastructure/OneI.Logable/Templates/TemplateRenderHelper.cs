@@ -196,16 +196,17 @@ public static class TemplateRenderHelper
             return;
         }
 
-        if(value is ISpanFormattable sf)
-        {
-            WriteSpanFormattable(ref writer, sf, format, formatProvider);
-
-            return;
-        }
-
         if(value is IFormattable f)
         {
+            if(value is ISpanFormattable sf)
+            {
+                WriteSpanFormattable(ref writer, sf, format, formatProvider);
+
+                return;
+            }
+
             writer.Append(f.ToString(format, formatProvider));
+
             return;
         }
 
@@ -216,7 +217,7 @@ public static class TemplateRenderHelper
             return;
         }
 
-        writer.Append(value.ToString()!);
+        writer.Append(value.ToString().AsSpan());
     }
 
     public static void WriteSpanFormattable(

@@ -31,4 +31,6 @@ public interface ILoggerConfiguration : ILoggerPipelineConfiguration
     /// </summary>
     /// <returns></returns>
     ILogger CreateLogger();
+
+    ILogger<T> CreateLogger<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>();
 }

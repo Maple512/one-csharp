@@ -11,33 +11,44 @@ using System.Text;
 [DebuggerStepThrough]
 internal static partial class Randomizer
 {
-    const string latter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private const string latter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private const string character_set = $"0123456789{latter}!@#$%^&*()_-+=[{{]}};:>|./?";
 
-    public static string Latter()
+    #region Enumerable
+
+    /// <summary>
+    /// 从给定集合中随机获取一个元素
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    public static T Item<T>(params T[] source)
     {
-        return Latter(Integer(latter.Length));
+        _ = Check.NotNull(source);
+
+        return source[Integer(source.Length)];
     }
 
-    public static string String()
+    /// <summary>
+    /// 从给定集合中随机获取一个元素
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <returns></returns>
+    public static T Item<T>(IEnumerable<T> source)
     {
-        return String(Integer(character_set.Length));
+        _ = Check.NotNull(source);
+
+        return source.ElementAt(Integer(source.Count()));
     }
 
-    public static T Item<T>(params T[] objs)
-    {
-        _ = Check.NotNull(objs);
-
-        return objs[Integer(objs.Length)];
-    }
-
-    public static T Item<T>(IEnumerable<T> list)
-    {
-        _ = Check.NotNull(list);
-
-        return list.ElementAt(Integer(list.Count()));
-    }
-
+    /// <summary>
+    /// 从给定集合中随机获取指定长度的元素
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="count"></param>
+    /// <param name="source"></param>
+    /// <returns></returns>
     public static IEnumerable<T> Items<T>(int count, params T[] source)
     {
         _ = Check.NotNull(source);
@@ -50,28 +61,41 @@ internal static partial class Randomizer
         yield break;
     }
 
-    public static IEnumerable<T> Items<T>(IEnumerable<T> list, int count)
+    /// <summary>
+    /// 从给定集合中随机获取指定长度的元素
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="count"></param>
+    /// <returns></returns>
+    public static IEnumerable<T> Items<T>(IEnumerable<T> source, int count)
     {
-        _ = Check.NotNull(list);
+        _ = Check.NotNull(source);
 
         for(var i = 0; i < count; i++)
         {
-            yield return list.ElementAt(Integer(list.Count()));
+            yield return source.ElementAt(Integer(source.Count()));
         }
 
         yield break;
     }
 
-    public static List<T> Disorder<T>(IEnumerable<T> items)
+    /// <summary>
+    /// 打乱顺序
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="items"></param>
+    /// <returns></returns>
+    public static IEnumerable<T> Disorder<T>(IEnumerable<T> items)
     {
         _ = Check.NotNull(items);
 
         var currentList = new List<T>(items);
-        var randomList = new List<T>();
+        var randomList = new List<T>(currentList.Count);
 
         while(currentList.Any())
         {
-            var randomIndex = Integer(0, currentList.Count);
+            var randomIndex = Integer(currentList.Count);
 
             randomList.Add(currentList[randomIndex]);
 
@@ -81,6 +105,67 @@ internal static partial class Randomizer
         return randomList;
     }
 
+    #endregion
+
+    #region String
+
+    /// <summary>
+    /// 随机字母
+    /// </summary>
+    /// <returns></returns>
+    public static string Latter()
+    {
+        return Latter(Integer(latter.Length));
+    }
+
+    /// <summary>
+    /// 获取指定长度的随机字母
+    /// </summary>
+    /// <param name="length"></param>
+    /// <returns></returns>
+    public static string Latter(int length)
+    {
+        scoped Span<char> span = stackalloc char[length];
+
+        for(var i = 0; i < length; i++)
+        {
+            span[i] = Item<char>(latter);
+        }
+
+        return span.ToString();
+    }
+
+    /// <summary>
+    /// 随机字符
+    /// </summary>
+    /// <returns></returns>
+    public static string String()
+    {
+        return String(Integer(character_set.Length));
+    }
+
+    /// <summary>
+    /// 获取指定长度的随机字符
+    /// </summary>
+    /// <param name="length"></param>
+    /// <returns></returns>
+    public static string String(int length)
+    {
+        scoped Span<char> span = stackalloc char[length];
+
+        for(var i = 0; i < length; i++)
+        {
+            span[i] = Item<char>(character_set);
+        }
+
+        return span.ToString();
+    }
+
+    /// <summary>
+    /// 随机中文文字
+    /// </summary>
+    /// <param name="length"></param>
+    /// <returns></returns>
     public static string StringChinese(int length)
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -129,36 +214,68 @@ internal static partial class Randomizer
 
         return builder.ToString();
     }
+
+    #endregion
+
+    #region Numberic
+
+    /// <summary>
+    /// 随机偶数
+    /// </summary>
+    /// <param name="max"></param>
+    /// <returns></returns>
+    public static int Even(int max)
+    {
+        return Integer(max) & ~1;
+    }
+
+    /// <summary>
+    /// 随机偶数
+    /// </summary>
+    /// <param name="min"></param>
+    /// <param name="max"></param>
+    /// <returns></returns>
+    public static int Even(int min, int max)
+    {
+        return Integer(min, max) & ~1;
+    }
+
+    /// <summary>
+    /// 随机奇数
+    /// </summary>
+    /// <param name="max"></param>
+    /// <returns></returns>
+    public static int Odd(int max)
+    {
+        return Integer(max) | 1;
+    }
+
+    /// <summary>
+    /// 随机奇数
+    /// </summary>
+    /// <param name="min"></param>
+    /// <param name="max"></param>
+    /// <returns></returns>
+    public static int Odd(int min, int max)
+    {
+        min = (min + 1) & ~1;
+        max |= 1;
+
+        if(min > max)
+        {
+            return min;
+        }
+
+        return Integer(min, max) | 1;
+    }
+
+    #endregion
 }
 
 #if NET
 [StackTraceHidden]
 internal static partial class Randomizer
 {
-    public static string Latter(int length)
-    {
-        scoped Span<char> span = stackalloc char[length];
-
-        for(var i = 0; i < length; i++)
-        {
-            span[i] = Item<char>(latter);
-        }
-
-        return span.ToString();
-    }
-
-    public static string String(int length)
-    {
-        scoped Span<char> span = stackalloc char[length];
-
-        for(var i = 0; i < length; i++)
-        {
-            span[i] = Item<char>(character_set);
-        }
-
-        return span.ToString();
-    }
-
     public static int Integer(int minValue, int maxValue)
     {
         return RandomNumberGenerator.GetInt32(minValue, maxValue);
@@ -173,30 +290,11 @@ internal static partial class Randomizer
 #elif NETSTANDARD2_0_OR_GREATER
 internal static partial class Randomizer
 {
-    private static readonly Random _random = new();
+    private static Random _random = new();
 
-    public static string Latter(int length)
+    public static void InlitializeRandomSeed(int seed)
     {
-        scoped Span<char> span = stackalloc char[length];
-
-        for(var i = 0; i < length; i++)
-        {
-            span[i] = Item<char>(latter);
-        }
-
-        return span.ToString();
-    }
-
-    public static string String(int length)
-    {
-        var span = new StringBuilder(length);
-
-        for(var i = 0; i < length; i++)
-        {
-            _ = span.Append(Item<char>(character_set));
-        }
-
-        return span.ToString();
+        _random = new Random(seed);
     }
 
     public static int Integer(int minValue, int maxValue)

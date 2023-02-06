@@ -143,6 +143,30 @@ public struct PropertyDictionary
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool ContainsKey(string key) => Keys.IndexOf(key) != -1;
 
+    public bool TryGetValue<T>(string key, out T? value)
+    {
+        if(key == null)
+        {
+            ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key);
+        }
+
+        var index = Keys.IndexOf(key);
+
+        if(index != -1)
+        {
+            var obj = _values[index];
+
+            if(obj is T result)
+            {
+                value = result;
+                return true;
+            }
+        }
+
+        value = default;
+        return false;
+    }
+
     public bool TryGetValue(string key, out object? value)
     {
         if(key == null)

@@ -100,6 +100,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Generateable.Generic",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Generateable.Test", "Infrastructure\OneI.Generateable.Test\OneI.Generateable.Test.csproj", "{A0435BE3-4F0C-44B5-AD54-1E0C55FF7BBB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Logable.Extensions.EventSource", "Infrastructure\OneI.Logable.Extensions.EventSource\OneI.Logable.Extensions.EventSource.csproj", "{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -202,6 +204,10 @@ Global
 		{A0435BE3-4F0C-44B5-AD54-1E0C55FF7BBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0435BE3-4F0C-44B5-AD54-1E0C55FF7BBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0435BE3-4F0C-44B5-AD54-1E0C55FF7BBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -236,6 +242,7 @@ Global
 		{48118014-CAD0-4D3F-8AB7-A338461FB352} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
 		{B4F6BAD5-E5F2-486C-8F17-DDA266257910} = {48118014-CAD0-4D3F-8AB7-A338461FB352}
 		{A0435BE3-4F0C-44B5-AD54-1E0C55FF7BBB} = {48118014-CAD0-4D3F-8AB7-A338461FB352}
+		{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD} = {FCF4D373-C63B-41A0-A3F7-935189A7CE68}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

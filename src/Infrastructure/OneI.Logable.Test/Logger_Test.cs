@@ -19,6 +19,7 @@ public class Logger_Test
         logger = new LoggerConfiguration()
                  .Level.Override<Logger_Test>(LogLevel.Information)
                  .CreateLogger();
+
         logger.ForContext<Logger_Test>().IsEnable(LogLevel.Verbose).ShouldBeFalse();
         logger.ForContext<Logger_Test>().IsEnable(LogLevel.Information).ShouldBeTrue();
         logger.ForContext<Logger_Test>().IsEnable(LogLevel.Fatal).ShouldBeTrue();
@@ -26,7 +27,7 @@ public class Logger_Test
         // other type is true (still the default)
         logger.ForContext<ILogger>().IsEnable(LogLevel.Verbose).ShouldBeTrue();
 
-        logger.Information("", 1, 2, 3, 4, 5);
+        logger.Information("", 1);
     }
 
     [Fact]
@@ -36,7 +37,7 @@ public class Logger_Test
 
         var id = Guid.NewGuid();
         var name = "Id";
-        var propertyId = (PropertyValue?)null;
+        object propertyId = null!;
 
         var logger = Fake.CreateLogger(
                                        logger: logger => logger

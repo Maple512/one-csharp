@@ -9,8 +9,6 @@ public class size_test
     {
         TestTools.PrintLayoutToFile<object>().Size.ShouldBe(8);
 
-        TestTools.PrintLayoutToFile<PropertyValue>().Size.ShouldBe(16);
-
         TestTools.PrintLayoutToFile<TemplateHolder>().Size.ShouldBe(40);
 
         TestTools.PrintLayoutToFile<TemplateEnumerator>().Size.ShouldBe(112);
