@@ -22,6 +22,7 @@
   - `Reflectable`：先使用源生成器定位，然后使用Fody补充
 - `Example`：案例
 - `Service`：服务
+- `CodeGenerator`：代码生成器生成类文件统一命名空间后缀：`CodeGenerated`
 
 ## 笔记
 

@@ -5,8 +5,6 @@ using System.Runtime.Versioning;
 [SupportedOSPlatform(SharedConstants.OSPlatform.Windows)]
 public class EventSourceOptions
 {
-    public const string EventId = nameof(EventId);
-
     public string? LogName { get; set; } = "Application";
 
     public string? SourceName { get; set; } = ".NET Runtime";

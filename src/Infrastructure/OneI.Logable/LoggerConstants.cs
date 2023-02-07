@@ -31,6 +31,12 @@ public static class LoggerConstants
         public const string Line = nameof(Line);
 
         public const string SourceContext = nameof(SourceContext);
+
+        public const string DefaultSourceContext = "Default";
+
+        public const string EventId = nameof(EventId);
+
+        public const int DefaultEventId = 0;
     }
 
     internal static class Formatters

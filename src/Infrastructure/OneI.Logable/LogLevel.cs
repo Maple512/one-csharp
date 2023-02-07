@@ -1,6 +1,6 @@
 namespace OneI.Logable;
 
-[OneI.Generateable.ToFastString]
+[ToFastString]
 public enum LogLevel : sbyte
 {
     /// <summary>

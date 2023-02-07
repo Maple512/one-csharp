@@ -3,7 +3,7 @@ namespace OneI.Logable;
 using OneI.Logable.Templates;
 
 [StackTraceHidden]
-public class Logger<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T> : Logger, ILogger<T>, ILogger
+public class Logger<TSource> : Logger, ILogger<TSource>, ILogger
 {
     internal Logger(
         ILoggerMiddleware[] middleware,

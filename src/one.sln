@@ -30,27 +30,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Utilityable.Command", "Infrastructure\OneI.Utilityable.Command\OneI.Utilityable.Command.csproj", "{81FE7853-EC0C-4294-9E8A-498D202147DA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4A002385-E86A-43D0-9272-16FC438A0800}"
-	ProjectSection(SolutionItems) = preProject
-		Shared\Common\Check.cs = Shared\Common\Check.cs
-		Shared\Common\CollectionExtensions.cs = Shared\Common\CollectionExtensions.cs
-		Shared\Common\DictionaryExtensions.cs = Shared\Common\DictionaryExtensions.cs
-		Shared\Common\DisposeAction.cs = Shared\Common\DisposeAction.cs
-		Shared\Common\EnumerableExtensions.cs = Shared\Common\EnumerableExtensions.cs
-		Shared\NETStandard\Index.cs = Shared\NETStandard\Index.cs
-		Shared\Interop\Interop.Kernel32.cs = Shared\Interop\Interop.Kernel32.cs
-		Shared\Unix\Interop.Libc.cs = Shared\Unix\Interop.Libc.cs
-		Shared\Common\IOTools.cs = Shared\Common\IOTools.cs
-		Shared\Common\ListExtensions.cs = Shared\Common\ListExtensions.cs
-		Shared\Common\QueryableExtensions.cs = Shared\Common\QueryableExtensions.cs
-		Shared\Common\Randomizer.cs = Shared\Common\Randomizer.cs
-		Shared\NETStandard\Range.cs = Shared\NETStandard\Range.cs
-		Shared\Common\RangeExtensions.cs = Shared\Common\RangeExtensions.cs
-		Shared\Common\ReflectionExtensions.cs = Shared\Common\ReflectionExtensions.cs
-		Shared\Common\SharedConstants.cs = Shared\Common\SharedConstants.cs
-		Shared\Unix\SharedConstants.Unix.cs = Shared\Unix\SharedConstants.Unix.cs
-		Shared\Common\StringExtensions.cs = Shared\Common\StringExtensions.cs
-		Shared\Common\ThrowHelper.cs = Shared\Common\ThrowHelper.cs
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneT.Benchmark", "Test\OneT.Benchmark\OneT.Benchmark.csproj", "{5B1885C4-30B5-42B4-A959-8D6D83DBDB40}"
 EndProject
@@ -100,9 +79,40 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Generateable.Generic",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OneI.Generateable.Test", "Infrastructure\OneI.Generateable.Test\OneI.Generateable.Test.csproj", "{A0435BE3-4F0C-44B5-AD54-1E0C55FF7BBB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Logable.Extensions.EventSource", "Infrastructure\OneI.Logable.Extensions.EventSource\OneI.Logable.Extensions.EventSource.csproj", "{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{BC806539-8E52-4D66-8BC4-963E49E28E68}"
+	ProjectSection(SolutionItems) = preProject
+		Shared\Common\Check.cs = Shared\Common\Check.cs
+		Shared\Common\CollectionExtensions.cs = Shared\Common\CollectionExtensions.cs
+		Shared\Common\DictionaryExtensions.cs = Shared\Common\DictionaryExtensions.cs
+		Shared\Common\DisposeAction.cs = Shared\Common\DisposeAction.cs
+		Shared\Common\EnumerableExtensions.cs = Shared\Common\EnumerableExtensions.cs
+		Shared\Common\IOTools.cs = Shared\Common\IOTools.cs
+		Shared\Common\ListExtensions.cs = Shared\Common\ListExtensions.cs
+		Shared\Common\QueryableExtensions.cs = Shared\Common\QueryableExtensions.cs
+		Shared\Common\Randomizer.cs = Shared\Common\Randomizer.cs
+		Shared\Common\RangeExtensions.cs = Shared\Common\RangeExtensions.cs
+		Shared\Common\ReflectionExtensions.cs = Shared\Common\ReflectionExtensions.cs
+		Shared\Common\SharedConstants.cs = Shared\Common\SharedConstants.cs
+		Shared\Common\StringExtensions.cs = Shared\Common\StringExtensions.cs
+		Shared\Common\ThrowHelper.cs = Shared\Common\ThrowHelper.cs
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OneI.Generateable", "Infrastructure\OneI.Generateable\OneI.Generateable.csproj", "{53D4A94D-FB3B-4C9F-B06B-EBB29FDECA51}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NETStandard", "NETStandard", "{FCD0620D-0B5E-4B29-9157-AAC3064B0417}"
+	ProjectSection(SolutionItems) = preProject
+		Shared\NETStandard\Index.cs = Shared\NETStandard\Index.cs
+		Shared\NETStandard\Range.cs = Shared\NETStandard\Range.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Interop", "Interop", "{92B1A1AE-B07B-4176-B4DD-12B847C71451}"
+	ProjectSection(SolutionItems) = preProject
+		Shared\Interop\Interop.Kernel32.cs = Shared\Interop\Interop.Kernel32.cs
+		Shared\Unix\Interop.Libc.cs = Shared\Unix\Interop.Libc.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unix", "Unix", "{812C5271-149D-4787-816F-CC89C8F16630}"
+	ProjectSection(SolutionItems) = preProject
+		Shared\Unix\SharedConstants.Unix.cs = Shared\Unix\SharedConstants.Unix.cs
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -206,14 +216,6 @@ Global
 		{A0435BE3-4F0C-44B5-AD54-1E0C55FF7BBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0435BE3-4F0C-44B5-AD54-1E0C55FF7BBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0435BE3-4F0C-44B5-AD54-1E0C55FF7BBB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{53D4A94D-FB3B-4C9F-B06B-EBB29FDECA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{53D4A94D-FB3B-4C9F-B06B-EBB29FDECA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{53D4A94D-FB3B-4C9F-B06B-EBB29FDECA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{53D4A94D-FB3B-4C9F-B06B-EBB29FDECA51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -248,8 +250,10 @@ Global
 		{48118014-CAD0-4D3F-8AB7-A338461FB352} = {26105688-0978-4523-BD3D-84D76F1AA0A0}
 		{B4F6BAD5-E5F2-486C-8F17-DDA266257910} = {48118014-CAD0-4D3F-8AB7-A338461FB352}
 		{A0435BE3-4F0C-44B5-AD54-1E0C55FF7BBB} = {48118014-CAD0-4D3F-8AB7-A338461FB352}
-		{FEFC28BE-BE61-46C2-BCC4-5FDADF2F41BD} = {FCF4D373-C63B-41A0-A3F7-935189A7CE68}
-		{53D4A94D-FB3B-4C9F-B06B-EBB29FDECA51} = {48118014-CAD0-4D3F-8AB7-A338461FB352}
+		{BC806539-8E52-4D66-8BC4-963E49E28E68} = {4A002385-E86A-43D0-9272-16FC438A0800}
+		{FCD0620D-0B5E-4B29-9157-AAC3064B0417} = {4A002385-E86A-43D0-9272-16FC438A0800}
+		{92B1A1AE-B07B-4176-B4DD-12B847C71451} = {4A002385-E86A-43D0-9272-16FC438A0800}
+		{812C5271-149D-4787-816F-CC89C8F16630} = {4A002385-E86A-43D0-9272-16FC438A0800}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E42F812-6AC8-43D9-A0BC-0F1E8A4F17A5}

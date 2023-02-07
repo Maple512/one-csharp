@@ -4,7 +4,7 @@ internal static class CodeAssets
 {
     public static class Extension
     {
-        public const string Namespace = "OneI.Generateable";
+        public const string Namespace = "OneI.Generateable.CodeGenerated";
 
         public const string ClassName = "OneIGenerateableEnumExtensions";
 
@@ -17,14 +17,14 @@ internal static class CodeAssets
 
     public static class Attribute
     {
-        public const string FullClassName = "OneI.Generateable.ToFastStringAttribute";
+        public const string FullClassName = $"{Extension.Namespace}.ToFastStringAttribute";
 
         public const string FileName = "OneIGenerateableEnumExtensions.a.g.cs";
 
         public const string Content =
 """
 #nullable enable
-namespace OneI.Generateable
+namespace OneI.Generateable.CodeGenerated
 {
     /// <summary>
     /// Indicates to use the code generator to produce the ToFastString method for this Enum

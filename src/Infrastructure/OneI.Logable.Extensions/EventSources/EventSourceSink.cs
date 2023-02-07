@@ -25,9 +25,7 @@ internal class EventSourceSink : ILoggerSink
 
             TemplateRenderHelper.Render(writer, context, null);
 
-            _ = context.Properties.TryGetValue<int>(EventSourceOptions.EventId, out var eventId);
-
-            _log.WriteEntry(writer.ToString(), ToEventLogEntryType(context.Message.Level), eventId, 0);
+            _log.WriteEntry(writer.ToString(), ToEventLogEntryType(context.Message.Level), context.EventId, 0);
         }
     }
 

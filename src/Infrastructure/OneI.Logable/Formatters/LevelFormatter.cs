@@ -1,6 +1,5 @@
 namespace OneI.Logable.Formatters;
 
-using OneI.Generateable;
 using static LoggerConstants;
 
 internal static class LevelFormatHelper

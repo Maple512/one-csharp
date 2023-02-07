@@ -42,41 +42,41 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
 
     public ILoggerAuditConfiguration Audit { get; }
 
-    public virtual ILoggerConfiguration Use(ILoggerMiddleware middleware)
+    public virtual ILoggerConfiguration With(ILoggerMiddleware middleware)
     {
         _middlewares.Add(middleware);
 
         return this;
     }
 
-    public ILoggerConfiguration Use<TMiddleware>()
+    public ILoggerConfiguration With<TMiddleware>()
         where TMiddleware : ILoggerMiddleware, new()
-        => Use(new TMiddleware());
+        => With(new TMiddleware());
 
     /// <summary>
     ///     向管道中添加一个中间件
     /// </summary>
-    public ILoggerConfiguration Use(Action<LoggerMessageContext> middleware) => Use(new ActionMiddleware(middleware));
+    public ILoggerConfiguration With(Action<LoggerMessageContext> middleware) => With(new ActionMiddleware(middleware));
 
     /// <summary>
     ///     向管道中添加一个中间件
     /// </summary>
-    public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, ILoggerMiddleware middleware)
-        => Use(new ConditionalMiddleware(condition, middleware));
+    public ILoggerConfiguration WithWhen(Func<LoggerMessageContext, bool> condition, ILoggerMiddleware middleware)
+        => With(new ConditionalMiddleware(condition, middleware));
 
     /// <summary>
     ///     向管道中添加一个中间件
     /// </summary>
-    public ILoggerConfiguration UseWhen<TMiddleware>(Func<LoggerMessageContext, bool> condition)
+    public ILoggerConfiguration WithWhen<TMiddleware>(Func<LoggerMessageContext, bool> condition)
         where TMiddleware : ILoggerMiddleware, new()
-        => UseWhen(condition, new TMiddleware());
+        => WithWhen(condition, new TMiddleware());
 
     /// <summary>
     ///     向管道中添加一个中间件
     /// </summary>
-    public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition
+    public ILoggerConfiguration WithWhen(Func<LoggerMessageContext, bool> condition
                                         , Action<LoggerMessageContext> middleware)
-        => UseWhen(condition, new ActionMiddleware(middleware));
+        => WithWhen(condition, new ActionMiddleware(middleware));
 
     public ILogger CreateLogger()
     {
@@ -85,13 +85,15 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
         return new Logger(_middlewares.ToArray(), _sinks.ToArray(), _logLevelMap, templateSelector);
     }
 
-    public ILogger<T> CreateLogger<T>()
+    public ILogger<TSource> CreateLogger<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSource>()
     {
         var templateSelector = new TemplateProvider(_defaultTemplate, _templateProviders.ToArray());
 
-        Properties.Add(LoggerConstants.Propertys.SourceContext, typeof(T).FullName!);
+        var typename = OneIReflectionExtensions.GetTypeDisplayName(typeof(TSource), true, false, false, '.');
 
-        return new Logger<T>(_middlewares.ToArray(), _sinks.ToArray(), _logLevelMap, templateSelector);
+        Properties.Add(LoggerConstants.Propertys.SourceContext, typename);
+
+        return new Logger<TSource>(_middlewares.ToArray(), _sinks.ToArray(), _logLevelMap, templateSelector);
     }
 
     internal ILogger CreateWithLogger(Logger logger)

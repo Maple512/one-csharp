@@ -15,14 +15,14 @@ public partial class LoggerConfiguration
         {
             _ = Check.NotNullOrEmpty(name);
 
-            return _parent.Use(new PropertyMiddleware<T>(name, value));
+            return _parent.With(new PropertyMiddleware<T>(name, value));
         }
 
         public ILoggerConfiguration AddOrUpdate<T>(string name, T value)
         {
             _ = Check.NotNullOrEmpty(name);
 
-            return _parent.Use(new PropertyMiddleware<T>(name, value, true));
+            return _parent.With(new PropertyMiddleware<T>(name, value, true));
         }
     }
 }

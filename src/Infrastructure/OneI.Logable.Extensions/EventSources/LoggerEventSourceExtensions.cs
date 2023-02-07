@@ -8,7 +8,7 @@ public static class LoggerEventSourceExtensions
 {
     public static ILoggerConfiguration UseEventSource(
         this ILoggerSinkConfiguration sink,
-        Action<EventSourceOptions>? configure)
+        Action<EventSourceOptions>? configure = null)
     {
         var options = new EventSourceOptions();
         configure?.Invoke(options);
@@ -21,7 +21,7 @@ public static class LoggerEventSourceExtensions
     public static ILoggerConfiguration UseEventSourceWhen(
         this ILoggerSinkConfiguration sink,
         Func<LoggerContext, bool> condition,
-        Action<EventSourceOptions>? configure)
+        Action<EventSourceOptions>? configure = null)
     {
         var options = new EventSourceOptions();
         configure?.Invoke(options);

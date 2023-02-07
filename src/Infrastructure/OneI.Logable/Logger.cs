@@ -115,14 +115,14 @@ public class Logger : ILogger
 
             return ForContext(configure =>
             {
-                _ = configure.Use(middleware)
+                _ = configure.With(middleware)
                              .Level.Use(range.Minimum, range.Maximum);
             });
         }
 
         return ForContext(configure =>
         {
-            _ = configure.Use(middleware);
+            _ = configure.With(middleware);
         });
     }
 

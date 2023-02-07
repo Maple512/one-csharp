@@ -58,7 +58,7 @@ public class InternalMethodReflectionBenchmark : BenchmarkItem
 
         var b = ExpressionPrinter.Print(a);
 
-        return null;
+        return null!;
     }
 
     public override void Inlitialize()

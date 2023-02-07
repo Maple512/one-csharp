@@ -1,6 +1,7 @@
 namespace OneI.Logable.Templates;
 
 using System.ComponentModel;
+using static DotNext.Generic.BooleanConst;
 
 /// <summary>
 ///     容量：尽量多分配，这个字典不会自动扩容
@@ -142,6 +143,28 @@ public struct PropertyDictionary
     /// <returns></returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool ContainsKey(string key) => Keys.IndexOf(key) != -1;
+
+    public T? GetValue<T>(string key)
+    {
+        if(key == null)
+        {
+            ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key);
+        }
+
+        var index = Keys.IndexOf(key);
+
+        if(index != -1)
+        {
+            var obj = _values[index];
+
+            if(obj is T result)
+            {
+                return result;
+            }
+        }
+
+        return default;
+    }
 
     public bool TryGetValue<T>(string key, out T? value)
     {

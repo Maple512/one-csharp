@@ -18,8 +18,11 @@
     <Import Project="../../common.test.props" />
 
     <PropertyGroup>
-        <ImplicitUsings>disable</ImplicitUsings>
         <IncludeShared>false</IncludeShared>
     </PropertyGroup>
+
+    <ItemGroup>
+        <Using Include="OneI.Logable.CodeGenerated"/>
+    </ItemGroup>
 
 </Project>

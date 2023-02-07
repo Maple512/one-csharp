@@ -2,8 +2,7 @@ namespace OneI.Logable.Internal;
 
 internal static class CodeAssets
 {
-    public const string Logable = "Logable";
-    public const string LogableNamespace = $"OneI.{Logable}";
+    public const string LogableNamespace = $"OneI.Logable";
 
     public const string LoggerFullName = $"{LogableNamespace}.ILogger";
 
@@ -21,136 +20,139 @@ internal static class CodeAssets
 
     public static class LoggerExtension
     {
+        public const string Namespace = $"{LogableNamespace}.CodeGenerated";
         public const string Name = "OneILoggerCodeGeneratorExtensions";
-        public const string ClassFullName = $"{LogableNamespace}.{Name}";
+        public const string ClassFullName = $"{Namespace}.{Name}";
         public const string FileNmae = "OneILoggerExtensions.g.cs";
         public const string PartialName = "OneILoggerExtensions.p.g.cs";
         public const string Content =
 """
 #nullable enable
-namespace OneI.Logable;
-
-using global::System;
-using global::System.ComponentModel;
-using global::System.Diagnostics;
-using global::OneI.Logable.Middlewares;
-using global::OneI.Logable.Templates;
-
-[global::System.Diagnostics.DebuggerStepThrough]
-[global::System.Diagnostics.StackTraceHidden]
-internal static partial class OneILoggerCodeGeneratorExtensions
+namespace OneI.Logable.CodeGenerated
 {
-    #region Write
+    using global::System;
+    using global::System.ComponentModel;
+    using global::System.Diagnostics;
+    using global::OneI.Logable;
+    using global::OneI.Logable.Middlewares;
+    using global::OneI.Logable.Templates;
 
-    [Conditional("DEBUG")]
-    public static void Write(this ILogger logger, LogLevel level, string message, params object?[] args)
-        => throw new NotSupportedException();
+    [global::System.Diagnostics.DebuggerStepThrough]
+    [global::System.Diagnostics.StackTraceHidden]
+    internal static partial class OneILoggerCodeGeneratorExtensions
+    {
+        #region Write
 
-    [Conditional("DEBUG")]
-    public static void Write(this ILogger logger, LogLevel level, Exception exception, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Write(this ILogger logger, LogLevel level, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    [Conditional("DEBUG")]
-    public static void Write(this ILogger logger, LogLevel level, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Write(this ILogger logger, LogLevel level, Exception exception, params object?[] args)
+            => throw new NotSupportedException();
 
-    #endregion Write
+        [Conditional("DEBUG")]
+        public static void Write(this ILogger logger, LogLevel level, Exception exception, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    #region Verbose
+        #endregion Write
 
-    [Conditional("DEBUG")]
-    public static void Verbose(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
+        #region Verbose
 
-    [Conditional("DEBUG")]
-    public static void Verbose(this ILogger logger, Exception exception, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Verbose(this ILogger logger, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    [Conditional("DEBUG")]
-    public static void Verbose(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Verbose(this ILogger logger, Exception exception, params object?[] args)
+            => throw new NotSupportedException();
 
-    #endregion Verbose
+        [Conditional("DEBUG")]
+        public static void Verbose(this ILogger logger, Exception exception, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    #region Debug
+        #endregion Verbose
 
-    [Conditional("DEBUG")]
-    public static void Debug(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
+        #region Debug
 
-    [Conditional("DEBUG")]
-    public static void Debug(this ILogger logger, Exception exception, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Debug(this ILogger logger, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    [Conditional("DEBUG")]
-    public static void Debug(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Debug(this ILogger logger, Exception exception, params object?[] args)
+            => throw new NotSupportedException();
 
-    #endregion Debug
+        [Conditional("DEBUG")]
+        public static void Debug(this ILogger logger, Exception exception, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    #region Information
+        #endregion Debug
 
-    [Conditional("DEBUG")]
-    public static void Information(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
+        #region Information
 
-    [Conditional("DEBUG")]
-    public static void Information(this ILogger logger, Exception exception, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Information(this ILogger logger, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    [Conditional("DEBUG")]
-    public static void Information(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Information(this ILogger logger, Exception exception, params object?[] args)
+            => throw new NotSupportedException();
 
-    #endregion Information
+        [Conditional("DEBUG")]
+        public static void Information(this ILogger logger, Exception exception, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    #region Warning
+        #endregion Information
 
-    [Conditional("DEBUG")]
-    public static void Warning(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
+        #region Warning
 
-    [Conditional("DEBUG")]
-    public static void Warning(this ILogger logger, Exception exception, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Warning(this ILogger logger, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    [Conditional("DEBUG")]
-    public static void Warning(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Warning(this ILogger logger, Exception exception, params object?[] args)
+            => throw new NotSupportedException();
 
-    #endregion Warning
+        [Conditional("DEBUG")]
+        public static void Warning(this ILogger logger, Exception exception, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    #region Error
+        #endregion Warning
 
-    [Conditional("DEBUG")]
-    public static void Error(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
+        #region Error
 
-    [Conditional("DEBUG")]
-    public static void Error(this ILogger logger, Exception exception, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Error(this ILogger logger, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    [Conditional("DEBUG")]
-    public static void Error(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Error(this ILogger logger, Exception exception, params object?[] args)
+            => throw new NotSupportedException();
 
-    #endregion Error
+        [Conditional("DEBUG")]
+        public static void Error(this ILogger logger, Exception exception, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    #region Fatal
+        #endregion Error
 
-    [Conditional("DEBUG")]
-    public static void Fatal(this ILogger logger, string message, params object?[] args)
-        => throw new NotSupportedException();
+        #region Fatal
 
-    [Conditional("DEBUG")]
-    public static void Fatal(this ILogger logger, Exception exception, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Fatal(this ILogger logger, string message, params object?[] args)
+            => throw new NotSupportedException();
 
-    [Conditional("DEBUG")]
-    public static void Fatal(this ILogger logger, Exception exception, string message, params object?[] args)
-        => throw new NotSupportedException();
+        [Conditional("DEBUG")]
+        public static void Fatal(this ILogger logger, Exception exception, params object?[] args)
+            => throw new NotSupportedException();
 
-    #endregion Fatal
+        [Conditional("DEBUG")]
+        public static void Fatal(this ILogger logger, Exception exception, string message, params object?[] args)
+            => throw new NotSupportedException();
+
+        #endregion Fatal
+    }
 }
 #nullable restore
 """;

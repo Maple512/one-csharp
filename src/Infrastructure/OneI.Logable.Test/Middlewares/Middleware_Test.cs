@@ -10,9 +10,9 @@ public class Middleware_Test
     {
         var orders = new List<int>();
         var logger = new LoggerConfiguration()
-                     .Use(_ => orders.Add(1))
-                     .UseWhen(c => c.Level == level, _ => orders.Add(2))
-                     .Use(_ => orders.Add(3))
+                     .With(_ => orders.Add(1))
+                     .WithWhen(c => c.Level == level, _ => orders.Add(2))
+                     .With(_ => orders.Add(3))
                      .CreateLogger();
 
         logger.Information("");

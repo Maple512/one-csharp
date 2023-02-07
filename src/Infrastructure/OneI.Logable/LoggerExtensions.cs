@@ -39,7 +39,7 @@ public static class LoggerExtensions
     public static ILogger ForContext(this ILogger logger, params ILoggerMiddleware[] middlewares)
         => logger.ForContext(configure =>
         {
-            _ = configure.Use(new AggregateMiddleware(middlewares));
+            _ = configure.With(new AggregateMiddleware(middlewares));
         });
 
     /// <summary>

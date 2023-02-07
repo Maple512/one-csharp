@@ -31,19 +31,19 @@
     </PropertyGroup>
 
     <ItemGroup Label="Common Shard Files" Condition="$(IncludeShared)">
-        <Compile Include="..\..\Shared\Common\*.cs" Link="Shared\%(FileName).cs"/>
+        <Compile Include="..\..\Shared\Common\*.cs" Link="Shared\Common\%(FileName).cs"/>
     </ItemGroup>
 
     <ItemGroup Condition="$(IncludeShared) == 'true' and $(Target_Standard) == 'true'">
-        <Compile Include="..\..\Shared\NETStandard\*.cs" Link="Shared\%(FileName).cs"/>
+        <Compile Include="..\..\Shared\NETStandard\*.cs" Link="Shared\NETStandard\%(FileName).cs"/>
     </ItemGroup>
 
     <ItemGroup Condition="$(IncludeShared) == 'true' and $(AllowUnsafeBlocks) == 'true' and $(Target_Windows) == 'true'">
-        <Compile Include="..\..\Shared\Interop\*.cs" Link="Shared\%(FileName).cs"/>
+        <Compile Include="..\..\Shared\Interop\*.cs" Link="Shared\Interop\%(FileName).cs"/>
     </ItemGroup>
 
     <ItemGroup Condition="$(IncludeShared) == 'true' and $(AllowUnsafeBlocks) == 'true' and $(Target_Unix) == 'true'">
-        <Compile Include="..\..\Shared\Unix\*.cs" Link="Shared\%(FileName).cs"/>
+        <Compile Include="..\..\Shared\Unix\*.cs" Link="Shared\Unix\%(FileName).cs"/>
     </ItemGroup>
 
     <ItemGroup Label="Global implicit usings">

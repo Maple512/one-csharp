@@ -2,7 +2,6 @@ namespace OneI.Logable;
 
 using OneI.Logable.Fakes;
 using OneI.Logable.Middlewares;
-using OneI.Logable.Templates;
 
 public class Logger_Test
 {
@@ -27,7 +26,7 @@ public class Logger_Test
         // other type is true (still the default)
         logger.ForContext<ILogger>().IsEnable(LogLevel.Verbose).ShouldBeTrue();
 
-        logger.Information("", 1);
+        logger.Error("");
     }
 
     [Fact]
@@ -37,15 +36,15 @@ public class Logger_Test
 
         var id = Guid.NewGuid();
         var name = "Id";
-        object propertyId = null!;
+        var propertyId = Guid.Empty;
 
         var logger = Fake.CreateLogger(
                                        logger: logger => logger
-                                                         .Use(new ActionMiddleware(_ => order.Add(1)))
-                                                         .Use(new ActionMiddleware(_ => order.Add(2)))
+                                                         .With(new ActionMiddleware(_ => order.Add(1)))
+                                                         .With(new ActionMiddleware(_ => order.Add(2)))
                                                          .Audit.Attach(c =>
                                                          {
-                                                             c.Properties.TryGetValue(name, out propertyId);
+                                                             _ = c.Properties.TryGetValue<Guid>(name, out propertyId);
                                                          }));
 
         var scope = new ILoggerMiddleware[]
@@ -63,13 +62,11 @@ public class Logger_Test
             order[2].ShouldBe(3);
             order[3].ShouldBe(4);
 
-            propertyId.ShouldNotBeNull();
+            propertyId.ShouldNotBe(Guid.Empty);
             propertyId.ToString().ShouldBe(id.ToString());
         }
 
         logger.Error("{Id}");
-
-        propertyId.ShouldBeNull();
 
         order[4].ShouldBe(1);
         order[5].ShouldBe(2);
@@ -80,7 +77,7 @@ public class Logger_Test
     {
         var logger = Fake.CreateLogger(logger: configure =>
         {
-            configure.Template.UseWhen(c => c.Exception is not null, Fake.ErrorTemplate);
+            _ = configure.Template.UseWhen(c => c.Exception is not null, Fake.ErrorTemplate);
         });
 
         logger.ForContext<Middleware_Test>().Error(new ArgumentException(), "Include Source Context");

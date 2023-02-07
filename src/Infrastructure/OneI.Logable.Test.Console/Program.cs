@@ -32,7 +32,7 @@ public class Program
 
             logger.Error("message", 1, 3, default(int?));
 
-            logger.Error(new InvalidCastException(), (1, 2, 3, 4, 2, 3), new Tuple<int>(10), new List<int>(), new Dictionary<int, int>(), new BitArray(1));
+            //logger.Error(new InvalidCastException(), (1, 2, 3, 4, 2, 3), new Tuple<int>(10), new List<int>(), new Dictionary<int, int>(), new BitArray(1));
 
             //logger.Error(default(string)!, 1, 1, 23);
             //logger.Error(new Exception(), "", 1, 2, 3);

@@ -2,13 +2,16 @@
 
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
-        <IncludeShared>false</IncludeShared>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj"/>
+        <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj" />
     </ItemGroup>
 
-    <Import Project="../../common.props"/>
+    <ItemGroup>
+        <PackageReference Include="System.Diagnostics.EventLog" Version="7.0.0" />
+    </ItemGroup>
+
+    <Import Project="../../common.props" />
 
 </Project>

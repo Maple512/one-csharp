@@ -1,8 +1,8 @@
-namespace OneI.Logable.Diagnostics;
+namespace OneI.Logable;
 
 using OneI.Logable.Templates;
 
-public class EnvironmentMiddleware : ILoggerMiddleware
+internal class EnvironmentMiddleware : ILoggerMiddleware
 {
     private readonly EnvironmentOptions _options;
 
@@ -69,17 +69,5 @@ public class EnvironmentMiddleware : ILoggerMiddleware
         {
             properties.AddProperty(nameof(RuntimeInformation.FrameworkDescription), RuntimeInformation.FrameworkDescription);
         }
-    }
-}
-
-public static class EnvironmentMiddlewareExtensions
-{
-    public static ILoggerConfiguration WithEnvironment(
-        this ILoggerConfiguration configuration,
-        EnvironmentOptions options)
-    {
-        _ = configuration.Use(new EnvironmentMiddleware(options));
-
-        return configuration;
     }
 }

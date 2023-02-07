@@ -7,6 +7,7 @@ using Moq;
 using NLog;
 using Serilog;
 using ZLogger;
+using OneI.Logable.CodeGenerated;
 
 [SimpleJob(RunStrategy.Throughput, baseline: true)]
 public class LogFileBenchmark : BenchmarkItem
@@ -40,7 +41,7 @@ public class LogFileBenchmark : BenchmarkItem
                                           time => new DateTimeOffset(time.Year, time.Month, time.Day, time.Hour, 0, 0
                                                                      , TimeSpan.Zero),
                                           1 * 1024 * 1024);
-        }).CreateLogger("LogFileBenchmark");
+        }).CreateLogger(nameof(LogFileBenchmark));
 
         _models = AutoFaker.Create().Generate<List<Model1>>();
     }

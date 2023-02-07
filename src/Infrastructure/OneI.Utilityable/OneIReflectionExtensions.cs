@@ -30,43 +30,43 @@ public static class OneIReflectionExtensions
 
     [return: NotNullIfNotNull(nameof(item))]
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetTypeDisplayName(object? item, bool fullName = true)
+    public static string? GetTypeDisplayName(object? item, bool hasFullName = true)
     {
-        return item == null ? null : GetTypeDisplayName(item.GetType(), fullName);
+        return item == null ? null : GetTypeDisplayName(item.GetType(), hasFullName);
     }
 
     /// <summary>
     /// 获取指定类型<typeparamref name="T"/>的显示名称
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <param name="fullName"></param>
+    /// <param name="hasFullName"></param>
     /// <returns>
     /// <para>For example, given <c><![CDATA[System.Collections.Generic.Dictionary<string, string>]]></c></para>
     /// <para>
-    ///    when fullName is <see langword="true"/>, you will get <c><![CDATA[System.Collections.Generic.Dictionary<string, string>]]></c>
+    ///    when hasFullName is <see langword="true"/>, you will get <c><![CDATA[System.Collections.Generic.Dictionary<string, string>]]></c>
     /// </para>
     /// <para>
     ///    otherwise is <see langword="false"/>, you will get <c><![CDATA[Dictionary<string, string>]]></c>
     /// </para> 
     /// </returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string? GetTypeDisplayName<T>(bool fullName = true)
+    public static string? GetTypeDisplayName<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>(bool hasFullName = true)
     {
-        return GetTypeDisplayName(typeof(T), fullName);
+        return GetTypeDisplayName(typeof(T), hasFullName);
     }
 
     /// <summary>
     /// 获取指定类型<paramref name="type"/>的显示名称
     /// </summary>
     /// <param name="type">The <see cref="Type"/>.</param>
-    /// <param name="fullName"><c>true</c> to print a fully qualified name.</param>
+    /// <param name="hasFullName"><c>true</c> to print a fully qualified name.</param>
     /// <param name="includeGenericParameterNames"><c>true</c> to include generic parameter names.</param>
     /// <param name="includeGenericParameters"><c>true</c> to include generic parameters.</param>
     /// <param name="nestedTypeDelimiter">Character to use as a delimiter in nested type names</param>
     /// <returns>
     /// <para>For example, given <c><![CDATA[System.Collections.Generic.Dictionary<string, string>]]></c></para>
     /// <para>
-    ///    when fullName is <see langword="true"/>, you will get <c><![CDATA[System.Collections.Generic.Dictionary<string, string>]]></c>
+    ///    when hasFullName is <see langword="true"/>, you will get <c><![CDATA[System.Collections.Generic.Dictionary<string, string>]]></c>
     /// </para>
     /// <para>
     ///    otherwise is <see langword="false"/>, you will get <c><![CDATA[Dictionary<string, string>]]></c>
@@ -74,7 +74,7 @@ public static class OneIReflectionExtensions
     /// </returns>
     public static string GetTypeDisplayName(
         Type type,
-        bool fullName = true,
+        bool hasFullName = true,
         bool includeGenericParameterNames = false,
         bool includeGenericParameters = true,
         char nestedTypeDelimiter = DefaultNestedTypeDelimiter)
@@ -83,7 +83,7 @@ public static class OneIReflectionExtensions
 
         try
         {
-            ProcessType(ref builder, type, new DisplayNameOptions(fullName, includeGenericParameterNames, includeGenericParameters, nestedTypeDelimiter));
+            ProcessType(ref builder, type, new DisplayNameOptions(hasFullName, includeGenericParameterNames, includeGenericParameters, nestedTypeDelimiter));
 
             return builder.ToString();
         }
@@ -118,7 +118,7 @@ public static class OneIReflectionExtensions
         }
         else
         {
-            var name = options.FullName ? type.FullName! : type.Name;
+            var name = options.HasFullName ? type.FullName! : type.Name;
 
             builder.Append(name);
             if(options.NestedTypeDelimiter != DefaultNestedTypeDelimiter)
@@ -155,7 +155,7 @@ public static class OneIReflectionExtensions
             offset = type.DeclaringType!.GetGenericArguments().Length;
         }
 
-        if(options.FullName)
+        if(options.HasFullName)
         {
             if(type.IsNested)
             {
@@ -202,15 +202,15 @@ public static class OneIReflectionExtensions
 
     private readonly struct DisplayNameOptions
     {
-        public DisplayNameOptions(bool fullName, bool includeGenericParameterNames, bool includeGenericParameters, char nestedTypeDelimiter)
+        public DisplayNameOptions(bool hasFullName, bool includeGenericParameterNames, bool includeGenericParameters, char nestedTypeDelimiter)
         {
-            FullName = fullName;
+            HasFullName = hasFullName;
             IncludeGenericParameters = includeGenericParameters;
             IncludeGenericParameterNames = includeGenericParameterNames;
             NestedTypeDelimiter = nestedTypeDelimiter;
         }
 
-        public bool FullName { get; }
+        public bool HasFullName { get; }
 
         public bool IncludeGenericParameters { get; }
 

@@ -5,7 +5,6 @@
       "Infrastructure\\OneI.Logable.Benchmark\\OneI.Logable.Benchmark.csproj",
       "Infrastructure\\OneI.Logable.CodeGenerator.Test\\OneI.Logable.CodeGenerator.Test.csproj",
       "Infrastructure\\OneI.Logable.CodeGenerator\\OneI.Logable.CodeGenerator.csproj",
-      "Infrastructure\\OneI.Logable.Extensions.EventSource\\OneI.Logable.Extensions.EventSource.csproj",
       "Infrastructure\\OneI.Logable.Extensions\\OneI.Logable.Extensions.csproj",
       "Infrastructure\\OneI.Logable.File\\OneI.Logable.File.csproj",
       "Infrastructure\\OneI.Logable.Test.Console\\OneI.Logable.Test.Console.csproj",

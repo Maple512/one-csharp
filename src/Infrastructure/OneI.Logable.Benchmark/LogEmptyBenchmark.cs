@@ -1,6 +1,7 @@
 namespace OneI.Logable;
 
 using NLog;
+using OneI.Logable.CodeGenerated;
 
 public class LogEmptyBenchmark : BenchmarkItem
 {

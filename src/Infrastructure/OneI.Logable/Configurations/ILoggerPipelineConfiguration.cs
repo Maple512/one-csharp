@@ -8,34 +8,34 @@ public interface ILoggerPipelineConfiguration
     ///     向管道中添加一个中间件
     /// </summary>
     /// <param name="middleware"></param>
-    ILoggerConfiguration Use(ILoggerMiddleware middleware);
+    ILoggerConfiguration With(ILoggerMiddleware middleware);
 
-    public ILoggerConfiguration Use<TMiddleware>()
+    public ILoggerConfiguration With<TMiddleware>()
         where TMiddleware : ILoggerMiddleware, new()
-        => Use(new TMiddleware());
+        => With(new TMiddleware());
 
     /// <summary>
     ///     向管道中添加一个中间件
     /// </summary>
-    public ILoggerConfiguration Use(Action<LoggerMessageContext> middleware) => Use(new ActionMiddleware(middleware));
+    public ILoggerConfiguration With(Action<LoggerMessageContext> middleware) => With(new ActionMiddleware(middleware));
 
     /// <summary>
     ///     向管道中添加一个中间件
     /// </summary>
-    public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, ILoggerMiddleware middleware)
-        => Use(new ConditionalMiddleware(condition, middleware));
+    public ILoggerConfiguration WithWhen(Func<LoggerMessageContext, bool> condition, ILoggerMiddleware middleware)
+        => With(new ConditionalMiddleware(condition, middleware));
 
     /// <summary>
     ///     向管道中添加一个中间件
     /// </summary>
-    public ILoggerConfiguration UseWhen<TMiddleware>(Func<LoggerMessageContext, bool> condition)
+    public ILoggerConfiguration WithWhen<TMiddleware>(Func<LoggerMessageContext, bool> condition)
         where TMiddleware : ILoggerMiddleware, new()
-        => UseWhen(condition, new TMiddleware());
+        => WithWhen(condition, new TMiddleware());
 
     /// <summary>
     ///     向管道中添加一个中间件
     /// </summary>
-    public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition
+    public ILoggerConfiguration WithWhen(Func<LoggerMessageContext, bool> condition
                                         , Action<LoggerMessageContext> middleware)
-        => UseWhen(condition, new ActionMiddleware(middleware));
+        => WithWhen(condition, new ActionMiddleware(middleware));
 }

@@ -6,36 +6,19 @@ using OneT.CodeGenerator;
 public class EnumToString_Test : CodeGeneratorSnapshotTest
 {
     [Fact]
-    public Task generator_simple()
+    public Task generate_tofaststring_code()
     {
         var source =
 """
 namespace OneI.Generateable;
 
 using System;
+using OneI.Generateable.CodeGenerated;
 
 [ToFastString]
-public enum SomeEnum : byte
+public enum SomeEnum 
 {
-    A = 20, B, C, D, E, F
-}
-
-[ToFastString(HasDictionary = true)]
-public enum SomeEnum1 : byte
-{
-    A = 20, B, C, F
-}
-
-[ToFastString(HasDictionary = true, DictionaryMethodName = "GetAAA")]
-public enum SomeEnum2 : byte
-{
-    A = 20, B, C, D, E, F
-}
-
-[ToFastString("GETDDD",HasDictionary = true, DictionaryMethodName = "GetAAA")]
-public enum SomeEnum3 : byte
-{
-    A = 20, B, C, D, E, F
+    A , B, C, D, E, F
 }
 """;
 
