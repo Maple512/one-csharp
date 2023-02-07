@@ -103,12 +103,12 @@ public class HostApplicationBuilder
 
         if(optionList is not null)
         {
-            Configuration.AddInMemoryCollection(optionList);
+            _ = Configuration.AddInMemoryCollection(optionList);
         }
 
         (var hostingEnvironment, var physicalFileProvider) = HostBuilder.CreateHostingEnvironment(Configuration);
 
-        Configuration.SetFileProvider(physicalFileProvider);
+        _ = Configuration.SetFileProvider(physicalFileProvider);
 
         _hostBuilderContext = new HostBuilderContext(hostingEnvironment, Configuration);
 
@@ -155,7 +155,13 @@ public class HostApplicationBuilder
     /// <summary>
     /// A collection of services for the application to compose. This is useful for adding user provided or framework provided services.
     /// </summary>
-    public IServiceCollection Services => _serviceCollection;
+    public IServiceCollection Services
+    {
+        get
+        {
+            return _serviceCollection;
+        }
+    }
 
     /// <summary>
     /// A collection of logging providers for the application to compose. This is useful for adding new logging providers.

@@ -26,11 +26,12 @@ public static class SystemdHostBuilderExtensions
     {
         if(SystemdHelper.IsSystemdService())
         {
-            hostBuilder.ConfigureServices((hostContext, services) =>
+            _ = hostBuilder.ConfigureServices((hostContext, services) =>
             {
                 AddSystemdLifetime(services);
             });
         }
+
         return hostBuilder;
     }
 
@@ -67,13 +68,13 @@ public static class SystemdHostBuilderExtensions
 
     private static void AddSystemdLifetime(IServiceCollection services)
     {
-        services.Configure<ConsoleLoggerOptions>(options =>
+        _ = services.Configure<ConsoleLoggerOptions>(options =>
         {
             options.FormatterName = ConsoleFormatterNames.Systemd;
         });
 
         // IsSystemdService() will never return true for android/browser/iOS/tvOS
-        services.AddSingleton<ISystemdNotifier, SystemdNotifier>();
-        services.AddSingleton<IHostLifetime, SystemdLifetime>();
+        _ = services.AddSingleton<ISystemdNotifier, SystemdNotifier>();
+        _ = services.AddSingleton<IHostLifetime, SystemdLifetime>();
     }
 }

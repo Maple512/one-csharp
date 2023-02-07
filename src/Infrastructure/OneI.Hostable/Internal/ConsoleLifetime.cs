@@ -66,7 +66,6 @@ internal class ConsoleLifetime : IHostLifetime, IDisposable
     public void Dispose()
     {
 
-
         UnregisterShutdownHandlers();
 
         _startedCallback.Dispose();

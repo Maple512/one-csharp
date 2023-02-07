@@ -1,9 +1,8 @@
 namespace OneI.Logable.Internal;
 
 using OneI.Logable.Definitions;
-using OneI.Logable.Internal;
 
-partial class CodePrinter
+internal partial class CodePrinter
 {
     internal static void PrintMethod(IndentedStringBuilder builder, MethodDef method)
     {
@@ -80,9 +79,11 @@ partial class CodePrinter
             {
                 builder.AppendLine("throw new global::System.ArgumentOutOfRangeException(\"The String is to long, Please try to use a short string(length <= 128)\", nameof(message));");
             }
+
             builder.AppendLine("}");
             builder.AppendLine();
         }
+
         builder.AppendLine("var properties = new global::OneI.Logable.Templates.PropertyDictionary();");
 
         for(var i = 0; i < method.Parameters.Count; i++)

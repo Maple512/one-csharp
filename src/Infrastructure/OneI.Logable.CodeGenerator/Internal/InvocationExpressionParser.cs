@@ -3,7 +3,6 @@ namespace OneI.Logable.Internal;
 using System;
 using Microsoft.CodeAnalysis;
 using OneI.Logable.Definitions;
-using OneI.Logable.Internal;
 
 internal static class InvocationExpressionParser
 {
@@ -53,7 +52,6 @@ internal static class InvocationExpressionParser
 
                     method.AddParameter(type);
                 }
-
             }
 
             return true;

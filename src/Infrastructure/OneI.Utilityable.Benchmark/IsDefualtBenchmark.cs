@@ -13,7 +13,7 @@ public class IsDefualtBenchmark
     public void UseDefault()
     {
         Sturct1 a = default;
-        for(int i = 0; i < length; i++)
+        for(var i = 0; i < length; i++)
         {
             _ = a == default;
         }
@@ -23,13 +23,13 @@ public class IsDefualtBenchmark
     public void UseDotNext()
     {
         var a = new Sturct1();
-        for(int i = 0; i < length; i++)
+        for(var i = 0; i < length; i++)
         {
             _ = Intrinsics.IsDefault(a);
         }
     }
 
-    struct Sturct1 : IEquatable<Sturct1>, IEqualityOperators<Sturct1, Sturct1, bool>
+    private struct Sturct1 : IEquatable<Sturct1>, IEqualityOperators<Sturct1, Sturct1, bool>
     {
         public bool Equals(Sturct1 other)
         {

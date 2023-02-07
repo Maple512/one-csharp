@@ -1,7 +1,6 @@
 namespace OneI.Text;
 
 using System.Buffers;
-using Cysharp.Text;
 
 public partial struct Utf8ValueStringBuilder : IDisposable, IBufferWriter<byte>
 {

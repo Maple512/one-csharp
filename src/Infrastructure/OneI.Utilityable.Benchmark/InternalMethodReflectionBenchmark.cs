@@ -7,8 +7,8 @@ using Microsoft.Win32.SafeHandles;
 
 public class InternalMethodReflectionBenchmark : BenchmarkItem
 {
-    const string MethodName = "FastAllocateString";
-    const string FieldName = "_path";
+    private const string MethodName = "FastAllocateString";
+    private const string FieldName = "_path";
 
     [Benchmark]
     [BenchmarkCategory("Call Method")]
@@ -55,18 +55,17 @@ public class InternalMethodReflectionBenchmark : BenchmarkItem
         var field = Expression.Field(parameter, type, FieldName);
 
         var a = Expression.Lambda<Func<SafeFileHandle, string>>(field, parameter);
-
-        var b = ExpressionPrinter.Print(a);
+        _ = ExpressionPrinter.Print(a);
 
         return null!;
     }
 
     public override void Inlitialize()
     {
-        UseReflection_Method();
-        UseDotNext_Method();
-        UseReflection_Field();
-        UseDotNext_Field();
-        UseExpression_Field();
+        _ = UseReflection_Method();
+        _ = UseDotNext_Method();
+        _ = UseReflection_Field();
+        _ = UseDotNext_Field();
+        _ = UseExpression_Field();
     }
 }

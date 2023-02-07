@@ -124,6 +124,7 @@ internal static class TypeSymbolParser
             type.Kind = TypeDefKind.Literal;
             return type;
         }
+
         if(interfaces.Any(x => x == "System.ISpanFormattable")
             || ISpanFormattables.Contains(type.ToString()))
         {
@@ -131,12 +132,14 @@ internal static class TypeSymbolParser
             type.IsSpanFormattable = true;
             return type;
         }
+
         if(interfaces.Any(x => x == "System.IFormattable"))
         {
             type.Kind = TypeDefKind.Literal;
             type.IsFormattable = true;
             return type;
         }
+
         if(BuiltInTypes.Contains(name))// 内置类型 
         {
             type.Kind = TypeDefKind.Literal;

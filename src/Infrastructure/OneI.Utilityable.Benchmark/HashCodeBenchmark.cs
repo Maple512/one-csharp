@@ -8,27 +8,27 @@ public class HashCodeBenchmark
     [Benchmark(Baseline = true)]
     public void UseDefault()
     {
-        for(int i = 0; i < length; i++)
+        for(var i = 0; i < length; i++)
         {
-            new object().GetHashCode();
+            _ = new object().GetHashCode();
         }
     }
 
     [Benchmark]
     public void UseHashCode()
     {
-        for(int i = 0; i < length; i++)
+        for(var i = 0; i < length; i++)
         {
-            HashCode.Combine(new object());
+            _ = HashCode.Combine(new object());
         }
     }
 
     [Benchmark]
     public void UseEqualityComparer()
     {
-        for(int i = 0; i < length; i++)
+        for(var i = 0; i < length; i++)
         {
-            EqualityComparer<object>.Default.GetHashCode(new object());
+            _ = EqualityComparer<object>.Default.GetHashCode(new object());
         }
     }
 }

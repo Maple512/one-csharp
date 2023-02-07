@@ -16,7 +16,7 @@ internal static partial class StringExtensions
 [StackTraceHidden]
 internal static partial class StringExtensions
 {
-    #region Check
+#region Check
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IsNullOrWhiteSpace([NotNullWhen(false)] this string? str)
@@ -40,9 +40,9 @@ internal static partial class StringExtensions
         return str.AsSpan().IsWhiteSpace() == false;
     }
 
-    #endregion
+#endregion
 
-    #region char case
+#region char case
 
     /// <summary>
     /// 转驼峰命名（首字符转小写，其余不变）
@@ -162,13 +162,13 @@ internal static partial class StringExtensions
         return stringBuilder.ToString();
     }
 
-    #endregion char case
+#endregion char case
 }
 
 #elif NETSTANDARD2_0_OR_GREATER
 internal static partial class StringExtensions
 {
-#region Check
+    #region Check
 
     public static bool IsNullOrEmpty(this string? str)
     {
@@ -190,9 +190,9 @@ internal static partial class StringExtensions
         return string.IsNullOrWhiteSpace(str) == false;
     }
 
-#endregion
+    #endregion
 
-#region char case
+    #region char case
 
     /// <summary>
     /// 转驼峰命名（首字符转小写，其余不变）
@@ -311,6 +311,6 @@ internal static partial class StringExtensions
         return stringBuilder.ToString();
     }
 
-#endregion char case
+    #endregion char case
 }
 #endif

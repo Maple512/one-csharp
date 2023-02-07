@@ -34,16 +34,16 @@ public class WindowsServiceLifetime : ServiceBase, IHostLifetime
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        cancellationToken.Register(() => _delayStart.TrySetCanceled());
+        _ = cancellationToken.Register(() => _delayStart.TrySetCanceled());
 
-        _hostApplicationLifetime.Started.Register(() =>
+        _ = _hostApplicationLifetime.Started.Register(() =>
         {
             _logger.LogInformation("The host started.");
             _logger.LogInformation($"Environment: {_environment.EnvironmentName}");
             _logger.LogInformation($"Root: {_environment.RootPath}");
         });
 
-        _hostApplicationLifetime.Stopping.Register(() =>
+        _ = _hostApplicationLifetime.Stopping.Register(() =>
         {
             _logger.LogInformation("The host is shutting down...");
         });
@@ -60,7 +60,7 @@ public class WindowsServiceLifetime : ServiceBase, IHostLifetime
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        Task.Run(Stop, CancellationToken.None);
+        _ = Task.Run(Stop, CancellationToken.None);
 
         return Task.CompletedTask;
     }
@@ -70,17 +70,17 @@ public class WindowsServiceLifetime : ServiceBase, IHostLifetime
         try
         {
             Run(this);
-            _delayStart.TrySetException(new InvalidOperationException("Stopped without starting."));
+            _ = _delayStart.TrySetException(new InvalidOperationException("Stopped without starting."));
         }
         catch(Exception ex)
         {
-            _delayStart.TrySetException(ex);
+            _ = _delayStart.TrySetException(ex);
         }
     }
 
     protected override void OnStart(string[] args)
     {
-        _delayStart.TrySetResult(null);
+        _ = _delayStart.TrySetResult(null);
 
         base.OnStart(args);
     }
@@ -88,14 +88,14 @@ public class WindowsServiceLifetime : ServiceBase, IHostLifetime
     protected override void OnStop()
     {
         _hostApplicationLifetime.StopApplication();
-        _delayStop.Wait(_hostOptions.ShutdownTimeout);
+        _ = _delayStop.Wait(_hostOptions.ShutdownTimeout);
         base.OnStop();
     }
 
     protected override void OnShutdown()
     {
         _hostApplicationLifetime.StopApplication();
-        _delayStop.Wait(_hostOptions.ShutdownTimeout);
+        _ = _delayStop.Wait(_hostOptions.ShutdownTimeout);
         base.OnShutdown();
     }
 

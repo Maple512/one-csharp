@@ -4,8 +4,8 @@ using System.Buffers;
 
 public class AllockArrayBenchmark
 {
-    const int _capacity = 100;
-    const int _count = 10;
+    private const int _capacity = 100;
+    private const int _count = 10;
 
     [Benchmark(Baseline = true)]
     public void UseList_Int()

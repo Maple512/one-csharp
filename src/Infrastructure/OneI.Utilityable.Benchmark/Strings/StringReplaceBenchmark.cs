@@ -21,7 +21,7 @@ public class StringReplaceBenchmark : BenchmarkItem
     [Benchmark]
     public void UseZString()
     {
-        var text = Randomizer.String(100);
+        _ = Randomizer.String(100);
         var builder = ZString.CreateStringBuilder(true);
 
         for(var i = 0; i < length; i++)

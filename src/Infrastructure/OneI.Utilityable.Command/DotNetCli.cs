@@ -27,7 +27,13 @@ public static class DotNetCli
     /// <summary>
     /// Gets the dotnet executable path.
     /// </summary>
-    public static string DotnetExecutablePath => Path.Combine(BinPath, RuntimeInformationHelper.GetExeFileName("dotnet"));
+    public static string DotnetExecutablePath
+    {
+        get
+        {
+            return Path.Combine(BinPath, RuntimeInformationHelper.GetExeFileName("dotnet"));
+        }
+    }
 
     /// <summary>
     /// Execs the.

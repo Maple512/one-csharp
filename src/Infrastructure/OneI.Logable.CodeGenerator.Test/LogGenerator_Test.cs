@@ -1,6 +1,6 @@
 namespace OneI.Logable;
-using OneT.CodeGenerator;
 using System.Threading.Tasks;
+using OneT.CodeGenerator;
 using VerifyXunit;
 
 [UsesVerify]

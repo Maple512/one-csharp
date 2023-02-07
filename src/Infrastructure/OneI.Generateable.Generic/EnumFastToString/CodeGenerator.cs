@@ -159,7 +159,6 @@ public class CodeGenerator : IIncrementalGenerator
 
             var name = symbol.ToString();
             var fields = symbol.GetMembers().OfType<IFieldSymbol>()
-                .Where(x => x is IFieldSymbol)
                 .ToDictionary(k => k.Name, v => v.ConstantValue);
 
             result.Add(new EnumInformation(name, @enum, fields));

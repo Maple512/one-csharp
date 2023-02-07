@@ -1,7 +1,6 @@
 namespace OneI.Logable;
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using OneT.Common;
 
@@ -30,7 +29,7 @@ public class Program
             // TODO: 有bug，两个string不会触发源代码生成器
             // TODO: 需要有一个纯异常的方法   logger.Warning(new Exception());
 
-            logger.Error("message", 1, 3, default(int?));
+            logger.Error("message", 1, 3, default);
 
             //logger.Error(new InvalidCastException(), (1, 2, 3, 4, 2, 3), new Tuple<int>(10), new List<int>(), new Dictionary<int, int>(), new BitArray(1));
 

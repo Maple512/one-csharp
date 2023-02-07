@@ -26,16 +26,16 @@ public class StringBuilderBenchmark
         {
             for(var i = 0; i < count; i++)
             {
-                writer.Append(StringValue);
+                _ = writer.Append(StringValue);
 
-                writer.AppendLine();
+                _ = writer.AppendLine();
             }
 
             return writer.ToString();
         }
         finally
         {
-            writer.Clear();
+            _ = writer.Clear();
         }
     }
 

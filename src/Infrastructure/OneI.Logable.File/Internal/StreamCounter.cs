@@ -12,18 +12,49 @@ internal class StreamCounter : Stream
 
     public long CountedLength { get; private set; }
 
-    public override bool CanRead => false;
+    public override bool CanRead
+    {
+        get
+        {
+            return false;
+        }
+    }
 
-    public override bool CanSeek => _stream.CanSeek;
+    public override bool CanSeek
+    {
+        get
+        {
+            return _stream.CanSeek;
+        }
+    }
 
-    public override bool CanWrite => true;
+    public override bool CanWrite
+    {
+        get
+        {
+            return true;
+        }
+    }
 
-    public override long Length => _stream.Length;
+    public override long Length
+    {
+        get
+        {
+            return _stream.Length;
+        }
+    }
 
     public override long Position
     {
-        get => _stream.Position;
-        set => throw new NotSupportedException();
+        get
+        {
+            return _stream.Position;
+        }
+
+        set
+        {
+            throw new NotSupportedException();
+        }
     }
 
     protected override void Dispose(bool disposing)

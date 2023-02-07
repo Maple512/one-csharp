@@ -44,13 +44,11 @@ public class Host : IHost, IAsyncDisposable
     public void Dispose()
     {
 
-
         DisposeAsync().AsTask().GetAwaiter().GetResult();
     }
 
     public async ValueTask DisposeAsync()
     {
-
 
         // The user didn't change the FileProvider instance, we can dispose it
         if(ReferenceEquals(_environment.FileProvider, _defaultProvider))

@@ -119,7 +119,7 @@ public sealed class ProcessParameter
     /// <returns>A ProcessParameter.</returns>
     public ProcessParameter WithEnvironment(string name, string value)
     {
-        Check.NotNullOrWhiteSpace(name);
+        _ = Check.NotNullOrWhiteSpace(name);
 
         Environments[name] = value;
 
@@ -133,7 +133,7 @@ public sealed class ProcessParameter
     /// <returns>A ProcessParameter.</returns>
     public ProcessParameter WithEnvironmentToRemove(string name)
     {
-        Check.NotNullOrWhiteSpace(name);
+        _ = Check.NotNullOrWhiteSpace(name);
 
         EnvironmentsToRemove.Add(name);
 

@@ -35,14 +35,14 @@ public class StringEscapeBenchmark : BenchmarkItem
     [Benchmark(Baseline = true)]
     public void UseUri()
     {
-        var result = Uri.EscapeDataString(chars);
+        _ = Uri.EscapeDataString(chars);
     }
 
     // "\uD83D\uDC1B\uD83D\uDD25\uD83D\uDCDD\r\nMumbai,...
     [Benchmark]
     public void UseJsonSerializer()
     {
-        var result = JsonSerializer.Serialize(chars);
+        _ = JsonSerializer.Serialize(chars);
     }
 
     // \uD83D\uDC1B\uD83D\uDD25\uD83D\uDCDD\r\nMumbai, 
@@ -52,8 +52,7 @@ public class StringEscapeBenchmark : BenchmarkItem
         scoped Span<byte> bytes = new byte[chars.Length * 2];
 
         _ = Encoding.UTF8.GetBytes(chars, bytes);
-
-        var result = JsonHelpers.Escape(bytes);
+        _ = JsonHelpers.Escape(bytes);
     }
 
     // \uD83D\uDC1B\uD83D\uDD25\uD83D\uDCDD\r\nMumbai, ...

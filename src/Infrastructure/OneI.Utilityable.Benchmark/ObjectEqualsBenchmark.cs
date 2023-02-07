@@ -5,7 +5,7 @@ using DotNext;
 public class ObjectEqualsBenchmark : BenchmarkItem
 {
     [Params(10)]
-    private int count;
+    private readonly int count;
 
     public override void Inlitialize()
     {

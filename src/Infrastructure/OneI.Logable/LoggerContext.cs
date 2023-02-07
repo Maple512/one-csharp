@@ -24,7 +24,7 @@ public struct LoggerContext
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            _sourceContext ??= Properties.GetValue<string>(LoggerConstants.Propertys.SourceContext) 
+            _sourceContext ??= Properties.GetValue<string>(LoggerConstants.Propertys.SourceContext)
                     ?? LoggerConstants.Propertys.DefaultSourceContext;
 
             return _sourceContext;
@@ -38,7 +38,7 @@ public struct LoggerContext
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            eventId ??= Properties.GetValue<int?>(LoggerConstants.Propertys.EventId) 
+            eventId ??= Properties.GetValue<int?>(LoggerConstants.Propertys.EventId)
                 ?? LoggerConstants.Propertys.DefaultEventId;
 
             return eventId.Value;

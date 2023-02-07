@@ -46,10 +46,22 @@ internal readonly struct Index : IEquatable<Index>
     }
 
     /// <summary>Create an Index pointing at first element.</summary>
-    public static Index Start => new(0);
+    public static Index Start
+    {
+        get
+        {
+            return new(0);
+        }
+    }
 
     /// <summary>Create an Index pointing at beyond last element.</summary>
-    public static Index End => new(~0);
+    public static Index End
+    {
+        get
+        {
+            return new(~0);
+        }
+    }
 
     /// <summary>Create an Index from the start at the position indicated by the value.</summary>
     /// <param name="value">The index value from the start.</param>
@@ -92,7 +104,13 @@ internal readonly struct Index : IEquatable<Index>
     }
 
     /// <summary>Indicates whether the index is from the start or the end.</summary>
-    public bool IsFromEnd => _value < 0;
+    public bool IsFromEnd
+    {
+        get
+        {
+            return _value < 0;
+        }
+    }
 
     /// <summary>Calculate the offset from the start using the giving collection length.</summary>
     /// <param name="length">The length of the collection that the Index will be used with. length has to be a positive value</param>

@@ -50,16 +50,15 @@ public abstract class BackgroundService : IHostStrartingService, IDisposable
 
             using var registration = cancellationToken.Register(state =>
             {
-                ((TaskCompletionSource<object>)state!).TrySetCanceled();
+                _ = ((TaskCompletionSource<object>)state!).TrySetCanceled();
             }, taskSource);
 
-            await Task.WhenAny(ExecuteTask, taskSource.Task);
+            _ = await Task.WhenAny(ExecuteTask, taskSource.Task);
         }
     }
 
     public void Dispose()
     {
-
 
         _stoppingToken?.Cancel();
     }

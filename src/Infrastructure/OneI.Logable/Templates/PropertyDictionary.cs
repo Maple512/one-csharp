@@ -1,7 +1,6 @@
 namespace OneI.Logable.Templates;
 
 using System.ComponentModel;
-using static DotNext.Generic.BooleanConst;
 
 /// <summary>
 ///     容量：尽量多分配，这个字典不会自动扩容
@@ -39,7 +38,10 @@ public struct PropertyDictionary
     public bool IsEmpty
     {
         [method: MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => Length == 0;
+        get
+        {
+            return Length == 0;
+        }
     }
 
     public int Length
@@ -66,13 +68,19 @@ public struct PropertyDictionary
     public ReadOnlySpan<string> Keys
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _keys.AsSpan(0, Length);
+        get
+        {
+            return _keys.AsSpan(0, Length);
+        }
     }
 
     public ReadOnlySpan<object?> Values
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => _values.AsSpan(0, Length);
+        get
+        {
+            return _values.AsSpan(0, Length);
+        }
     }
 
     public void AddRange(PropertyDictionary other)

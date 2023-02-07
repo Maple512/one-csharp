@@ -15,7 +15,7 @@ public class DictionaryCacheBenchmark
         {
             foreach(var item in StringValue)
             {
-                _cache.GetOrAdd(item, item.GetHashCode());
+                _ = _cache.GetOrAdd(item, item.GetHashCode());
             }
         }
     }
@@ -29,7 +29,7 @@ public class DictionaryCacheBenchmark
         {
             foreach(var item in StringValue)
             {
-                _cache.GetOrAdd(item, item.GetHashCode());
+                _ = _cache.GetOrAdd(item, item.GetHashCode());
             }
         }
     }
@@ -43,7 +43,7 @@ public class DictionaryCacheBenchmark
         {
             foreach(var item in StringValue)
             {
-                _cache.GetOrAdd(item.GetHashCode(), item.GetHashCode());
+                _ = _cache.GetOrAdd(item.GetHashCode(), item.GetHashCode());
             }
         }
     }
@@ -57,7 +57,7 @@ public class DictionaryCacheBenchmark
         {
             foreach(var item in StringValue)
             {
-                _cache.GetOrAdd(item.GetHashCode(), item);
+                _ = _cache.GetOrAdd(item.GetHashCode(), item);
             }
         }
     }

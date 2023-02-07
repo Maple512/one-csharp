@@ -91,7 +91,7 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
 
         var typename = OneIReflectionExtensions.GetTypeDisplayName(typeof(TSource), true, false, false, '.');
 
-        Properties.Add(LoggerConstants.Propertys.SourceContext, typename);
+        _ = Properties.Add(LoggerConstants.Propertys.SourceContext, typename);
 
         return new Logger<TSource>(_middlewares.ToArray(), _sinks.ToArray(), _logLevelMap, templateSelector);
     }

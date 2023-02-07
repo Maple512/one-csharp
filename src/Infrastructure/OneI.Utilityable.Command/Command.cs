@@ -137,6 +137,7 @@ public class Command
             {
                 return !string.Equals(extension, ".exe", StringComparison.Ordinal);
             }
+
             if(executable.Contains(Path.DirectorySeparatorChar))
             {
                 // It's a relative path without an extension
@@ -250,7 +251,7 @@ public class Command
         {
             try
             {
-                Process.Start();
+                _ = Process.Start();
                 break;
             }
             catch(Win32Exception e) when(i < 4 && e.Message.Contains("Text file busy"))
@@ -315,11 +316,11 @@ public class Command
         // Clear out any enabling of dump creation if failure is expected
         if(expectedToFail)
         {
-            EnvironmentVariable("COMPlus_DbgEnableMiniDump", null);
-            EnvironmentVariable("DOTNET_DbgEnableMiniDump", null);
+            _ = EnvironmentVariable("COMPlus_DbgEnableMiniDump", null);
+            _ = EnvironmentVariable("DOTNET_DbgEnableMiniDump", null);
         }
 
-        Start();
+        _ = Start();
 
         return WaitForExit(expectedToFail);
     }
@@ -357,7 +358,7 @@ public class Command
     /// <returns>A Command.</returns>
     public Command RemoveEnvironmentVariable(string name)
     {
-        Process.StartInfo.Environment.Remove(name);
+        _ = Process.StartInfo.Environment.Remove(name);
         return this;
     }
 

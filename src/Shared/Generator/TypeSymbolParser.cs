@@ -264,6 +264,7 @@ public static class TypeSymbolParser
                 }
             }
         }
+
         return type;
     }
 
@@ -288,6 +289,7 @@ public static class TypeSymbolParser
                 }
             }
         }
+
         type.Names.Add(symbol.Name);
     }
 

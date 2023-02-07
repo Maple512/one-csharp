@@ -82,7 +82,7 @@ public static class HostAbstractionsExtensions
     {
         var lifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
 
-        cancellationToken.Register(state =>
+        _ = cancellationToken.Register(state =>
         {
             Debugger.Break();
             ((IHostApplicationLifetime)state!).StopApplication();
@@ -90,13 +90,13 @@ public static class HostAbstractionsExtensions
 
         var waitForStop = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        lifetime.Stopping.Register(state =>
+        _ = lifetime.Stopping.Register(state =>
         {
             Debugger.Break();
-            ((TaskCompletionSource<object?>)state!).TrySetResult(null);
+            _ = ((TaskCompletionSource<object?>)state!).TrySetResult(null);
         }, waitForStop);
 
-        await waitForStop.Task;
+        _ = await waitForStop.Task;
 
         // 取消令牌可能已被触发以取消阻止waitForStop。不要在这里传递它，因为这会触发失败的关机。
         await host.StopAsync(CancellationToken.None);

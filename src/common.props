@@ -24,10 +24,8 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <DefineConstants Condition="'$(Is64Bit)' != 'true'">$(DefineConstants);TARGET_32BIT</DefineConstants>
         <DefineConstants Condition="'$(Is64Bit)' == 'true'">$(DefineConstants);TARGET_64BIT</DefineConstants>
         <DefineConstants Condition="'$(Target_Windows)' == 'true'">$(DefineConstants);WINDOWS</DefineConstants>
-        <DefineConstants Condition="'$(Target_Windows)' != 'true'">$(DefineConstants);UNIX</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup Label="Common Shard Files" Condition="$(IncludeShared)">

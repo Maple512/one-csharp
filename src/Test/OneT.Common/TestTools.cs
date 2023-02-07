@@ -14,7 +14,7 @@ public static class TestTools
 
         if(Directory.Exists(path) == false)
         {
-            Directory.CreateDirectory(path);
+            _ = Directory.CreateDirectory(path);
         }
 
         File.AppendAllText(fullname, message, Encoding.UTF8);

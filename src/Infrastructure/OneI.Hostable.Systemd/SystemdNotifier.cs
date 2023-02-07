@@ -17,7 +17,13 @@ public class SystemdNotifier : ISystemdNotifier
         _socketPath = socketPath;
     }
 
-    public bool IsEnabled => _socketPath is not null;
+    public bool IsEnabled
+    {
+        get
+        {
+            return _socketPath is not null;
+        }
+    }
 
     public void Notify(ServiceState state)
     {
@@ -30,7 +36,7 @@ public class SystemdNotifier : ISystemdNotifier
             socket.Connect(endpoint);
 
             // 在这里进行非阻塞调用是安全的：这里发送的消息比内核缓冲区小得多，所以我们不会被阻塞
-            socket.Send(state.GetDate());
+            _ = socket.Send(state.GetDate());
         }
     }
 

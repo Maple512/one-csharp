@@ -83,20 +83,20 @@ internal class TraceSourceSink : ILoggerSink, IDisposable
     {
         var indexOfLastDot = traceSourceName.LastIndexOf('.');
 
-        return indexOfLastDot == -1 
+        return indexOfLastDot == -1
             ? null
             : traceSourceName[..indexOfLastDot];
     }
 
     private static bool HasDefaultListeners(TraceSource traceSource)
     {
-        return traceSource.Listeners.Count == 1 
+        return traceSource.Listeners.Count == 1
             && traceSource.Listeners[0] is DefaultTraceListener;
     }
 
     private static bool HasDefaultSwitch(TraceSource traceSource)
     {
-        return string.IsNullOrEmpty(traceSource.Switch.DisplayName) == string.IsNullOrEmpty(traceSource.Name) 
+        return string.IsNullOrEmpty(traceSource.Switch.DisplayName) == string.IsNullOrEmpty(traceSource.Name)
             && traceSource.Switch.Level == SourceLevels.Off;
     }
 

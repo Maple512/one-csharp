@@ -1,6 +1,5 @@
 namespace OneI.Utilityable.Benchmark;
 
-using BenchmarkDotNet.Configs;
 using OneI.Utilityable.Strings;
 
 internal class Program

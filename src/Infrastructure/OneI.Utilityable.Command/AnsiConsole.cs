@@ -87,7 +87,6 @@ public class AnsiConsole
         Writer.WriteLine();
     }
 
-
     /// <summary>
     /// Writes the.
     /// </summary>

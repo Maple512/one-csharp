@@ -1,6 +1,5 @@
 namespace System.Diagnostics;
 
-
 public partial class ProcessActuator
 {
     /// <summary>
@@ -74,7 +73,7 @@ public partial class ProcessActuator
         {
             foreach(var env in paramter.EnvironmentsToRemove)
             {
-                process.StartInfo.Environment.Remove(env);
+                _ = process.StartInfo.Environment.Remove(env);
             }
         }
 
@@ -82,7 +81,7 @@ public partial class ProcessActuator
         {
             paramter.OutputReceiver?.Invoke(true, e.Data);
 
-            paramter.OutputBuilder?.AppendLine(e.Data);
+            _ = (paramter.OutputBuilder?.AppendLine(e.Data));
 
             Debug.WriteLine(e.Data, "Output Data");
         };
@@ -91,7 +90,7 @@ public partial class ProcessActuator
         {
             paramter.OutputReceiver?.Invoke(false, e.Data);
 
-            paramter.OutputBuilder?.AppendLine(e.Data);
+            _ = (paramter.OutputBuilder?.AppendLine(e.Data));
 
             Debug.WriteLine(e.Data, "Error Data");
         };
@@ -102,18 +101,18 @@ public partial class ProcessActuator
         {
             if(continueWithErrors && process.ExitCode != 0)
             {
-                processLifetimeTask.TrySetException(new InvalidOperationException($"Command {paramter.FileName} {paramter.Arguments.Join(' ')} returned exit code: {process.ExitCode}"));
+                _ = processLifetimeTask.TrySetException(new InvalidOperationException($"Command {paramter.FileName} {paramter.Arguments.Join(' ')} returned exit code: {process.ExitCode}"));
             }
             else
             {
-                processLifetimeTask.TrySetResult(new ProcessResult(
+                _ = processLifetimeTask.TrySetResult(new ProcessResult(
                     process.Id,
                     process.ExitCode,
                     process.TotalProcessorTime));
             }
         };
 
-        process.Start();
+        _ = process.Start();
 
         process.BeginOutputReadLine();
         process.BeginErrorReadLine();
@@ -128,7 +127,7 @@ public partial class ProcessActuator
         {
             if(!_isWindows)
             {
-                var _ = sys_kill(process.Id, sig: 2); // SIGINT
+                _ = sys_kill(process.Id, sig: 2); // SIGINT
             }
             else
             {
@@ -142,7 +141,7 @@ public partial class ProcessActuator
             {
                 var cancel = new CancellationTokenSource();
 
-                await Task.WhenAny(processLifetimeTask.Task, Task.Delay(TimeSpan.FromSeconds(5), cancel.Token));
+                _ = await Task.WhenAny(processLifetimeTask.Task, Task.Delay(TimeSpan.FromSeconds(5), cancel.Token));
 
                 cancel.Cancel();
 

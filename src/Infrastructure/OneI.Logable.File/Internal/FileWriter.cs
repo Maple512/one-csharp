@@ -15,7 +15,13 @@ internal class FileWriter : TextWriter
         Position = position;
     }
 
-    public override Encoding Encoding => _encoding;
+    public override Encoding Encoding
+    {
+        get
+        {
+            return _encoding;
+        }
+    }
 
     public long Position { get; private set; }
 

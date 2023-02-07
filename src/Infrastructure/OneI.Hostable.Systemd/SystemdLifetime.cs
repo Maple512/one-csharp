@@ -62,7 +62,6 @@ public class SystemdLifetime : IHostLifetime, IDisposable
     public void Dispose()
     {
 
-
         UnregisterShutdownHandlers();
 
         _applicationStartedRegistration.Dispose();

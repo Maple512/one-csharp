@@ -53,7 +53,7 @@ public static class ArgumentEscaper
         var quoted = ShouldSurroundWithQuotes(arg);
         if(quoted)
         {
-            sb.Append('"');
+            _ = sb.Append('"');
         }
 
         for(var i = 0; i < arg.Length; ++i)
@@ -72,27 +72,27 @@ public static class ArgumentEscaper
             // an argument delimiter
             if(i == arg.Length)
             {
-                sb.Append('\\', 2 * backslashCount);
+                _ = sb.Append('\\', 2 * backslashCount);
             }
 
             // Escape any preceding backslashes and the quote
             else if(arg[i] == '"')
             {
-                sb.Append('\\', 2 * backslashCount + 1);
-                sb.Append('"');
+                _ = sb.Append('\\', 2 * backslashCount + 1);
+                _ = sb.Append('"');
             }
 
             // Output any consumed backslashes and the character
             else
             {
-                sb.Append('\\', backslashCount);
-                sb.Append(arg[i]);
+                _ = sb.Append('\\', backslashCount);
+                _ = sb.Append(arg[i]);
             }
         }
 
         if(quoted)
         {
-            sb.Append('"');
+            _ = sb.Append('"');
         }
 
         return sb.ToString();

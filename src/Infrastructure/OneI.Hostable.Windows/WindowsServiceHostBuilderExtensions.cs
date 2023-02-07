@@ -36,7 +36,7 @@ public static class WindowsServiceHostBuilderExtensions
     {
         if(WindowsServiceHelper.IsWindowsService())
         {
-            hostBuilder.ConfigureServices(services =>
+            _ = hostBuilder.ConfigureServices(services =>
             {
                 AddWindowsServiceLifetime(services, configure);
             });
@@ -94,15 +94,15 @@ public static class WindowsServiceHostBuilderExtensions
     {
         Debug.Assert(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
-        services.AddLogging(logging =>
+        _ = services.AddLogging(logging =>
         {
             Debug.Assert(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
-            logging.AddEventLog();
+            _ = logging.AddEventLog();
         });
-        services.AddSingleton<IHostLifetime, WindowsServiceLifetime>();
-        services.AddSingleton<IConfigureOptions<EventLogSettings>, EventLogSettingsSetup>();
-        services.Configure(configure);
+        _ = services.AddSingleton<IHostLifetime, WindowsServiceLifetime>();
+        _ = services.AddSingleton<IConfigureOptions<EventLogSettings>, EventLogSettingsSetup>();
+        _ = services.Configure(configure);
     }
 
     private sealed class EventLogSettingsSetup : IConfigureOptions<EventLogSettings>

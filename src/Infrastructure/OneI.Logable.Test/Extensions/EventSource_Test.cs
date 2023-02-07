@@ -23,6 +23,6 @@ public class EventSource_Test
 
         var logs = EventLog.GetEventLogs().FirstOrDefault(x => x.Log == logName);
 
-        logs.ShouldNotBeNull();
+        _ = logs.ShouldNotBeNull();
     }
 }

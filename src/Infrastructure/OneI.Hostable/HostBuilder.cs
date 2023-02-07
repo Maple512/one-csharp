@@ -269,15 +269,15 @@ public class HostBuilder : IHostBuilder
         IConfiguration appConfiguration,
         Func<IServiceProvider> serviceProviderGetter)
     {
-        services.AddSingleton<IHostEnvironment>(hostingEnvironment);
-        services.AddSingleton(hostBuilderContext);
+        _ = services.AddSingleton<IHostEnvironment>(hostingEnvironment);
+        _ = services.AddSingleton(hostBuilderContext);
         // register configuration as factory to make it dispose with the service provider
-        services.AddSingleton(_ => appConfiguration);
-        services.AddSingleton<IHostApplicationLifetime, HostApplicationLifetime>();
+        _ = services.AddSingleton(_ => appConfiguration);
+        _ = services.AddSingleton<IHostApplicationLifetime, HostApplicationLifetime>();
 
         AddLifetime(services);
 
-        services.AddSingleton<IHost>(_ =>
+        _ = services.AddSingleton<IHost>(_ =>
         {
             // We use serviceProviderGetter() instead of the _ parameter because these can be different given a custom IServiceProviderFactory.
             // We want the host to always dispose the IServiceProvider returned by the IServiceProviderFactory.
@@ -293,8 +293,8 @@ public class HostBuilder : IHostBuilder
                 appServices,
                 defaultFileProvider);
         });
-        services.AddOptions().Configure<HostOptions>(options => { options.Initialize(hostBuilderContext.Configuration); });
-        services.AddLogging();
+        _ = services.AddOptions().Configure<HostOptions>(options => { options.Initialize(hostBuilderContext.Configuration); });
+        _ = services.AddLogging();
     }
 
     [MemberNotNull(nameof(_appServices))]
@@ -353,11 +353,11 @@ public class HostBuilder : IHostBuilder
             && !OperatingSystem.IsIOS()
             && !OperatingSystem.IsTvOS())
         {
-            services.AddSingleton<IHostLifetime, ConsoleLifetime>();
+            _ = services.AddSingleton<IHostLifetime, ConsoleLifetime>();
         }
         else
         {
-            services.AddSingleton<IHostLifetime, NullHostLifetime>();
+            _ = services.AddSingleton<IHostLifetime, NullHostLifetime>();
         }
     }
 }

@@ -12,7 +12,13 @@ public readonly struct StopwatchValue : IEquatable<StopwatchValue>
 
     private readonly long _startTimestamp;
 
-    public bool IsActive => _startTimestamp != 0;
+    public bool IsActive
+    {
+        get
+        {
+            return _startTimestamp != 0;
+        }
+    }
 
     private StopwatchValue(long startTimestamp) => _startTimestamp = startTimestamp;
 

@@ -3,11 +3,10 @@ namespace OneI.Logable;
 using AutoBogus;
 using BenchmarkDotNet.Engines;
 using Microsoft.Extensions.Logging;
-using Moq;
 using NLog;
+using OneI.Logable.CodeGenerated;
 using Serilog;
 using ZLogger;
-using OneI.Logable.CodeGenerated;
 
 [SimpleJob(RunStrategy.Throughput, baseline: true)]
 public class LogFileBenchmark : BenchmarkItem
@@ -18,8 +17,7 @@ public class LogFileBenchmark : BenchmarkItem
     private static Microsoft.Extensions.Logging.ILogger zlogger;
 
     private const int count = 1000;
-
-    static List<Model1> _models;
+    private static List<Model1> _models;
 
     public override void Inlitialize()
     {

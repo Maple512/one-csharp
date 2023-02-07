@@ -15,9 +15,29 @@ public class HostApplicationLifetime : IHostApplicationLifetime
         _logger = logger;
     }
 
-    public CancellationToken Started => _started.Token;
-    public CancellationToken Stopping => _stopping.Token;
-    public CancellationToken Stopped => _stopped.Token;
+    public CancellationToken Started
+    {
+        get
+        {
+            return _started.Token;
+        }
+    }
+
+    public CancellationToken Stopping
+    {
+        get
+        {
+            return _stopping.Token;
+        }
+    }
+
+    public CancellationToken Stopped
+    {
+        get
+        {
+            return _stopped.Token;
+        }
+    }
 
     public void StopApplication()
     {

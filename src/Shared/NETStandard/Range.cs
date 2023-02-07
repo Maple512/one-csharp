@@ -88,7 +88,13 @@ internal readonly struct Range : IEquatable<Range>
     public static Range EndAt(Index end) => new(Index.Start, end);
 
     /// <summary>Create a Range object starting from first element to the end.</summary>
-    public static Range All => new(Index.Start, Index.End);
+    public static Range All
+    {
+        get
+        {
+            return new(Index.Start, Index.End);
+        }
+    }
 
     /// <summary>Calculate the start offset and length of range object using a collection length.</summary>
     /// <param name="length">The length of the collection that the range will be used with. length has to be a positive value.</param>

@@ -18,7 +18,7 @@ public class ArraySliceBenchmark : BenchmarkItem
 
         for(var i = 0; i < count; i++)
         {
-            var b = array[..half];
+            _ = array[..half];
         }
     }
     //2
@@ -31,7 +31,7 @@ public class ArraySliceBenchmark : BenchmarkItem
 
         for(var i = 0; i < count; i++)
         {
-            var b = array.AsSpan()[..half];
+            _ = array.AsSpan()[..half];
         }
     }
     // 5
@@ -44,7 +44,7 @@ public class ArraySliceBenchmark : BenchmarkItem
 
         for(var i = 0; i < count; i++)
         {
-            var b = array[..half].AsSpan();
+            _ = array[..half].AsSpan();
         }
     }
     //3
@@ -57,7 +57,7 @@ public class ArraySliceBenchmark : BenchmarkItem
 
         for(var i = 0; i < count; i++)
         {
-            var b = array[..half].AsSpan();
+            _ = array[..half].AsSpan();
         }
     }
     //1
@@ -70,7 +70,7 @@ public class ArraySliceBenchmark : BenchmarkItem
 
         for(var i = 0; i < count; i++)
         {
-            var b = array.AsSpan()[..half];
+            _ = array.AsSpan()[..half];
         }
     }
     // 1
@@ -78,12 +78,12 @@ public class ArraySliceBenchmark : BenchmarkItem
     [BenchmarkCategory("Create String")]
     public void UseNewString()
     {
-        var half = capacity / 2;
+        _ = capacity / 2;
         var array = Randomizer.String(capacity).ToCharArray();
 
         for(var i = 0; i < count; i++)
         {
-            var b = new string(array);
+            _ = new string(array);
         }
     }
     // 2
@@ -91,12 +91,12 @@ public class ArraySliceBenchmark : BenchmarkItem
     [BenchmarkCategory("Create String")]
     public void UseAsSpanNewString()
     {
-        var half = capacity / 2;
+        _ = capacity / 2;
         var array = Randomizer.String(capacity).ToCharArray();
 
         for(var i = 0; i < count; i++)
         {
-            var b = new string(array.AsSpan());
+            _ = new string(array.AsSpan());
         }
     }
     //3
@@ -104,12 +104,12 @@ public class ArraySliceBenchmark : BenchmarkItem
     [BenchmarkCategory("Create String")]
     public void UseSpanToString()
     {
-        var half = capacity / 2;
+        _ = capacity / 2;
         var array = Randomizer.String(capacity).ToCharArray();
 
         for(var i = 0; i < count; i++)
         {
-            var b = array.AsSpan().ToString();
+            _ = array.AsSpan().ToString();
         }
     }
 }

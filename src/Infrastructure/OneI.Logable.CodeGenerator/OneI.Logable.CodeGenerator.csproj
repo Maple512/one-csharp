@@ -1,9 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>$(NetStandard)</TargetFramework>
     </PropertyGroup>
 
     <Import Project="../../common.codegen.props" />
+
+    <ItemGroup>
+        <Content Include="build\*" Pack="true" PackagePath="build" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="build\OneI.Logable.CodeGenerator.props" />
+    </ItemGroup>
 
 </Project>

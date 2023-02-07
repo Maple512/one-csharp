@@ -2,7 +2,6 @@ namespace OneI.Logable.Internal;
 
 using Microsoft.CodeAnalysis.Text;
 using OneI.Logable.Definitions;
-using OneI.Logable.Internal;
 
 internal static partial class CodePrinter
 {
@@ -106,6 +105,7 @@ internal static partial class CodePrinter
 
             content.AppendLine("}");
         }
+
         content.AppendLine("}");
 
         content.AppendLine("#nullable restore");
@@ -148,6 +148,7 @@ internal static partial class CodePrinter
 
             content.AppendLine("}");
         }
+
         content.AppendLine("}");
 
         content.AppendLine("#nullable restore");

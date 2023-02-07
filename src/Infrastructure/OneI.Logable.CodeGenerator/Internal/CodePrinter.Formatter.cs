@@ -2,7 +2,7 @@ namespace OneI.Logable.Internal;
 
 using OneI.Logable.Definitions;
 
-partial class CodePrinter
+internal partial class CodePrinter
 {
     private static void ObjectTypeFormatter(IndentedStringBuilder builder, TypeDef type)
     {
@@ -17,6 +17,7 @@ partial class CodePrinter
             {
                 builder.AppendLine("value = arg;");
             }
+
             builder.AppendLine("}");
             builder.AppendLine();
             builder.AppendLine($"public void Format(ref global::Cysharp.Text.Utf16ValueStringBuilder container, global::OneI.Logable.Templates.PropertyType type)");
@@ -36,8 +37,10 @@ partial class CodePrinter
                         builder.AppendLine("container.Append(\", \");");
                     }
                 }
+
                 builder.AppendLine("container.Append('}');");
             }
+
             builder.AppendLine("}");
         }
 
@@ -60,6 +63,7 @@ partial class CodePrinter
             {
                 builder.AppendLine("obj = value;");
             }
+
             builder.AppendLine("}");
             builder.AppendLine();
             builder.AppendLine($"public void Format(ref global::Cysharp.Text.Utf16ValueStringBuilder container, global::OneI.Logable.Templates.PropertyType type)");
@@ -79,8 +83,10 @@ partial class CodePrinter
                         builder.AppendLine("container.Append(\", \");");
                     }
                 }
+
                 builder.AppendLine("container.Append('}');");
             }
+
             builder.AppendLine("}");
         }
 
@@ -103,6 +109,7 @@ partial class CodePrinter
             {
                 builder.AppendLine("this.enumerable = enumerable;");
             }
+
             builder.AppendLine();
             builder.AppendLine("}");
             builder.AppendLine();
@@ -126,6 +133,7 @@ partial class CodePrinter
 
                         builder.AppendLine($"global::OneI.Logable.Templates.TemplateRenderHelper.LiteralRender(ref container, wrapper, type, null, null);");
                     }
+
                     builder.AppendLine("}");
                     builder.AppendLine("else");
                     builder.AppendLine("{");
@@ -133,6 +141,7 @@ partial class CodePrinter
                     {
                         builder.AppendLine("break;");
                     }
+
                     builder.AppendLine("}");
                     builder.AppendLine("if(enumerator.MoveNext())");
                     builder.AppendLine("{");
@@ -141,6 +150,7 @@ partial class CodePrinter
                         builder.AppendLine("hasNext = true;");
                         builder.AppendLine("container.Append(\", \");");
                     }
+
                     builder.AppendLine("}");
                     builder.AppendLine("else");
                     builder.AppendLine("{");
@@ -148,14 +158,18 @@ partial class CodePrinter
                     {
                         builder.AppendLine("hasNext = false;");
                     }
+
                     builder.AppendLine("}");
                 }
+
                 builder.AppendLine("}");
                 builder.AppendLine("container.Append(']');");
 
             }
+
             builder.AppendLine("}");
         }
+
         builder.AppendLine("}");
     }
 
@@ -174,6 +188,7 @@ partial class CodePrinter
             {
                 builder.AppendLine("this.enumerable = enumerable;");
             }
+
             builder.AppendLine("}");
             builder.AppendLine();
             builder.AppendLine("public void Format(ref global::Cysharp.Text.Utf16ValueStringBuilder container, global::OneI.Logable.Templates.PropertyType type)");
@@ -196,6 +211,7 @@ partial class CodePrinter
 
                         builder.AppendLine($"global::OneI.Logable.Templates.TemplateRenderHelper.LiteralRender(ref container, wrapper, type, null, null);");
                     }
+
                     builder.AppendLine("}");
                     builder.AppendLine("else");
                     builder.AppendLine("{");
@@ -203,6 +219,7 @@ partial class CodePrinter
                     {
                         builder.AppendLine("break;");
                     }
+
                     builder.AppendLine("}");
                     builder.AppendLine("if(enumerator.MoveNext())");
                     builder.AppendLine("{");
@@ -211,6 +228,7 @@ partial class CodePrinter
                         builder.AppendLine("hasNext = true;");
                         builder.AppendLine("container.Append(\", \");");
                     }
+
                     builder.AppendLine("}");
                     builder.AppendLine("else");
                     builder.AppendLine("{");
@@ -218,14 +236,18 @@ partial class CodePrinter
                     {
                         builder.AppendLine("hasNext = false;");
                     }
+
                     builder.AppendLine("}");
                 }
+
                 builder.AppendLine("}");
                 builder.AppendLine("container.Append(']');");
 
             }
+
             builder.AppendLine("}");
         }
+
         builder.AppendLine("}");
     }
 
@@ -246,6 +268,7 @@ partial class CodePrinter
             {
                 builder.AppendLine("this.enumerable = enumerable;");
             }
+
             builder.AppendLine("}");
             builder.AppendLine();
             builder.AppendLine("public void Format(ref global::Cysharp.Text.Utf16ValueStringBuilder container, global::OneI.Logable.Templates.PropertyType type)");
@@ -272,6 +295,7 @@ partial class CodePrinter
                         builder.AppendLine($"global::OneI.Logable.Templates.TemplateRenderHelper.LiteralRender(ref container, valueWrapper, type, null, null);");
                         builder.AppendLine("container.Append('}');");
                     }
+
                     builder.AppendLine("}");
                     builder.AppendLine("else");
                     builder.AppendLine("{");
@@ -279,6 +303,7 @@ partial class CodePrinter
                     {
                         builder.AppendLine("break;");
                     }
+
                     builder.AppendLine("}");
                     builder.AppendLine("if(enumerator.MoveNext())");
                     builder.AppendLine("{");
@@ -287,6 +312,7 @@ partial class CodePrinter
                         builder.AppendLine("hasNext = true;");
                         builder.AppendLine("container.Append(\", \");");
                     }
+
                     builder.AppendLine("}");
                     builder.AppendLine("else");
                     builder.AppendLine("{");
@@ -294,14 +320,18 @@ partial class CodePrinter
                     {
                         builder.AppendLine("hasNext = false;");
                     }
+
                     builder.AppendLine("}");
                 }
+
                 builder.AppendLine("}");
                 builder.AppendLine("container.Append(']');");
 
             }
+
             builder.AppendLine("}");
         }
+
         builder.AppendLine("}");
     }
 
@@ -321,6 +351,7 @@ partial class CodePrinter
             {
                 builder.AppendLine("this.enumerable = enumerable;");
             }
+
             builder.AppendLine("}");
             builder.AppendLine();
             builder.AppendLine("public void Format(ref global::Cysharp.Text.Utf16ValueStringBuilder container, global::OneI.Logable.Templates.PropertyType type)");
@@ -342,13 +373,17 @@ partial class CodePrinter
                     {
                         builder.AppendLine("container.Append(\", \");");
                     }
+
                     builder.AppendLine("}");
                 }
+
                 builder.AppendLine("}");
                 builder.AppendLine("container.Append(']');");
             }
+
             builder.AppendLine("}");
         }
+
         builder.AppendLine("}");
     }
 }

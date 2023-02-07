@@ -3,8 +3,6 @@ namespace OneI.Utilityable.Strings;
 using System.Globalization;
 using BenchmarkDotNet.Columns;
 using Cysharp.Text;
-using DotNext;
-using DotNext.Runtime;
 
 [GroupBenchmarksBy]
 public class StringTransferBenchmark : BenchmarkItem

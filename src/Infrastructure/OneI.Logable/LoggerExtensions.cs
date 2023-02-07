@@ -1,6 +1,5 @@
 namespace OneI.Logable;
 
-using System.ComponentModel;
 using OneI.Logable.Middlewares;
 using OneI.Logable.Templates;
 

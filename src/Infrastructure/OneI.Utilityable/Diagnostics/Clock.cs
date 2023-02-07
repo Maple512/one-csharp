@@ -17,5 +17,11 @@ public static class Clock
         _provider = Check.NotNull(provider);
     }
 
-    public static DateTimeOffset Now => _provider?.Invoke() ?? DateTimeOffset.Now;
+    public static DateTimeOffset Now
+    {
+        get
+        {
+            return _provider?.Invoke() ?? DateTimeOffset.Now;
+        }
+    }
 }

@@ -67,12 +67,12 @@ public readonly struct CommandResult
             {
                 if(StandardOutput is { Length: > 0 })
                 {
-                    message.AppendLine($"{Environment.NewLine}Standard Output:{Environment.NewLine}{StandardOutput}");
+                    _ = message.AppendLine($"{Environment.NewLine}Standard Output:{Environment.NewLine}{StandardOutput}");
                 }
 
                 if(StandardError is { Length: > 0 })
                 {
-                    message.AppendLine($"{Environment.NewLine}Standard Error:{Environment.NewLine}{StandardError}");
+                    _ = message.AppendLine($"{Environment.NewLine}Standard Error:{Environment.NewLine}{StandardError}");
                 }
             }
 

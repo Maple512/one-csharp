@@ -137,7 +137,13 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>, IEnumerator<T
         private set;
     }
 
-    object IEnumerator.Current => Current;
+    object IEnumerator.Current
+    {
+        get
+        {
+            return Current;
+        }
+    }
 
     public override string ToString() => Text.ToString();
 

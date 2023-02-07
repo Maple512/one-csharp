@@ -24,7 +24,13 @@ public struct LoggerTemplateEnumerator : IEnumerator<TemplateHolder>
         get; private set;
     }
 
-    object IEnumerator.Current => Current;
+    object IEnumerator.Current
+    {
+        get
+        {
+            return Current;
+        }
+    }
 
     public bool MoveNext()
     {

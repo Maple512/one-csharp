@@ -21,7 +21,7 @@ public static class HostingHostBuilderExtensions
     {
         return hostBuilder.ConfigureHostConfiguration(configBuilder =>
         {
-            configBuilder.AddInMemoryCollection(new[]
+            _ = configBuilder.AddInMemoryCollection(new[]
             {
                     new KeyValuePair<string, string?>(HostableAbstractionsConstants.Configuration.Environment, environment)
                 });
@@ -39,7 +39,7 @@ public static class HostingHostBuilderExtensions
     {
         return hostBuilder.ConfigureHostConfiguration(configBuilder =>
         {
-            configBuilder.AddInMemoryCollection(new[]
+            _ = configBuilder.AddInMemoryCollection(new[]
             {
                 new KeyValuePair<string, string?>(HostableAbstractionsConstants.Configuration.RootPath, contentRoot)
             });
@@ -200,7 +200,7 @@ public static class HostingHostBuilderExtensions
         var cwd = Environment.CurrentDirectory;
         if(!RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || !string.Equals(cwd, Environment.GetFolderPath(Environment.SpecialFolder.System), StringComparison.OrdinalIgnoreCase))
         {
-            hostConfigBuilder.AddInMemoryCollection(new[]
+            _ = hostConfigBuilder.AddInMemoryCollection(new[]
             {
                     new KeyValuePair<string, string?>(HostableAbstractionsConstants.Configuration.Environment, cwd),
                 });
@@ -209,10 +209,10 @@ public static class HostingHostBuilderExtensions
 
     internal static void AddDefaultHostConfigurationSources(IConfigurationBuilder hostConfigBuilder, string[]? args)
     {
-        hostConfigBuilder.AddEnvironmentVariables(prefix: "DOTNET_");
+        _ = hostConfigBuilder.AddEnvironmentVariables(prefix: "DOTNET_");
         if(args is { Length: > 0 })
         {
-            hostConfigBuilder.AddCommandLine(args);
+            _ = hostConfigBuilder.AddCommandLine(args);
         }
     }
 
@@ -221,7 +221,7 @@ public static class HostingHostBuilderExtensions
         var env = hostingContext.Environment;
         var reloadOnChange = GetReloadConfigOnChangeValue(hostingContext);
 
-        appConfigBuilder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: reloadOnChange)
+        _ = appConfigBuilder.AddJsonFile("appsettings.json", optional: true, reloadOnChange: reloadOnChange)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: reloadOnChange);
 
         if(env.IsDevelopment() && env.ApplicationName is { Length: > 0 })
@@ -229,7 +229,7 @@ public static class HostingHostBuilderExtensions
             try
             {
                 var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
-                appConfigBuilder.AddUserSecrets(appAssembly, optional: true, reloadOnChange: reloadOnChange);
+                _ = appConfigBuilder.AddUserSecrets(appAssembly, optional: true, reloadOnChange: reloadOnChange);
             }
             catch(FileNotFoundException)
             {
@@ -237,11 +237,11 @@ public static class HostingHostBuilderExtensions
             }
         }
 
-        appConfigBuilder.AddEnvironmentVariables();
+        _ = appConfigBuilder.AddEnvironmentVariables();
 
         if(args is { Length: > 0 })
         {
-            appConfigBuilder.AddCommandLine(args);
+            _ = appConfigBuilder.AddCommandLine(args);
         }
 
         [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2026:RequiresUnreferencedCode", Justification = "Calling IConfiguration.GetValue is safe when the T is bool.")]
@@ -253,7 +253,7 @@ public static class HostingHostBuilderExtensions
 
     internal static void AddDefaultServices(HostBuilderContext hostingContext, IServiceCollection services)
     {
-        services.AddLogging(logging =>
+        _ = services.AddLogging(logging =>
         {
             var isWindows = OperatingSystem.IsWindows();
 
@@ -262,25 +262,25 @@ public static class HostingHostBuilderExtensions
             if(isWindows)
             {
                 // Default the EventLogLoggerProvider to warning or above
-                logging.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Warning);
+                _ = logging.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Warning);
             }
 
-            logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+            _ = logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
             if(!OperatingSystem.IsBrowser())
             {
-                logging.AddConsole();
+                _ = logging.AddConsole();
             }
 
-            logging.AddDebug();
-            logging.AddEventSourceLogger();
+            _ = logging.AddDebug();
+            _ = logging.AddEventSourceLogger();
 
             if(isWindows)
             {
                 // Add the EventLogLoggerProvider on windows machines
-                logging.AddEventLog();
+                _ = logging.AddEventLog();
             }
 
-            logging.Configure(options =>
+            _ = logging.Configure(options =>
             {
                 options.ActivityTrackingOptions =
                     ActivityTrackingOptions.SpanId |
@@ -331,8 +331,8 @@ public static class HostingHostBuilderExtensions
     {
         return hostBuilder.ConfigureServices(collection =>
         {
-            collection.AddSingleton<IHostLifetime, ConsoleLifetime>();
-            collection.Configure(configureOptions);
+            _ = collection.AddSingleton<IHostLifetime, ConsoleLifetime>();
+            _ = collection.Configure(configureOptions);
         });
     }
 

@@ -16,8 +16,21 @@ internal class LogLevelMap
         _range = new LogLevelRange(MinimumLevelDefault, MaximumLevelDefault);
     }
 
-    public LogLevel Minimum => _range.Minimum;
-    public LogLevel Maximum => _range.Maximum;
+    public LogLevel Minimum
+    {
+        get
+        {
+            return _range.Minimum;
+        }
+    }
+
+    public LogLevel Maximum
+    {
+        get
+        {
+            return _range.Maximum;
+        }
+    }
 
     public void Override(LogLevel minimum, LogLevel maximum) => _range = new LogLevelRange(minimum, maximum);
 

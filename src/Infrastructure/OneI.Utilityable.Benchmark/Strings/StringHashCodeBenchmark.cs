@@ -4,11 +4,29 @@ public class StringHashCodeBenchmark : BenchmarkItem
 {
     private const int count = 100;
 
-    private string s1 => $"0123456789abcdasdjf{s3}/+9as8d+f*a/sd+fasd+f9";
+    private string s1
+    {
+        get
+        {
+            return $"0123456789abcdasdjf{s3}/+9as8d+f*a/sd+fasd+f9";
+        }
+    }
 
-    private string s2 => $"0123456789abcdasdjf{s3}/+9as8d+f*a/sd+fasd+f9";
+    private string s2
+    {
+        get
+        {
+            return $"0123456789abcdasdjf{s3}/+9as8d+f*a/sd+fasd+f9";
+        }
+    }
 
-    private string s3 => "0123456789abcdasdjfaopi12+-*/+9as8d+f*a/sd+fasd+f9";
+    private string s3
+    {
+        get
+        {
+            return "0123456789abcdasdjfaopi12+-*/+9as8d+f*a/sd+fasd+f9";
+        }
+    }
 
     [Benchmark(Baseline = true)]
     public bool UseStringEquals()

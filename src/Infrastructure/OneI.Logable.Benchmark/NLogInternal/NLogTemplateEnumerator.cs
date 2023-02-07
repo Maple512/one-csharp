@@ -80,7 +80,12 @@ internal struct LiteralHole
     }
 
     public bool MaybePositionalTemplate
-        => Literal.Skip != 0 && Hole.Index != -1 && Hole.CaptureType == CaptureType.Normal;
+    {
+        get
+        {
+            return Literal.Skip != 0 && Hole.Index != -1 && Hole.CaptureType == CaptureType.Normal;
+        }
+    }
 }
 
 internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
@@ -114,7 +119,13 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
     /// </summary>
     public LiteralHole Current { get; private set; }
 
-    object IEnumerator.Current => Current;
+    object IEnumerator.Current
+    {
+        get
+        {
+            return Current;
+        }
+    }
 
     /// <summary>
     ///     Clears the enumerator
