@@ -3,9 +3,7 @@ namespace System.Linq;
 using Expressions;
 using OneI;
 
-#if NET
 [StackTraceHidden]
-#endif
 [DebuggerStepThrough]
 internal static class QueryableExtensions
 {
@@ -14,7 +12,7 @@ internal static class QueryableExtensions
         int offset,
         int takeCount)
     {
-        _ = Check.NotNull(query);
+        Check.ThrowIfNull(query);
 
         return query.Skip(offset).Take(takeCount);
     }
@@ -24,7 +22,7 @@ internal static class QueryableExtensions
         bool condition,
         Expression<Func<T, bool>> predicate)
     {
-        _ = Check.NotNull(source);
+        Check.ThrowIfNull(source);
 
         return condition ? source.Where(predicate) : source;
     }
@@ -34,7 +32,7 @@ internal static class QueryableExtensions
         bool condition,
         Expression<Func<T, int, bool>> predicate)
     {
-        _ = Check.NotNull(source);
+        Check.ThrowIfNull(source);
 
         return condition ? source.Where(predicate) : source;
     }
@@ -45,7 +43,7 @@ internal static class QueryableExtensions
         Expression<Func<T, bool>> @true,
         Expression<Func<T, bool>> @false)
     {
-        _ = Check.NotNull(source);
+        Check.ThrowIfNull(source);
 
         return source.Where(condition ? @true : @false);
     }
@@ -56,7 +54,7 @@ internal static class QueryableExtensions
         Expression<Func<T, int, bool>> @true,
         Expression<Func<T, int, bool>> @false)
     {
-        _ = Check.NotNull(source);
+        Check.ThrowIfNull(source);
 
         return source.Where(condition ? @true : @false);
     }

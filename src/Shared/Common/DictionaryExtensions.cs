@@ -1,8 +1,6 @@
 namespace System.Collections.Generic;
 
-#if NET
 [StackTraceHidden]
-#endif
 [DebuggerStepThrough]
 internal static class DictionaryExtensions
 {
@@ -46,8 +44,11 @@ internal static class DictionaryExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static TValue? GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
     {
-        return dictionary.TryGetValue(key, out var obj)
-            ? obj
-            : default;
+        if(dictionary.TryGetValue(key, out var obj))
+        {
+            return obj;
+        }
+
+        return default;
     }
 }

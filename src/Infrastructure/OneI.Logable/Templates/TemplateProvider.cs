@@ -1,5 +1,7 @@
 namespace OneI.Logable.Templates;
 
+using OneI.Logable;
+
 internal class TemplateProvider
 {
     private readonly TemplateItem _default;
@@ -30,7 +32,7 @@ internal class TemplateProvider
     }
 }
 
-internal readonly struct TemplateItem
+public readonly struct TemplateItem
 {
     public readonly TemplateHolder[] Holders;
 

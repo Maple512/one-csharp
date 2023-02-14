@@ -1,7 +1,5 @@
 namespace OneI.Logable;
 
-using OneI.Logable.Configurations;
-
 public static class LoggerTraceSourceExtensions
 {
     public static ILoggerConfiguration UseTraceSource(
@@ -9,7 +7,7 @@ public static class LoggerTraceSourceExtensions
         string switchName,
         Action<TraceSourceOptions>? configure = null)
     {
-        _ = Check.NotNullOrEmpty(switchName);
+        ArgumentNullException.ThrowIfNullOrEmpty(switchName);
 
         var options = new TraceSourceOptions(switchName);
         configure?.Invoke(options);
@@ -23,7 +21,7 @@ public static class LoggerTraceSourceExtensions
         string switchName,
         Action<TraceSourceOptions>? configure = null)
     {
-        _ = Check.NotNullOrEmpty(switchName);
+        ArgumentNullException.ThrowIfNullOrEmpty(switchName);
 
         var options = new TraceSourceOptions(switchName);
         configure?.Invoke(options);

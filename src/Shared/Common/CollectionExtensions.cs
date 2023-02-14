@@ -2,12 +2,7 @@ namespace System.Collections.Generic;
 
 using OneI;
 
-/// <summary>
-/// The collection extensions.
-/// </summary>
-#if NET
 [StackTraceHidden]
-#endif
 [DebuggerStepThrough]
 internal static class CollectionExtensions
 {
@@ -18,7 +13,7 @@ internal static class CollectionExtensions
     /// <param name="item">The item.</param>
     public static void AddIfNotContains<T>(this ICollection<T> source, T item)
     {
-        _ = Check.NotNull(source);
+        Check.ThrowIfNull(source);
 
         if(!source.Contains(item))
         {
@@ -33,7 +28,7 @@ internal static class CollectionExtensions
     /// <param name="items">The items.</param>
     public static void AddIfNotContains<T>(this ICollection<T> source, IEnumerable<T> items)
     {
-        _ = Check.NotNull(source);
+        Check.ThrowIfNull(source);
 
         foreach(var item in items)
         {

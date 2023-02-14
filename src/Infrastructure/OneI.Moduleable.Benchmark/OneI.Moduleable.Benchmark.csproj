@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>exe</OutputType>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+    </PropertyGroup>
+
+    <Import Project="../../common.test.benchmark.props" />
+
+</Project>

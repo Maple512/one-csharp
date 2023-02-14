@@ -5,8 +5,7 @@ internal static partial class Check
 {
     public static bool IsIn<T>(T? value, params T[] data)
     {
-        if(value is null
-            || data is { Length: 0 })
+        if(value is null || data is { Length: 0 })
         {
             return false;
         }
@@ -21,108 +20,30 @@ internal static partial class Check
 
         return false;
     }
-}
 
-#if NET
-[StackTraceHidden]
-internal static partial class Check
-{
-    [return: NotNull]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrEmpty(string? value)
+    public static void ThrowNullOrWhiteSpace([NotNull] string? value)
+#pragma warning disable CS8777 
     {
-        if(string.IsNullOrEmpty(value))
+        if(string.IsNullOrWhiteSpace(value))
         {
-            throw new ArgumentNullException(nameof(value));
+            ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value);
         }
-
-        return value;
     }
+#pragma warning restore CS8777 
 
-    [return: NotNull]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrWhiteSpace(string? value)
-    {
-        if(value.IsNullOrWhiteSpace())
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
-
-        return value!;
-    }
-
-    [return: NotNull]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T NotNull<T>(T? value)
+    public static void ThrowIfNull<T>([NotNull] T? value)
     {
         if(value == null)
         {
-            throw new ArgumentNullException(nameof(value));
+            ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value);
         }
-
-        return value!;
     }
 
-    [return: NotNull]
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> NotNullOrEmpty<T>(IEnumerable<T> data)
+    public static void ThrowIfNullOrEmpty<T>([NotNull] IEnumerable<T> source)
     {
-        if(data is null || data.Any() == false)
+        if(source is null || source.Any() == false)
         {
-            throw new ArgumentNullException(nameof(data));
+            ThrowHelper.ThrowArgumentNullException(ExceptionArgument.source);
         }
-
-        return data;
     }
 }
-
-#elif NETSTANDARD2_0_OR_GREATER
-internal static partial class Check
-{
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrEmpty(string? value)
-    {
-        return string.IsNullOrEmpty(value)
-            ? throw new ArgumentNullException(nameof(value))
-            : value!;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string NotNullOrWhiteSpace(string? value)
-    {
-        return string.IsNullOrWhiteSpace(value)
-            ? throw new ArgumentNullException(nameof(value))
-            : value!;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T NotNull<T>(T? value)
-    {
-        return value == null
-            ? throw new ArgumentNullException(nameof(value))
-            : value;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static IEnumerable<T> NotNullOrEmpty<T>(IEnumerable<T> data)
-    {
-        if(data?.Any() != true)
-        {
-            throw new ArgumentNullException(nameof(data));
-        }
-        else
-        {
-            return data;
-        }
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Dictionary<TKey, TValue> NotNullOrEmpty<TKey, TValue>(Dictionary<TKey, TValue>? data)
-        where TKey : notnull
-    {
-        return data == null || !data.Any()
-            ? throw new ArgumentNullException(nameof(data))
-            : data;
-    }
-}
-#endif

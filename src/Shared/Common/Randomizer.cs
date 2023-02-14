@@ -8,13 +8,14 @@ using System.Text;
 /// <summary>
 /// 随机数
 /// </summary>
+[StackTraceHidden]
 [DebuggerStepThrough]
 internal static partial class Randomizer
 {
     private const string latter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private const string character_set = $"0123456789{latter}!@#$%^&*()_-+=[{{]}};:>|./?";
 
-    #region Enumerable
+#region Enumerable
 
     /// <summary>
     /// 从给定集合中随机获取一个元素
@@ -24,7 +25,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static T Item<T>(params T[] source)
     {
-        _ = Check.NotNull(source);
+        Check.ThrowIfNull(source);
 
         return source[Integer(source.Length)];
     }
@@ -37,7 +38,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static T Item<T>(IEnumerable<T> source)
     {
-        _ = Check.NotNull(source);
+        Check.ThrowIfNull(source);
 
         return source.ElementAt(Integer(source.Count()));
     }
@@ -51,7 +52,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static IEnumerable<T> Items<T>(int count, params T[] source)
     {
-        _ = Check.NotNull(source);
+        Check.ThrowIfNull(source);
 
         for(var i = 0; i < count; i++)
         {
@@ -70,7 +71,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static IEnumerable<T> Items<T>(IEnumerable<T> source, int count)
     {
-        _ = Check.NotNull(source);
+        Check.ThrowIfNull(source);
 
         for(var i = 0; i < count; i++)
         {
@@ -88,7 +89,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static IEnumerable<T> Disorder<T>(IEnumerable<T> items)
     {
-        _ = Check.NotNull(items);
+        Check.ThrowIfNull(items);
 
         var currentList = new List<T>(items);
         var randomList = new List<T>(currentList.Count);
@@ -105,9 +106,9 @@ internal static partial class Randomizer
         return randomList;
     }
 
-    #endregion
+#endregion
 
-    #region String
+#region String
 
     /// <summary>
     /// 随机字母
@@ -215,9 +216,9 @@ internal static partial class Randomizer
         return builder.ToString();
     }
 
-    #endregion
+#endregion
 
-    #region Numberic
+#region Numberic
 
     /// <summary>
     /// 随机偶数
@@ -269,11 +270,10 @@ internal static partial class Randomizer
         return Integer(min, max) | 1;
     }
 
-    #endregion
+#endregion
 }
 
 #if NET
-[StackTraceHidden]
 internal static partial class Randomizer
 {
     public static int Integer(int minValue, int maxValue)

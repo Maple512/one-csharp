@@ -16,8 +16,11 @@ public class SystemdLifetime : IHostLifetime, IDisposable
     }
 
     private IHostApplicationLifetime HostApplicationLifetime { get; }
+
     private IHostEnvironment Environment { get; }
+
     private ILogger Logger { get; }
+
     private ISystemdNotifier SystemdNotifier { get; }
 
     public Task StopAsync(CancellationToken cancellationToken)
@@ -32,6 +35,7 @@ public class SystemdLifetime : IHostLifetime, IDisposable
             ((SystemdLifetime)state!).OnApplicationStarted();
         },
         this);
+
         _applicationStoppingRegistration = HostApplicationLifetime.Stopping.Register(state =>
         {
             ((SystemdLifetime)state!).OnApplicationStopping();
@@ -61,7 +65,6 @@ public class SystemdLifetime : IHostLifetime, IDisposable
 
     public void Dispose()
     {
-
         UnregisterShutdownHandlers();
 
         _applicationStartedRegistration.Dispose();

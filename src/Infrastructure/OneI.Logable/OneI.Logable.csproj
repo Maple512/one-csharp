@@ -5,16 +5,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\OneI.Generateable.Generic\OneI.Generateable.Generic.csproj" 
-                          OutputItemType="Analyzer" 
-                          ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\OneI.Generateable.Generic\OneI.Generateable.Generic.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\OneI.Logable.Abstractions\OneI.Logable.Abstractions.csproj" />
         <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
     </ItemGroup>
 
     <Import Project="../../common.props" />
 
     <ItemGroup>
-        <Using Include="OneI.Generateable.CodeGenerated"/>
+        <Using Include="OneI.Generateable.CodeGenerated" />
     </ItemGroup>
 
 </Project>

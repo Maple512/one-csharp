@@ -59,7 +59,6 @@ public abstract class BackgroundService : IHostStrartingService, IDisposable
 
     public void Dispose()
     {
-
         _stoppingToken?.Cancel();
     }
 }

@@ -8,8 +8,5 @@ public interface IHostApplicationLifetime
 
     CancellationToken Stopped { get; }
 
-    /// <summary>
-    /// 在
-    /// </summary>
     void StopApplication();
 }

@@ -12,7 +12,12 @@ public sealed class ProcessParameter
     /// Initializes a new instance of the <see cref="ProcessParameter"/> class.
     /// </summary>
     /// <param name="fileName">The file name.</param>
-    public ProcessParameter(string fileName) => FileName = Check.NotNullOrWhiteSpace(fileName);
+    public ProcessParameter(string fileName)
+    {
+        Check.ThrowNullOrWhiteSpace(fileName);
+
+        FileName = fileName;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ProcessParameter"/> class.
@@ -20,9 +25,8 @@ public sealed class ProcessParameter
     /// <param name="fileName">The file name.</param>
     /// <param name="arguments">The arguments.</param>
     public ProcessParameter(string fileName, string arguments)
+        : this(fileName)
     {
-        FileName = Check.NotNullOrWhiteSpace(fileName);
-
         Arguments.AddRange(arguments.Split(' '));
     }
 
@@ -32,9 +36,8 @@ public sealed class ProcessParameter
     /// <param name="fileName">The file name.</param>
     /// <param name="arguments">The arguments.</param>
     public ProcessParameter(string fileName, params string[] arguments)
+        : this(fileName)
     {
-        FileName = Check.NotNullOrWhiteSpace(fileName);
-
         Arguments.AddRange(arguments);
     }
 
@@ -106,7 +109,9 @@ public sealed class ProcessParameter
     /// <returns>A ProcessParameter.</returns>
     public ProcessParameter WithWorkingDirectory(string workingDirectory)
     {
-        WorkingDirectory = Check.NotNull(workingDirectory);
+        Check.ThrowIfNull(workingDirectory);
+
+        WorkingDirectory = workingDirectory;
 
         return this;
     }
@@ -119,7 +124,7 @@ public sealed class ProcessParameter
     /// <returns>A ProcessParameter.</returns>
     public ProcessParameter WithEnvironment(string name, string value)
     {
-        _ = Check.NotNullOrWhiteSpace(name);
+        Check.ThrowNullOrWhiteSpace(name);
 
         Environments[name] = value;
 
@@ -133,7 +138,7 @@ public sealed class ProcessParameter
     /// <returns>A ProcessParameter.</returns>
     public ProcessParameter WithEnvironmentToRemove(string name)
     {
-        _ = Check.NotNullOrWhiteSpace(name);
+        Check.ThrowNullOrWhiteSpace(name);
 
         EnvironmentsToRemove.Add(name);
 
@@ -147,7 +152,9 @@ public sealed class ProcessParameter
     /// <returns>A ProcessParameter.</returns>
     public ProcessParameter WithOutput(Action<bool, string?> output)
     {
-        OutputReceiver = Check.NotNull(output);
+        Check.ThrowIfNull(output);
+
+        OutputReceiver = output;
 
         return this;
     }

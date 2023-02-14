@@ -1,7 +1,5 @@
 namespace OneI.Logable.Diagnostics;
 
-using OneI.Logable.Configurations;
-
 public static class LoggerDebugConfigurationExtensions
 {
     public static ILoggerConfiguration UseDebug(this ILoggerSinkConfiguration logger)

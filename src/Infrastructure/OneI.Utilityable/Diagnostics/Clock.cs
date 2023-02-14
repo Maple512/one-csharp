@@ -9,12 +9,9 @@ public static class Clock
 
     public static void Initialize(Func<DateTimeOffset> provider)
     {
-        if(_provider != null)
-        {
-            throw new Exception("The initialize method can only be called once.");
-        }
+        Check.ThrowIfNull(provider);
 
-        _provider = Check.NotNull(provider);
+        _provider = provider;
     }
 
     public static DateTimeOffset Now

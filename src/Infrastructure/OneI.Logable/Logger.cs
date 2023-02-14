@@ -1,5 +1,6 @@
 namespace OneI.Logable;
 
+using OneI.Logable.Internal;
 using OneI.Logable.Middlewares;
 using OneI.Logable.Templates;
 

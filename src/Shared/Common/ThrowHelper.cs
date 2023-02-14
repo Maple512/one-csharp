@@ -31,11 +31,9 @@
 //
 
 namespace System;
-#if NET
+
 using Buffers;
-using Numerics;
 using Runtime.ExceptionServices;
-using Runtime.Intrinsics;
 using Runtime.Serialization;
 
 /// <summary>
@@ -44,7 +42,6 @@ using Runtime.Serialization;
 [StackTraceHidden]
 internal static class ThrowHelper
 {
-    [DoesNotReturn]
     public static void ReThrow(this Exception exception)
     {
         ExceptionDispatchInfo.Capture(exception).Throw();
@@ -544,25 +541,6 @@ internal static class ThrowHelper
     }
 
     [DoesNotReturn]
-    internal static void ThrowApplicationException(int hr)
-    {
-        // Get a message for this HR
-        var ex = Marshal.GetExceptionForHR(hr);
-        if(ex != null && !string.IsNullOrEmpty(ex.Message))
-        {
-            ex = new ApplicationException(ex.Message);
-        }
-        else
-        {
-            ex = new ApplicationException();
-        }
-
-        ex.HResult = hr;
-
-        throw ex;
-    }
-
-    [DoesNotReturn]
     internal static void ThrowFormatInvalidString()
     {
         throw new FormatException("Input string was not in a correct format.");
@@ -656,70 +634,6 @@ internal static class ThrowHelper
             ThrowArgumentNullException(argName);
         }
     }
-
-    // Throws if 'T' is disallowed in Vector<T> in the Numerics namespace.
-    // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
-    // is supported and we're on an optimized release build.
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static void ThrowForUnsupportedNumericsVectorBaseType<T>()
-        where T : struct
-    {
-        if(!Vector<T>.IsSupported)
-        {
-            ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
-        }
-    }
-
-    // Throws if 'T' is disallowed in Vector64<T> in the Intrinsics_Test namespace.
-    // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
-    // is supported and we're on an optimized release build.
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static void ThrowForUnsupportedIntrinsicsVector64BaseType<T>()
-        where T : struct
-    {
-        if(!Vector64<T>.IsSupported)
-        {
-            ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
-        }
-    }
-
-    // Throws if 'T' is disallowed in Vector128<T> in the Intrinsics_Test namespace.
-    // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
-    // is supported and we're on an optimized release build.
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static void ThrowForUnsupportedIntrinsicsVector128BaseType<T>()
-        where T : struct
-    {
-        if(!Vector128<T>.IsSupported)
-        {
-            ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
-        }
-    }
-
-    // Throws if 'T' is disallowed in Vector256<T> in the Intrinsics_Test namespace.
-    // If 'T' is allowed, no-ops. JIT will elide the method entirely if 'T'
-    // is supported and we're on an optimized release build.
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static void ThrowForUnsupportedIntrinsicsVector256BaseType<T>()
-        where T : struct
-    {
-        if(!Vector256<T>.IsSupported)
-        {
-            ThrowNotSupportedException(ExceptionResource.Arg_TypeNotSupported);
-        }
-    }
-
-#if false // Reflection-based implementation does not work for NativeAOT
-    // This function will convert an ExceptionArgument enum value to the argument name string.
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private static string GetArgumentName(ExceptionArgument argument)
-    {
-        Debug.Assert(Enum.IsDefined(argument),
-            "The enum value is not defined, please check the ExceptionArgument Enum.");
-
-        return argument.ToString();
-    }
-#endif
 
     private static string GetArgumentName(ExceptionArgument argument)
     {
@@ -1265,4 +1179,3 @@ internal enum ExceptionResource
     CancellationTokenSource_Disposed,
     Argument_AlignmentMustBePow2,
 }
-#endif

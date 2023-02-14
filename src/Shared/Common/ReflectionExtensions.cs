@@ -1,9 +1,6 @@
 namespace System.Reflection;
-// TODO: 使用源生成器解决反射
 
-/// <summary>
-/// The type extensions.
-/// </summary>
+[StackTraceHidden]
 [DebuggerStepThrough]
 internal static partial class ReflectionExtensions
 {
@@ -46,12 +43,7 @@ internal static partial class ReflectionExtensions
             typeInfo = typeInfo.BaseType?.GetTypeInfo();
         }
     }
-}
 
-#if NET
-[StackTraceHidden]
-internal static partial class ReflectionExtensions
-{
     /// <summary>
     /// 尝试获取无参构造器
     /// </summary>
@@ -67,4 +59,3 @@ internal static partial class ReflectionExtensions
             .FirstOrDefault(x => x.GetParameters().IsNullOrEmpty())) != null;
     }
 }
-#endif

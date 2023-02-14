@@ -293,7 +293,12 @@ public class HostBuilder : IHostBuilder
                 appServices,
                 defaultFileProvider);
         });
-        _ = services.AddOptions().Configure<HostOptions>(options => { options.Initialize(hostBuilderContext.Configuration); });
+
+        _ = services.AddOptions().Configure<HostOptions>(options =>
+        {
+            options.Initialize(hostBuilderContext.Configuration);
+        });
+
         _ = services.AddLogging();
     }
 

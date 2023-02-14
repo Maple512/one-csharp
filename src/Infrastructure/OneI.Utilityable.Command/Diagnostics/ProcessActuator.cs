@@ -81,7 +81,7 @@ public partial class ProcessActuator
         {
             paramter.OutputReceiver?.Invoke(true, e.Data);
 
-            _ = (paramter.OutputBuilder?.AppendLine(e.Data));
+            paramter.OutputBuilder?.AppendLine(e.Data);
 
             Debug.WriteLine(e.Data, "Output Data");
         };
@@ -90,7 +90,7 @@ public partial class ProcessActuator
         {
             paramter.OutputReceiver?.Invoke(false, e.Data);
 
-            _ = (paramter.OutputBuilder?.AppendLine(e.Data));
+            paramter.OutputBuilder?.AppendLine(e.Data);
 
             Debug.WriteLine(e.Data, "Error Data");
         };

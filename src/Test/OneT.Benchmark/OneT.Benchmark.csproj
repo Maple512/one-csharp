@@ -16,6 +16,10 @@
         <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.4" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Infrastructure\OneI.Utilityable\OneI.Utilityable.csproj" />
+    </ItemGroup>
+
     <Import Project="../../common.test.props" />
 
 </Project>

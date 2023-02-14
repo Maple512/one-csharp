@@ -1,0 +1,11 @@
+{
+  "solution": {
+    "path": "one.sln",
+    "projects": [
+      "Infrastructure\\OneI.Moduleabl.Benchmark\\OneI.Moduleabl.Benchmark.csproj",
+      "Infrastructure\\OneI.Moduleable.Abstractions\\OneI.Moduleable.Abstractions.csproj",
+      "Infrastructure\\OneI.Moduleable.DependencyInjection.CodeGenerator\\OneI.Moduleable.DependencyInjection.CodeGenerator.csproj",
+      "Infrastructure\\OneI.Moduleable.Test\\OneI.Moduleable.Test.csproj"
+    ]
+  }
+}

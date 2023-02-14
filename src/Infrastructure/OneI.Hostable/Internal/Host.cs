@@ -16,7 +16,7 @@ public class Host : IHost, IAsyncDisposable
     private IEnumerable<IHostStrartingService>? _hostStartingServices;
     private volatile bool _stopCalled;
 
-    public Host(
+    internal Host(
         ILogger<IHost> logger,
         IHostLifetime lifetime,
         IHostApplicationLifetime applicationLifetime,

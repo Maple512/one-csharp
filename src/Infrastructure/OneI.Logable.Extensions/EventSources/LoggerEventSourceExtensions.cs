@@ -1,7 +1,6 @@
 namespace OneI.Logable;
 
 using System.Runtime.Versioning;
-using OneI.Logable.Configurations;
 
 [SupportedOSPlatform(SharedConstants.OSPlatform.Windows)]
 public static class LoggerEventSourceExtensions

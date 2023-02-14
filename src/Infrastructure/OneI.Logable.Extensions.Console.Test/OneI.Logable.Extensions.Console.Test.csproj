@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>exe</OutputType>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+    </PropertyGroup>
+
+    <Import Project="../../common.test.props" />
+
+    <ItemGroup>
+        <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"/>
+        <ProjectReference Include="..\OneI.Logable.Extensions.Console\OneI.Logable.Extensions.Console.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="OneI.Logable.CodeGenerated" />
+    </ItemGroup>
+
+</Project>
