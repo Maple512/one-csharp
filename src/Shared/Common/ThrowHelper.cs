@@ -47,23 +47,35 @@ internal static class ThrowHelper
         ExceptionDispatchInfo.Capture(exception).Throw();
     }
 
-    [DoesNotReturn]
-    internal static void ThrowAccessViolationException()
+    #region Check
+
+    public static void ThrowIfNullOrWhiteSpace([NotNull] string? value)
+#pragma warning disable CS8777 
     {
-        throw new AccessViolationException();
+        if(string.IsNullOrWhiteSpace(value))
+        {
+            ThrowArgumentNullException(ExceptionArgument.value);
+        }
+    }
+#pragma warning restore CS8777
+
+    public static void ThrowIfNull<T>([NotNull] T? value)
+    {
+        if(value == null)
+        {
+            ThrowArgumentNullException(ExceptionArgument.value);
+        }
     }
 
-    [DoesNotReturn]
-    internal static void ThrowArrayTypeMismatchException()
+    public static void ThrowIfNullOrEmpty<T>([NotNull] IEnumerable<T> source)
     {
-        throw new ArrayTypeMismatchException();
+        if(source is null || source.Any() == false)
+        {
+            ThrowArgumentNullException(ExceptionArgument.source);
+        }
     }
 
-    [DoesNotReturn]
-    internal static void ThrowInvalidTypeWithPointersNotSupported(Type targetType)
-    {
-        throw new ArgumentException($"Cannot use type '{targetType}'. Only value types without pointers or references are supported.", nameof(targetType));
-    }
+    #endregion
 
     [DoesNotReturn]
     internal static void ThrowIndexOutOfRangeException()
@@ -84,24 +96,6 @@ internal static class ThrowHelper
     }
 
     [DoesNotReturn]
-    internal static void ThrowArgumentException_OverlapAlignmentMismatch()
-    {
-        throw new ArgumentException("Overlapping spans have mismatching alignment.");
-    }
-
-    [DoesNotReturn]
-    internal static void ThrowArgumentException_ArgumentNull_TypedRefType()
-    {
-        throw new ArgumentNullException("Type in TypedReference cannot be null.");
-    }
-
-    [DoesNotReturn]
-    internal static void ThrowArgumentException_CannotExtractScalar(ExceptionArgument argument)
-    {
-        throw GetArgumentException(ExceptionResource.Argument_CannotExtractScalar, argument);
-    }
-
-    [DoesNotReturn]
     internal static void ThrowArgumentException_TupleIncorrectType(object obj)
     {
         throw new ArgumentException($"Argument must be of type {obj.GetType()}.", nameof(obj));
@@ -110,21 +104,13 @@ internal static class ThrowHelper
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRange_IndexMustBeLessException()
     {
-        throw GetArgumentOutOfRangeException(ExceptionArgument.index,
-                                                ExceptionResource.ArgumentOutOfRange_IndexMustBeLess);
+        throw GetArgumentOutOfRangeException(ExceptionArgument.index, ExceptionResource.ArgumentOutOfRange_IndexMustBeLess);
     }
 
     [DoesNotReturn]
     internal static void ThrowArgumentOutOfRange_IndexMustBeLessOrEqualException()
     {
-        throw GetArgumentOutOfRangeException(ExceptionArgument.index,
-                                                ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual);
-    }
-
-    [DoesNotReturn]
-    internal static void ThrowArgumentException_BadComparer(object? comparer)
-    {
-        throw new ArgumentException($"Unable to sort because the IComparer.Compare() method returns inconsistent results. Either a value does not compare equal to itself, or one value repeatedly compared to another value yields different results. IComparer: '{comparer}'.", nameof(comparer));
+        throw GetArgumentOutOfRangeException(ExceptionArgument.index, ExceptionResource.ArgumentOutOfRange_IndexMustBeLessOrEqual);
     }
 
     [DoesNotReturn]

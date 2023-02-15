@@ -1,6 +1,8 @@
-﻿namespace OneI.Applicationable;
+namespace OneI.Applicationable;
 
-public class IApplicationHostLifetime
+public interface IApplicationHostLifetime
 {
+    Task StartAsync(CancellationToken token);
 
+    Task StopAsync(CancellationToken token);
 }

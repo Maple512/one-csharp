@@ -12,7 +12,7 @@ internal static class QueryableExtensions
         int offset,
         int takeCount)
     {
-        Check.ThrowIfNull(query);
+        ThrowHelper.ThrowIfNull(query);
 
         return query.Skip(offset).Take(takeCount);
     }
@@ -22,7 +22,7 @@ internal static class QueryableExtensions
         bool condition,
         Expression<Func<T, bool>> predicate)
     {
-        Check.ThrowIfNull(source);
+        ThrowHelper.ThrowIfNull(source);
 
         return condition ? source.Where(predicate) : source;
     }
@@ -32,7 +32,7 @@ internal static class QueryableExtensions
         bool condition,
         Expression<Func<T, int, bool>> predicate)
     {
-        Check.ThrowIfNull(source);
+        ThrowHelper.ThrowIfNull(source);
 
         return condition ? source.Where(predicate) : source;
     }
@@ -43,7 +43,7 @@ internal static class QueryableExtensions
         Expression<Func<T, bool>> @true,
         Expression<Func<T, bool>> @false)
     {
-        Check.ThrowIfNull(source);
+        ThrowHelper.ThrowIfNull(source);
 
         return source.Where(condition ? @true : @false);
     }
@@ -54,7 +54,7 @@ internal static class QueryableExtensions
         Expression<Func<T, int, bool>> @true,
         Expression<Func<T, int, bool>> @false)
     {
-        Check.ThrowIfNull(source);
+        ThrowHelper.ThrowIfNull(source);
 
         return source.Where(condition ? @true : @false);
     }

@@ -15,6 +15,12 @@ public interface ILogger : IDisposable, IAsyncDisposable
 
     ILogger ForContext<TValue>(string name, TValue value);
 
+    ILogger ForContext(params ILoggerMiddleware[] middlewares);
+
+    ILogger ForContext<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>();
+    
+    ILogger ForContext(string context);
+
     #endregion
 
     #region Begin Scope
@@ -22,6 +28,10 @@ public interface ILogger : IDisposable, IAsyncDisposable
     IDisposable BeginScope(params ILoggerMiddleware[] middlewares);
 
     IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares);
+
+    IDisposable BeginScope<T>(string name, T value);
+
+    IAsyncDisposable BeginScopeAsync<T>(string name, T value);
 
     #endregion
 }
@@ -35,7 +45,17 @@ public readonly struct NoneLogger : ILogger
         return DisposeAction.Nullable;
     }
 
+    public IDisposable BeginScope<T>(string name, T value)
+    {
+        return DisposeAction.Nullable;
+    }
+
     public IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares)
+    {
+        return DisposeAction.Nullable;
+    }
+
+    public IAsyncDisposable BeginScopeAsync<T>(string name, T value)
     {
         return DisposeAction.Nullable;
     }
@@ -56,6 +76,21 @@ public readonly struct NoneLogger : ILogger
     }
 
     public ILogger ForContext<TValue>(string name, TValue value)
+    {
+        return this;
+    }
+
+    public ILogger ForContext(params ILoggerMiddleware[] middlewares)
+    {
+        return this;
+    }
+
+    public ILogger ForContext<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSourceContext>()
+    {
+        return this;
+    }
+
+    public ILogger ForContext(string sourceContext)
     {
         return this;
     }

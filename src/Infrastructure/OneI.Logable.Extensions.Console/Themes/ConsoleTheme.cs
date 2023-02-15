@@ -9,7 +9,7 @@ public class ConsoleTheme
             Ansi = Spectre.Console.AnsiSupport.Yes,
             ColorSystem = Spectre.Console.ColorSystemSupport.EightBit,
             Enrichment = new Spectre.Console.ProfileEnrichment(),
-             
+
         });
     }
 }

@@ -2,7 +2,11 @@ namespace OneI.Applicationable;
 
 public interface IApplicationLifetime
 {
-    Task StartAsync(CancellationToken cancellationToken);
+    CancellationToken Started { get; }
 
-    Task StopAsync(CancellationToken cancellationToken);
+    CancellationToken Stopping { get; }
+
+    CancellationToken Stopped { get; }
+
+    void Stop();
 }

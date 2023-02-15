@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="$(MSVersion)" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="$(MSVersion)" />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="$(MSVersion)" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="$(MSVersion)" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\OneI.Applicationable.Abstractions\OneI.Applicationable.Abstractions.csproj" />
+        <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\OneI.Logable\OneI.Logable.csproj" />
+    </ItemGroup>
+
+    <Import Project="../../common.props" />
+
+    <ItemGroup>
+        <Using Include="OneI.Logable.CodeGenerated" />
+    </ItemGroup>
+
+</Project>

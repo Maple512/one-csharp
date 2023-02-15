@@ -51,7 +51,7 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
         return this;
     }
 
-    public ILoggerConfiguration With(Action<LoggerMessageContext> middleware) 
+    public ILoggerConfiguration With(Action<LoggerMessageContext> middleware)
         => With(new ActionMiddleware(middleware));
 
     public ILoggerConfiguration WithWhen(Func<LoggerMessageContext, bool> condition, ILoggerMiddleware middleware)
@@ -67,17 +67,6 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
         var templateSelector = new TemplateProvider(_defaultTemplate, _templateProviders.ToArray());
 
         return new Logger(_middlewares.ToArray(), _sinks.ToArray(), _logLevelMap, templateSelector);
-    }
-
-    public ILogger<TSource> CreateLogger<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSource>()
-    {
-        var templateSelector = new TemplateProvider(_defaultTemplate, _templateProviders.ToArray());
-
-        var typename = OneIReflectionExtensions.GetTypeDisplayName(typeof(TSource), true, false, false, '.');
-
-        _ = Properties.Add(LoggerConstants.Propertys.SourceContext, typename);
-
-        return new Logger<TSource>(_middlewares.ToArray(), _sinks.ToArray(), _logLevelMap, templateSelector);
     }
 
     internal ILogger CreateWithLogger(Logger logger)

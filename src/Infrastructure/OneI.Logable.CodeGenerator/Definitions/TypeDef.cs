@@ -18,15 +18,7 @@ internal class TypeDef : IEquatable<TypeDef>
 
     private string? id;
 
-    public string Id
-    {
-        get
-        {
-            id ??= $"{Randomizer.Latter(5)}_{Math.Abs(GetHashCode())}";
-
-            return id;
-        }
-    }
+    public string Id => id ??= $"{Math.Abs(GetHashCode())}";
 
     public List<string> Names { get; }
 
@@ -72,29 +64,11 @@ internal class TypeDef : IEquatable<TypeDef>
     /// </summary>
     public List<PropertyDef> Properties { get; }
 
-    public string WrapperMethod
-    {
-        get
-        {
-            return $"Create_{WrapperName}";
-        }
-    }
+    public string WrapperMethod => $"Create_{WrapperName}";
 
-    public string WrapperName
-    {
-        get
-        {
-            return $"Wrapper_{Id}";
-        }
-    }
+    public string WrapperName => $"Wrapper_{Id}";
 
-    public string FormatterName
-    {
-        get
-        {
-            return $"Formatter_{Id}";
-        }
-    }
+    public string FormatterName => $"Formatter_{Id}";
 
     public bool Equals(TypeDef other)
     {

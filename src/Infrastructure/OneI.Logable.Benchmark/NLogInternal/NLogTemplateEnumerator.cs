@@ -79,13 +79,7 @@ internal struct LiteralHole
         Hole = hole;
     }
 
-    public bool MaybePositionalTemplate
-    {
-        get
-        {
-            return Literal.Skip != 0 && Hole.Index != -1 && Hole.CaptureType == CaptureType.Normal;
-        }
-    }
+    public bool MaybePositionalTemplate => Literal.Skip != 0 && Hole.Index != -1 && Hole.CaptureType == CaptureType.Normal;
 }
 
 internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
@@ -119,13 +113,7 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
     /// </summary>
     public LiteralHole Current { get; private set; }
 
-    object IEnumerator.Current
-    {
-        get
-        {
-            return Current;
-        }
-    }
+    object IEnumerator.Current => Current;
 
     /// <summary>
     ///     Clears the enumerator
@@ -389,7 +377,7 @@ internal struct NLogTemplateEnumerator : IEnumerator<LiteralHole>
 
     private char Read() => _template[_position++];
 
-    // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
+    // ReSharper disable once ParameterOnlyUsedForPreconditionThrowHelper.Local
     private void Skip(char c)
     {
         // Can be out of bounds, but never in correct use (expects a required char).

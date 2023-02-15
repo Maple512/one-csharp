@@ -24,13 +24,7 @@ internal class IndentedStringBuilder
         _size = size;
     }
 
-    public int Length
-    {
-        get
-        {
-            return _stringBuilder.Length;
-        }
-    }
+    public int Length => _stringBuilder.Length;
 
     /// <summary>
     ///     将给定字符串分隔为多行，然后将每行（以当前缩进为前缀，后跟新行）追加到正在生成的字符串中。

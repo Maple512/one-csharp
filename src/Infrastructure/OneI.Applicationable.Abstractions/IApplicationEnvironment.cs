@@ -10,5 +10,5 @@ public interface IApplicationEnvironment
 
     string RootPath { get; }
 
-    IFileProvider? FileProvider { get; }
+    IFileProvider FileProvider { get; }
 }

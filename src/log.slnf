@@ -2,6 +2,7 @@
   "solution": {
     "path": "one.sln",
     "projects": [
+      "Infrastructure\\OneI.Logable.Abstractions\\OneI.Logable.Abstractions.csproj",
       "Infrastructure\\OneI.Logable.Benchmark\\OneI.Logable.Benchmark.csproj",
       "Infrastructure\\OneI.Logable.CodeGenerator.Test\\OneI.Logable.CodeGenerator.Test.csproj",
       "Infrastructure\\OneI.Logable.CodeGenerator\\OneI.Logable.CodeGenerator.csproj",

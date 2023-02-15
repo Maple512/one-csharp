@@ -19,7 +19,7 @@ public partial class LoggerConfiguration
 
         public ILoggerConfiguration Override(string sourceContext, LogLevel minimum, LogLevel? maximum = null)
         {
-            Check.ThrowNullOrWhiteSpace(sourceContext);
+            ThrowHelper.ThrowIfNullOrWhiteSpace(sourceContext);
 
             _parent._logLevelMap.Override(sourceContext, minimum, maximum ?? LogLevelMap.MaximumLevelDefault);
 

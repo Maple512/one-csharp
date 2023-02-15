@@ -14,5 +14,6 @@ public interface ILoggerConfiguration : ILoggerPipelineConfiguration
 
     ILogger CreateLogger();
 
-    ILogger<T> CreateLogger<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>();
+    public ILogger<TSource> CreateLogger<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] TSource>()
+        => new Logger<TSource>(CreateLogger());
 }

@@ -1,21 +1,19 @@
 namespace OneI.Logable;
 
+using System.Diagnostics.CodeAnalysis;
 using OneI.Logable.Internal;
 using OneI.Logable.Middlewares;
 using OneI.Logable.Templates;
 
 [StackTraceHidden]
-public class Logger : ILogger
+internal class Logger : ILogger
 {
     internal readonly LogLevelMap _levelMap;
     internal readonly ILoggerSink[] _sinks;
     internal readonly TemplateProvider _templateProvider;
     internal ILoggerMiddleware[] _middlewares;
 
-    internal Logger(ILoggerMiddleware[] middleware
-                    , ILoggerSink[] sinks
-                    , LogLevelMap levelMap
-                    , TemplateProvider templateProvider)
+    internal Logger(ILoggerMiddleware[] middleware, ILoggerSink[] sinks, LogLevelMap levelMap, TemplateProvider templateProvider)
     {
         _middlewares = middleware;
         _sinks = sinks;
@@ -127,6 +125,26 @@ public class Logger : ILogger
         });
     }
 
+    public ILogger ForContext(params ILoggerMiddleware[] middlewares)
+        => ForContext(configure =>
+        {
+            _ = configure.With(new AggregateMiddleware(middlewares));
+        });
+
+    public ILogger ForContext<T>()
+    {
+        var typename = OneIReflectionExtensions.GetTypeDisplayName(typeof(T), true, false, false, '.');
+
+        return ForContext(typename);
+    }
+
+    public ILogger ForContext(string sourceContext)
+    {
+        ThrowHelper.ThrowIfNull(sourceContext);
+
+        return ForContext(LoggerConstants.Propertys.SourceContext, sourceContext);
+    }
+
     #endregion
 
     #region Scope
@@ -162,6 +180,12 @@ public class Logger : ILogger
 
         return new(state => _middlewares = state.Middlewares, scope);
     }
+
+    public IDisposable BeginScope<T>(string name, T value)
+       => BeginScope(new PropertyMiddleware<T>(name, value));
+
+    public IAsyncDisposable BeginScopeAsync<T>(string name, T value)
+        => BeginScopeAsync(new PropertyMiddleware<T>(name, value));
 
     #endregion
 }

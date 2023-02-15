@@ -14,7 +14,6 @@ internal readonly partial struct DisposeAction : IDisposable
 
     public void Dispose()
     {
-
         _action?.Invoke();
     }
 }
@@ -24,7 +23,6 @@ internal readonly partial struct DisposeAction : IAsyncDisposable
 {
     public ValueTask DisposeAsync()
     {
-
         _action?.Invoke();
 
         return ValueTask.CompletedTask;
@@ -47,7 +45,6 @@ internal readonly partial struct DisposeAction<T> : IDisposable
 
     public void Dispose()
     {
-
         _action?.Invoke(_state);
     }
 }
@@ -57,7 +54,6 @@ internal readonly partial struct DisposeAction<T> : IAsyncDisposable
 {
     public ValueTask DisposeAsync()
     {
-
         _action?.Invoke(_state);
 
         return ValueTask.CompletedTask;

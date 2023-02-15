@@ -10,7 +10,7 @@ public class StringTransactionBenchmark : BenchmarkItem
     {
         for(var i = 0; i < length; i++)
         {
-            Check.ThrowNullOrWhiteSpace(Randomizer.String(100));
+            ThrowHelper.ThrowIfNullOrWhiteSpace(Randomizer.String(100));
         }
     }
 

@@ -9,7 +9,7 @@ public static class Clock
 
     public static void Initialize(Func<DateTimeOffset> provider)
     {
-        Check.ThrowIfNull(provider);
+        ThrowHelper.ThrowIfNull(provider);
 
         _provider = provider;
     }

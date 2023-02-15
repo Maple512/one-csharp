@@ -15,27 +15,15 @@ internal class LogLevelMap
         _range = new LogLevelRange(MinimumLevelDefault, MaximumLevelDefault);
     }
 
-    public LogLevel Minimum
-    {
-        get
-        {
-            return _range.Minimum;
-        }
-    }
+    public LogLevel Minimum => _range.Minimum;
 
-    public LogLevel Maximum
-    {
-        get
-        {
-            return _range.Maximum;
-        }
-    }
+    public LogLevel Maximum => _range.Maximum;
 
     public void Override(LogLevel minimum, LogLevel maximum) => _range = new LogLevelRange(minimum, maximum);
 
     public void Override(string sourceContext, LogLevel minimum, LogLevel maximum)
     {
-       Check.ThrowNullOrWhiteSpace(sourceContext);
+        ThrowHelper.ThrowIfNullOrWhiteSpace(sourceContext);
 
         _overrides[sourceContext] = new LogLevelRange(minimum, maximum);
     }
