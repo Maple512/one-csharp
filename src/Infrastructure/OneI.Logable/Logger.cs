@@ -1,6 +1,5 @@
 namespace OneI.Logable;
 
-using System.Diagnostics.CodeAnalysis;
 using OneI.Logable.Internal;
 using OneI.Logable.Middlewares;
 using OneI.Logable.Templates;
@@ -55,8 +54,6 @@ internal class Logger : ILogger
     {
         var template = _templateProvider.GetTemplate(ref context);
 
-        var loggerContext = new LoggerContext(ref template, ref properties, ref context);
-
         List<Exception>? exceptions = null;
 
         for(var i = 0; i < _middlewares.Length; i++)
@@ -71,6 +68,8 @@ internal class Logger : ILogger
                 exceptions.Add(ex);
             }
         }
+
+        var loggerContext = new LoggerContext(ref template, ref properties, ref context);
 
         for(var i = 0; i < _sinks.Length; i++)
         {
@@ -96,7 +95,12 @@ internal class Logger : ILogger
 
     public ILogger ForContext(Action<ILoggerConfiguration> configure)
     {
-        var configuration = new LoggerConfiguration();
+        var configuration = new LoggerConfiguration
+        {
+            _defaultTemplate = _templateProvider._default
+        };
+
+        configuration._templateProviders.AddRange(_templateProvider._providers);
 
         configure.Invoke(configuration);
 

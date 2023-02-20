@@ -4,9 +4,10 @@ using OneI.Logable.Templates;
 
 public struct LoggerTemplateEnumerator : IEnumerator<TemplateHolder>
 {
-    private readonly int _messageIndex;
-    public readonly TemplateHolder[] Template;
+    private int _messageIndex;
+    public TemplateHolder[] Template;
     public TemplateEnumerator Message;
+    private TemplateHolder _current;
 
     public LoggerTemplateEnumerator(TemplateHolder[] template, int messageIndex, TemplateEnumerator message)
     {
@@ -15,22 +16,18 @@ public struct LoggerTemplateEnumerator : IEnumerator<TemplateHolder>
         Message = message;
     }
 
-    public bool _isMessageScope;
     private byte _index;
 
     public TemplateHolder Current
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get; private set;
-    }
-
-    object IEnumerator.Current
-    {
         get
         {
-            return Current;
+            return _current;
         }
     }
+
+    object IEnumerator.Current => Current;
 
     public bool MoveNext()
     {
@@ -38,7 +35,7 @@ public struct LoggerTemplateEnumerator : IEnumerator<TemplateHolder>
         {
             if(Message.MoveNext())
             {
-                Current = Message.Current;
+                _current = Message.Current;
                 return true;
             }
 
@@ -50,7 +47,7 @@ public struct LoggerTemplateEnumerator : IEnumerator<TemplateHolder>
             return false;
         }
 
-        Current = Template[_index++];
+        _current = Template[_index++];
 
         return true;
     }

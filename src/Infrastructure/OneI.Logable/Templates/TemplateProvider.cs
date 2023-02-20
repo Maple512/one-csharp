@@ -4,8 +4,8 @@ using OneI.Logable;
 
 internal class TemplateProvider
 {
-    private readonly TemplateItem _default;
-    private readonly TemplateItem[] _providers;
+    internal readonly TemplateItem _default;
+    internal readonly TemplateItem[] _providers;
 
     public TemplateProvider(TemplateItem template, TemplateItem[] providers)
     {
@@ -28,7 +28,9 @@ internal class TemplateProvider
             }
         }
 
-        return TemplateTokenCache.GetOrAdd(ref template, ref context);
+        var messageTemplate = new TemplateEnumerator(context.Message.AsMemory());
+
+        return new LoggerTemplateEnumerator(template.Holders, template.MessageIndex, messageTemplate);
     }
 }
 
@@ -52,32 +54,5 @@ public readonly struct TemplateItem
         }
 
         Condition = condition;
-    }
-
-    public override int GetHashCode() => HashCode.Combine(Holders, Condition, MessageIndex);
-}
-
-internal static class TemplateTokenCache
-{
-    private static readonly Dictionary<int, LoggerTemplateEnumerator> _cache = new(20);
-
-    public static LoggerTemplateEnumerator GetOrAdd(ref TemplateItem template, ref LoggerMessageContext context)
-    {
-        var key = HashCode.Combine(template.GetHashCode(), context.GetHashCode());
-
-        if(_cache.TryGetValue(key, out var value))
-        {
-            return value;
-        }
-
-        var message = context.Message is null
-            ? default
-            : new TemplateEnumerator(context.Message.AsMemory());
-
-        value = new LoggerTemplateEnumerator(template.Holders, template.MessageIndex, message);
-
-        _cache.Add(key, value);
-
-        return value;
     }
 }

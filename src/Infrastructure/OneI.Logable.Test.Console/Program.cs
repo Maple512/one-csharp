@@ -24,8 +24,7 @@ public class Program
 
         while(true)
         {
-            logger.Error("message", 1, 3, default(int?));
-            logger.Error("message", 111);
+            logger.Error(" {0} {1} {2}", 1, 3, default(int?));
         }
     }
 }

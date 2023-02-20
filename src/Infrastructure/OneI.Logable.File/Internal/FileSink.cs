@@ -34,7 +34,7 @@ internal class FileSink : ILoggerSink, IDisposable
     {
         lock(_writer)
         {
-            TemplateRenderHelper.Render(_writer, context, _options.FormatProvider);
+            context.WriteTo(_writer, _options.FormatProvider);
         }
     }
 

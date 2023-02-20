@@ -20,13 +20,11 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>, IEnumerator<T
 
     public readonly ReadOnlyMemory<char> Text;
     private TemplateHolder? _next;
-    private readonly ushort _length;
     private ushort _position;
 
     public TemplateEnumerator()
     {
         _position = 0;
-        _length = 0;
     }
 
     public TemplateEnumerator(ReadOnlyMemory<char> template)
@@ -38,7 +36,6 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>, IEnumerator<T
 
         Text = template;
         Current = default;
-        _length = (ushort)template.Length;
         _position = 0;
     }
 
@@ -51,12 +48,13 @@ public struct TemplateEnumerator : IEquatable<TemplateEnumerator>, IEnumerator<T
             return true;
         }
 
+        var _length = (ushort)Text.Length;
+
         if(_position >= _length)
         {
             return false;
         }
 
-        // 剩余
         var position = _position;
 
         while(true)

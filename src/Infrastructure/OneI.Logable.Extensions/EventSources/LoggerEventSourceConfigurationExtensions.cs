@@ -3,7 +3,7 @@ namespace OneI.Logable;
 using System.Runtime.Versioning;
 
 [SupportedOSPlatform(SharedConstants.OSPlatform.Windows)]
-public static class LoggerEventSourceExtensions
+public static class LoggerEventSourceConfigurationExtensions
 {
     public static ILoggerConfiguration UseEventSource(
         this ILoggerSinkConfiguration sink,

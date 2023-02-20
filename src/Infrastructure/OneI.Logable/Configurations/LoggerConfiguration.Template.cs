@@ -10,9 +10,18 @@ public partial class LoggerConfiguration
 
         public TemplateConfiguration(LoggerConfiguration parent) => _parent = parent;
 
+        public ILoggerConfiguration Default(string template)
+        {
+            ArgumentException.ThrowIfNullOrEmpty(template);
+
+            _parent._defaultTemplate = new TemplateItem(null, template.AsMemory());
+
+            return _parent;
+        }
+
         public ILoggerConfiguration UseWhen(Func<LoggerMessageContext, bool> condition, string template)
         {
-            ArgumentNullException.ThrowIfNullOrEmpty(template);
+            ArgumentException.ThrowIfNullOrEmpty(template);
 
             _parent._templateProviders.Add(new TemplateItem(condition, template.AsMemory()));
 

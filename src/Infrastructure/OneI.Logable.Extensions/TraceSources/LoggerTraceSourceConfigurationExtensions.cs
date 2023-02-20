@@ -1,6 +1,6 @@
 namespace OneI.Logable;
 
-public static class LoggerTraceSourceExtensions
+public static class LoggerTraceSourceConfigurationExtensions
 {
     public static ILoggerConfiguration UseTraceSource(
         this ILoggerSinkConfiguration sink,

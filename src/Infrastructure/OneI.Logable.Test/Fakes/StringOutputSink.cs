@@ -12,7 +12,7 @@ public sealed class StringOutputSink : ILoggerSink
     {
         var writer = new StringWriter();
 
-        TemplateRenderHelper.Render(writer, context, null);
+        context.WriteTo(writer);
 
         _receiver.Invoke(writer.ToString());
     }

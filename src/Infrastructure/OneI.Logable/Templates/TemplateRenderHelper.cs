@@ -2,12 +2,11 @@ namespace OneI.Logable.Templates;
 
 using System.Globalization;
 using Cysharp.Text;
-using OneI.Logable.Internal;
 using static LoggerConstants.Propertys;
 
 public static class TemplateRenderHelper
 {
-    public static void Render(TextWriter writer, in LoggerContext context, IFormatProvider? formatProvider)
+    internal static void Render(TextWriter writer, LoggerContext context, IFormatProvider? formatProvider)
     {
         var template = context.Template;
         var message = context.Message;
@@ -58,12 +57,17 @@ public static class TemplateRenderHelper
                 }
                 else
                 {
+                    int pad;
                     if(holder.Align < 0)
                     {
                         writer.Write(container.AsSpan());
+                        pad = -holder.Align - written;
+                    }
+                    else
+                    {
+                        pad = holder.Align - written;
                     }
 
-                    var pad = Math.Abs(holder.Align) - written;
                     WriteSpance(writer, pad);
 
                     if(holder.Align > 0)
@@ -97,7 +101,7 @@ public static class TemplateRenderHelper
     {
         if(holder.Name == Level)
         {
-            var level = LevelFormatHelper.Format(message.Level, holder.Format);
+            var level = LevelFormat.Format(message.Level, holder.Format);
 
             writer.Append(level);
             return;
@@ -152,7 +156,6 @@ public static class TemplateRenderHelper
             }
             else
             {
-                writer.Append(TemplateConstants.Property.Null);
                 return;
             }
         }
@@ -169,7 +172,6 @@ public static class TemplateRenderHelper
     {
         if(value == null)
         {
-            writer.Append(TemplateConstants.Property.Null);
             return;
         }
 
@@ -182,7 +184,7 @@ public static class TemplateRenderHelper
 
         if(value is string str)
         {
-            if(type == PropertyType.Stringify)
+            if(type != PropertyType.Serialize)
             {
                 writer.Append('"');
                 writer.Append(str.Replace("\"", "\\\""));

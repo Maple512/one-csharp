@@ -43,7 +43,7 @@ internal class RollFileSink : ILoggerSink, IDisposable
         {
             TryGetNewFile(DateTime.Now);
 
-            TemplateRenderHelper.Render(_writer, context, _options.FormatProvider);
+            context.WriteTo(_writer, _options.FormatProvider);
         }
     }
 

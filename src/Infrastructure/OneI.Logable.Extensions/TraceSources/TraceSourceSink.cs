@@ -27,7 +27,7 @@ internal class TraceSourceSink : ILoggerSink, IDisposable
         {
             using var writer = new ZStringWriter();
 
-            TemplateRenderHelper.Render(writer, context, null);
+            context.WriteTo(writer);
 
             trace.TraceEvent(level, context.EventId, writer.ToString());
         }

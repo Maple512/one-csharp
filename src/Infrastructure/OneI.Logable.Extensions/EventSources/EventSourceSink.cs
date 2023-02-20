@@ -23,7 +23,7 @@ internal class EventSourceSink : ILoggerSink
         {
             using var writer = new ZStringWriter();
 
-            TemplateRenderHelper.Render(writer, context, null);
+            context.WriteTo(writer);
 
             _log.WriteEntry(writer.ToString(), ToEventLogEntryType(context.Message.Level), context.EventId, 0);
         }

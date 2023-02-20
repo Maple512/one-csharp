@@ -4,20 +4,21 @@ using OneI.Logable.Internal;
 using OneI.Logable.Middlewares;
 using OneI.Logable.Templates;
 
+[StackTraceHidden]
 public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipelineConfiguration
 {
     public const string DefaultTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss}[{Level}]{Message}{NewLine}";
-    private readonly TemplateItem _defaultTemplate;
+    internal TemplateItem _defaultTemplate;
     private readonly LogLevelMap _logLevelMap;
 
     private readonly List<ILoggerMiddleware> _middlewares;
     private readonly List<ILoggerSink> _sinks;
-    private readonly List<TemplateItem> _templateProviders;
+    internal readonly List<TemplateItem> _templateProviders;
 
     /// <param name="template">日志默认模板，默认：<c>{Timestamp:yyyy-MM-dd HH:mm:ss}[{Level}]{Message}{NewLine}</c></param>
     public LoggerConfiguration(string template = DefaultTemplate)
     {
-        ArgumentNullException.ThrowIfNullOrEmpty(template);
+        ArgumentException.ThrowIfNullOrEmpty(template);
 
         _defaultTemplate = new TemplateItem(null, template.AsMemory());
         _templateProviders = new List<TemplateItem>();
@@ -71,7 +72,6 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
 
     internal ILogger CreateWithLogger(Logger logger)
     {
-        var defaultTemplate = _defaultTemplate;
         var loggerMiddlwares = logger._middlewares ?? Array.Empty<ILoggerMiddleware>();
 
         var middlewareCount = loggerMiddlwares.Length + _middlewares.Count;
@@ -102,8 +102,6 @@ public partial class LoggerConfiguration : ILoggerConfiguration, ILoggerPipeline
             _sinks.CopyTo(sinks, logger._sinks.Length);
         }
 
-        var templateProvider = new TemplateProvider(defaultTemplate, _templateProviders.ToArray());
-
-        return new Logger(middlewares, sinks, _logLevelMap, templateProvider);
+        return new Logger(middlewares, sinks, _logLevelMap, logger._templateProvider);
     }
 }

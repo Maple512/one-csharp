@@ -41,7 +41,7 @@ internal sealed class Application : IApplication, IDisposable, IAsyncDisposable
 
     public async Task StartAsync(CancellationToken cancellationToken = default)
     {
-        Logger.Debug("Application string");
+        Logger.Debug("Application starting");
 
         using var combinedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Stopping);
 
@@ -65,14 +65,14 @@ internal sealed class Application : IApplication, IDisposable, IAsyncDisposable
 
         _lifetime.NotifyStarted();
 
-        Logger.Debug("Hosting started.");
+        Logger.Debug("Application started.");
     }
 
     public async Task StopAsync(CancellationToken cancellationToken = default)
     {
         _stopCalled = true;
 
-        Logger.Debug("Hosting stopping");
+        Logger.Debug("Application stopping");
 
         using var tokenSource = new CancellationTokenSource(_options.ShutdownTimeout);
         using(var linked = CancellationTokenSource.CreateLinkedTokenSource(tokenSource.Token, cancellationToken))
@@ -118,7 +118,7 @@ internal sealed class Application : IApplication, IDisposable, IAsyncDisposable
             }
         }
 
-        Logger.Debug("Hosting stopped");
+        Logger.Debug("Application stopped");
     }
 
     private async Task TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)

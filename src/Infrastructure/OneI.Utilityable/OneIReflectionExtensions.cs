@@ -1,6 +1,7 @@
 namespace OneI;
 
 using Cysharp.Text;
+using OneI.Text;
 
 public static class OneIReflectionExtensions
 {
@@ -79,7 +80,7 @@ public static class OneIReflectionExtensions
         bool includeGenericParameters = true,
         char nestedTypeDelimiter = DefaultNestedTypeDelimiter)
     {
-        var builder = ZString.CreateStringBuilder(true);
+        var builder = new RefValueStringBuilder(stackalloc char[256]);
 
         try
         {
@@ -93,7 +94,7 @@ public static class OneIReflectionExtensions
         }
     }
 
-    private static void ProcessType(ref Utf16ValueStringBuilder builder, Type type, in DisplayNameOptions options)
+    private static void ProcessType(ref RefValueStringBuilder builder, Type type, in DisplayNameOptions options)
     {
         if(type.IsGenericType)
         {
@@ -128,7 +129,7 @@ public static class OneIReflectionExtensions
         }
     }
 
-    private static void ProcessArrayType(ref Utf16ValueStringBuilder builder, Type type, in DisplayNameOptions options)
+    private static void ProcessArrayType(ref RefValueStringBuilder builder, Type type, in DisplayNameOptions options)
     {
         var innerType = type;
         while(innerType.IsArray)
@@ -147,7 +148,7 @@ public static class OneIReflectionExtensions
         }
     }
 
-    private static void ProcessGenericType(ref Utf16ValueStringBuilder builder, Type type, Type[] genericArguments, int length, in DisplayNameOptions options)
+    private static void ProcessGenericType(ref RefValueStringBuilder builder, Type type, Type[] genericArguments, int length, in DisplayNameOptions options)
     {
         var offset = 0;
         if(type.IsNested)

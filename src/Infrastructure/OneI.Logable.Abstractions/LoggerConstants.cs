@@ -2,8 +2,6 @@ namespace OneI.Logable;
 
 public static class LoggerConstants
 {
-    internal const string MessagePlaceHolder = $"{{{Propertys.Message}}}";
-
     public static class Propertys
     {
         public const int MaxCount = 100;
@@ -39,7 +37,7 @@ public static class LoggerConstants
         public const int DefaultEventId = 0;
     }
 
-    internal static class Formatters
+    public static class Formatters
     {
         public const char UpperCase = 'u';
         public const char LowerCase = 'l';

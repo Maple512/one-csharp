@@ -1,3 +1,3 @@
 using OneI.Logable;
 
-BenchmarkTool.Run<WriteFileBenchmark>();
+BenchmarkTool.Switcher<WriteFileBenchmark>();

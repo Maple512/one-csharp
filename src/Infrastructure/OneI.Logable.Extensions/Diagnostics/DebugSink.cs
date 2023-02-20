@@ -9,7 +9,7 @@ internal class DebugSink : ILoggerSink
     {
         using var writer = new ZStringWriter();
 
-        TemplateRenderHelper.Render(writer, context, null);
+        context.WriteTo(writer);
 
         Debug.WriteLine(writer.ToString(), context.SourceContext);
     }
