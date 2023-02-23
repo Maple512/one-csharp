@@ -12,62 +12,62 @@ internal class EnvironmentMiddleware : ILoggerMiddleware
     {
         if(_options.HasCommandLine)
         {
-            properties.AddProperty(nameof(Environment.CommandLine), Environment.CommandLine);
+            properties.Add(nameof(Environment.CommandLine), Environment.CommandLine);
         }
 
         if(_options.HasCurrentDirectory)
         {
-            properties.AddProperty(nameof(Environment.CurrentDirectory), Environment.CurrentDirectory);
+            properties.Add(nameof(Environment.CurrentDirectory), Environment.CurrentDirectory);
         }
 
         if(_options.HasCurrentManagedThreadId)
         {
-            properties.AddProperty(nameof(Environment.CurrentManagedThreadId), Environment.CurrentManagedThreadId);
+            properties.Add(nameof(Environment.CurrentManagedThreadId), Environment.CurrentManagedThreadId);
         }
 
         if(_options.HasIs64BitOperatingSystem)
         {
-            properties.AddProperty(nameof(Environment.Is64BitOperatingSystem), Environment.Is64BitOperatingSystem);
+            properties.Add(nameof(Environment.Is64BitOperatingSystem), Environment.Is64BitOperatingSystem);
         }
 
         if(_options.HasIs64BitProcess)
         {
-            properties.AddProperty(nameof(Environment.Is64BitProcess), Environment.Is64BitProcess);
+            properties.Add(nameof(Environment.Is64BitProcess), Environment.Is64BitProcess);
         }
 
         if(_options.HasMachineName)
         {
-            properties.AddProperty(nameof(Environment.MachineName), Environment.MachineName);
+            properties.Add(nameof(Environment.MachineName), Environment.MachineName);
         }
 
         if(_options.HasOSVersion)
         {
-            properties.AddProperty(nameof(Environment.OSVersion), Environment.OSVersion);
+            properties.Add(nameof(Environment.OSVersion), Environment.OSVersion);
         }
 
         if(_options.HasProcessId)
         {
-            properties.AddProperty(nameof(Environment.ProcessId), Environment.ProcessId);
+            properties.Add(nameof(Environment.ProcessId), Environment.ProcessId);
         }
 
         if(_options.HasProcessorCount)
         {
-            properties.AddProperty(nameof(Environment.ProcessorCount), Environment.ProcessorCount);
+            properties.Add(nameof(Environment.ProcessorCount), Environment.ProcessorCount);
         }
 
         if(_options.HasProcessPath)
         {
-            properties.AddProperty(nameof(Environment.ProcessPath), Environment.ProcessPath);
+            properties.Add(nameof(Environment.ProcessPath), Environment.ProcessPath);
         }
 
         if(_options.HasUserName)
         {
-            properties.AddProperty(nameof(Environment.UserName), Environment.UserName);
+            properties.Add(nameof(Environment.UserName), Environment.UserName);
         }
 
         if(_options.HasFrameworkDescription)
         {
-            properties.AddProperty(nameof(RuntimeInformation.FrameworkDescription), RuntimeInformation.FrameworkDescription);
+            properties.Add(nameof(RuntimeInformation.FrameworkDescription), RuntimeInformation.FrameworkDescription);
         }
     }
 }

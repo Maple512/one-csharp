@@ -101,7 +101,7 @@ public static class TemplateRenderHelper
     {
         if(holder.Name == Level)
         {
-            var level = LevelFormat.Format(message.Level, holder.Format);
+            var level = LevelFormatter.Format(message.Level, holder.Format);
 
             writer.Append(level);
             return;
@@ -163,9 +163,9 @@ public static class TemplateRenderHelper
         LiteralRender(ref writer, value, holder.Type, holder.Format, formatProvider);
     }
 
-    public static void LiteralRender<TValue>(
+    public static void LiteralRender(
         ref Utf16ValueStringBuilder writer,
-        TValue? value,
+        object? value,
         PropertyType type,
         string? format,
         IFormatProvider? formatProvider)
@@ -222,11 +222,12 @@ public static class TemplateRenderHelper
         writer.Append(value.ToString().AsSpan());
     }
 
-    public static void WriteSpanFormattable(
+    public static void WriteSpanFormattable<T>(
         ref Utf16ValueStringBuilder writer,
-        ISpanFormattable spanFormattable,
+        T spanFormattable,
         string? format,
         IFormatProvider? formatProvider)
+        where T : ISpanFormattable
     {
         scoped var buffer = writer.GetSpan(0);
 

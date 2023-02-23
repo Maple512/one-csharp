@@ -28,7 +28,7 @@ public class PropertyMiddleware<T> : ILoggerMiddleware
         }
         else
         {
-            properties.Add(_name, _value);
+            properties.Add(_name, (object?)_value);
         }
     }
 }

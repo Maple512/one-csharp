@@ -7,7 +7,7 @@ using VerifyXunit;
 public class LogGenerator_Test : CodeGeneratorSnapshotTest
 {
     [Fact]
-    public Task logger_extensions_code_generated()
+    public Task code_generated()
     {
         var source =
 """
@@ -19,6 +19,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using OneI.Logable;
+using OneI.Logable.CodeGenerated;
 
 public class UserService
 {
@@ -27,7 +28,7 @@ public class UserService
         var logger = new LoggerConfiguration()
         .CreateLogger();
 
-        logger.Error("",1);
+        logger.Debug("",1,new List<int>(0));
     }
 }
 #nullable restore

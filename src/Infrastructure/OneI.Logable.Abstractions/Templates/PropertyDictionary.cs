@@ -99,21 +99,6 @@ public struct PropertyDictionary
     /// <exception cref="ArgumentNullException">给定的<paramref name="key" />为<see langword="null" /></exception>
     /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AddProperty<T>(string key, T value)
-    {
-        _ = TryInsert(key, value, InsertionBehavior.ThrowOnExisting);
-    }
-
-    /// <summary>
-    ///     向缓冲区中添加指定的键值对
-    /// </summary>
-    /// <param name="key"></param>
-    /// <param name="value"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException">已存在指定的<paramref name="key" /></exception>
-    /// <exception cref="ArgumentNullException">给定的<paramref name="key" />为<see langword="null" /></exception>
-    /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Add(string key, object? value)
     {
         _ = TryInsert(key, value, InsertionBehavior.ThrowOnExisting);
@@ -223,7 +208,7 @@ public struct PropertyDictionary
     /// <exception cref="ArgumentException">已存在指定的<paramref name="key" /></exception>
     /// <exception cref="ArgumentNullException">给定的<paramref name="key" />为<see langword="null" /></exception>
     /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
-    private bool TryInsert<T>(string key, T? value, InsertionBehavior behavior)
+    private bool TryInsert(string key, object? value, InsertionBehavior behavior)
     {
         if(key == null)
         {

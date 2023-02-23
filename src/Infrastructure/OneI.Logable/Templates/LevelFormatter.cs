@@ -2,7 +2,7 @@ namespace OneI.Logable.Templates;
 
 using static LoggerConstants;
 
-public static class LevelFormat
+public static class LevelFormatter
 {
     private static readonly string[][] _levelMap =
     {
