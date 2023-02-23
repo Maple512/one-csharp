@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OneI.Applicationable\OneI.Applicationable.csproj" />
+      <ProjectReference Include="..\OneI.Logable.Extensions\OneI.Logable.Extensions.csproj" />
     </ItemGroup>
 
 </Project>

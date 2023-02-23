@@ -76,7 +76,7 @@ public class StringBuilderBenchmark
     public string UseRefValueStringBuilder()
     {
         var StringValue = Randomizer.String(stringCount);
-        using scoped var builder = new RefValueStringBuilder(capacity);
+        using scoped var builder = new ValueStringBuilder(capacity);
 
         for(var i = 0; i < count; i++)
         {

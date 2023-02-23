@@ -184,7 +184,7 @@ public static class TemplateRenderHelper
 
         if(value is string str)
         {
-            if(type != PropertyType.Serialize)
+            if(type == PropertyType.Stringify)
             {
                 writer.Append('"');
                 writer.Append(str.Replace("\"", "\\\""));

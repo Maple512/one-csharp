@@ -6,7 +6,7 @@ public class StringHelper
 {
     public static string EscapeString(scoped ReadOnlySpan<char> chars)
     {
-        var buffer = new RefValueStringBuilder(stackalloc char[chars.Length]);
+        var buffer = new ValueStringBuilder(stackalloc char[chars.Length]);
 
         // TODO: 等net8
         //chars.IndexOfAny()

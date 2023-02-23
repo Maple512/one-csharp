@@ -7,7 +7,7 @@ using System.ComponentModel;
 /// <summary>
 /// <see href="https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/ValueStringBuilder.cs"/>
 /// </summary>
-public ref struct RefValueStringBuilder
+public ref struct ValueStringBuilder
 {
     /// <summary>缓冲池最小长度</summary>
     private const int ArrayPoolMinimumLength = 256;
@@ -16,19 +16,19 @@ public ref struct RefValueStringBuilder
     private char[]? _arrayToReturnToPool;
     private Span<char> _buffer;
 
-    public RefValueStringBuilder()
+    public ValueStringBuilder()
         : this(ArrayPoolMinimumLength)
     {
     }
 
-    public RefValueStringBuilder(Span<char> initialBuffer)
+    public ValueStringBuilder(Span<char> initialBuffer)
     {
         _arrayToReturnToPool = null;
         _buffer = initialBuffer;
         _pos = 0;
     }
 
-    public RefValueStringBuilder(int initialCapacity)
+    public ValueStringBuilder(int initialCapacity)
     {
         _arrayToReturnToPool = ArrayPool<char>.Shared.Rent(initialCapacity);
         _buffer = _arrayToReturnToPool;
@@ -37,21 +37,15 @@ public ref struct RefValueStringBuilder
 
     public int Length
     {
-        get
-        {
-            return _pos;
-        }
-
-        set
-        {
-            Debug.Assert(value >= 0);
-            Debug.Assert(value <= _buffer.Length);
-
-            _pos = value;
-        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _pos;
     }
 
-    public int Capacity => _buffer.Length;
+    public int Capacity
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => _buffer.Length;
+    }
 
     public void EnsureCapacity(int capacity)
     {
@@ -65,31 +59,9 @@ public ref struct RefValueStringBuilder
         }
     }
 
-    /// <summary>
-    /// Get a pinnable reference to the builder.
-    /// Does not ensure there is a null char after <see cref="Length"/>
-    /// This overload is pattern matched in the C# 7.3+ compiler so you can omit
-    /// the explicit method call, and write eg "fixed (char* c = builder)"
-    /// </summary>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public ref char GetPinnableReference()
     {
-        return ref MemoryMarshal.GetReference(_buffer);
-    }
-
-    /// <summary>
-    /// Get a pinnable reference to the builder.
-    /// </summary>
-    /// <param name="terminate">Ensures that the builder has a null char after <see cref="Length"/></param>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public ref char GetPinnableReference(bool terminate)
-    {
-        if(terminate)
-        {
-            EnsureCapacity(Length + 1);
-            _buffer[Length] = '\0';
-        }
-
         return ref MemoryMarshal.GetReference(_buffer);
     }
 
@@ -115,21 +87,6 @@ public ref struct RefValueStringBuilder
     public Span<char> RawChars => _buffer;
 
     #region AsSpan
-
-    /// <summary>
-    /// Returns a span around the contents of the builder.
-    /// </summary>
-    /// <param name="terminate">Ensures that the builder has a null char after <see cref="Length"/></param>
-    public ReadOnlySpan<char> AsSpan(bool terminate)
-    {
-        if(terminate)
-        {
-            EnsureCapacity(Length + 1);
-            _buffer[Length] = '\0';
-        }
-
-        return _buffer[.._pos];
-    }
 
     public ReadOnlySpan<char> AsSpan() => _buffer[.._pos];
     public ReadOnlySpan<char> AsSpan(int start) => _buffer[start.._pos];
@@ -375,7 +332,9 @@ public ref struct RefValueStringBuilder
     public void Dispose()
     {
         var toReturn = _arrayToReturnToPool;
+        
         this = default; // for safety, to avoid using pooled array if this instance is erroneously appended to again
+        
         if(toReturn != null)
         {
             ArrayPool<char>.Shared.Return(toReturn);

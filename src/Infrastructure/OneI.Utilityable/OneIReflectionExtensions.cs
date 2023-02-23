@@ -80,7 +80,7 @@ public static class OneIReflectionExtensions
         bool includeGenericParameters = true,
         char nestedTypeDelimiter = DefaultNestedTypeDelimiter)
     {
-        var builder = new RefValueStringBuilder(stackalloc char[256]);
+        var builder = new ValueStringBuilder(stackalloc char[256]);
 
         try
         {
@@ -94,7 +94,7 @@ public static class OneIReflectionExtensions
         }
     }
 
-    private static void ProcessType(ref RefValueStringBuilder builder, Type type, in DisplayNameOptions options)
+    private static void ProcessType(ref ValueStringBuilder builder, Type type, in DisplayNameOptions options)
     {
         if(type.IsGenericType)
         {
@@ -129,7 +129,7 @@ public static class OneIReflectionExtensions
         }
     }
 
-    private static void ProcessArrayType(ref RefValueStringBuilder builder, Type type, in DisplayNameOptions options)
+    private static void ProcessArrayType(ref ValueStringBuilder builder, Type type, in DisplayNameOptions options)
     {
         var innerType = type;
         while(innerType.IsArray)
@@ -148,7 +148,7 @@ public static class OneIReflectionExtensions
         }
     }
 
-    private static void ProcessGenericType(ref RefValueStringBuilder builder, Type type, Type[] genericArguments, int length, in DisplayNameOptions options)
+    private static void ProcessGenericType(ref ValueStringBuilder builder, Type type, Type[] genericArguments, int length, in DisplayNameOptions options)
     {
         var offset = 0;
         if(type.IsNested)

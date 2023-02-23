@@ -1,7 +1,7 @@
 namespace OneI.Applicationable;
 
 using System.Threading.Tasks;
-using OneI.Logable;
+using OneI.Logable.Console;
 
 public class Program
 {
@@ -11,11 +11,8 @@ public class Program
             .ConfigureLogger((context, logger) =>
             {
                 _ = logger
-                .Template.Default("{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level} {SourceContext}]{Message}{NewLine}")
-                .Sink.Use(c =>
-                {
-                    c.WriteTo(Console.Out);
-                });
+                .Template.Default("{Timestamp:yyyy-MM-dd HH:mm:ss}|{Level}|{SourceContext}|{Message}{NewLine}")
+                .Sink.UseConsole();
             });
 
         var app = builder.Build();

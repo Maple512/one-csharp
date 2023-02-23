@@ -8,7 +8,7 @@ public sealed class RefValueStringBuilder_Test
     [InlineData("啊手动阀手我阀骄傲", '我', '他')]
     public void replace_char(string text, char old, char @new)
     {
-        var builder = new RefValueStringBuilder(stackalloc char[512]);
+        var builder = new ValueStringBuilder(stackalloc char[512]);
         builder.Append(text);
 
         builder.Replace(old, @new);
