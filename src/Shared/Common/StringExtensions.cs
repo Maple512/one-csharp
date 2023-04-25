@@ -52,7 +52,7 @@ internal static partial class StringExtensions
     /// </remarks>
     /// <param name="str"></param>
     /// <returns></returns>
-    [return: NotNullIfNotNull("str")]
+    [return: NotNullIfNotNull(nameof(str))]
     public static string? ToCamelCase(this string? str)
     {
         if(str.IsNullOrWhiteSpace() || !char.IsUpper(str![0]))
@@ -89,7 +89,7 @@ internal static partial class StringExtensions
     /// <param name="str"></param>
     /// <param name="separator">分隔符，默认下滑线</param>
     /// <returns></returns>
-    [return: NotNullIfNotNull("str")]
+    [return: NotNullIfNotNull(nameof(str))]
     public static string? ToSnakeCase(this string? str, char separator = '_')
     {
         if(str.IsNullOrWhiteSpace())

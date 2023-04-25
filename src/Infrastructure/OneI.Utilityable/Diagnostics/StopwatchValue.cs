@@ -1,12 +1,12 @@
 namespace OneI.Diagnostics;
 
+using System.ComponentModel;
+
 /// <summary>
 /// 秒表
 /// </summary>
 /// <remarks>source: <see href="https://github.com/dotnet/aspnetcore/blob/main/src/Shared/ValueStopwatch/ValueStopwatch.cs"/></remarks>
-#pragma warning disable CS0659 // “StopwatchValue”重写 Object.Equals(object o) 但不重写 Object.GetHashCode()
 public readonly struct StopwatchValue : IEquatable<StopwatchValue>
-#pragma warning restore CS0659 // “StopwatchValue”重写 Object.Equals(object o) 但不重写 Object.GetHashCode()
 {
     private static readonly long _timestampToTicks = TimeSpan.TicksPerSecond / Stopwatch.Frequency;
 
@@ -57,5 +57,22 @@ public readonly struct StopwatchValue : IEquatable<StopwatchValue>
     {
         return IsActive && other.IsActive
             && _startTimestamp == other._startTimestamp;
+    }
+
+    public static bool operator ==(StopwatchValue left, StopwatchValue right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(StopwatchValue left, StopwatchValue right)
+    {
+        return !(left == right);
+    }
+
+    [DoesNotReturn]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override int GetHashCode()
+    {
+        throw new NotImplementedException();
     }
 }

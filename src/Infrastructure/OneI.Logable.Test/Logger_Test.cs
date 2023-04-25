@@ -49,8 +49,9 @@ public class Logger_Test
 
         var scope = new ILoggerMiddleware[]
         {
-            new ActionMiddleware(_ => order.Add(3)), new PropertyMiddleware<Guid>(name, id)
-            , new ActionMiddleware(_ => order.Add(4)),
+            new ActionMiddleware(_ => order.Add(3)),
+            new PropertyMiddleware(name, id),
+            new ActionMiddleware(_ => order.Add(4)),
         };
 
         using(logger.BeginScope("1", 1))

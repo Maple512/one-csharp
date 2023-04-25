@@ -1,5 +1,6 @@
 namespace OneI.Logable.Templates;
 
+using OneI.Generateable.CodeGenerated;
 using static LoggerConstants;
 
 public static class LevelFormatter

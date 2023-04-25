@@ -1,9 +1,12 @@
 namespace OneI.Logable;
 
+using DotNext.Reflection;
 using NLog;
 using Serilog;
 
-public class WriteFileBenchmark : BenchmarkItem
+using MSLogging = Microsoft.Extensions.Logging;
+
+public partial class WriteFileBenchmark : BenchmarkItem
 {
     private static Serilog.Core.Logger serilog;
     private static ILogger logger;
@@ -50,6 +53,17 @@ public class WriteFileBenchmark : BenchmarkItem
         for(var i = 0; i < count; i++)
         {
             nlog.Info(" {0} {1} {2} {3}", 0, "", new object());
+        }
+    }
+
+    [MSLogging.LoggerMessage(14, MSLogging.LogLevel.Debug, @"Connection id ""{ConnectionId}"" communication error.", EventName = "ConnectionError", SkipEnabledCheck = true)]
+    private static partial void ConnectionErrorCore(MSLogging.ILogger logger, string connectionId, Exception ex);
+
+    public static void ConnectionError(MSLogging.ILogger logger, Exception ex)
+    {
+        if(logger.IsEnabled(MSLogging.LogLevel.Debug))
+        {
+            ConnectionErrorCore(logger, Guid.NewGuid().ToString("N"), ex);
         }
     }
 }

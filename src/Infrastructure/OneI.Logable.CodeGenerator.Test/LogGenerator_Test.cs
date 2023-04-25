@@ -1,5 +1,6 @@
 namespace OneI.Logable;
 using System.Threading.Tasks;
+using OneI.Logable.CodeGenerated;
 using OneT.CodeGenerator;
 using VerifyXunit;
 
@@ -33,6 +34,10 @@ public class UserService
 }
 #nullable restore
 """;
+
+        //var logger = (ILogger)default!;
+
+        //logger.Write(LogLevel.Debug, $"{nameof(Guid)}", 1, 2, 3);
 
         return Verify(source, new LoggerCodeGenerator());
     }

@@ -10,18 +10,18 @@ public partial class LoggerConfiguration
 
         public LoggerPropertyConfiguration(LoggerConfiguration parent) => _parent = parent;
 
-        public ILoggerConfiguration Add<T>(string name, T value)
+        public ILoggerConfiguration Add(string name, object value)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(name);
 
-            return _parent.With(new PropertyMiddleware<T>(name, value));
+            return _parent.With(new PropertyMiddleware(name, value));
         }
 
-        public ILoggerConfiguration AddOrUpdate<T>(string name, T value)
+        public ILoggerConfiguration AddOrUpdate(string name, object value)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(name);
 
-            return _parent.With(new PropertyMiddleware<T>(name, value, true));
+            return _parent.With(new PropertyMiddleware(name, value, true));
         }
     }
 }

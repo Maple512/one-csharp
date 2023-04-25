@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+    </PropertyGroup>
+
+    <Import Project="../../common.props" />
+
+    <ItemGroup>
+        <ProjectReference Include="..\OneI.Logable.Abstractions\OneI.Logable.Abstractions.csproj" />
+        <ProjectReference Include="..\OneI.Logable.CodeGenerator\OneI.Logable.CodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\OneI.Openable.Connection.Abstractions\OneI.Openable.Connection.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="OneI.Logable.CodeGenerated" />
+    </ItemGroup>
+    
+</Project>

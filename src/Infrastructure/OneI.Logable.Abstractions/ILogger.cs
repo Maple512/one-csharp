@@ -13,12 +13,12 @@ public interface ILogger : IDisposable, IAsyncDisposable
 
     ILogger ForContext(Action<ILoggerConfiguration> configure);
 
-    ILogger ForContext<TValue>(string name, TValue value);
+    ILogger ForContext(string name, object value);
 
     ILogger ForContext(params ILoggerMiddleware[] middlewares);
 
     ILogger ForContext<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields)] T>();
-    
+
     ILogger ForContext(string context);
 
     #endregion
@@ -29,9 +29,9 @@ public interface ILogger : IDisposable, IAsyncDisposable
 
     IAsyncDisposable BeginScopeAsync(params ILoggerMiddleware[] middlewares);
 
-    IDisposable BeginScope<T>(string name, T value);
+    IDisposable BeginScope(string name, object value);
 
-    IAsyncDisposable BeginScopeAsync<T>(string name, T value);
+    IAsyncDisposable BeginScopeAsync(string name, object value);
 
     #endregion
 }
@@ -45,7 +45,7 @@ public readonly struct NoneLogger : ILogger
         return DisposeAction.Nullable;
     }
 
-    public IDisposable BeginScope<T>(string name, T value)
+    public IDisposable BeginScope(string name, object value)
     {
         return DisposeAction.Nullable;
     }
@@ -55,7 +55,7 @@ public readonly struct NoneLogger : ILogger
         return DisposeAction.Nullable;
     }
 
-    public IAsyncDisposable BeginScopeAsync<T>(string name, T value)
+    public IAsyncDisposable BeginScopeAsync(string name, object value)
     {
         return DisposeAction.Nullable;
     }
@@ -75,7 +75,7 @@ public readonly struct NoneLogger : ILogger
         return this;
     }
 
-    public ILogger ForContext<TValue>(string name, TValue value)
+    public ILogger ForContext(string name, object value)
     {
         return this;
     }

@@ -2,7 +2,7 @@ namespace OneI.Logable;
 
 public interface ILoggerPropertyConfiguration
 {
-    ILoggerConfiguration Add<T>(string name, T value);
+    ILoggerConfiguration Add(string name, object value);
 
-    ILoggerConfiguration AddOrUpdate<T>(string name, T value);
+    ILoggerConfiguration AddOrUpdate(string name, object value);
 }

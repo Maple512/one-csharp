@@ -13,7 +13,7 @@ using System.Text;
 internal static partial class Randomizer
 {
     private const string latter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private const string character_set = $"0123456789{latter}!@#$%^&*()_-+=[{{]}};:>|./?";
+    private const string characters = $"0123456789{latter}!@#$%^&*()_-+=[{{]}};:>|./?";
 
     #region Enumerable
 
@@ -142,7 +142,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static string String()
     {
-        return String(Integer(character_set.Length));
+        return String(Integer(characters.Length));
     }
 
     /// <summary>
@@ -156,7 +156,7 @@ internal static partial class Randomizer
 
         for(var i = 0; i < length; i++)
         {
-            span[i] = Item<char>(character_set);
+            span[i] = Item<char>(characters);
         }
 
         return span.ToString();

@@ -1,6 +1,4 @@
-namespace OneI.Utilityable.Benchmark;
-
-using OneI.Utilityable.Strings;
+namespace OneI.Utilityable;
 
 internal class Program
 {
@@ -8,6 +6,6 @@ internal class Program
     {
         // BenchmarkTool.RunAssymbly<Program>(args);
 
-        BenchmarkTool.Run<StringEscapeBenchmark>(args);
+        BenchmarkTool.Switcher<Program>(args);
     }
 }

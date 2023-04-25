@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+        <RootNamespace>OneI</RootNamespace>
+        <IncludeShared>false</IncludeShared>
+    </PropertyGroup>
+
+    <Import Project="../../common.props" />
+
+</Project>

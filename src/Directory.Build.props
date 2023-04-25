@@ -3,7 +3,7 @@
     <PropertyGroup>
         <!-- Net Version -->
         <NetStandard>netstandard2.0</NetStandard>
-        <NetFramework>net7.0</NetFramework>
+        <NetFramework>net8.0</NetFramework>
 
         <!-- Microsoft Version -->
         <MSVersion>7.0.0</MSVersion>

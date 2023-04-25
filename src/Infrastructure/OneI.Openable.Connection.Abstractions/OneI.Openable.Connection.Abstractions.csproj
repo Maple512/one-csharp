@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+    </PropertyGroup>
+
+    <Import Project="../../common.props" />
+
+    <ItemGroup>
+      <PackageReference Include="System.IO.Pipelines" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OneI.Utilityable\OneI.Utilityable.csproj" />
+    </ItemGroup>
+
+</Project>

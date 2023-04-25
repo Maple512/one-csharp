@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>$(NetFramework)</TargetFramework>
+    </PropertyGroup>
+
+    <Import Project="../../common.props" />
+
+    <ItemGroup>
+        <Compile Include="../OneI.Httpable.Shared/Headers/HttpParseResult.cs" Link="Shared\%(FileName).cs"></Compile>
+        <Compile Include="../OneI.Httpable.Shared/Headers/HttpRuleParser.cs" Link="Shared\%(FileName).cs"></Compile>
+    </ItemGroup>
+
+</Project>

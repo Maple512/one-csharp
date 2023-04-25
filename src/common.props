@@ -36,6 +36,10 @@
         <Compile Include="..\..\Shared\NETStandard\*.cs" Link="Shared\NETStandard\%(FileName).cs"/>
     </ItemGroup>
 
+    <ItemGroup Condition="$(IncludeShared) == 'true' and $(Target_Standard) != 'true'">
+        <Compile Include="..\..\Shared\NET\*.cs" Link="Shared\NET\%(FileName).cs"/>
+    </ItemGroup>
+
     <ItemGroup Condition="$(IncludeShared) == 'true' and $(AllowUnsafeBlocks) == 'true' and $(Target_Windows) == 'true'">
         <Compile Include="..\..\Shared\Interop\*.cs" Link="Shared\Interop\%(FileName).cs"/>
     </ItemGroup>
@@ -91,6 +95,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Condition="$(Target_Standard) != 'true'" Include="SimdLinq" Version="1.3.0" />
+        <PackageReference Include="Microsoft.Extensions.Primitives" Version="$(MSVersion)" />
     </ItemGroup>
 
     <!--github action-->

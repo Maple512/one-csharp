@@ -1,6 +1,8 @@
 
 namespace OneI.Applicationable.Test.API;
 
+using Microsoft.AspNetCore.Hosting.Server;
+
 public class Program
 {
     public static void Main(string[] args)
@@ -17,9 +19,9 @@ public class Program
 
         builder.Configuration.AddCommandLine(args);
 
-        builder.Configuration.AddConfiguration(default!);
-
         var app = builder.Build();
+
+        var a = app.Services.GetRequiredService<IServer>();
 
         // Configure the HTTP request pipeline.
         if(app.Environment.IsDevelopment())

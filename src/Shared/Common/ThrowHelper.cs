@@ -32,7 +32,6 @@
 
 namespace System;
 
-using Buffers;
 using Runtime.ExceptionServices;
 using Runtime.Serialization;
 
@@ -495,12 +494,6 @@ internal static class ThrowHelper
     internal static void ThrowFormatException_BadFormatSpecifier()
     {
         throw new FormatException("Format specifier was invalid.");
-    }
-
-    [DoesNotReturn]
-    internal static void ThrowArgumentOutOfRangeException_PrecisionTooLarge()
-    {
-        throw new ArgumentOutOfRangeException("precision", $"Precision cannot be larger than {StandardFormat.MaxPrecision}.");
     }
 
     [DoesNotReturn]

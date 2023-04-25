@@ -351,3 +351,6 @@ MigrationBackup/
 
 # dotnet format
 format/
+
+# rider
+.idea/

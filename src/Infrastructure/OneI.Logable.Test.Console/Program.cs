@@ -22,6 +22,8 @@ public class Program
                            })
                            .CreateLogger();
 
+        logger.Debug(new Exception(), $"asdfasdf{Guid.NewGuid():N}");
+
         while(true)
         {
             logger.Error(" {0} {1} {2}", 1, 3, default(int?));

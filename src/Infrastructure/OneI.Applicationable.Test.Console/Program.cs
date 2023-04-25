@@ -1,7 +1,7 @@
 namespace OneI.Applicationable;
 
 using System.Threading.Tasks;
-using OneI.Logable.Console;
+using OneI.Logable.Consoles;
 
 public class Program
 {

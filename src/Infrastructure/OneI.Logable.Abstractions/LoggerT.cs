@@ -19,9 +19,9 @@ public class Logger<TSource> : ILogger<TSource>, ILogger
         return _logger.BeginScope(middlewares);
     }
 
-    IDisposable ILogger.BeginScope<T>(string name, T value)
+    IDisposable ILogger.BeginScope(string name, object value)
     {
-        return _logger.BeginScope<T>(name, value);
+        return _logger.BeginScope(name, value);
     }
 
     IAsyncDisposable ILogger.BeginScopeAsync(params ILoggerMiddleware[] middlewares)
@@ -29,7 +29,7 @@ public class Logger<TSource> : ILogger<TSource>, ILogger
         return _logger.BeginScopeAsync(middlewares);
     }
 
-    IAsyncDisposable ILogger.BeginScopeAsync<T>(string name, T value)
+    IAsyncDisposable ILogger.BeginScopeAsync(string name, object value)
     {
         return _logger.BeginScopeAsync(name, value);
     }
@@ -49,9 +49,9 @@ public class Logger<TSource> : ILogger<TSource>, ILogger
         return _logger.ForContext(configure);
     }
 
-    ILogger ILogger.ForContext<TValue>(string name, TValue value)
+    ILogger ILogger.ForContext(string name, object value)
     {
-        return _logger.ForContext<TValue>(name, value);
+        return _logger.ForContext(name, value);
     }
 
     ILogger ILogger.ForContext(params ILoggerMiddleware[] middlewares)

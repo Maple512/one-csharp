@@ -13,4 +13,8 @@
 
     <Import Project="./common.props"/>
 
+    <ItemGroup>
+        <Using Include="AutoBogus"/>
+    </ItemGroup>
+
 </Project>

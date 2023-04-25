@@ -43,9 +43,9 @@ internal class Logger : ILogger
     {
         for(var i = 0; i < _sinks.Length; i++)
         {
-            if(_sinks[i] is IAsyncDisposable d)
+            if(_sinks[i] is IAsyncDisposable disposable)
             {
-                await d.DisposeAsync();
+                await disposable.DisposeAsync();
             }
         }
     }
@@ -107,9 +107,9 @@ internal class Logger : ILogger
         return configuration.CreateWithLogger(this);
     }
 
-    public ILogger ForContext<TValue>(string name, TValue value)
+    public ILogger ForContext(string name, object value)
     {
-        var middleware = new PropertyMiddleware<TValue>(name, value, true);
+        var middleware = new PropertyMiddleware(name, value, true);
 
         if(name.AsSpan().Equals(LoggerConstants.Propertys.SourceContext, StringComparison.InvariantCulture)
            && value is string sourceContext)
@@ -185,11 +185,11 @@ internal class Logger : ILogger
         return new(state => _middlewares = state.Middlewares, scope);
     }
 
-    public IDisposable BeginScope<T>(string name, T value)
-       => BeginScope(new PropertyMiddleware<T>(name, value));
+    public IDisposable BeginScope(string name, object value)
+       => BeginScope(new PropertyMiddleware(name, value));
 
-    public IAsyncDisposable BeginScopeAsync<T>(string name, T value)
-        => BeginScopeAsync(new PropertyMiddleware<T>(name, value));
+    public IAsyncDisposable BeginScopeAsync(string name, object value)
+        => BeginScopeAsync(new PropertyMiddleware(name, value));
 
     #endregion
 }
