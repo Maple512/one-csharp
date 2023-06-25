@@ -112,13 +112,13 @@ internal sealed class Application : IApplication, IDisposable, IAsyncDisposable
             {
                 var ex = new AggregateException(exceptions);
 
-                Logger.Debug(ex, "Hosting shutdown exception");
+                Logger.Debug(ex, "Hosting shutdown exception.");
 
                 throw ex;
             }
         }
 
-        Logger.Debug("Application stopped");
+        Logger.Debug("Application stopped.");
     }
 
     private async Task TryExecuteBackgroundServiceAsync(BackgroundService backgroundService)

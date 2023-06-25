@@ -9,7 +9,7 @@ internal static partial class EnumerableExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Join<T>(this IEnumerable<T> source, string separator)
     {
-        ThrowHelper.ThrowIfNull(source);
+        Check.ThrowIfNull(source);
 
         return string.Join(separator, source);
     }
@@ -20,7 +20,7 @@ internal static partial class EnumerableExtensions
         bool condition,
         Func<T, bool> predicate)
     {
-        ThrowHelper.ThrowIfNull(source);
+        Check.ThrowIfNull(source);
 
         return condition ? source.Where(predicate) : source;
     }
@@ -32,7 +32,7 @@ internal static partial class EnumerableExtensions
         Func<T, bool> @true,
         Func<T, bool> @false)
     {
-        ThrowHelper.ThrowIfNull(source);
+        Check.ThrowIfNull(source);
 
         return source.Where(condition ? @true : @false);
     }
@@ -67,7 +67,7 @@ internal static partial class EnumerableExtensions
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string Join<T>(this IEnumerable<T> source, char separator = ',')
     {
-        ThrowHelper.ThrowIfNull(source);
+        Check.ThrowIfNull(source);
 
 #if NET
         return string.Join(separator, source);

@@ -1,6 +1,6 @@
 namespace OneI.Logable.Internal;
 
-using OneI.Logable.Definitions;
+using OneI.Generateable.Generator;
 
 internal partial class CodePrinter
 {

@@ -31,6 +31,19 @@
 
 - 源生成器类不能继承其他类
 
+## 代码片段
+
+- 日志生成器
+
+```XML
+<Import Project="../../log.gen.props" />
+```
+
+- 通用生成器
+```XML
+<Import Project="../../generic.gen.props" />
+```
+
 ## 其他
 
 - git base: `git config --global --add core.quotepath false` 防止中文乱码

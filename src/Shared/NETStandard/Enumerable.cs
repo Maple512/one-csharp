@@ -4,10 +4,7 @@ internal static class Enumerable
 {
     public static bool TryGetNonEnumeratedCount<TSource>(this IEnumerable<TSource> source, out int count)
     {
-        if(source == null)
-        {
-            ThrowHelper.ThrowArgumentNullException(ExceptionArgument.source);
-        }
+        Check.ThrowIfNull(source);
 
         if(source is ICollection<TSource> collectionoft)
         {

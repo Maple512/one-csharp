@@ -1,4 +1,5 @@
 namespace OneI.Applicationable.Test.API.Controllers;
+
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]

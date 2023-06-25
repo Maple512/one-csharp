@@ -83,7 +83,7 @@ internal sealed class ConfigurationManager : IConfigurationManager
 
     IConfigurationBuilder IConfigurationBuilder.Add(IConfigurationSource source)
     {
-        ThrowHelper.ThrowIfNull(source);
+        Check.ThrowIfNull(source);
 
         _sources.Add(source);
         return this;

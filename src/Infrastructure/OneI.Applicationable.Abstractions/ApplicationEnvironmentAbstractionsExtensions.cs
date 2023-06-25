@@ -23,7 +23,7 @@ public static class ApplicationEnvironmentAbstractionsExtensions
     {
         if(environmentName is not { Length: > 0 })
         {
-            ThrowHelper.ThrowArgumentNullException(nameof(environmentName));
+            throw new ArgumentNullException(nameof(environmentName));
         }
 
         return environmentName.AsSpan().Equals(hostEnvironment.EnvironmentName, StringComparison.OrdinalIgnoreCase);

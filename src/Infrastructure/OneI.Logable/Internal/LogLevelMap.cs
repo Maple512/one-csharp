@@ -23,7 +23,7 @@ internal class LogLevelMap
 
     public void Override(string sourceContext, LogLevel minimum, LogLevel maximum)
     {
-        ThrowHelper.ThrowIfNullOrWhiteSpace(sourceContext);
+        Check.ThrowIfNullOrWhiteSpace(sourceContext);
 
         _overrides[sourceContext] = new LogLevelRange(minimum, maximum);
     }

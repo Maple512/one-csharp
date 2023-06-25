@@ -36,7 +36,7 @@ public class AggregateMiddleware : ILoggerMiddleware
 
         if(!_isSilent && exceptions != null)
         {
-            ThrowHelper.ThrowAggregateException(exceptions);
+            throw new AggregateException(exceptions);
         }
     }
 }

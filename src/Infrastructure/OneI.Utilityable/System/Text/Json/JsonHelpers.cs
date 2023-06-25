@@ -28,7 +28,7 @@ public static class JsonHelpers
         // 2k
         if(chars.Length > 2 * 1024)
         {
-            ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.chars);
+            throw new ArgumentOutOfRangeException(nameof(chars));
         }
 
         encoder ??= JavaScriptEncoder.Default;

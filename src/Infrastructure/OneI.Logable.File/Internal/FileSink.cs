@@ -2,7 +2,6 @@ namespace OneI.Logable.Internal;
 
 using System;
 using DotNext.IO;
-using OneI.Logable.Templates;
 
 internal class FileSink : ILoggerSink, IDisposable
 {

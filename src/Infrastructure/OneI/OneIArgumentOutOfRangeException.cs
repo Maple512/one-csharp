@@ -40,19 +40,6 @@ public class OneIArgumentOutOfRangeException<T> : ArgumentException
         HResult = HResults.COR_E_ARGUMENTOUTOFRANGE;
     }
 
-    protected OneIArgumentOutOfRangeException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
-    {
-        _actualValue = (T?)info.GetValue("ActualValue", typeof(T));
-    }
-
-    public override void GetObjectData(SerializationInfo info, StreamingContext context)
-    {
-        base.GetObjectData(info, context);
-
-        info.AddValue("ActualValue", _actualValue, typeof(object));
-    }
-
     public override string Message
     {
         get
@@ -66,7 +53,7 @@ public class OneIArgumentOutOfRangeException<T> : ArgumentException
                     return valueMessage;
                 }
 
-                return s + Environment.NewLine + valueMessage;
+                return $"{s}{Environment.NewLine}{valueMessage}";
             }
 
             return s;

@@ -1,6 +1,6 @@
 namespace OneI.Logable.Internal;
 
-using OneI.Logable.Definitions;
+using OneI.Generateable.Generator;
 
 internal partial class CodePrinter
 {
@@ -90,7 +90,7 @@ internal partial class CodePrinter
         {
             var parameter = method.Parameters[i];
 
-            var type = _types.Values.FirstOrDefault(x => x.Equals(parameter.Type));
+            var type = TypeCache.Types.FirstOrDefault(x => x.Equals(parameter.Type));
 
             builder.Append($"properties.Add(\"__{i}\", ");
 

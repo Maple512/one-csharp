@@ -9,6 +9,9 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\..\Test\OneT.Benchmark\OneT.Benchmark.csproj"/>
     </ItemGroup>
 

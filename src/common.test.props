@@ -1,5 +1,5 @@
 <Project>
-
+    
     <PropertyGroup>
         <IsPackable>false</IsPackable>
         <NoWarn>$(NoWarn);IDE1006;</NoWarn>
@@ -11,10 +11,10 @@
         <PackageReference Include="ObjectLayoutInspector" Version="0.1.4"/>
     </ItemGroup>
 
-    <Import Project="./common.props"/>
-
     <ItemGroup>
         <Using Include="AutoBogus"/>
     </ItemGroup>
+
+    <Import Project="./common.props"/>
 
 </Project>

@@ -2,7 +2,7 @@ namespace OneI.Logable.Internal;
 
 using System;
 using Microsoft.CodeAnalysis;
-using OneI.Logable.Definitions;
+using OneI.Generateable.Generator;
 
 internal static class InvocationExpressionParser
 {

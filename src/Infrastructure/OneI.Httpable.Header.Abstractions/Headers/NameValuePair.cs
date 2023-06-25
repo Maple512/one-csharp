@@ -1,6 +1,7 @@
 namespace OneI.Httpable.Headers;
 
 using System.Diagnostics.Contracts;
+using System.Globalization;
 using System.Net.Http.Headers;
 using Microsoft.Extensions.Primitives;
 
@@ -14,6 +15,34 @@ public sealed class NameValuePair
     private StringSegment _name;
     private StringSegment _value;
     private bool _isReadOnly;
+
+    private NameValuePair() { }
+
+    public NameValuePair(StringSegment name, StringSegment value)
+    {
+        _name = name;
+        _value = value;
+    }
+
+    public StringSegment Name
+    {
+        get { return _name; }
+    }
+
+    public StringSegment Value
+    {
+        get => _value;
+        set
+        {
+            HeaderUtilities.ThrowIfReadOnly(IsReadOnly);
+
+            CheckValueFormat(value);
+
+            _value = value;
+        }
+    }
+
+    public bool IsReadOnly { get { return _isReadOnly; } }
 
     internal static int GetValueLength(StringSegment input, int startIndex)
     {
@@ -35,7 +64,6 @@ public sealed class NameValuePair
         }
         return valueLength;
     }
-
 
     private static int GetNameValueLength(StringSegment input, int startIndex, out NameValuePair? parsedValue)
     {
@@ -85,5 +113,32 @@ public sealed class NameValuePair
         current = current + valueLength;
         current = current + HttpRuleParser.GetWhitespaceLength(input, current); // skip whitespaces
         return current - startIndex;
+    }
+
+    public static NameValuePair? Find(List<NameValuePair>? values, StringSegment name)
+    {
+        if(values.IsNullOrEmpty()) return null;
+
+        for(int i = 0; i < values.Count; i++)
+        {
+            var value = values[i];
+
+            if(value._name.Equals(name, StringComparison.OrdinalIgnoreCase))
+            {
+                return value;
+            }
+        }
+
+        return null;
+    }
+
+    private static void CheckValueFormat(StringSegment value)
+    {
+        // 值为null/空或有效的令牌/带引号的字符串
+        if(!(StringSegment.IsNullOrEmpty(value)
+            || (GetValueLength(value, 0) == value.Length)))
+        {
+            throw new FormatException($"The header value is invalid: '{value}'");
+        }
     }
 }

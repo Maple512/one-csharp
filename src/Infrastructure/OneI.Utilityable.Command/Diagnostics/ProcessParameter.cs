@@ -14,7 +14,7 @@ public sealed class ProcessParameter
     /// <param name="fileName">The file name.</param>
     public ProcessParameter(string fileName)
     {
-        ThrowHelper.ThrowIfNullOrWhiteSpace(fileName);
+        Check.ThrowIfNullOrWhiteSpace(fileName);
 
         FileName = fileName;
     }
@@ -109,7 +109,7 @@ public sealed class ProcessParameter
     /// <returns>A ProcessParameter.</returns>
     public ProcessParameter WithWorkingDirectory(string workingDirectory)
     {
-        ThrowHelper.ThrowIfNull(workingDirectory);
+        Check.ThrowIfNull(workingDirectory);
 
         WorkingDirectory = workingDirectory;
 
@@ -124,7 +124,7 @@ public sealed class ProcessParameter
     /// <returns>A ProcessParameter.</returns>
     public ProcessParameter WithEnvironment(string name, string value)
     {
-        ThrowHelper.ThrowIfNullOrWhiteSpace(name);
+        Check.ThrowIfNullOrWhiteSpace(name);
 
         Environments[name] = value;
 
@@ -138,7 +138,7 @@ public sealed class ProcessParameter
     /// <returns>A ProcessParameter.</returns>
     public ProcessParameter WithEnvironmentToRemove(string name)
     {
-        ThrowHelper.ThrowIfNullOrWhiteSpace(name);
+        Check.ThrowIfNullOrWhiteSpace(name);
 
         EnvironmentsToRemove.Add(name);
 
@@ -152,7 +152,7 @@ public sealed class ProcessParameter
     /// <returns>A ProcessParameter.</returns>
     public ProcessParameter WithOutput(Action<bool, string?> output)
     {
-        ThrowHelper.ThrowIfNull(output);
+        Check.ThrowIfNull(output);
 
         OutputReceiver = output;
 

@@ -1,7 +1,8 @@
-<Project>
+<Project Sdk="Microsoft.NET.Sdk">
+
 
     <PropertyGroup>
-        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <TargetFramework>$(NetStandard)</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,17 +12,13 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.4.0" PrivateAssets="All"/>
         <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.4.0" PrivateAssets="All"/>
     </ItemGroup>
-    
+
     <ItemGroup>
         <Using Include="Microsoft.CodeAnalysis"/>
         <Using Include="Microsoft.CodeAnalysis.CSharp"/>
         <Using Include="Microsoft.CodeAnalysis.CSharp.Syntax"/>
     </ItemGroup>
-
-    <Import Project="./common.props"/>
-
-    <ItemGroup Label="Common Shard Files" Condition="$(IncludeShared)">
-        <Compile Include="..\OneI.Generateable.Shared\Generator\*.cs" Link="Shared\Generator\%(FileName).cs"/>
-    </ItemGroup>
+    
+    <Import Project="../../common.props" />
 
 </Project>

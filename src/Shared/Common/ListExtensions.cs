@@ -104,7 +104,7 @@ internal static class ListExtensions
 
     public static T GetOrAdd<T>(this IList<T> source, Func<T, bool> selector, Func<T> factory)
     {
-        ThrowHelper.ThrowIfNull(source);
+        Check.ThrowIfNull(source);
 
         var item = source.FirstOrDefault(selector);
 

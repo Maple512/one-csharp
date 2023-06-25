@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>$(NetFramework)</TargetFramework>
@@ -7,7 +7,7 @@
     <Import Project="../../common.xunit.props" />
 
     <ItemGroup>
-      <ProjectReference Include="..\OneI.Applicationable.API\OneI.Applicationable.Open.csproj" />
+      <ProjectReference Include="..\OneI.Applicationable\OneI.Applicationable.csproj" />
     </ItemGroup>
 
 </Project>

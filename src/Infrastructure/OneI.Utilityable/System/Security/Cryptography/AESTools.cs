@@ -30,7 +30,7 @@ public static class AESTools
         CipherMode mode = CipherMode.CBC,
         PaddingMode padding = PaddingMode.PKCS7)
     {
-        ThrowHelper.ThrowIfNullOrWhiteSpace(data);
+        Check.ThrowIfNullOrWhiteSpace(data);
 
         var result = Encrypt(
             Encoding.UTF8.GetBytes(data),
@@ -61,7 +61,7 @@ public static class AESTools
         CipherMode mode = CipherMode.CBC,
         PaddingMode padding = PaddingMode.PKCS7)
     {
-        ThrowHelper.ThrowIfNullOrEmpty(data);
+        Check.ThrowIfNullOrEmpty(data);
 
         using var aes = Aes.Create();
 
@@ -92,7 +92,7 @@ public static class AESTools
         CipherMode mode = CipherMode.CBC,
         PaddingMode padding = PaddingMode.PKCS7)
     {
-        ThrowHelper.ThrowIfNullOrWhiteSpace(data);
+        Check.ThrowIfNullOrWhiteSpace(data);
 
         var result = Decrypt(
             Convert.FromBase64String(data),
@@ -123,7 +123,7 @@ public static class AESTools
         CipherMode mode = CipherMode.CBC,
         PaddingMode padding = PaddingMode.PKCS7)
     {
-        ThrowHelper.ThrowIfNullOrEmpty(data);
+        Check.ThrowIfNullOrEmpty(data);
 
         using var aes = Aes.Create();
 

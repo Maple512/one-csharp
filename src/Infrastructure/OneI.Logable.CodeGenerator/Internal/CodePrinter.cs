@@ -2,33 +2,10 @@ namespace OneI.Logable.Internal;
 
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis.Text;
-using OneI.Logable.Definitions;
+using OneI.Generateable.Generator;
 
 internal static partial class CodePrinter
 {
-    private static readonly ConcurrentDictionary<ISymbol, TypeDef> _types = new(EqualityComparer<ISymbol>.Default);
-
-    public static void AddType(ISymbol symbol, TypeDef type)
-    {
-        if(_types.ContainsKey(symbol))
-        {
-            return;
-        }
-
-        var existed = _types.Values.FirstOrDefault(x => x.Equals(type));
-        if(existed != null)
-        {
-            return;
-        }
-
-        _types[symbol] = type;
-    }
-
-    public static bool TryGetType(ISymbol symbol, [NotNullWhen(true)] out TypeDef? type)
-    {
-        return _types.TryGetValue(symbol, out type);
-    }
-
     internal static void Print(IEnumerable<MethodDef> methods, out SourceText tyeps, out SourceText loggerExtensions)
     {
         tyeps = PrintTypes();
@@ -55,7 +32,7 @@ internal static partial class CodePrinter
             // 创建自定义属性
             using(var _ = content.Indent())
             {
-                var types = _types.Values.OrderBy(x => x.Kind)
+                var types = TypeCache.Types.OrderBy(x => x.Kind)
                     .ThenBy(x => x.WrapperName)
                     .ThenBy(x => x.Properties.Count)
                     .ToList();

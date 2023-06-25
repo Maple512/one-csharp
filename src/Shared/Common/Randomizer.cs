@@ -25,7 +25,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static T Item<T>(params T[] source)
     {
-        ThrowHelper.ThrowIfNull(source);
+        Check.ThrowIfNull(source);
 
         return source[Integer(source.Length)];
     }
@@ -38,7 +38,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static T Item<T>(IEnumerable<T> source)
     {
-        ThrowHelper.ThrowIfNull(source);
+        Check.ThrowIfNull(source);
 
         return source.ElementAt(Integer(source.Count()));
     }
@@ -52,7 +52,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static IEnumerable<T> Items<T>(int count, params T[] source)
     {
-        ThrowHelper.ThrowIfNull(source);
+        Check.ThrowIfNull(source);
 
         for(var i = 0; i < count; i++)
         {
@@ -71,7 +71,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static IEnumerable<T> Items<T>(IEnumerable<T> source, int count)
     {
-        ThrowHelper.ThrowIfNull(source);
+        Check.ThrowIfNull(source);
 
         for(var i = 0; i < count; i++)
         {
@@ -89,7 +89,7 @@ internal static partial class Randomizer
     /// <returns></returns>
     public static IEnumerable<T> Disorder<T>(IEnumerable<T> items)
     {
-        ThrowHelper.ThrowIfNull(items);
+        Check.ThrowIfNull(items);
 
         var currentList = new List<T>(items);
         var randomList = new List<T>(currentList.Count);

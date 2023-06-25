@@ -144,7 +144,7 @@ internal class Logger : ILogger
 
     public ILogger ForContext(string sourceContext)
     {
-        ThrowHelper.ThrowIfNull(sourceContext);
+        Check.ThrowIfNull(sourceContext);
 
         return ForContext(LoggerConstants.Propertys.SourceContext, sourceContext);
     }

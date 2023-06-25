@@ -3,7 +3,6 @@ namespace OneI.Logable.Internal;
 using System;
 using System.IO;
 using DotNext.IO;
-using OneI.Logable.Templates;
 
 internal class RollFileSink : ILoggerSink, IDisposable
 {

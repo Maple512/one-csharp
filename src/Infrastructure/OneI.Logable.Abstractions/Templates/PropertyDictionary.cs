@@ -35,10 +35,7 @@ public struct PropertyDictionary
     public bool IsEmpty
     {
         [method: MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get
-        {
-            return Length == 0;
-        }
+        get => Length == 0;
     }
 
     public int Length
@@ -53,10 +50,7 @@ public struct PropertyDictionary
     {
         get
         {
-            if(index > Length)
-            {
-                ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index);
-            }
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(index, Length);
 
             return new KeyValuePair<string, object?>(_keys[index], _values[index]);
         }
@@ -138,7 +132,7 @@ public struct PropertyDictionary
     {
         if(key == null)
         {
-            ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key);
+            throw new ArgumentNullException(nameof(key));
         }
 
         var index = Keys.IndexOf(key);
@@ -158,10 +152,7 @@ public struct PropertyDictionary
 
     public bool TryGetValue<T>(string key, out T? value)
     {
-        if(key == null)
-        {
-            ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key);
-        }
+        Check.ThrowIfNull(key);
 
         var index = Keys.IndexOf(key);
 
@@ -182,10 +173,7 @@ public struct PropertyDictionary
 
     public bool TryGetValue(string key, out object? value)
     {
-        if(key == null)
-        {
-            ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key);
-        }
+        Check.ThrowIfNull(key);
 
         var index = Keys.IndexOf(key);
 
@@ -210,10 +198,7 @@ public struct PropertyDictionary
     /// <exception cref="ArgumentOutOfRangeException">超出缓冲区长度限制</exception>
     private bool TryInsert(string key, object? value, InsertionBehavior behavior)
     {
-        if(key == null)
-        {
-            ThrowHelper.ThrowArgumentNullException(ExceptionArgument.key);
-        }
+        Check.ThrowIfNull(key);
 
         if(Length >= _keys.Length - 1)
         {
@@ -233,7 +218,7 @@ public struct PropertyDictionary
 
             if(behavior == InsertionBehavior.ThrowOnExisting)
             {
-                ThrowHelper.ThrowAddingDuplicateWithKeyArgumentException(key);
+                throw new ArgumentException($"An item with the same key has already been added. Key: {key}");
             }
 
             return false;

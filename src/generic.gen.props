@@ -1,0 +1,11 @@
+<Project>
+
+    <ItemGroup>
+        <ProjectReference Include="..\OneI.Generateable.Generic\OneI.Generateable.Generic.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="OneI.Generateable.CodeGenerated" />
+    </ItemGroup>
+
+</Project>

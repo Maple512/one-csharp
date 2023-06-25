@@ -2,7 +2,7 @@ namespace OneI.Logable;
 
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.Text;
-using OneI.Logable.Definitions;
+using OneI.Generateable.Generator;
 using OneI.Logable.Internal;
 
 [Generator]
